@@ -1,62 +1,33 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Mundialis
+Mundialis is a Laravel-based framework for managing story, character, and world information. It aims to reduce the friction of recording these by streamlining the process of template creation, use, and information formatting.
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+- Demo Site:
+- Support Discord: https://discord.gg/mVqUzgQXMd
 
-## About Laravel
+### Why Mundialis?
+There are certainly preexisting solutions for keeping and organizing this kind of information, both standalone and service-based. However, I have yet to see one that did not more or less boil down to some implementation of a wiki, and rightly so; wiki software is very robust, meant to handle a great breadth and potentially depth of information, depending on the specific implementation and how it's used. 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The trouble arises from this last point. I have traditionally used a [MediaWiki](https://www.mediawiki.org/wiki/MediaWiki) instance for this purpose. While it is exceedingly powerful and meets most of my needs, it has a few notable drawbacks: namely, all non-basic formatting and organization need to be set up and manually maintained per page. Wiki software will generally provide tools to help with this, but there is only so much it can do on its own. Moreover, there are certain things a general-purpose app like that is simply not built to handle efficiently-- in this context, consider timelines or handling a lexicon for a conlang-- which may be prohibitively effort and/or time-intensive to manually document, format, etc.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Thus, this project was born out of a desire for a more efficient way to record world information-- one which takes some of the advantages of a wiki framework while taking a more specialized approach, bringing some minor automation to bear so that you can spend less time formatting and organizing your information and more time creating. Moreover, since it's a self-contained app rather than a service, you can host it locally/on your own machine or on a server and manage your project's information on your own terms.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Features
+TBA
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
+## Setup
+TBA
 
 ## Contributing
+Thank you for considering contributing to Mundialis! Please see the [Contribution Guide]() for information on how best to contribute.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Extending Mundialis
+If you are interested in providing optional/plugin-type functionality for Mundialis, please contact me first and foremost; while I am open to developing plugin support and would rather do so before any are made, I will not be doing so until there is concrete interest in it.
 
-## Code of Conduct
+## Credits
+Beyond dependencies and contributions, this project owes its existence in part to some projects and people who provided valuable inspiration and insight.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- [Lorekeeper](https://github.com/corowne/lorekeeper), a framework for running ARPG sites. Much of its blood-- and certainly many of the lessons I have learned while contributing to the project-- are still in Mundialis.
+- @preimpression's excellent [World Expansion](http://wiki.lorekeeper.me/index.php?title=Extensions:World_Expansion) extension for Lorekeeper, which brings a sort of wiki-lite functionality to it and which helped inspire Mundialis by demonstrating the efficacy of automating this kind of documentation somewhat.
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Contact
+If you have any questions, please contact me via email at [queries@itinerare.net](emailto:queries@itinerare.net).
