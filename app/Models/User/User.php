@@ -39,4 +39,108 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**********************************************************************************************
+
+        RELATIONS
+
+    **********************************************************************************************/
+
+    /**
+     * Get user settings.
+     */
+    public function settings()
+    {
+        return $this->hasOne('App\Models\User\UserSettings');
+    }
+
+    /**
+     * Get user-editable profile data.
+     */
+    public function profile()
+    {
+        return $this->hasOne('App\Models\User\UserProfile');
+    }
+
+    /**
+     * Get the user's notifications.
+     */
+    public function notifications()
+    {
+        return $this->hasMany('App\Models\Notification');
+    }
+
+    /**
+     * Get the user's rank data.
+     */
+    public function rank()
+    {
+        return $this->belongsTo('App\Models\Rank\Rank');
+    }
+
+    /**********************************************************************************************
+
+        ACCESSORS
+
+    **********************************************************************************************/
+
+    /**
+     * Checks if the user has an admin rank.
+     *
+     * @return bool
+     */
+    public function getIsAdminAttribute()
+    {
+        return $this->rank->isAdmin;
+    }
+
+    /**
+     * Checks if the user has an admin rank.
+     *
+     * @return bool
+     */
+    public function getCanWriteAttribute()
+    {
+        return $this->rank->canWrite;
+    }
+
+    /**
+     * Gets the user's profile URL.
+     *
+     * @return string
+     */
+    public function getUrlAttribute()
+    {
+        return url('user/'.$this->name);
+    }
+
+    /**
+     * Gets the URL for editing the user in the admin panel.
+     *
+     * @return string
+     */
+    public function getAdminUrlAttribute()
+    {
+        return url('admin/users/'.$this->name.'/edit');
+    }
+
+    /**
+     * Displays the user's name, linked to their profile page.
+     *
+     * @return string
+     */
+    public function getDisplayNameAttribute()
+    {
+        return ($this->is_banned ? '<strike>' : '') . '<a href="'.$this->url.'" class="display-user">'.$this->name.'</a>' . ($this->is_banned ? '</strike>' : '');
+    }
+
+    /**
+     * Displays the user's avatar
+     *
+     * @return string
+     */
+    public function getAvatar()
+    {
+        return ($this->avatar);
+    }
 }

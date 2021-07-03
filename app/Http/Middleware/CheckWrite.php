@@ -5,10 +5,10 @@ namespace App\Http\Middleware;
 use Closure;
 use Settings;
 
-class CheckRead
+class CheckWrite
 {
     /**
-     * Redirect visitors to the homepage if site is private.
+     * Redirect users without write permissions to the home page.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
@@ -16,8 +16,8 @@ class CheckRead
      */
     public function handle($request, Closure $next)
     {
-        if (!Settings::get('visitors_can_read') && !$request->user()) {
-            flash('You must be logged in to view this page!')->error();
+        if (!$request->user()->canWrite) {
+            flash('You do not have the permission to access this page.')->error();
             return redirect('/');
         }
 

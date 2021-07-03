@@ -50,4 +50,15 @@ class Rank extends Model
         return false;
     }
 
+    /**
+     * Check if the rank is the admin rank.
+     *
+     * @return bool
+     */
+    public function getCanWriteAttribute()
+    {
+        if($this->id == Rank::where('id', 2)->id || $this->isAdmin) return true;
+        return false;
+    }
+
 }
