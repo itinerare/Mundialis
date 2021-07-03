@@ -13,6 +13,7 @@ Thus, this project was born out of a desire for a more efficient way to record w
 
 ## Features
 TBA
+- Support for multiple users with read and optional write permissions (note that this is explicitly **not** designed for many people, just a small group, e.g. friends.)
 
 ## Setup
 TBA
