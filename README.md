@@ -27,7 +27,7 @@ If you are interested in providing optional/plugin-type functionality for Mundia
 ## Credits
 Beyond dependencies and contributions, this project owes its existence in part to some projects and people who provided valuable inspiration and insight.
 
-- [Lorekeeper](https://github.com/corowne/lorekeeper), a framework for running ARPG sites. Much of its blood-- and certainly many of the lessons I have learned while contributing to the project-- are still in Mundialis.
+- [Lorekeeper](https://github.com/corowne/lorekeeper), a framework for running ARPG sites. Though this has been altogether rebuilt to suit a different purpose, much of Lorekeeper's blood-- and certainly many of the lessons I have learned while contributing to the project-- can still be seen in Mundialis.
 - @preimpression, in particular for the excellent [World Expansion](http://wiki.lorekeeper.me/index.php?title=Extensions:World_Expansion) extension for Lorekeeper, which brings a sort of wiki-lite functionality to it and which helped inspire Mundialis.
 
 ## Contact

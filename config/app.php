@@ -229,6 +229,9 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Settings' => App\Facades\Settings::class,
+        'Notifications' => App\Facades\Notifications::class,
+        'Image' => Intervention\Image\Facades\Image::class
 
     ],
 
