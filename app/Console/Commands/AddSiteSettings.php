@@ -35,8 +35,6 @@ class AddSiteSettings extends Command
     /**
      * Add a site setting.
      *
-     * Example usage:
-     * $this->addSiteSetting("site_setting_key", 1, "0: does nothing. 1: does something.");
      *
      * @param  string  $key
      * @param  int     $value

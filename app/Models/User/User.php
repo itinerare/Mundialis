@@ -75,7 +75,7 @@ class User extends Authenticatable
      */
     public function rank()
     {
-        return $this->belongsTo('App\Models\Rank\Rank');
+        return $this->belongsTo('App\Models\User\Rank');
     }
 
     /**********************************************************************************************

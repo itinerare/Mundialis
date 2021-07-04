@@ -21,7 +21,7 @@ class Controller extends BaseController
     public function getIndex()
     {
         return view('index', [
-            'page' => SitePage::where('key', 'index')->first()
+            'page' => SitePage::where('key', 'about')->first()
         ]);
     }
 }
