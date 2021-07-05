@@ -5,7 +5,7 @@
 | Member Routes
 |--------------------------------------------------------------------------
 |
-| Routes for pages that require an accountto view.
+| Routes for pages that require an account to view.
 |
 */
 
