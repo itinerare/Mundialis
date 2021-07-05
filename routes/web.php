@@ -35,7 +35,7 @@ Route::group(['middleware' => ['read']], function() {
             require_once __DIR__.'/mundialis/write.php';
 
             /* Routes that require admin permissions */
-            Route::group(['middleware' => ['admin']], function() {
+            Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['admin']], function() {
 
                 require_once __DIR__.'/mundialis/admin.php';
             });

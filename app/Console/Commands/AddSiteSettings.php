@@ -69,7 +69,7 @@ class AddSiteSettings extends Command
 
         $this->addSiteSetting('is_registration_open', 1, 'Whether or not registration is open. Registration always requires an invitation code.');
 
-        $this->addSiteSetting('viewers_can_read', 1, 'Whether or not logged-out visitors can read content on the site.');
+        $this->addSiteSetting('visitors_can_read', 1, 'Whether or not logged-out visitors can read content on the site.');
 
         $this->line("\nSite settings up to date!");
 
