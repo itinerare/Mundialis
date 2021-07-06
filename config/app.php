@@ -174,7 +174,9 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
         App\Providers\SettingsProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
 
     ],

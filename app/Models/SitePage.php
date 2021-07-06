@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Config;
 use App\Models\Model;
 
 class SitePage extends Model

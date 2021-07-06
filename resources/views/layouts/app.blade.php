@@ -90,7 +90,6 @@
 
                     <div class="p-4">
                         <div>
-
                             @include('flash::message')
                             @yield('content')
                         </div>

@@ -2,8 +2,9 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -22,20 +23,39 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontFlash = [
-        'current_password',
         'password',
         'password_confirmation',
+        '_token'
     ];
 
     /**
-     * Register the exception handling callbacks for the application.
+     * Report or log an exception.
      *
+     * @param  \Exception  $exception
      * @return void
+     *
+     * @throws \Exception
      */
-    public function register()
+    public function report(Throwable $exception)
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        if ($exception instanceof ValidationException) {
+            foreach ($exception->validator->errors()->all() as $message) {
+                flash($message)->error();
+            }
+        }
+
+        parent::report($exception);
+    }
+
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Exception  $exception
+     * @return \Illuminate\Http\Response
+     */
+    public function render($request, Throwable $exception)
+    {
+        return parent::render($request, $exception);
     }
 }
