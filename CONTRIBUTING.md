@@ -75,6 +75,8 @@ If you are fixing bug(s), there are a few possibilities depending on the circums
 - As a general rule, making feature branches for bugfixes vs. checking out develop or the release branch and committing them directly is recommended, but not required, as you will need to push the relevant branch to your fork and make a PR regardless.
 - If you are making a hotfix for a critical issue present **in the current release**, create a new hotfix branch off of main, make the necessary changes, and PR it back into main.
 
+### Commit Formatting
+Additionally, Mundialis commits make use of [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) formatting for its commits. Contributors are not required to follow this formatting when making pull requests; if the commits in a PR do not follow this formatting, they will be squashed into a correctly formatted commit.
 ### About abandoned pull requests
 
 In the case where a pull request is started but not finished and the contributor is nonresponsive despite efforts to contact them, the pull request will be closed regardless of its status. It is up to contributors to finish work, make any requested changes, etc., not maintainers.
