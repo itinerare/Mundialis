@@ -146,6 +146,8 @@
                     e.preventDefault();
                     $sidebar.toggleClass('active');
                 });
+
+                });
         </script>
     </div>
 </body>
