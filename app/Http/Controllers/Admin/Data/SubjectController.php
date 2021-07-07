@@ -61,8 +61,7 @@ class SubjectController extends Controller
         return view('admin.subjects.template', [
             'subject' => $subject,
             'subjectName' => $name,
-            'template' => $template ? $template : new SubjectTemplate,
-            'fieldTypes' => ['text' => 'Text', 'textarea' => 'Textbox', 'number' => 'Number', 'checkbox' => 'Checkbox/Toggle', 'choice' => 'Choose One', 'multiple' => 'Choose Multiple']
+            'template' => $template ? $template : new SubjectTemplate
         ]);
     }
 
@@ -81,7 +80,7 @@ class SubjectController extends Controller
 
         $data = $request->only([
             'section_key', 'section_name',
-            'infobox_key', 'infobox_type', 'infobox_label', 'infobox_rules', 'infobox_choices', 'infobox_value', 'infobox_help',
+            'infobox_key', 'infobox_type', 'infobox_label', 'infobox_rules', 'infobox_choices', 'infobox_value', 'infobox_help', 'widget_key', 'widget_section',
             'field_key', 'field_type', 'field_label', 'field_rules', 'field_choices', 'field_value', 'field_help', 'field_is_subsection', 'field_section'
         ]);
         if($service->editTemplate($subject, $data, Auth::user())) {

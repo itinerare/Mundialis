@@ -37,6 +37,10 @@ return [
         'name' => 'Time & Events'
     ],
 
+    'language' => [
+        ''
+    ],
+
     'misc' => [
         'name' => 'Miscellaneous'
     ],

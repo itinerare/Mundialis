@@ -11,7 +11,7 @@
             <div class="col-md">
                 <div class="form-group">
                     {!! Form::label('Field Type') !!}
-                    {!! Form::select('field_type[]', $fieldTypes, null, ['class' => 'form-control form-field-type', 'placeholder' => 'Select a Type']) !!}
+                    {!! Form::select('field_type[]', ['text' => 'Text', 'textarea' => 'Textbox', 'number' => 'Number', 'checkbox' => 'Checkbox/Toggle', 'choice' => 'Choose One', 'multiple' => 'Choose Multiple'], null, ['class' => 'form-control form-field-type', 'placeholder' => 'Select a Type']) !!}
                 </div>
             </div>
             <div class="col-md-12">

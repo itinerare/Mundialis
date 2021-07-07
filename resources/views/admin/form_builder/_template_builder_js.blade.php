@@ -64,12 +64,27 @@
                 $clone.find('.field-section').attr('value', $(this).attr("value"));
                 attachFieldTypeListener($clone.find('.form-field-type'));
             });
+
+            node.find('.add-widget').on('click', function(e) {
+                e.preventDefault();
+                var $clone = $('#widget-row').clone();
+                $(this).parent().parent().find('.widget-list').append($clone);
+                $clone.removeClass('hide widget-row');
+                $clone.find('.remove-widget').on('click', function(e) {
+                    e.preventDefault();
+                    removeWidgetRow($(this));
+                });
+                $clone.find('.widget-section').attr('value', $(this).attr("value"));
+            });
         }
 
-        $('.fieldList .field-list-entry').each(function(index) {
-            attachFieldTypeListener($(this).find('.character-rewardable-type'));
+        $('.field-list-entry').each(function(index) {
+            attachFieldTypeListener($(this).find('.form-field-type'));
         });
         function removeFieldRow($trigger) {
+            $trigger.parent().parent().remove();
+        }
+        function removeWidgetRow($trigger) {
             $trigger.parent().parent().remove();
         }
 

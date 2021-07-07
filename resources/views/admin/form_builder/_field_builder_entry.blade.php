@@ -11,7 +11,7 @@
             <div class="col-md">
                 <div class="form-group">
                     {!! Form::label('Field Type') !!}
-                    {!! Form::select('field_type[]', $fieldTypes, $field['type'], ['class' => 'form-control form-field-type', 'placeholder' => 'Select a Type']) !!}
+                    {!! Form::select('field_type[]', ['text' => 'Text', 'textarea' => 'Textbox', 'number' => 'Number', 'checkbox' => 'Checkbox/Toggle', 'choice' => 'Choose One', 'multiple' => 'Choose Multiple'], $field['type'], ['class' => 'form-control form-field-type', 'placeholder' => 'Select a Type']) !!}
                 </div>
             </div>
             <div class="col-md-12">
@@ -52,7 +52,7 @@
                     {!! Form::select('field_is_subsection[]', [0 => 'No (No header shown)', 1 => 'Yes (Header shown)', 2 => 'Yes (sub-subsection) (Shows a minor header)'], $field['is_subsection'], ['class' => 'form-control form-field-type']) !!}
                 </div>
             </div>
-            {!! Form::hidden('field_section[]', $field['section'], ['class' => 'form-control field-section']) !!}
+            {!! Form::hidden('field_section[]', $section, ['class' => 'form-control field-section']) !!}
         </div>
     </div>
 </div>

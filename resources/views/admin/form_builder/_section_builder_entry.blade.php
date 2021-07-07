@@ -18,14 +18,20 @@
     </div>
     <div>
         <div class="text-right mb-3">
+            <a href="#" class="btn btn-outline-info add-widget mr-1" value="{{ $key }}">Add Widget</a>
             <a href="#" class="btn btn-outline-info add-field" value="{{ $key }}">Add Field</a>
         </div>
+        <div class="widget-list">
+            @if(isset($template->data['widgets'][$key]))
+                @foreach($template->data['widgets'][$key] as $widget)
+                    @include('admin.form_builder._widget_builder_entry', ['widget' => $widget, 'section' => $key])
+                @endforeach
+            @endif
+        </div>
         <div class="field-list">
-            @if(isset($template->data['fields']))
-                @foreach($template->data['fields'] as $fieldKey=>$field)
-                    @if($field['section'] == $key)
-                        @include('admin.form_builder._field_builder_entry', ['key' => $fieldKey, 'field' => $field])
-                    @endif
+            @if(isset($template->data['fields'][$key]))
+                @foreach($template->data['fields'][$key] as $fieldKey=>$field)
+                    @include('admin.form_builder._field_builder_entry', ['key' => $fieldKey, 'field' => $field, 'section' => $key])
                 @endforeach
             @endif
         </div>

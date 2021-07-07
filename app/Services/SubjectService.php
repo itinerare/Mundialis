@@ -68,6 +68,7 @@ class SubjectService extends Service
      */
     private function processFormFields($data)
     {
+        // Format and record infobox fields if present
         if(isset($data['infobox_key'])) foreach($data['infobox_key'] as $key=>$fieldKey) {
             if(isset($data['infobox_choices'][$key]))
                 $data['infobox_choices'][$key] = explode(',', $data['field_choices'][$key]);
@@ -82,19 +83,24 @@ class SubjectService extends Service
             ];
         }
 
+        // Format and record widgets if present
+        if(isset($data['widget_key'])) foreach($data['widget_key'] as $key=>$widget) {
+            $data['data']['widgets'][$data['widget_section'][$key]][] = $widget;
+        }
+
+        // Format and record form fields if present
         if(isset($data['field_key'])) foreach($data['field_key'] as $key=>$fieldKey) {
             if(isset($data['field_choices'][$key]))
                 $data['field_choices'][$key] = explode(',', $data['field_choices'][$key]);
 
-            $data['data']['fields'][$fieldKey] = [
+            $data['data']['fields'][$data['field_section'][$key]][$fieldKey] = [
                 'label' => $data['field_label'][$key],
                 'type' => $data['field_type'][$key],
                 'rules' => isset($data['field_rules'][$key]) ? $data['field_rules'][$key] : null,
                 'choices' => isset($data['field_choices'][$key]) ? $data['field_choices'][$key] : null,
                 'value' => isset($data['field_value'][$key]) ? $data['field_value'][$key] : null,
                 'help' => isset($data['field_help'][$key]) ? $data['field_help'][$key] : null,
-                'is_subsection' => $data['field_is_subsection'][$key],
-                'section' => $data['field_section'][$key]
+                'is_subsection' => $data['field_is_subsection'][$key]
             ];
         }
 

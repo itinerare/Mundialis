@@ -13,7 +13,7 @@
 
 <h2>Infobox</h2>
 
-<p>Fields in this section will be used to build a page's infobox, which displays basic at-a-glance information about the subject of the page.</p>
+<p>Fields in this section will be used to build a page's infobox, which displays basic at-a-glance information about the subject of the page. Fields for this section should expect content to be brief.</p>
 
 <div class="text-right mb-3">
     <a href="#" class="btn btn-outline-info" id="add-infobox">Add Field</a>
@@ -55,6 +55,10 @@
     @include('admin.form_builder._section_builder_row')
 </div>
 
+<div class="hide mb-2" id="widget-row">
+    @include('admin.form_builder._widget_builder_row')
+</div>
+
 <div class="hide mb-2" id="field-row">
     @include('admin.form_builder._field_builder_row')
 </div>
@@ -64,6 +68,6 @@
 @section('scripts')
 @parent
 
-@include('admin.form_builder._field_builder_js')
+@include('admin.form_builder._template_builder_js')
 
 @endsection
