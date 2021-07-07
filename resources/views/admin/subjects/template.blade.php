@@ -13,7 +13,7 @@
 
 <h2>Infobox</h2>
 
-<p>Fields in this section will be added to a page's infobox, which displays basic at-a-glance information about the subject of the page.</p>
+<p>Fields in this section will be used to build a page's infobox, which displays basic at-a-glance information about the subject of the page.</p>
 
 <div class="text-right mb-3">
     <a href="#" class="btn btn-outline-info" id="add-infobox">Add Field</a>

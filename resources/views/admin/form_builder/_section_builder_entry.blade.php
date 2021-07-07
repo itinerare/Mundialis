@@ -22,8 +22,10 @@
         </div>
         <div class="field-list">
             @if(isset($template->data['fields']))
-                @foreach($template->data['fields'] as $key=>$field)
-                    @include('admin.form_builder._field_builder_entry', ['key' => $key, 'field' => $field])
+                @foreach($template->data['fields'] as $fieldKey=>$field)
+                    @if($field['section'] == $key)
+                        @include('admin.form_builder._field_builder_entry', ['key' => $fieldKey, 'field' => $field])
+                    @endif
                 @endforeach
             @endif
         </div>
