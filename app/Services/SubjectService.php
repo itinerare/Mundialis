@@ -249,12 +249,13 @@ class SubjectService extends Service
     private function cascadeTemplateChanges($categories, $data)
     {
         // Recursively compare arrays
-        $data['changes']['added'] = $this->array_diff_recursive($data['data'], $data['old']);
-        $data['changes']['removed'] = $this->array_diff_recursive($data['old'], $data['data']);
+        $data['changes']['added'] = $this->diff_recursive($data['data'], $data['old']);
+        $data['changes']['removed'] = $this->diff_recursive($data['old'], $data['data']);
 
         // Perform operations on impacted categories
         foreach($categories as $key=>$category) {
             $categoryData[$key] = $category->data;
+
             // Perform any removals
             if(isset($data['changes']['removed'])) {
                 foreach($data['changes']['removed'] as $segment=>$items) {
@@ -262,10 +263,9 @@ class SubjectService extends Service
                         // If segment is nested, step down first
                         foreach($items as $section=>$sectionData) {
                             foreach($sectionData as $itemKey=>$item) {
-                                // Check to see if key exists in the array and
-                                // unset if so
-                                if(array_key_exists(($segment == 'widgets' ? $itemKey : $item), $category->data[$segment][$section]))
-                                    unset($categoryData[$key][$segment][$section][($segment == 'widgets' ? $itemKey : $item)]);
+                                // Check to see if key exists in the array and unset if so
+                                if(array_key_exists($itemKey, $category->data[$segment][$section]))
+                                    unset($categoryData[$key][$segment][$section][$itemKey]);
                             }
                         }
                     }
@@ -273,46 +273,16 @@ class SubjectService extends Service
                         // If segment is not nested, simply proceed
                         if(isset($data['changes']['removed'][$segment]) && $data['changes']['removed'][$segment])
                             foreach($items as $item) {
-                            // Check to see if key exists in the array and
-                            // unset if so
-                            if(array_key_exists($item, $category->data[$segment]))
-                                unset($categoryData[$key][$segment][$item]);
+                                // Check to see if key exists in the array and unset if so
+                                if(array_key_exists($item, $category->data[$segment]))
+                                    unset($categoryData[$key][$segment][$item]);
                             }
                     }
                 }
             }
 
-            // Perform any additions
-            if(isset($data['changes']['added'])) {
-                foreach($data['changes']['added'] as $segment=>$items) {
-                    if($segment == 'fields' || $segment == 'widgets') {
-                        // If segment is nested, step down first
-                        foreach($items as $section=>$sectionData) {
-                            foreach($sectionData as $itemKey=>$item) {
-                                // Check to see if the item should be inserted
-                                if(!isset($category->data[$segment][$section]) || !array_key_exists($item, $category->data[$segment][$section])) {
-                                    // If so, append it to the end of the array
-                                    if(!isset($categoryData[$key][$segment][$section]) || !array_key_exists($item, $categoryData[$key][$segment][$section]))
-                                        $categoryData[$key][$segment][$section][$itemKey] = $data['changes']['added'][$segment][$section][$itemKey];
-                                }
-
-                            }
-                        }
-                    }
-                    else {
-                        // If segment is not nested, simply proceed
-                        if(isset($data['changes']['added'][$segment]) && $data['changes']['added'][$segment])
-                            foreach($items as $itemKey=>$item) {
-                            // Check to see if the item should be inserted
-                                if(!array_key_exists($item, $category->data[$segment])) {
-                                    // If so, append it to the end of the array
-                                    if(!isset($categoryData[$key][$segment]) || !array_key_exists($item, $categoryData[$key][$segment]))
-                                        $categoryData[$key][$segment][$itemKey] = $data['changes']['added'][$segment][$itemKey];
-                                }
-                            }
-                    }
-                }
-            }
+            // Recursively perform any additions
+            $categoryData[$key] = array_replace_recursive($categoryData[$key], $data['changes']['added']);
 
             // Update the category
             $categoryData[$key] = json_encode($categoryData[$key]);

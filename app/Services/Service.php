@@ -236,40 +236,31 @@ abstract class Service {
         unlink($dir . '/' . $name);
     }
 
-    // Recursively compares arrays
-    // Taken from https://stackoverflow.com/questions/3876435/recursive-array-diff
-    public function array_diff_recursive($arr1, $arr2)
-    {
-        $outputDiff = [];
-
-        foreach ($arr1 as $key => $value)
-        {
-            //if the key exists in the second array, recursively call this function
-            //if it is an array, otherwise check if the value is in arr2
-            if (array_key_exists($key, $arr2))
-            {
-                if (is_array($value))
-                {
-                    $recursiveDiff = $this->array_diff_recursive($value, $arr2[$key]);
-
-                    if (count($recursiveDiff))
-                    {
-                        $outputDiff[$key] = $recursiveDiff;
-                    }
-                }
-                else if (!in_array($value, $arr2))
-                {
-                    $outputDiff[$key] = $value;
-                }
-            }
-            //if the key is not in the second array, check if the value is in
-            //the second array (this is a quirk of how array_diff works)
-            else if (!in_array($value, $arr2))
-            {
-                $outputDiff[$key] = $value;
+    /**
+     * Recursively compares two arrays.
+     * Taken from https://gist.github.com/jondlm/7709e54f84a3f1e1b67b
+     *
+     * @param  array            $array1
+     * @param  array            $array2
+     * @return array
+     */
+    public function diff_recursive($array1, $array2) {
+        $difference=array();
+        foreach($array1 as $key => $value) {
+            if(is_array($value) && isset($array2[$key])){
+                // it's an array and both have the key
+                $new_diff = $this->diff_recursive($value, $array2[$key]);
+                if( !empty($new_diff) )
+                    $difference[$key] = $new_diff;
+            } else if(is_string($value) && !in_array($value, $array2)) {
+                // the value is a string and it's not in array B
+                $difference[$key] = $value;
+            } else if(!is_numeric($key) && !array_key_exists($key, $array2)) {
+                // the key is not numberic and is missing from array B
+                $difference[$key] = $value;
             }
         }
-
-        return $outputDiff;
+        return $difference;
     }
+
 }
