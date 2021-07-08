@@ -18,6 +18,13 @@
 
 @include('admin.form_builder._template_builder_content', ['template' => $template])
 
+@if($template->id)
+    <div class="form-group">
+        {!! Form::checkbox('cascade_template', 1, 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+        {!! Form::label('cascade_template', 'Cascade Template Changes (Optional)', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, any changes made to this template will cascade to categories in this subject that have customized templates. <strong>This includes removing fields!</strong>') !!}
+    </div>
+@endif
+
 <div class="text-right">
     {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
 </div>

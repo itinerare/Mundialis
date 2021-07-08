@@ -35,9 +35,16 @@
     {!! Form::textarea('description', $category->description, ['class' => 'form-control wysiwyg']) !!}
 </div>
 
-<h2>Template</h2>
+<div class="form-group">
+    {!! Form::checkbox('populate_template', 1, 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+    {!! Form::label('populate_template', 'Populate Template (Optional)', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, this category\'s template information will be populated with any information from its\' subject\'s template. <strong>This will overwrite any current template information!</strong>') !!}
+</div>
 
-@include('admin.form_builder._template_builder_content', ['template' => $category])
+@if($category->id)
+    <h2>Template</h2>
+
+    @include('admin.form_builder._template_builder_content', ['template' => $category])
+@endif
 
 <div class="text-right">
     {!! Form::submit($category->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}

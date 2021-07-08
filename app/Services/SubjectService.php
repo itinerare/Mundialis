@@ -38,6 +38,67 @@ class SubjectService extends Service
             // Collect and record infobox and form fields
             $data = $this->processTemplateData($data);
 
+            // Check if changes should cascade, and if so, perform comparison
+            // and make updates as necessary
+            if($template && (isset($data['cascade_template']) && $data['cascade_template']) && $data['data'] != $template->data) {
+                // First find any impacted categories
+                $categories = $template->categories()->whereNotNull('data')->get();
+
+                // Collect the existing data for the template
+                $data['old'] = $template->data; $changes = [];
+                // Compare counts for each segment of the data to detect changes broadly
+                foreach($data['data'] as $segment=>$segmentData) {
+                    if(count($segmentData) != count($data['old'][$segment])) $changes[$segment] = $segmentData;
+                }
+                // Perform finer change detection
+                foreach($changes as $segment=>$segmentData)
+                    $data['changes']['removed'][$segment] = array_diff($data['old'][$segment], $data['data'][$segment]);
+                    $differences['added'][$segment] = array_diff($data['data'][$segment], $data['old'][$segment]);
+
+                // Record any additions' keys
+                foreach($differences['added'] as $segment=>$segmentData)
+                    foreach($segmentData as $key=>$item) {
+                        $data['changes']['added'][$segment][array_search($key, array_keys($data['data'][$segment]))] = $key;
+                    }
+
+                // Perform operations on impacted categories
+                foreach($categories as $key=>$category) {
+                    $categoryData[$key] = $category->data;
+                    // Perform any removals
+                    if(isset($data['changes']['removed']))
+                        foreach($data['changes']['removed'] as $segment=>$items)
+                        if(isset($data['changes']['removed'][$segment]) && $data['changes']['removed'][$segment])
+                            foreach($items as $item) {
+                            if(array_key_exists($item, $category->data[$segment]))
+                                unset($categoryData[$key][$segment][$item]);
+                        }
+                    // Perform any additions
+                    if(isset($data['changes']['added']))
+                        foreach($data['changes']['added'] as $segment=>$items)
+                        if(isset($data['changes']['added'][$segment]) && $data['changes']['added'][$segment])
+                            foreach($items as $itemKey=>$item) {
+                            // Check to see if the item should be inserted
+                            if(!array_key_exists($item, $category->data[$segment])) {
+                                $i = 0;
+                                foreach($categoryData[$key][$segment] as $catSegment=>$catItem) {
+                                    if($i == $itemKey) $catData[$key][$segment][$item] = $data['data'][$segment][$item];
+                                    $catData[$key][$segment][$catSegment] = $catItem;
+                                    $i++;
+                                }
+                                // If the item isn't present after attempting insertion,
+                                // append it to the end of the array
+                                if(!array_key_exists($item, $catData[$key][$segment]))
+                                    $catData[$key][$segment][$item] = $data['data'][$segment][$item];
+                                $categoryData[$key][$segment] = $catData[$key][$segment];
+                            }
+                        }
+                }
+
+                // Update the category
+                $categoryData[$key] = json_encode($categoryData[$key]);
+                $category->update(['data' => $categoryData[$key]]);
+            }
+
             // Encode data before saving either way, for convenience
             if(isset($data['data'])) $data['data'] = json_encode($data['data']);
             else $data['data'] = null;
@@ -71,6 +132,9 @@ class SubjectService extends Service
             // Record subject
             $data['subject'] = $subject;
 
+            if(isset($data['populate_template']) && $data['populate_template'])
+                $data['data'] = SubjectTemplate::where('subject', $subject)->first()->data;
+
             // Collect and record infobox and form fields
             $data = $this->processTemplateData($data);
 
@@ -103,6 +167,9 @@ class SubjectService extends Service
         try {
             // More specific validation
             if(SubjectCategory::where('name', $data['name'])->where('id', '!=', $category->id)->exists()) throw new \Exception("The name has already been taken.");
+
+            if(isset($data['populate_template']) && $data['populate_template'])
+                $data['data'] = $category->subjectTemplate->data;
 
             // Collect and record template information
             $data = $this->processTemplateData($data);

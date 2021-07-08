@@ -12,7 +12,7 @@ class SubjectCategory extends Model
      * @var array
      */
     protected $fillable = [
-        'subject', 'name', 'description', 'data'
+        'subject', 'name', 'parent_id', 'description', 'data'
     ];
 
     /**
@@ -75,6 +75,30 @@ class SubjectCategory extends Model
         RELATIONS
 
     **********************************************************************************************/
+
+    /**
+     * Get the template for this subject.
+     */
+    public function subjectTemplate()
+    {
+        return $this->belongsTo('App\Models\Subject\SubjectTemplate', 'subject', 'subject');
+    }
+
+    /**
+     * Get parent category of this category.
+     */
+    public function parent()
+    {
+        return $this->belongsTo('App\Models\Subject\SubjectCategory', 'parent_id');
+    }
+
+    /**
+     * Get child categories of this category.
+     */
+    public function children()
+    {
+        return $this->hasMany('App\Models\Subject\SubjectCategory', 'parent_id');
+    }
 
     /**
      * Get pages in this category.

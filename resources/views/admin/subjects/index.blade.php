@@ -21,6 +21,7 @@
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Parent Category</th>
                 <th></th>
             </tr>
         </thead>
@@ -30,6 +31,9 @@
                     <td>
                         <a class="fas fa-arrows-alt-v handle mr-3" href="#"></a>
                         {!! $category->name !!}
+                    </td>
+                    <td>
+                        {!! $category->parent ? $category->parent->name : '-' !!}
                     </td>
                     <td>
                     <td class="text-right">
