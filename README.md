@@ -14,6 +14,7 @@ Thus, this project was born out of a desire for a more efficient way to record w
 ## Features
 TBA
 - Support for multiple users with read and optional write permissions (note that this is explicitly **not** designed for many people, just a small group, e.g. friends.)
+- Page templates and template editing per-subject (people, places, things, etc) and per-category, including sub-categories, with optional selective change cascading from subject to categories and from categories to sub-categories (with optional recursive change cascading)-- that is, only new changes get applied, kinda like git but for page templates. They can be applied to all categories in a subject, all sub-categories of a category, or those and all *their* sub-categories ad infinitum. Forms for page editing are constructed from these templates, as well as pages themselves.
 
 ## Setup
 TBA
