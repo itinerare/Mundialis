@@ -88,8 +88,10 @@ class SubjectService extends Service
             $data = $this->processTemplateData($data);
 
             // Overwrite with data from subject template if necessary
-            if(isset($data['populate_template']) && $data['populate_template'])
-                $data['data'] = SubjectTemplate::where('subject', $subject)->first()->data;
+            if(isset($data['populate_template']) && $data['populate_template']) {
+                if(isset($data['parent_id'])) $parent = SubjectCategory::find($data['parent_id']);
+                $data['data'] = isset($parent) && $parent ? $parent->data : SubjectTemplate::where('subject', $subject)->first()->data;
+            }
 
             // Encode data before saving either way, for convenience
             if(isset($data['data'])) $data['data'] = json_encode($data['data']);
@@ -126,7 +128,26 @@ class SubjectService extends Service
 
             // Overwrite with data from subject template if necessary
             if(isset($data['populate_template']) && $data['populate_template'])
-                $data['data'] = $category->subjectTemplate->data;
+                $data['data'] = $category->parent ? $category->parent->data : $category->subjectTemplate->data;
+
+            // Check if changes should cascade, and if so, perform comparison
+            // and make updates as necessary
+            if((isset($data['cascade_template']) && $data['cascade_template']) && $data['data'] != $category->data) {
+                // Collect existing template data
+                $data['old'] = $category->data;
+
+                // Find any impacted categories
+                $categories = $category->children()->whereNotNull('data')->get();
+
+                // Check if changes should be cascaded recursively (to the childrens' children)
+                if(isset($data['cascade_recursively']) && $data['cascade_recursively']) {
+                    $this->cascadeTemplateChangesRecursively($categories, $data);
+                }
+                else {
+                    // Cascade changes to impacted categories
+                    $this->cascadeTemplateChanges($categories, $data);
+                }
+            }
 
             // Encode data before saving either way, for convenience
             if(isset($data['data'])) $data['data'] = json_encode($data['data']);
@@ -189,6 +210,30 @@ class SubjectService extends Service
                 'help' => isset($data['field_help'][$key]) ? $data['field_help'][$key] : null,
                 'is_subsection' => $data['field_is_subsection'][$key]
             ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * Cascades template changes.
+     *
+     * @param Illuminate\Database\Eloquent\Collection    $categories
+     * @param  array                                     $data
+     * @return array
+     */
+    private function cascadeTemplateChangesRecursively($categories, $data)
+    {
+        $this->cascadeTemplateChanges($categories, $data);
+
+        foreach($categories as $category) {
+            if($category->children()->count()) {
+                // Find any impacted categories
+                $categories = $category->children()->whereNotNull('data')->get();
+
+                // Cascade changes to impacted categories
+                $this->cascadeTemplateChangesRecursively($categories, $data);
+            }
         }
 
         return $data;

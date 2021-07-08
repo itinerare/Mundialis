@@ -37,13 +37,28 @@
 
 <div class="form-group">
     {!! Form::checkbox('populate_template', 1, 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-    {!! Form::label('populate_template', 'Populate Template (Optional)', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, this category\'s template information will be populated with any information from its\' subject\'s template. <strong>This will overwrite any current template information!</strong>') !!}
+    {!! Form::label('populate_template', 'Populate Template (Optional)', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, this category\'s template information will be populated with any information from its\' parent\'s (or subject\'s) template. <strong>This will overwrite any current template information!</strong>') !!}
 </div>
 
 @if($category->id)
     <h2>Template</h2>
 
     @include('admin.form_builder._template_builder_content', ['template' => $category])
+
+    <div class="row">
+        <div class="col-md">
+            <div class="form-group">
+                {!! Form::checkbox('cascade_template', 1, 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                {!! Form::label('cascade_template', 'Cascade Template Changes (Optional)', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, any changes made to this category\'s template will cascade to its sub-categories that have customized templates. <strong>This includes removing elements!</strong>') !!}
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-group">
+                {!! Form::checkbox('cascade_recursively', 1, 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                {!! Form::label('cascade_recursively', 'Cascade Changes Recursively (Optional)', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this and cascading changes are turned on, changes will cascade recursively. <strong>This includes removing elements!</strong>') !!}
+            </div>
+        </div>
+    </div>
 @endif
 
 <div class="text-right">
