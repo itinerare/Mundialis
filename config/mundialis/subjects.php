@@ -30,7 +30,7 @@ return [
     ],
 
     'concepts' => [
-        'name' => 'People'
+        'name' => 'Concepts'
     ],
 
     'time' => [
