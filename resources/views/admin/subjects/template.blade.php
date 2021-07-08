@@ -12,7 +12,7 @@
     </div>
 </h1>
 
-<p>This is the overall template that will be used for this subject's pages. Categories' templates can be further customized, but it's recommended to make smart use of this to minimize as much redundancy as possible. <strong>Note that removing fields from this template will hide them/inputted information from any pages using them, and will cause any inputted information to be deleted on the next edit to the page.</strong> Re-adding the field with the same key and information will cause it to reappear.</p>
+<p>This is the overall template that will be used for this subject's pages. Categories' templates can be further customized, but it's recommended to make smart use of this to minimize as much redundancy as possible.</p>
 
 {!! Form::open(['url' => 'admin/data/'.$subject['key'].'/edit']) !!}
 
