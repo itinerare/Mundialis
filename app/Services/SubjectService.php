@@ -5,6 +5,7 @@ use App\Services\Service;
 use DB;
 
 use App\Models\Subject\SubjectTemplate;
+use App\Models\Subject\SubjectCategory;
 
 class SubjectService extends Service
 {
@@ -30,15 +31,12 @@ class SubjectService extends Service
         DB::beginTransaction();
 
         try {
+            // Record subject
+            $data['subject'] = $subject;
             $template = SubjectTemplate::where('subject', $subject)->first();
 
-            // Collect and record sections
-            if(isset($data['section_key'])) foreach($data['section_key'] as $key=>$section) {
-                $data['data']['sections'][strtolower($section)] = $data['section_name'][$key];
-            }
-
             // Collect and record infobox and form fields
-            $data = $this->processFormFields($data);
+            $data = $this->processTemplateData($data);
 
             // Encode data before saving either way, for convenience
             if(isset($data['data'])) $data['data'] = json_encode($data['data']);
@@ -46,10 +44,7 @@ class SubjectService extends Service
 
             // Either create or update template data
             if(!$template)
-                $template = SubjectTemplate::create([
-                    'subject' => $subject,
-                    'data' => $data['data']
-                ]);
+                $template = SubjectTemplate::create($data);
             else
                 $template->update($data);
 
@@ -61,13 +56,84 @@ class SubjectService extends Service
     }
 
     /**
-     * Processes form field information.
+     * Creates a category.
+     *
+     * @param  array                         $data
+     * @param  \App\Models\User\User         $user
+     * @param  string                        $subject
+     * @return bool|\App\Models\SubjectCategory
+     */
+    public function createCategory($data, $user, $subject)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Record subject
+            $data['subject'] = $subject;
+
+            // Collect and record infobox and form fields
+            $data = $this->processTemplateData($data);
+
+            // Encode data before saving either way, for convenience
+            if(isset($data['data'])) $data['data'] = json_encode($data['data']);
+            else $data['data'] = null;
+
+            // Create category
+            $category = SubjectCategory::create($data);
+
+            return $this->commitReturn($category);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Updates a category.
+     *
+     * @param  \App\Models\Gallery\Category   $category
+     * @param  array                          $data
+     * @param  \App\Models\User\User          $user
+     * @return \App\Models\Gallery\Project|bool
+     */
+    public function updateCategory($category, $data, $user)
+    {
+        DB::beginTransaction();
+
+        try {
+            // More specific validation
+            if(SubjectCategory::where('name', $data['name'])->where('id', '!=', $category->id)->exists()) throw new \Exception("The name has already been taken.");
+
+            // Collect and record template information
+            $data = $this->processTemplateData($data);
+
+            // Encode data before saving either way, for convenience
+            if(isset($data['data'])) $data['data'] = json_encode($data['data']);
+            else $data['data'] = null;
+
+            // Update category
+            $category->update($data);
+
+            return $this->commitReturn($category);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Processes template information.
      *
      * @param  array              $data
      * @return array
      */
-    private function processFormFields($data)
+    private function processTemplateData($data)
     {
+        // Collect and record sections if present
+        if(isset($data['section_key'])) foreach($data['section_key'] as $key=>$section) {
+            $data['data']['sections'][strtolower($section)] = $data['section_name'][$key];
+        }
+
         // Format and record infobox fields if present
         if(isset($data['infobox_key'])) foreach($data['infobox_key'] as $key=>$fieldKey) {
             if(isset($data['infobox_choices'][$key]))

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Data;
 use Config;
 use Auth;
 use App\Models\Subject\SubjectTemplate;
-//use App\Models\Subject\SubjectCategory;
+use App\Models\Subject\SubjectCategory;
 
 use App\Services\SubjectService;
 
@@ -36,12 +36,12 @@ class SubjectController extends Controller
     public function getSubjectIndex($subject)
     {
         if(null == Config::get('mundialis.subjects.'.$subject)) abort(404);
-        $name = null !== Config::get('mundialis.subjects.'.$subject.'.name') ? Config::get('mundialis.subjects.'.$subject.'.name') : ucfirst($subject);
+        $subjectKey = $subject; $subject = Config::get('mundialis.subjects.'.$subject);
+        $subject['key'] = $subjectKey;
 
         return view('admin.subjects.index', [
             'subject' => $subject,
-            'subjectName' => $name,
-            'categories' => []
+            'categories' => SubjectCategory::where('subject', $subject['key'])->get()
         ]);
     }
 
@@ -54,13 +54,13 @@ class SubjectController extends Controller
     public function getEditTemplate($subject)
     {
         if(null == Config::get('mundialis.subjects.'.$subject)) abort(404);
-        $name = null !== Config::get('mundialis.subjects.'.$subject.'.name') ? Config::get('mundialis.subjects.'.$subject.'.name') : ucfirst($subject);
+        $subjectKey = $subject; $subject = Config::get('mundialis.subjects.'.$subject);
+        $subject['key'] = $subjectKey;
 
-        $template = SubjectTemplate::where('subject', $subject)->first();
+        $template = SubjectTemplate::where('subject', $subject['key'])->first();
 
         return view('admin.subjects.template', [
             'subject' => $subject,
-            'subjectName' => $name,
             'template' => $template ? $template : new SubjectTemplate
         ]);
     }
@@ -101,33 +101,34 @@ class SubjectController extends Controller
     public function getCreateCategory($subject)
     {
         if(null == Config::get('mundialis.subjects.'.$subject)) abort(404);
-        $name = null !== Config::get('mundialis.subjects.'.$subject.'.name') ? Config::get('mundialis.subjects.'.$subject.'.name') : ucfirst($subject);
+        $subjectKey = $subject; $subject = Config::get('mundialis.subjects.'.$subject);
+        $subject['key'] = $subjectKey;
 
         return view('admin.subjects.create_edit_category', [
             'subject' => $subject,
-            'subjectName' => $name,
-            'category' => new SubjectCategory
+            'category' => new SubjectCategory,
+            'categoryOptions' => SubjectCategory::where('subject', $subject['key'])->pluck('name', 'id')->toArray()
         ]);
     }
 
     /**
      * Shows the edit category page.
      *
-     * @param string     $subject
      * @param  int       $id
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditCategory($subject, $id)
+    public function getEditCategory($id)
     {
-        if(null == Config::get('mundialis.subjects.'.$subject)) abort(404);
-        $name = null !== Config::get('mundialis.subjects.'.$subject.'.name') ? Config::get('mundialis.subjects.'.$subject.'.name') : ucfirst($subject);
+        $category = SubjectCategory::find($id);
+        if(!$category) abort(404);
 
-        $project = Project::find($id);
-        if(!$project) abort(404);
-        return view('admin.subjects.create_edit_project', [
+        if(null == Config::get('mundialis.subjects.'.$category->subject)) abort(404);
+        $subject = Config::get('mundialis.subjects.'.$category->subject); $subject['key'] = $category->subject;
+
+        return view('admin.subjects.create_edit_category', [
             'subject' => $subject,
-            'subjectName' => $name,
-            'category' => $category
+            'category' => $category,
+            'categoryOptions' => SubjectCategory::where('subject', $subject['key'])->where('id', '!=', $category->id)->pluck('name', 'id')->toArray()
         ]);
     }
 
@@ -136,22 +137,23 @@ class SubjectController extends Controller
      *
      * @param  \Illuminate\Http\Request     $request
      * @param  App\Services\SubjectService  $service
-     * @param string                        $subject
-     * @param  int|null                     $id
+     * @param string|int                    $subject
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCreateEditCategory(Request $request, SubjectService $service, $subject, $id = null)
+    public function postCreateEditCategory(Request $request, SubjectService $service, $subject)
     {
-        $id ? $request->validate(Project::$updateRules) : $request->validate(Project::$createRules);
+        is_numeric($subject) ? $request->validate(SubjectCategory::$updateRules + SubjectCategory::$templateRules) : $request->validate(SubjectCategory::$createRules + SubjectCategory::$templateRules);
         $data = $request->only([
-            'name', 'description', 'is_visible'
+            'name', 'description', 'section_key', 'section_name',
+            'infobox_key', 'infobox_type', 'infobox_label', 'infobox_rules', 'infobox_choices', 'infobox_value', 'infobox_help', 'widget_key', 'widget_section',
+            'field_key', 'field_type', 'field_label', 'field_rules', 'field_choices', 'field_value', 'field_help', 'field_is_subsection', 'field_section'
         ]);
-        if($id && $service->updateProject(Project::find($id), $data, Auth::user(), $subject)) {
+        if(is_numeric($subject) && $service->updateCategory(SubjectCategory::find($subject), $data, Auth::user())) {
             flash('Category updated successfully.')->success();
         }
-        else if (!$id && $project = $service->createProject($data, Auth::user(), $subject)) {
+        else if (!is_numeric($subject) && $category = $service->createCategory($data, Auth::user(), $subject)) {
             flash('Category created successfully.')->success();
-            return redirect()->to('admin/data/projects/edit/'.$project->id);
+            return redirect()->to('admin/data/edit/'.$category->id);
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
@@ -162,18 +164,15 @@ class SubjectController extends Controller
     /**
      * Gets the category deletion modal.
      *
-     * @param string     $subject
      * @param  int       $id
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getDeleteCategory($subject, $id)
+    public function getDeleteCategory($id)
     {
-        if(null == Config::get('mundialis.subjects.'.$subject)) abort(404);
         $category = SubjectCategory::find($id);
 
         return view('admin.subjects._delete_category', [
-            'subject' => $subject,
-            'category' => $category,
+            'category' => $category
         ]);
     }
 
@@ -182,11 +181,10 @@ class SubjectController extends Controller
      *
      * @param  \Illuminate\Http\Request     $request
      * @param  App\Services\SubjectService  $service
-     * @param string                        $subject
      * @param  int                          $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postDeleteCategory(Request $request, SubjectService $service, $subject, $id)
+    public function postDeleteCategory(Request $request, SubjectService $service, $id)
     {
         if($id && $service->deleteCategory(SubjectCategory::find($id), $subject)) {
             flash('Category deleted successfully.')->success();

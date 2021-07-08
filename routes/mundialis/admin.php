@@ -21,13 +21,13 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data'], function() {
     Route::get('{subject}', 'SubjectController@getSubjectIndex');
     Route::get('{subject}/edit', 'SubjectController@getEditTemplate');
     Route::post('{subject}/edit', 'SubjectController@postEditTemplate');
-
     Route::get('{subject}/create', 'SubjectController@getCreateCategory');
-    Route::get('{subject}/edit/{id}', 'SubjectController@getEditCategory');
-    Route::get('{subject}/delete/{id}', 'SubjectController@getDeleteCategory');
     Route::post('{subject}/create', 'SubjectController@postCreateEditCategory');
-    Route::post('{subject}/edit/{id}', 'SubjectController@postCreateEditCategory');
-    Route::post('{subject}/delete/{id}', 'SubjectController@postDeleteCategory');
+
+    Route::get('categories/edit/{id}', 'SubjectController@getEditCategory');
+    Route::get('categories/delete/{id}', 'SubjectController@getDeleteCategory');
+    Route::post('categories/edit/{id?}', 'SubjectController@postCreateEditCategory');
+    Route::post('categories/delete/{id}', 'SubjectController@postDeleteCategory');
     Route::post('{subject}/sort', 'SubjectController@postSortCategories');
 });
 

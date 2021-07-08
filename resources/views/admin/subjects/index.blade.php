@@ -1,17 +1,17 @@
 @extends('admin.layout')
 
-@section('admin-title') {{ $subjectName }} @endsection
+@section('admin-title') {{ $subject['name'] }} @endsection
 
 @section('admin-content')
-{!! breadcrumbs(['Admin Panel' => 'admin', $subjectName => 'admin/data/'.$subject]) !!}
+{!! breadcrumbs(['Admin Panel' => 'admin', $subject['name'] => 'admin/data/'.$subject['key']]) !!}
 
-<h1>{{ $subjectName }}</h1>
+<h1>{{ $subject['name'] }}</h1>
 
-<p>This is a list of categories that will be used to sort pages.</p>
+<p>This is a list of categories that will be used to organize pages. Categories can also have their own template, which will be used for pages created within them.</p>
 
 <div class="text-right mb-3">
-    <a class="btn btn-primary" href="{{ url('admin/data/'.$subject.'/edit') }}"><i class="fas fa-edit"></i> Edit Template</a>
-    <a class="btn btn-primary" href="{{ url('admin/data/'.$subject.'/create') }}"><i class="fas fa-plus"></i> Create New Category</a>
+    <a class="btn btn-primary" href="{{ url('admin/data/'.$subject['key'].'/edit') }}"><i class="fas fa-edit"></i> Edit Template</a>
+    <a class="btn btn-primary" href="{{ url('admin/data/'.$subject['key'].'/create') }}"><i class="fas fa-plus"></i> Create New Category</a>
 </div>
 
 @if(!count($categories))
@@ -21,22 +21,19 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Visibility</th>
                 <th></th>
             </tr>
         </thead>
         <tbody id="sortable" class="sortable">
             @foreach($categories as $category)
-                <tr class="sort-item" data-id="{{ $project->id }}">
+                <tr class="sort-item" data-id="{{ $category->id }}">
                     <td>
                         <a class="fas fa-arrows-alt-v handle mr-3" href="#"></a>
                         {!! $category->name !!}
                     </td>
                     <td>
-                        {!! $category->is_visible ? '<i class="text-success fas fa-check"></i>' : '-' !!}
-                    </td>
                     <td class="text-right">
-                        <a href="{{ url('admin/data/'.$subject.'/edit/'.$category->id) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ url('admin/data/categories/edit/'.$category->id) }}" class="btn btn-primary">Edit</a>
                     </td>
                 </tr>
             @endforeach
@@ -44,7 +41,7 @@
 
     </table>
     <div class="mb-4">
-        {!! Form::open(['url' => 'admin/data/'.$subject.'/sort']) !!}
+        {!! Form::open(['url' => 'admin/data/'.$subject['key'].'/sort']) !!}
         {!! Form::hidden('sort', '', ['id' => 'sortableOrder']) !!}
         {!! Form::submit('Save Order', ['class' => 'btn btn-primary']) !!}
         {!! Form::close() !!}

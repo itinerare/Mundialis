@@ -14,11 +14,11 @@ return [
     */
 
     'people' => [
-        ''
+        'name' => 'People'
     ],
 
     'places' => [
-        ''
+        'name' => 'Places'
     ],
 
     'species' => [
@@ -26,7 +26,7 @@ return [
     ],
 
     'things' => [
-        ''
+        'name' => 'Things'
     ],
 
     'concepts' => [
@@ -38,7 +38,7 @@ return [
     ],
 
     'language' => [
-        ''
+        'name' => 'Language'
     ],
 
     'misc' => [
