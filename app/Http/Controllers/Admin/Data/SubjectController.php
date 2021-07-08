@@ -41,7 +41,7 @@ class SubjectController extends Controller
 
         return view('admin.subjects.index', [
             'subject' => $subject,
-            'categories' => SubjectCategory::where('subject', $subject['key'])->get()
+            'categories' => SubjectCategory::where('subject', $subject['key'])->orderBy('sort', 'DESC')->get()
         ]);
     }
 

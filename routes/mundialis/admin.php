@@ -28,7 +28,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data'], function() {
     Route::get('categories/delete/{id}', 'SubjectController@getDeleteCategory');
     Route::post('categories/edit/{id?}', 'SubjectController@postCreateEditCategory');
     Route::post('categories/delete/{id}', 'SubjectController@postDeleteCategory');
-    Route::post('{subject}/sort', 'SubjectController@postSortCategories');
+    Route::post('{subject}/sort', 'SubjectController@postSortCategory');
 });
 
 /*

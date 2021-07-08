@@ -164,6 +164,32 @@ class SubjectService extends Service
     }
 
     /**
+     * Sorts category order.
+     *
+     * @param  array   $data
+     * @param  string  $subject
+     * @return bool
+     */
+    public function sortCategory($data, $subject)
+    {
+        DB::beginTransaction();
+
+        try {
+            // explode the sort array and reverse it since the order is inverted
+            $sort = array_reverse(explode(',', $data));
+
+            foreach($sort as $key => $s) {
+                SubjectCategory::where('subject', $subject)->where('id', $s)->update(['sort' => $key]);
+            }
+
+            return $this->commitReturn(true);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
      * Processes template information.
      *
      * @param  array              $data
