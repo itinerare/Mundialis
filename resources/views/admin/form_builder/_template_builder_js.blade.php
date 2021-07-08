@@ -64,6 +64,7 @@
                 $clone.find('.field-section').attr('value', $(this).attr("value"));
                 attachFieldTypeListener($clone.find('.form-field-type'));
             });
+            attachFieldTypeListener(node.find('.form-field-type'));
 
             node.find('.add-widget').on('click', function(e) {
                 e.preventDefault();
@@ -78,12 +79,18 @@
             });
         }
 
-        $('.field-list-entry').each(function(index) {
-            attachFieldTypeListener($(this).find('.form-field-type'));
-        });
+        $('.remove-field').on('click', function(e) {
+            e.preventDefault();
+            removeFieldRow($(this));
+        })
         function removeFieldRow($trigger) {
             $trigger.parent().parent().remove();
         }
+
+        $('.remove-widget').on('click', function(e) {
+            e.preventDefault();
+            removeWidgetRow($(this));
+        })
         function removeWidgetRow($trigger) {
             $trigger.parent().parent().remove();
         }
