@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d52ed92f0360e044e5b882853d9068a1",
+    "content-hash": "67aa4c803fc8eddb0aa731f8362d7646",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -6013,6 +6013,80 @@
                 "source": "https://github.com/laravel/sail"
             },
             "time": "2021-07-06T16:57:00+00:00"
+        },
+        {
+            "name": "marcocesarato/php-conventional-changelog",
+            "version": "1.10.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marcocesarato/php-conventional-changelog.git",
+                "reference": "ec3a4b6df15af22967e2093299def52246ec9bcd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marcocesarato/php-conventional-changelog/zipball/ec3a4b6df15af22967e2093299def52246ec9bcd",
+                "reference": "ec3a4b6df15af22967e2093299def52246ec9bcd",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.1.3",
+                "symfony/console": "^4 || ^5"
+            },
+            "require-dev": {
+                "brainmaestro/composer-git-hooks": "^2.8",
+                "friendsofphp/php-cs-fixer": "^2.18"
+            },
+            "bin": [
+                "conventional-changelog"
+            ],
+            "type": "library",
+            "extra": {
+                "hooks": {
+                    "pre-commit": "composer fix-cs",
+                    "pre-push": "composer check-cs",
+                    "post-merge": "composer install"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ConventionalChangelog\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Cesarato",
+                    "email": "cesarato.developer@gmail.com"
+                }
+            ],
+            "description": "Generate changelogs and release notes from a project's commit messages and metadata and automate versioning with semver.org and conventionalcommits.org",
+            "keywords": [
+                "changelog",
+                "commit",
+                "commits",
+                "convention",
+                "conventional",
+                "conventional-changelog",
+                "conventional-changelog-preset",
+                "conventional-commit",
+                "conventional-commits",
+                "conventionalcommits",
+                "generation",
+                "git",
+                "history",
+                "php",
+                "readme",
+                "tag"
+            ],
+            "support": {
+                "issues": "https://github.com/marcocesarato/php-conventional-changelog/issues",
+                "source": "https://github.com/marcocesarato/php-conventional-changelog/tree/v1.10.7"
+            },
+            "time": "2021-05-15T11:48:32+00:00"
         },
         {
             "name": "mockery/mockery",
