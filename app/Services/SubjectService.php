@@ -361,15 +361,12 @@ class SubjectService extends Service
         DB::beginTransaction();
 
         try {
-            // Remove divisions not present in the form data
-            TimeDivision::whereNotIn('name', $data['name'])->delete();
-
             // Process each entered division
             foreach($data['name'] as $key=>$name) {
                 // More specific validation
                 foreach($data['name'] as $subKey=>$subName) if($subName == $name && $subKey != $key) throw new \Exception("The name has already been taken.");
 
-                $division = TimeDivision::where('name', $name)->first();
+                if(isset($data['id'][$key])) $division = TimeDivision::find($data['id'][$key]);
 
                 // Assemble data
                 $data[$key] = [
@@ -397,6 +394,9 @@ class SubjectService extends Service
                     TimeDivision::where('id', $s)->update(['sort' => $key]);
                 }
             }
+
+            // Remove divisions not present in the form data
+            TimeDivision::whereNotIn('name', $data['name'])->delete();
 
             return $this->commitReturn($divisions);
         } catch(\Exception $e) {

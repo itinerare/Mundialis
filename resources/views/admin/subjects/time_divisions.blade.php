@@ -32,6 +32,7 @@
                 <tr class="sort-item" data-id="{{ $division->id }}">
                     <td class="d-flex">
                         <a class="fas fa-arrows-alt-v handle mr-3" href="#"></a>
+                        {!! Form::hidden('id[]', $division->id, ['class' => 'form-control']) !!}
                         {!! Form::text('name[]', $division->name, ['class' => 'form-control']) !!}
                     </td>
                     <td>

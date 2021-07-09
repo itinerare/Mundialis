@@ -248,7 +248,7 @@ class SubjectController extends Controller
         $request->validate(TimeDivision::$rules);
 
         $data = $request->only([
-            'name', 'abbreviation', 'unit', 'use_for_dates', 'sort'
+            'id', 'name', 'abbreviation', 'unit', 'use_for_dates', 'sort'
         ]);
         if($service->editTimeDivisions($data, Auth::user())) {
             flash('Divisions updated successfully.')->success();
