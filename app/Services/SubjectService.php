@@ -226,7 +226,10 @@ class SubjectService extends Service
     {
         // Collect and record sections if present
         if(isset($data['section_key'])) foreach($data['section_key'] as $key=>$section) {
-            $data['data']['sections'][strtolower($section)] = $data['section_name'][$key];
+            $data['data']['sections'][strtolower($section)] = [
+                'name' => $data['section_name'][$key],
+                'subject' => $data['section_subject'][$key]
+            ];
         }
 
         // Format and record infobox fields if present
@@ -312,7 +315,7 @@ class SubjectService extends Service
             // Perform any removals
             if(isset($data['changes']['removed'])) {
                 foreach($data['changes']['removed'] as $segment=>$items) {
-                    if($segment == 'fields' || $segment == 'widgets') {
+                    if($segment == 'sections' || $segment == 'fields' || $segment == 'widgets') {
                         // If segment is nested, step down first
                         foreach($items as $section=>$sectionData) {
                             foreach($sectionData as $itemKey=>$item) {
@@ -320,6 +323,8 @@ class SubjectService extends Service
                                 if(array_key_exists($itemKey, $category->data[$segment][$section]))
                                     unset($categoryData[$key][$segment][$section][$itemKey]);
                             }
+                            // Check for empty sections and if so remove them
+                            if($segment == 'sections' && isset($categoryData[$key][$segment][$section]) && $categoryData[$key][$segment][$section] == []) unset($categoryData[$key][$segment][$section]);
                         }
                     }
                     else {

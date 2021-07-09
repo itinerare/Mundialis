@@ -11,7 +11,14 @@
             <div class="col-md">
                 <div class="form-group">
                     {!! Form::label('Section Name') !!}
-                    {!! Form::text('section_name[]', $name, ['class' => 'form-control', 'placeholder' => 'Section name/header']) !!}
+                    {!! Form::text('section_name[]', $section['name'], ['class' => 'form-control', 'placeholder' => 'Section name/header']) !!}
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    {!! Form::label('Focus Subject (Optional)') !!}
+                    @php $configSubjects = Config::get('mundialis.subjects'); foreach($configSubjects as $subject=>$values) $subjects[$subject] = $values['name']; @endphp
+                    {!! Form::select('section_subject[]', $subjects, isset($section['subject']) ? $section['subject'] : null, ['class' => 'form-control form-field-type', 'placeholder' => 'Select a subject; this allows relating the subject\'s page(s) when editing a page']) !!}
                 </div>
             </div>
         </div>
