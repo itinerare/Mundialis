@@ -12,7 +12,7 @@ class TimeDivision extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'abbreviation', 'unit'
+        'name', 'abbreviation', 'unit', 'use_for_dates'
     ];
 
     /**

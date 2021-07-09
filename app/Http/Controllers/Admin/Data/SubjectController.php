@@ -42,7 +42,7 @@ class SubjectController extends Controller
         $subjectKey = $subject; $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
-        return view('admin.subjects.index', [
+        return view('admin.subjects.subject', [
             'subject' => $subject,
             'categories' => SubjectCategory::where('subject', $subject['key'])->orderBy('sort', 'DESC')->get()
         ]);
@@ -248,7 +248,7 @@ class SubjectController extends Controller
         $request->validate(TimeDivision::$rules);
 
         $data = $request->only([
-            'name', 'abbreviation', 'unit', 'sort'
+            'name', 'abbreviation', 'unit', 'use_for_dates', 'sort'
         ]);
         if($service->editTimeDivisions($data, Auth::user())) {
             flash('Divisions updated successfully.')->success();

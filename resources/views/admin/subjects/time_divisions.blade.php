@@ -12,16 +12,18 @@
     </div>
 </h1>
 
-<p>These are the divisions of time that will be used for your site and when creating and editing events. Feel free to be as narrow or as broad in focus as suits your project. Setting these is semi-optional; if you do not specify any divisions of time, you will be able to specify only the year for any events. Once created, divisions can be sorted. If divisions are set, they will be displayed along with other basic information on your project's timeframe and events.</p>
+<p>These are the divisions of time that will be used for your site and when creating and editing events. Feel free to be as narrow or as broad in focus as suits your project. Setting these is semi-optional; if you do not specify any divisions of time, you will be able to specify only the year for any events. Once created, divisions can be sorted; they should be sorted from largest to smallest. If divisions are set, they will be displayed along with other basic information on your project's timeframe and events. It's recommended to have the largest division of time correspond to a year at most.</p>
 
 {!! Form::open(['url' => 'admin/data/time/divisions']) !!}
 
 <table class="table table-sm division-table">
     <thead>
         <tr>
-            <th width="40%">Name {!! add_help('The division\'s name.') !!}</th>
-            <th width="33%">Abbreviation (Optional) {!! add_help('e.g. \'min\' for minute.') !!}</th>
+            <th width="30%">Name {!! add_help('The division\'s name.') !!}</th>
+            <th width="25%">Abbreviation (Optional) {!! add_help('e.g. \'min\' for minute.') !!}</th>
             <th>Unit (Optional) {!! add_help('The amount of the division that are in the next up, e.g. 24 for hours.') !!}</th>
+            <th>Use for Dates {!! add_help('Whether or not the division should be used when entering dates.') !!}</th>
+            <th></th>
         </tr>
     </thead>
     <tbody id="sortable" class="sortable division-list">
@@ -37,6 +39,12 @@
                     </td>
                     <td>
                         {!! Form::number('unit[]', $division->unit, ['class' => 'form-control']) !!}
+                    </td>
+                    <td>
+                        {!! Form::checkbox('use_for_dates['.$division->id.']', 1, $division->use_for_dates, ['class' => 'form-control']) !!}
+                    </td>
+                    <td>
+                        <a href="#" class="float-right remove-division btn btn-danger mb-2">×</a>
                     </td>
                 </tr>
             @endforeach
@@ -69,6 +77,11 @@
             </td>
             <td>
                 {!! Form::number('unit[]', null, ['class' => 'form-control']) !!}
+            </td>
+            <td>
+            </td>
+            <td>
+                <a href="#" class="float-right remove-division btn btn-danger mb-2">×</a>
             </td>
         </tr>
     </table>

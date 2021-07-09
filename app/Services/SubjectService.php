@@ -375,7 +375,8 @@ class SubjectService extends Service
                 $data[$key] = [
                     'name' => $data['name'][$key],
                     'abbreviation' => isset($data['abbreviation'][$key]) ? $data['abbreviation'][$key] : null,
-                    'unit' => isset($data['unit'][$key]) ? $data['unit'][$key] : null
+                    'unit' => isset($data['unit'][$key]) ? $data['unit'][$key] : null,
+                    'use_for_dates' => $division && (isset($data['use_for_dates'][$division->id]) && $data['use_for_dates'][$division->id]) ? 1 : 0
                 ];
 
                 // Create or update division data
