@@ -4,7 +4,7 @@ namespace App\Models\Subject;
 
 use App\Models\Model;
 
-class SubjectCategory extends Model
+class TimeChronology extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,7 +12,7 @@ class SubjectCategory extends Model
      * @var array
      */
     protected $fillable = [
-        'subject', 'name', 'parent_id', 'description', 'data'
+        'parent_id', 'name', 'abbreviation', 'description'
     ];
 
     /**
@@ -20,7 +20,7 @@ class SubjectCategory extends Model
      *
      * @var string
      */
-    protected $table = 'subject_categories';
+    protected $table = 'time_chronology';
 
     /**
      * Whether the model contains timestamps to be saved and updated.
@@ -30,16 +30,17 @@ class SubjectCategory extends Model
     public $timestamps = false;
 
     /**
-     * Validation rules for category creation.
+     * Validation rules for chronology creation.
      *
      * @var array
      */
     public static $createRules = [
-        'name' => 'required|unique:subject_categories'
+        'name' => 'required|unique:time_chronology',
+        'abbreviation' => 'nullable|unique:time_chronology'
     ];
 
     /**
-     * Validation rules for category updating.
+     * Validation rules for chronology updating.
      *
      * @var array
      */
@@ -54,19 +55,11 @@ class SubjectCategory extends Model
     **********************************************************************************************/
 
     /**
-     * Get the template for this subject.
-     */
-    public function subjectTemplate()
-    {
-        return $this->belongsTo('App\Models\Subject\SubjectTemplate', 'subject', 'subject');
-    }
-
-    /**
      * Get parent category of this category.
      */
     public function parent()
     {
-        return $this->belongsTo('App\Models\Subject\SubjectCategory', 'parent_id');
+        return $this->belongsTo('App\Models\Subject\TimeChronology', 'parent_id');
     }
 
     /**
@@ -74,15 +67,7 @@ class SubjectCategory extends Model
      */
     public function children()
     {
-        return $this->hasMany('App\Models\Subject\SubjectCategory', 'parent_id');
-    }
-
-    /**
-     * Get pages in this category.
-     */
-    public function pages()
-    {
-        return $this->hasMany('App\Models\Subject\SubjectPage');
+        return $this->hasMany('App\Models\Subject\TimeChronology', 'parent_id');
     }
 
     /**********************************************************************************************
@@ -92,14 +77,14 @@ class SubjectCategory extends Model
     **********************************************************************************************/
 
     /**
-     * Get the data attribute as an associative array.
+     * Return the display name (abbreviation if present, name if not)
      *
-     * @return array
+     * @return string
      */
-    public function getDataAttribute()
+    public function getDisplayNameAttribute()
     {
-        if(!isset($this->attributes['data'])) return null;
-        return json_decode($this->attributes['data'], true);
+        if(isset($this->abbreviation)) return '<abbr data-toggle="tooltip" title="'.$this->name.'">'.$this->abbreviation.'</abbr>';
+        return $this->name;
     }
 
 }

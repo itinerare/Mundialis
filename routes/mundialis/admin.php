@@ -20,8 +20,8 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data'], function() {
     # GENERIC ROUTES
     Route::get('{subject}', 'SubjectController@getSubjectIndex');
     Route::get('{subject}/edit', 'SubjectController@getEditTemplate');
-    Route::post('{subject}/edit', 'SubjectController@postEditTemplate');
     Route::get('{subject}/create', 'SubjectController@getCreateCategory');
+    Route::post('{subject}/edit', 'SubjectController@postEditTemplate');
     Route::post('{subject}/create', 'SubjectController@postCreateEditCategory');
 
     Route::get('categories/edit/{id}', 'SubjectController@getEditCategory');
@@ -29,6 +29,20 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data'], function() {
     Route::post('categories/edit/{id?}', 'SubjectController@postCreateEditCategory');
     Route::post('categories/delete/{id}', 'SubjectController@postDeleteCategory');
     Route::post('{subject}/sort', 'SubjectController@postSortCategory');
+
+    # SPECIALIZED ROUTES
+    Route::group(['prefix' => 'time'], function() {
+        Route::get('divisions', 'SubjectController@getTimeDivisions');
+        Route::get('chronology', 'SubjectController@getTimeChronology');
+        Route::get('chronology/create', 'SubjectController@getCreateChronology');
+        Route::get('chronology/edit/{id}', 'SubjectController@getEditChronology');
+        Route::get('chronology/delete/{id}', 'SubjectController@getDeleteChronology');
+        Route::post('divisions', 'SubjectController@postEditDivisions');
+        Route::post('chronology/create', 'SubjectController@postCreateEditChronology');
+        Route::post('chronology/edit/{id?}', 'SubjectController@postCreateEditChronology');
+        Route::post('chronology/delete/{id}', 'SubjectController@postDeleteChronology');
+        Route::post('chronology/sort', 'SubjectController@postSortChronology');
+    });
 });
 
 /*

@@ -7,6 +7,9 @@ use DB;
 use App\Models\Subject\SubjectTemplate;
 use App\Models\Subject\SubjectCategory;
 
+use App\Models\Subject\TimeDivision;
+use App\Models\Subject\TimeChronology;
+
 class SubjectService extends Service
 {
     /*
@@ -74,7 +77,7 @@ class SubjectService extends Service
      * @param  array                         $data
      * @param  \App\Models\User\User         $user
      * @param  string                        $subject
-     * @return bool|\App\Models\SubjectCategory
+     * @return bool|\App\Models\Subject\SubjectCategory
      */
     public function createCategory($data, $user, $subject)
     {
@@ -110,10 +113,10 @@ class SubjectService extends Service
     /**
      * Updates a category.
      *
-     * @param  \App\Models\Gallery\Category   $category
-     * @param  array                          $data
-     * @param  \App\Models\User\User          $user
-     * @return \App\Models\Gallery\Project|bool
+     * @param  \App\Models\Subject\SubjectCategory  $category
+     * @param  array                                $data
+     * @param  \App\Models\User\User                $user
+     * @return \App\Models\Subject\SubjectCategory|bool
      */
     public function updateCategory($category, $data, $user)
     {
@@ -157,6 +160,30 @@ class SubjectService extends Service
             $category->update($data);
 
             return $this->commitReturn($category);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Delete a category.
+     *
+     * @param  \App\Models\Subject\SubjectCategory  $category
+     * @return bool
+     */
+    public function deleteCategory($category)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Check first if the project is currently in use
+            if(SubjectCategory::where('parent_id', $category->id)->exists()) throw new \Exception('A sub-category of this category exists. Please move or delete it first.');
+            //if(Piece::where('project_id', $project->id)->exists()) throw new \Exception("A piece with this category exists. Please move or delete it first.");
+
+            $category->delete();
+
+            return $this->commitReturn(true);
         } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
@@ -316,6 +343,163 @@ class SubjectService extends Service
         }
 
         return $data;
+    }
+
+    /******************************************************************************
+        SPECIALIZED - TIME
+    *******************************************************************************/
+
+    /**
+     * Updates time divisions.
+     *
+     * @param  array                         $data
+     * @param  \App\Models\User\User         $user
+     * @return bool|\App\Models\TimeDivision
+     */
+    public function editTimeDivisions($data, $user)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Remove divisions not present in the form data
+            TimeDivision::whereNotIn('name', $data['name'])->delete();
+
+            // Process each entered division
+            foreach($data['name'] as $key=>$name) {
+                // More specific validation
+                foreach($data['name'] as $subKey=>$subName) if($subName == $name && $subKey != $key) throw new \Exception("The name has already been taken.");
+
+                $division = TimeDivision::where('name', $name)->first();
+
+                // Assemble data
+                $data[$key] = [
+                    'name' => $data['name'][$key],
+                    'abbreviation' => isset($data['abbreviation'][$key]) ? $data['abbreviation'][$key] : null,
+                    'unit' => isset($data['unit'][$key]) ? $data['unit'][$key] : null
+                ];
+
+                // Create or update division data
+                if(!$division)
+                    $divisions[] = TimeDivision::create($data[$key]);
+                else {
+                    $division->update($data[$key]);
+                    $divisions[] = $division;
+                }
+            }
+
+            // Process sort information
+            if(isset($data['sort'])) {
+                // explode the sort array and reverse it since the order is inverted
+                $sort = array_reverse(explode(',', $data['sort']));
+
+                foreach($sort as $key => $s) {
+                    TimeDivision::where('id', $s)->update(['sort' => $key]);
+                }
+            }
+
+            return $this->commitReturn($divisions);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Creates a chronology.
+     *
+     * @param  array                         $data
+     * @param  \App\Models\User\User         $user
+     * @return bool|\App\Models\TimeChronology
+     */
+    public function createChronology($data, $user)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Create chronology
+            $chronology = TimeChronology::create($data);
+
+            return $this->commitReturn($chronology);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Updates a chronology.
+     *
+     * @param  \App\Models\Subject\TimeChronology    $chronology
+     * @param  array                                 $data
+     * @param  \App\Models\User\User                 $user
+     * @return \App\Models\Subject\TimeChronology|bool
+     */
+    public function updateChronology($chronology, $data, $user)
+    {
+        DB::beginTransaction();
+
+        try {
+            // More specific validation
+            if(TimeChronology::where('name', $data['name'])->where('id', '!=', $chronology->id)->exists()) throw new \Exception("The name has already been taken.");
+
+            // Update chronology
+            $chronology->update($data);
+
+            return $this->commitReturn($chronology);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Delete a chronology.
+     *
+     * @param  \App\Models\Subject\TimeChronology  $chronology
+     * @return bool
+     */
+    public function deleteChronology($chronology)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Check first if the project is currently in use
+            if(TimeChronology::where('parent_id', $chronology->id)->exists()) throw new \Exception('A sub-chronology of this chronology exists. Please move or delete it first.');
+            //if(Piece::where('project_id', $project->id)->exists()) throw new \Exception("A piece with this chronology exists. Please move or delete it first.");
+
+            $chronology->delete();
+
+            return $this->commitReturn(true);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Sorts chronology order.
+     *
+     * @param  array   $data
+     * @param  string  $subject
+     * @return bool
+     */
+    public function sortChronology($data, $subject)
+    {
+        DB::beginTransaction();
+
+        try {
+            // explode the sort array and reverse it since the order is inverted
+            $sort = array_reverse(explode(',', $data));
+
+            foreach($sort as $key => $s) {
+                TimeChronology::where('subject', $subject)->where('id', $s)->update(['sort' => $key]);
+            }
+
+            return $this->commitReturn(true);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
     }
 
 }

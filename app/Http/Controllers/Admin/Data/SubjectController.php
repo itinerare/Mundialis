@@ -7,6 +7,9 @@ use Auth;
 use App\Models\Subject\SubjectTemplate;
 use App\Models\Subject\SubjectCategory;
 
+use App\Models\Subject\TimeDivision;
+use App\Models\Subject\TimeChronology;
+
 use App\Services\SubjectService;
 
 use Illuminate\Http\Request;
@@ -142,7 +145,7 @@ class SubjectController extends Controller
      */
     public function postCreateEditCategory(Request $request, SubjectService $service, $subject)
     {
-        is_numeric($subject) ? $request->validate(SubjectCategory::$updateRules + SubjectCategory::$templateRules) : $request->validate(SubjectCategory::$createRules + SubjectCategory::$templateRules);
+        is_numeric($subject) ? $request->validate(SubjectCategory::$updateRules + SubjectTemplate::$rules) : $request->validate(SubjectCategory::$createRules + SubjectTemplate::$rules);
         $data = $request->only([
             'name', 'description', 'parent_id', 'populate_template', 'cascade_template', 'cascade_recursively',
             'section_key', 'section_name',
@@ -187,11 +190,13 @@ class SubjectController extends Controller
      */
     public function postDeleteCategory(Request $request, SubjectService $service, $id)
     {
-        if($id && $service->deleteCategory(SubjectCategory::find($id), $subject)) {
+        $category = SubjectCategory::find($id); $subject = $category->subject;
+        if($id && $service->deleteCategory($category)) {
             flash('Category deleted successfully.')->success();
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+            return redirect()->back();
         }
         return redirect()->to('admin/data/'.$subject);
     }
@@ -216,7 +221,162 @@ class SubjectController extends Controller
     }
 
     /******************************************************************************
-        SPECIALIZED
+        SPECIALIZED - TIME
     *******************************************************************************/
 
+    /**
+     * Shows the divisions page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getTimeDivisions()
+    {
+        return view('admin.subjects.time_divisions', [
+            'divisions' => TimeDivision::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+
+    /**
+     * Edits subject template data.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  App\Services\SubjectService  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postEditDivisions(Request $request, SubjectService $service)
+    {
+        $request->validate(TimeDivision::$rules);
+
+        $data = $request->only([
+            'name', 'abbreviation', 'unit', 'sort'
+        ]);
+        if($service->editTimeDivisions($data, Auth::user())) {
+            flash('Divisions updated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Shows the chronlogy index.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getTimeChronology()
+    {
+        return view('admin.subjects.time_chronology', [
+            'chronologies' => TimeChronology::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+
+    /**
+     * Shows the create chronology page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCreateChronology()
+    {
+        return view('admin.subjects.create_edit_chronology', [
+            'chronology' => new TimeChronology,
+            'chronologyOptions' => TimeChronology::pluck('name', 'id')->toArray()
+        ]);
+    }
+
+    /**
+     * Shows the edit chronology page.
+     *
+     * @param  int       $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getEditChronology($id)
+    {
+        $chronology = TimeChronology::find($id);
+        if(!$chronology) abort(404);
+
+        return view('admin.subjects.create_edit_chronology', [
+            'chronology' => $chronology,
+            'chronologyOptions' => TimeChronology::where('id', '!=', $chronology->id)->pluck('name', 'id')->toArray()
+        ]);
+    }
+
+    /**
+     * Creates or edits a chronology.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  App\Services\SubjectService  $service
+     * @param  int|null                     $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postCreateEditChronology(Request $request, SubjectService $service, $id = null)
+    {
+        $id ? $request->validate(TimeChronology::$updateRules) : $request->validate(TimeChronology::$createRules);
+        $data = $request->only([
+            'name', 'abbreviation', 'description', 'parent_id'
+        ]);
+        if($id && $service->updateChronology(TimeChronology::find($id), $data, Auth::user())) {
+            flash('Chronology updated successfully.')->success();
+        }
+        else if (!$id && $chronology = $service->createChronology($data, Auth::user())) {
+            flash('Chronology created successfully.')->success();
+            return redirect()->to('admin/data/time/chronology/edit/'.$chronology->id);
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Gets the chronology deletion modal.
+     *
+     * @param  int       $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getDeleteChronology($id)
+    {
+        $chronology = TimeChronology::find($id);
+
+        return view('admin.subjects._delete_chronology', [
+            'chronology' => $chronology
+        ]);
+    }
+
+    /**
+     * Deletes a chronology.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  App\Services\SubjectService  $service
+     * @param  int                          $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postDeleteChronology(Request $request, SubjectService $service, $id)
+    {
+        if($id && $service->deleteChronology(TimeChronology::find($id))) {
+            flash('Chronology deleted successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->to('admin/data/time/chronology');
+    }
+
+    /**
+     * Sorts categories.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  App\Services\SubjectService  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postSortChronology(Request $request, SubjectService $service)
+    {
+        if($service->sortChronology($request->get('sort'))) {
+            flash('Chronology order updated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
 }

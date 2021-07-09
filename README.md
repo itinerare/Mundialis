@@ -12,12 +12,14 @@ The trouble arises from this last point. I have traditionally used a [MediaWiki]
 Thus, this project was born out of a desire for a more efficient way to record world information-- one which takes some of the advantages of a wiki framework while taking a more specialized approach, bringing some minor automation to bear so that you can spend less time formatting and organizing your information and more time creating. Moreover, since it's a self-contained app rather than a service, you can host it locally/on your own machine or on a server and manage your project's information on your own terms.
 
 ## Features
-TBA
-- Support for multiple users with read and optional write permissions (note that this is explicitly **not** designed for many people, just a small group, e.g. friends.)
-- Page templates and template editing per-subject (people, places, things, etc) and per-category, including sub-categories, with optional selective change cascading from subject to categories and from categories to sub-categories (with optional recursive change cascading)-- that is, only new changes get applied, kinda like git but for page templates. They can be applied to all categories in a subject, all sub-categories of a category, or those and all *their* sub-categories ad infinitum. Forms for page editing are constructed from these templates, as well as pages themselves.
+WIP
+- Support for multiple users with read and optional write permissions (note that this is explicitly **not** designed for many people, just a small group, e.g. friends)
+- Pages organized by subject (people, places, things, etc) and category (including sub-categories)
+- Page templates and template editing per-subject and per-category, including sub-categories, with optional selective change cascading from subject to categories and from categories to sub-categories (with optional recursive change cascading)-- that is, only new changes get applied, kinda like git but for page templates. They can be applied to all categories in a subject, all sub-categories of a category, or those and all *their* sub-categories ad infinitum. Forms for page editing are constructed from these templates, as well as pages themselves.
+- Specialized functions for handling time: ability to set divisions of time (e.g. days, weeks) and set (and sort) larger portions of time (chronologies) for use as secondary categories for events/to provide more overarching order
 
 ## Setup
-TBA
+WIP
 
 ## Contributing
 Thank you for considering contributing to Mundialis! Please see the [Contribution Guide]() for information on how best to contribute.

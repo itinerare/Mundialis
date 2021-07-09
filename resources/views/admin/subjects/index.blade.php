@@ -7,17 +7,27 @@
 
 <h1>{{ $subject['name'] }}</h1>
 
+@if(isset($subject['description']))
+    <p>{{ $subject['description'] }}</p>
+@endif
+
 <p>This is a list of categories that will be used to organize pages. Categories can also have their own template, which will be used for pages created within them.</p>
 
 <div class="text-right mb-3">
     <a class="btn btn-primary" href="{{ url('admin/data/'.$subject['key'].'/edit') }}"><i class="fas fa-edit"></i> Edit Template</a>
     <a class="btn btn-primary" href="{{ url('admin/data/'.$subject['key'].'/create') }}"><i class="fas fa-plus"></i> Create New Category</a>
+    @if(isset($subject['pages']))
+        @foreach($subject['pages'] as $key=>$page)
+            {!! $loop->first ? '<br/>' : '' !!}
+            <a class="btn btn-primary mt-1" href="{{ url('admin/data/'.$subject['key'].'/'.$key) }}">{!! $page !!}</a>
+        @endforeach
+    @endif
 </div>
 
 @if(!count($categories))
     <p>No categories found.</p>
 @else
-    <table class="table table-sm project-table">
+    <table class="table table-sm category-table">
         <thead>
             <tr>
                 <th>Name</th>
