@@ -76,7 +76,7 @@ If you are fixing bug(s), there are a few possibilities depending on the circums
 - If you are making a hotfix for a critical issue present **in the current release**, create a new hotfix branch off of main, make the necessary changes, and PR it back into main.
 
 ### Commit Formatting
-Additionally, Mundialis commits make use of [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) formatting for its commits. Contributors are not required to follow this formatting when making pull requests; if the commits in a PR do not follow this formatting, they will be squashed into a correctly formatted commit.
+Commits to this project follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) formatting. Contributors are *highly recommended* to follow this formatting when making pull requests (it also makes it very easy to make pull requests!). It is also recommended to focus on atomic commits (commit each fix or task as a separate change, and only commit when a block of work is complete)-- this makes it much easier both to review and manage changes.
 ### About abandoned pull requests
 
 In the case where a pull request is started but not finished and the contributor is nonresponsive despite efforts to contact them, the pull request will be closed regardless of its status. It is up to contributors to finish work, make any requested changes, etc., not maintainers.
