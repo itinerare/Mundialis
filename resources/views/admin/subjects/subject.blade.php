@@ -11,7 +11,19 @@
     <p>{{ $subject['description'] }}</p>
 @endif
 
-<p>This is a list of categories that will be used to organize pages. Categories can also have their own template, which will be used for pages created within them.</p>
+@if(isset($subject['segments']))
+    <p>Keep in mind when constructing templates for this subject that it inherently includes the following special fields when creating or editing pages:</p>
+    @foreach($subject['segments'] as $segment=>$data)
+        <h5>{{ ucfirst($segment) }}:</h5>
+        <ul>
+            @foreach($data as $key=>$item)
+                <li>
+                    {{ $item['name'] }}: {!! $item['description'] !!}
+                </li>
+            @endforeach
+        </ul>
+    @endforeach
+@endif
 
 <div class="text-right mb-3">
     <a class="btn btn-primary" href="{{ url('admin/data/'.$subject['key'].'/edit') }}"><i class="fas fa-edit"></i> Edit Template</a>
@@ -23,6 +35,9 @@
         @endforeach
     @endif
 </div>
+
+
+<p>This is a list of categories that will be used to organize pages. Categories can also have their own template, which will be used for pages created within them.</p>
 
 @if(!count($categories))
     <p>No categories found.</p>
