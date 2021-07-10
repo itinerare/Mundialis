@@ -1,5 +1,6 @@
-<div class="card mb-2">
+<div class="card mb-2 infobox-list-entry sort-item">
     <div class="card-body">
+        <a class="float-left fas fa-arrows-alt-v handle mr-3" href="#"></a>
         <a href="#" class="float-right remove-infobox btn btn-danger mb-2">×</a>
         <div class="row">
             <div class="col-md">

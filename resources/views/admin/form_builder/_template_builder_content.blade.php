@@ -2,7 +2,7 @@
 
 <h2>Infobox</h2>
 
-<p>Fields in this section will be used to build a page's infobox, which displays basic at-a-glance information about the subject of the page. Fields for this section should expect content to be brief. Fields can also be reordered once created; however, note that moving fields does not cascade due to how change detection is handled.</p>
+<p>Fields in this section will be used to build a page's infobox, which displays basic at-a-glance information about the subject of the page. Fields for this section should expect content to be brief. Fields can also be reordered; however, note that moving fields does not cascade due to how change detection is handled.</p>
 
 <div class="text-right mb-3">
     <a href="#" class="btn btn-outline-info" id="add-infobox">Add Field</a>
@@ -17,7 +17,7 @@
 
 <h2>Main Page</h2>
 
-<p>To add fields, first add at least one section. Sections are overall headers for portions of a page. Widgets-- page components that display particular information, such as a timeline for events linked to the page-- can also be added to sections after they are created. Widgets can be safely added and removed without any loss of information. Note that <strong>changing a section's key will cause all fields and widgets for it to be deleted</strong>. Sections can also be reordered once created; however, note that moving sections does not cascade due to how change detection is handled.</p>
+<p>To add fields, first add at least one section. Sections are overall headers for portions of a page. Widgets-- page components that display particular information, such as a timeline for events linked to the page-- can also be added to sections after they are created. Widgets can be safely added and removed without any loss of information. Note that <strong>changing a section's key will cause all fields and widgets for it to be deleted</strong>. Sections can also be reordered; however, note that moving sections does not cascade due to how change detection is handled.</p>
 
 <div id="sectionList" class="sortable">
     @if(isset($template->data['sections']))
