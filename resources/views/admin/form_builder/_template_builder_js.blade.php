@@ -61,7 +61,7 @@
             attachListeners($clone);
         }
         function removeSectionRow($trigger) {
-            $trigger.parent().parent().remove();
+            $trigger.parent().remove();
         }
         $('#sectionList .section-list-entry').each(function(index) {
             attachListeners($(this));
