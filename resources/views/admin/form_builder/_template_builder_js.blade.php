@@ -26,6 +26,22 @@
             $trigger.parent().parent().remove();
         }
 
+        $('.handle').on('click', function(e) {
+            e.preventDefault();
+        });
+        $( ".sortable" ).sortable({
+            items: '.sort-item',
+            handle: ".handle",
+            placeholder: "sortable-placeholder",
+            stop: function( event, ui ) {
+                $('#sortableOrder').val($(this).sortable("toArray", {attribute:"data-id"}));
+            },
+            create: function() {
+                $('#sortableOrder').val($(this).sortable("toArray", {attribute:"data-id"}));
+            }
+        });
+        $( ".sortable" ).disableSelection();
+
         $('#add-section').on('click', function(e) {
             e.preventDefault();
             addSectionRow();
