@@ -11,7 +11,7 @@
     @endif
 </h1>
 
-{!! Form::open(['url' => $chronology->id ? 'admin/data/categories/edit/'.$chronology->id : 'admin/data/time/chronology/create']) !!}
+{!! Form::open(['url' => $chronology->id ? 'admin/data/time/chronology/edit/'.$chronology->id : 'admin/data/time/chronology/create']) !!}
 
 <h2>Basic Information</h2>
 
