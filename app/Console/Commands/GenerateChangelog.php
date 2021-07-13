@@ -19,7 +19,7 @@ class GenerateChangelog extends Command
      *
      * @var string
      */
-    protected $description = 'Adds pages for basic site information (info, ToS, etc.).';
+    protected $description = 'Generates the changelog.';
 
     /**
      * Create a new command instance.
