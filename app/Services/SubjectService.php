@@ -372,6 +372,7 @@ class SubjectService extends Service
                 foreach($data['name'] as $subKey=>$subName) if($subName == $name && $subKey != $key) throw new \Exception("The name has already been taken.");
 
                 if(isset($data['id'][$key])) $division = TimeDivision::find($data['id'][$key]);
+                else $division = null;
 
                 // Assemble data
                 $data[$key] = [
