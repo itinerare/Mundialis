@@ -33,11 +33,13 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data'], function() {
     # SPECIALIZED ROUTES
     Route::group(['prefix' => 'time'], function() {
         Route::get('divisions', 'SubjectController@getTimeDivisions');
+        Route::post('divisions', 'SubjectController@postEditDivisions');
+
         Route::get('chronology', 'SubjectController@getTimeChronology');
         Route::get('chronology/create', 'SubjectController@getCreateChronology');
         Route::get('chronology/edit/{id}', 'SubjectController@getEditChronology');
         Route::get('chronology/delete/{id}', 'SubjectController@getDeleteChronology');
-        Route::post('divisions', 'SubjectController@postEditDivisions');
+
         Route::post('chronology/create', 'SubjectController@postCreateEditChronology');
         Route::post('chronology/edit/{id?}', 'SubjectController@postCreateEditChronology');
         Route::post('chronology/delete/{id}', 'SubjectController@postDeleteChronology');
