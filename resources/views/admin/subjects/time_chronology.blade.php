@@ -45,7 +45,6 @@
                     <td>
                         {!! $chronology->parent ? $chronology->parent->name : '-' !!}
                     </td>
-                    <td>
                     <td class="text-right">
                         <a href="{{ url('admin/data/time/chronology/edit/'.$chronology->id) }}" class="btn btn-primary">Edit</a>
                     </td>

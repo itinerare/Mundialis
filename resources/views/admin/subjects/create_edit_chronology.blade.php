@@ -13,8 +13,6 @@
 
 {!! Form::open(['url' => $chronology->id ? 'admin/data/time/chronology/edit/'.$chronology->id : 'admin/data/time/chronology/create']) !!}
 
-<h2>Basic Information</h2>
-
 <div class="row">
     <div class="col-md">
         <div class="form-group">
