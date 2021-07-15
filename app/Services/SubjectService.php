@@ -642,7 +642,7 @@ class SubjectService extends Service
     private function processLexiconData($data, $category = null)
     {
         // Collect and record property and dimension information
-        foreach($data['property_name'] as $key=>$property) {
+        if(isset($data['property_name'])) foreach($data['property_name'] as $key=>$property) {
             $propertyKey[$key] = str_replace(' ', '_', strtolower($property));
             $data['data'][$data['property_class'][$key]]['properties'][$propertyKey[$key]] = [
                 'name' => $property,
