@@ -633,6 +633,55 @@ class SubjectService extends Service
     }
 
     /**
+     * Deletes a lexicon category.
+     *
+     * @param  \App\Models\Subject\LexiconCategory  $category
+     * @return bool
+     */
+    public function deleteLexiconCategory($category)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Check first if the project is currently in use
+            if(LexiconCategory::where('parent_id', $category->id)->exists()) throw new \Exception('A sub-category of this category exists. Please move or delete it first.');
+            //if(Piece::where('project_id', $project->id)->exists()) throw new \Exception("A piece with this category exists. Please move or delete it first.");
+
+            $category->delete();
+
+            return $this->commitReturn(true);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Sorts lexicon category order.
+     *
+     * @param  array   $data
+     * @return bool
+     */
+    public function sortLexiconCategory($data)
+    {
+        DB::beginTransaction();
+
+        try {
+            // explode the sort array and reverse it since the order is inverted
+            $sort = array_reverse(explode(',', $data));
+
+            foreach($sort as $key => $s) {
+                LexiconCategory::where('id', $s)->update(['sort' => $key]);
+            }
+
+            return $this->commitReturn(true);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
      * Processes lexicon category data for storage.
      *
      * @param  array                                     $data
