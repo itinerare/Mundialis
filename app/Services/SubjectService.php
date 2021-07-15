@@ -9,6 +9,8 @@ use App\Models\Subject\SubjectCategory;
 
 use App\Models\Subject\TimeDivision;
 use App\Models\Subject\TimeChronology;
+use App\Models\Subject\LexiconSetting;
+use App\Models\Subject\LexiconCategory;
 
 class SubjectService extends Service
 {
@@ -509,4 +511,183 @@ class SubjectService extends Service
         return $this->rollbackReturn(false);
     }
 
+    /******************************************************************************
+        SPECIALIZED - LANGUAGE
+    *******************************************************************************/
+
+    /**
+     * Updates lexicon settings.
+     *
+     * @param  array                         $data
+     * @param  \App\Models\User\User         $user
+     * @return bool|\App\Models\LexiconSetting
+     */
+    public function editLexiconSettings($data, $user)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Process each entered division
+            foreach($data['name'] as $key=>$name) {
+                // More specific validation
+                foreach($data['name'] as $subKey=>$subName) if($subName == $name && $subKey != $key) throw new \Exception("The name has already been taken.");
+
+                if(isset($data['id'][$key])) $setting = LexiconSetting::find($data['id'][$key]);
+                else $setting = null;
+
+                // Assemble data
+                $data[$key] = [
+                    'name' => $data['name'][$key],
+                    'abbreviation' => isset($data['abbreviation'][$key]) ? $data['abbreviation'][$key] : null,
+                ];
+
+                // Create or update division data
+                if(!$setting)
+                    $settings[] = LexiconSetting::create($data[$key]);
+                else {
+                    $setting->update($data[$key]);
+                    $settings[] = $setting;
+                }
+            }
+
+            // Process sort information
+            if(isset($data['sort'])) {
+                // explode the sort array and reverse it since the order is inverted
+                $sort = array_reverse(explode(',', $data['sort']));
+
+                foreach($sort as $key => $s) {
+                    LexiconSetting::where('id', $s)->update(['sort' => $key]);
+                }
+            }
+
+            // Remove divisions not present in the form data
+            LexiconSetting::whereNotIn('name', $data['name'])->delete();
+
+            return $this->commitReturn($settings);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Creates a lexicon category.
+     *
+     * @param  array                         $data
+     * @param  \App\Models\User\User         $user
+     * @return bool|\App\Models\LexiconCategory
+     */
+    public function createLexiconCategory($data, $user)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Process data for storage
+            $data = $this->processLexiconData($data);
+
+            // Encode data before saving either way, for convenience
+            if(isset($data['data'])) $data['data'] = json_encode($data['data']);
+            else $data['data'] = null;
+
+            // Create category
+            $category = LexiconCategory::create($data);
+
+            return $this->commitReturn($category);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Updates a lexicon category.
+     *
+     * @param  \App\Models\Subject\LexiconCategory  $category
+     * @param  array                                $data
+     * @param  \App\Models\User\User                $user
+     * @return \App\Models\Subject\LexiconCategory|bool
+     */
+    public function updateLexiconCategory($category, $data, $user)
+    {
+        DB::beginTransaction();
+
+        try {
+            // More specific validation
+            if(LexiconCategory::where('name', $data['name'])->where('id', '!=', $category->id)->exists()) throw new \Exception("The name has already been taken.");
+
+            // Process data for storage
+            $data = $this->processLexiconData($data, $category);
+
+            // Encode data before saving either way, for convenience
+            if(isset($data['data'])) $data['data'] = json_encode($data['data']);
+            else $data['data'] = null;
+
+            // Update category
+            $category->update($data);
+
+            return $this->commitReturn($category);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Processes lexicon category data for storage.
+     *
+     * @param  array                                     $data
+     * @param  App\Models\Subject\LexiconCategory        $category
+     * @return array
+     */
+    private function processLexiconData($data, $category = null)
+    {
+        // Collect and record property and dimension information
+        foreach($data['property_name'] as $key=>$property) {
+            $propertyKey[$key] = str_replace(' ', '_', strtolower($property));
+            $data['data'][$data['property_class'][$key]]['properties'][$propertyKey[$key]] = [
+                'name' => $property,
+                'non_dimensional' => isset($data['property_dimensions'][$key]) ? 0 : 1,
+                'dimensions' => isset($data['property_dimensions'][$key]) ? explode(',', $data['property_dimensions'][$key]) : null
+            ];
+        }
+
+        // Collect and record auto-conjugation/declension information
+        if($category && $category->id) {
+            $combinations = [];
+
+            // Cycle through lexical classes
+            foreach(LexiconSetting::all() as $class) {
+                // Gather the combinations for the class and category
+                $combinations[$class->id] = $category->classCombinations($class->id);
+
+                // Cycle through declension criteria
+                if(isset($data['declension_criteria'][$class->id])) foreach($data['declension_criteria'][$class->id] as $key=>$criteria) {
+                    if($criteria != null) {
+                        // Perform some general validation, since it's easier to do this now
+                        // Since there are many possible values that could throw an error,
+                        // go out of the way to specify exactly which field has thrown it
+                        if(!isset($data['declension_regex'][$class->id][$key])) throw new \Exception($class->name.' '.$combinations[$class->id][$key].' regex pattern missing! You must specify at least one pattern to replace.');
+                        if(!isset($data['declension_replacement'][$class->id][$key])) throw new \Exception($class->name.' '.$combinations[$class->id][$key].' replacement missing! You must specify at least one string to use for replacement.');
+
+                        // Assemble data itself, including exploding the selectize outputs
+                        // as it's easiest to perform final checks on arrays
+                        $data['data'][$class->id]['conjugation'][$key] = [
+                            'criteria' => explode(';', $criteria),
+                            'regex' => explode(';', $data['declension_regex'][$class->id][$key]),
+                            'replacement' => explode(';', $data['declension_replacement'][$class->id][$key]),
+                        ];
+
+                        // Perform final check to see that criteria and replacements are 1:1
+                        if(count($data['data'][$class->id]['conjugation'][$key]['criteria']) != count($data['data'][$class->id]['conjugation'][$key]['replacement'])) throw new \Exception($class->name.' '.$combinations[$class->id][$key].' has a different number of criteria and replacements! There must be the same number of each.');
+                        // Regex must either be only one or 1:1. This is a little janky,
+                        // but the likelihood of people caring about it significantly is low,
+                        // and if so it can be reworked later
+                        if(count($data['data'][$class->id]['conjugation'][$key]['regex']) > 1 && count($data['data'][$class->id]['conjugation'][$key]['criteria']) != count($data['data'][$class->id]['conjugation'][$key]['regex'])) throw new \Exception($class->name.' '.$combinations[$class->id][$key].' has a different number of critera and regex patterns! There must either be only one regex pattern for replacement, or the same number as criteria and replacements.');
+                    }
+                }
+            }
+        }
+
+        return $data;
+    }
 }

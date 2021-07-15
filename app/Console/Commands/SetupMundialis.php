@@ -34,7 +34,7 @@ class SetupMundialis extends Command
         $this->info('********************'."\n");
 
         // Check if the user has run composer and run migrations
-        $this->info('This command should be run after installing packages using composer and running first-time migrations. Once initial setup has been performed, you will be prompted for details to set up the site\'s admin account.');
+        $this->info('This command should be run after installing packages using composer and running first-time migrations. Once initial set-up has been performed, you will be prompted for details to set up the site\'s admin account.');
         if($this->confirm('Have you run the composer install command or equivalent and run first-time migrations?')) {
             // Run setup commands
             $this->line("\n".'Adding site pages and settings...');

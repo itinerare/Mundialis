@@ -9,6 +9,8 @@ use App\Models\Subject\SubjectCategory;
 
 use App\Models\Subject\TimeDivision;
 use App\Models\Subject\TimeChronology;
+use App\Models\Subject\LexiconSetting;
+use App\Models\Subject\LexiconCategory;
 
 use App\Services\SubjectService;
 
@@ -237,7 +239,7 @@ class SubjectController extends Controller
     }
 
     /**
-     * Edits subject template data.
+     * Edits time divisions.
      *
      * @param  \Illuminate\Http\Request     $request
      * @param  App\Services\SubjectService  $service
@@ -260,7 +262,7 @@ class SubjectController extends Controller
     }
 
     /**
-     * Shows the chronlogy index.
+     * Shows the chronology index.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -363,7 +365,7 @@ class SubjectController extends Controller
     }
 
     /**
-     * Sorts categories.
+     * Sorts chronologies.
      *
      * @param  \Illuminate\Http\Request     $request
      * @param  App\Services\SubjectService  $service
@@ -379,4 +381,169 @@ class SubjectController extends Controller
         }
         return redirect()->back();
     }
+
+    /******************************************************************************
+        SPECIALIZED - LANGUAGE
+    *******************************************************************************/
+
+    /**
+     * Shows the lexicon settings page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getLexiconSettings()
+    {
+        return view('admin.subjects.lang_settings', [
+            'parts' => LexiconSetting::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+
+    /**
+     * Edits lexicon settings.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  App\Services\SubjectService  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postEditLexiconSettings(Request $request, SubjectService $service)
+    {
+        $request->validate(LexiconSetting::$rules);
+
+        $data = $request->only([
+            'id', 'name', 'abbreviation', 'sort'
+        ]);
+        if($service->editLexiconSettings($data, Auth::user())) {
+            flash('Lexicon settings updated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Shows the lexicon category index.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getLexiconCategories()
+    {
+        return view('admin.subjects.lang_categories', [
+            'categories' => LexiconCategory::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+
+    /**
+     * Shows the create lexicon category page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCreateLexiconCategory()
+    {
+        return view('admin.subjects.create_edit_lang_category', [
+            'category' => new LexiconCategory,
+            'categoryOptions' => LexiconCategory::pluck('name', 'id')->toArray(),
+            'classes' => LexiconSetting::all()
+        ]);
+    }
+
+    /**
+     * Shows the edit lexicon category page.
+     *
+     * @param  int       $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getEditLexiconCategory($id)
+    {
+        $category = LexiconCategory::find($id);
+        if(!$category) abort(404);
+
+        return view('admin.subjects.create_edit_lang_category', [
+            'category' => $category,
+            'categoryOptions' => LexiconCategory::where('id', '!=', $category->id)->pluck('name', 'id')->toArray(),
+            'classes' => LexiconSetting::all()
+        ]);
+    }
+
+    /**
+     * Creates or edits a lexicon category.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  App\Services\SubjectService  $service
+     * @param  int|null                     $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postCreateEditLexiconCategory(Request $request, SubjectService $service, $id = null)
+    {
+        $id ? $request->validate(LexiconCategory::$updateRules) : $request->validate(LexiconCategory::$createRules);
+        $data = $request->only([
+            'name', 'description', 'parent_id',
+            'property_name', 'property_is_dimensional', 'property_dimensions', 'property_class',
+            'declension_criteria', 'declension_regex', 'declension_replacement'
+        ]);
+        if($id && $service->updateLexiconCategory(LexiconCategory::find($id), $data, Auth::user())) {
+            flash('Category updated successfully.')->success();
+        }
+        else if (!$id && $category = $service->createLexiconCategory($data, Auth::user())) {
+            flash('Category created successfully.')->success();
+            return redirect()->to('admin/data/language/lexicon-categories/edit/'.$category->id);
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Gets the lexicon category deletion modal.
+     *
+     * @param  int       $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getDeleteLexiconCategory($id)
+    {
+        $category = LexiconCategory::find($id);
+
+        return view('admin.subjects._delete_lang_category', [
+            'category' => $category
+        ]);
+    }
+
+    /**
+     * Deletes a lexicon category.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  App\Services\SubjectService  $service
+     * @param  int                          $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postDeleteLexiconCategory(Request $request, SubjectService $service, $id)
+    {
+        if($id && $service->deleteChronology(LexiconCategory::find($id))) {
+            flash('Category deleted successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->to('admin/data/language/lexicon-categories');
+    }
+
+    /**
+     * Sorts lexicon categories.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  App\Services\SubjectService  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postSortLexiconCategory(Request $request, SubjectService $service)
+    {
+        if($service->sortLexiconCategory($request->get('sort'))) {
+            flash('Lexicon category order updated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
 }

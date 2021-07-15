@@ -45,6 +45,21 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data'], function() {
         Route::post('chronology/delete/{id}', 'SubjectController@postDeleteChronology');
         Route::post('chronology/sort', 'SubjectController@postSortChronology');
     });
+
+    Route::group(['prefix' => 'language'], function() {
+        Route::get('lexicon-settings', 'SubjectController@getLexiconSettings');
+        Route::post('lexicon-settings', 'SubjectController@postEditLexiconSettings');
+
+        Route::get('lexicon-categories', 'SubjectController@getLexiconCategories');
+        Route::get('lexicon-categories/create', 'SubjectController@getCreateLexiconCategory');
+        Route::get('lexicon-categories/edit/{id}', 'SubjectController@getEditLexiconCategory');
+        Route::get('lexicon-categories/delete/{id}', 'SubjectController@getDeleteLexiconCategory');
+
+        Route::post('lexicon-categories/create', 'SubjectController@postCreateEditLexiconCategory');
+        Route::post('lexicon-categories/edit/{id?}', 'SubjectController@postCreateEditLexiconCategory');
+        Route::post('lexicon-categories/delete/{id}', 'SubjectController@postDeleteLexiconCategory');
+        Route::post('lexicon-categories/sort', 'SubjectController@postSortLexiconCategory');
+    });
 });
 
 /*
