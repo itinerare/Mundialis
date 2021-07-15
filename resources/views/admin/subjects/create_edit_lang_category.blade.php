@@ -37,7 +37,9 @@
 
 <h2>Declension/Conjugation Settings</h2>
 
-<p>Here you can specify different declension/conjugation settings for the different parts of speech set in <a href="{{ url('admin/data/language/lexicon-settings') }}">lexicon settings</a>. These settings are twofold; first, you can specify different properties, such as case or number, and the dimensions thereof. Second, once properties have been added, you can specify automatic conjugation/declension rules for each combination of these dimensions and/or for each non-dimensional property that can be applied to words within this category to automatically generate each form of the word. <strong>These settings are entirely optional</strong>.</p>
+<p>
+    Here you can specify different declension/conjugation settings for the different parts of speech set in <a href="{{ url('admin/data/language/lexicon-settings') }}">lexicon settings</a>. These settings are twofold; first, you can specify different properties, such as case or number, and the dimensions thereof. Second, once properties have been added, you can specify automatic conjugation/declension rules for each combination of these dimensions and/or for each non-dimensional property that can be applied to words within this category to automatically generate each form of the word. Once the category has been created, if it is a sub-category, you may also populate its data with that of its immediate parent. <strong>These settings are entirely optional</strong>.
+</p>
 
 @foreach($classes as $class)
     <div class="mb-3">
@@ -114,6 +116,13 @@
         </div>
     </div>
 @endforeach
+
+@if($category->parent_id && isset($category->parent->data))
+    <div class="form-group">
+        {!! Form::checkbox('populate_settings', 1, 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+        {!! Form::label('populate_settings', 'Populate Settings', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, this category\'s settings will be overwritten with those of its immediate parent. <strong>This overwrites any existing settings!</strong>') !!}
+    </div>
+@endif
 
 <div class="text-right">
     {!! Form::submit($category->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}

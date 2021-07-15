@@ -49,13 +49,13 @@
         <div class="col-md">
             <div class="form-group">
                 {!! Form::checkbox('cascade_template', 1, 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-                {!! Form::label('cascade_template', 'Cascade Template Changes (Optional)', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, any changes made to this category\'s template will cascade to its sub-categories that have customized templates. <strong>This includes removing elements!</strong>') !!}
+                {!! Form::label('cascade_template', 'Cascade Template Changes', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, any changes made to this category\'s template will cascade to its sub-categories that have customized templates. <strong>This includes removing elements!</strong>') !!}
             </div>
         </div>
         <div class="col-md">
             <div class="form-group">
                 {!! Form::checkbox('cascade_recursively', 1, 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-                {!! Form::label('cascade_recursively', 'Cascade Changes Recursively (Optional)', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this and cascading changes are turned on, changes will cascade recursively. <strong>This includes removing elements!</strong>') !!}
+                {!! Form::label('cascade_recursively', 'Cascade Changes Recursively', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this and cascading changes are turned on, changes will cascade recursively. <strong>This includes removing elements!</strong>') !!}
             </div>
         </div>
     </div>

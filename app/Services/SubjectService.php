@@ -618,6 +618,10 @@ class SubjectService extends Service
             // Process data for storage
             $data = $this->processLexiconData($data, $category);
 
+            // Overwrite with data from subject template if necessary
+            if(isset($data['populate_settings']) && $data['populate_settings'] && $category->parent && isset($category->parent->data))
+                $data['data'] = $category->parent->data;
+
             // Encode data before saving either way, for convenience
             if(isset($data['data'])) $data['data'] = json_encode($data['data']);
             else $data['data'] = null;

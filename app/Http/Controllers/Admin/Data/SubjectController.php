@@ -479,7 +479,8 @@ class SubjectController extends Controller
         $data = $request->only([
             'name', 'description', 'parent_id',
             'property_name', 'property_is_dimensional', 'property_dimensions', 'property_class',
-            'declension_criteria', 'declension_regex', 'declension_replacement'
+            'declension_criteria', 'declension_regex', 'declension_replacement',
+            'populate_settings'
         ]);
         if($id && $service->updateLexiconCategory(LexiconCategory::find($id), $data, Auth::user())) {
             flash('Category updated successfully.')->success();
