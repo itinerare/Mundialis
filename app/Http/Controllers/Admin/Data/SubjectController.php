@@ -520,7 +520,7 @@ class SubjectController extends Controller
      */
     public function postDeleteLexiconCategory(Request $request, SubjectService $service, $id)
     {
-        if($id && $service->deleteChronology(LexiconCategory::find($id))) {
+        if($id && $service->deleteLexiconCategory(LexiconCategory::find($id))) {
             flash('Category deleted successfully.')->success();
         }
         else {
