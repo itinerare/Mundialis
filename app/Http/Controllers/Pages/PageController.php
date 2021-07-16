@@ -51,7 +51,7 @@ class PageController extends Controller
             'page' => new Page,
             'category' => $category
         ] + ($category->subject['key'] == 'places' ? [
-            'placeOptions' => Page::visible()->subject('places')->pluck('id', 'title')
+            'placeOptions' => Page::visible()->subject('places')->pluck('title', 'id')
         ] : []));
     }
 
@@ -70,7 +70,7 @@ class PageController extends Controller
             'page' => $page,
             'category' => $page->category
         ] + ($page->category->subject['key'] == 'places' ? [
-            'placeOptions' => Page::visible()->subject('places')->pluck('id', 'title')
+            'placeOptions' => Page::visible()->subject('places')->where('id', '!=', $page->id)->pluck('title', 'id')
         ] : []));
     }
 
