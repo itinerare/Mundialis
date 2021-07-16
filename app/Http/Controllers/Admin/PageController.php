@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Auth;
 
 use App\Models\SitePage;
-use App\Services\PageService;
+use App\Services\SitePageService;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -52,11 +52,11 @@ class PageController extends Controller
      * Edits a text page.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\PageService  $service
+     * @param  App\Services\SitePageService  $service
      * @param  int|null                  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEditPage(Request $request, PageService $service, $id = null)
+    public function postEditPage(Request $request, SitePageService $service, $id = null)
     {
         $data = $request->only(['text']);
 

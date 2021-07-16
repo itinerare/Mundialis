@@ -6,7 +6,7 @@ use DB;
 
 use App\Models\SitePage;
 
-class PageService extends Service
+class SitePageService extends Service
 {
     /*
     |--------------------------------------------------------------------------

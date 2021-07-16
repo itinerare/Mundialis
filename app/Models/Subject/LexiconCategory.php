@@ -116,7 +116,7 @@ class LexiconCategory extends Model
      * @param  array    $arrays
      * @return array
      */
-    public function combinations($arrays, $i = 0)
+    private function combinations($arrays, $i = 0)
     {
         if (!isset($arrays[$i])) {
             return array();

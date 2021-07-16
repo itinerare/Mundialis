@@ -12,6 +12,8 @@ use App\Models\Subject\TimeChronology;
 use App\Models\Subject\LexiconSetting;
 use App\Models\Subject\LexiconCategory;
 
+use App\Models\Page\Page;
+
 class SubjectService extends Service
 {
     /*
@@ -181,7 +183,7 @@ class SubjectService extends Service
         try {
             // Check first if the project is currently in use
             if(SubjectCategory::where('parent_id', $category->id)->exists()) throw new \Exception('A sub-category of this category exists. Please move or delete it first.');
-            //if(Piece::where('project_id', $project->id)->exists()) throw new \Exception("A piece with this category exists. Please move or delete it first.");
+            if(Page::where('category_id', $category->id)->exists()) throw new \Exception("A page in this category exists. Please move or delete it first.");
 
             $category->delete();
 

@@ -127,8 +127,7 @@ class SubjectController extends Controller
         $category = SubjectCategory::find($id);
         if(!$category) abort(404);
 
-        if(null == Config::get('mundialis.subjects.'.$category->subject)) abort(404);
-        $subject = Config::get('mundialis.subjects.'.$category->subject); $subject['key'] = $category->subject;
+        $subject = $category->subject;
 
         return view('admin.subjects.create_edit_category', [
             'subject' => $subject,

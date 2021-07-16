@@ -2,6 +2,9 @@
 
 namespace App\Models\Subject;
 
+use Config;
+use App\Models\Subject\SubjectTemplate;
+
 use App\Models\Model;
 
 class SubjectCategory extends Model
@@ -54,14 +57,6 @@ class SubjectCategory extends Model
     **********************************************************************************************/
 
     /**
-     * Get the template for this subject.
-     */
-    public function subjectTemplate()
-    {
-        return $this->belongsTo('App\Models\Subject\SubjectTemplate', 'subject', 'subject');
-    }
-
-    /**
      * Get parent category of this category.
      */
     public function parent()
@@ -100,6 +95,76 @@ class SubjectCategory extends Model
     {
         if(!isset($this->attributes['data'])) return null;
         return json_decode($this->attributes['data'], true);
+    }
+
+    /**
+     * Get the category's subject, with information from config.
+     *
+     * @return array
+     */
+    public function getSubjectAttribute()
+    {
+        // Fetch config information for the recorded subject
+        $subject = Config::get('mundialis.subjects.'.$this->attributes['subject']);
+        // Then add its key to the array
+        $subject['key'] = $this->attributes['subject'];
+        return $subject;
+    }
+
+    /**
+     * Get the category's subject's template.
+     *
+     * @return App\Models\Subject\SubjectTemplate
+     */
+    public function getSubjectTemplateAttribute()
+    {
+        return SubjectTemplate::where('subject', $this->attributes['subject'])->first();
+    }
+
+    /**
+     * Get the category's template data, or failing that, its parent's.
+     *
+     * @return array
+     */
+    public function getTemplateAttribute()
+    {
+        // Check to see if this category's data is set,
+        if(isset($this->data) && $this->data) return $this->data;
+        // Else recursively check parents for data and return if data is found
+        else if($this->parent) {
+            $template = $this->fetchTemplateRecursive($this->parent);
+            if(isset($template) && $template) return $template;
+        }
+        // If no data is found and the subject's template is set,
+        // return the subject's template data
+        else if(isset($this->subjectTemplate->data) && $this->subjectTemplate->data) return $this->subjectTemplate->data;
+        // Failing that return an empty array so the form builder doesn't error
+        else return [];
+    }
+    private function fetchTemplateRecursive($parent)
+    {
+        if(isset($parent->data)) $template = $parent->data;
+        elseif($parent->parent) $template = $this->fetchTemplateRecursive($parent);
+
+        return $template;
+    }
+
+    /**
+     * Assemble the category's form fields for ease of processing.
+     *
+     * @return array
+     */
+    public function getFormFieldsAttribute()
+    {
+        $fields = [];
+
+        if(isset($this->template['infobox'])) $fields = $fields + $this->template['infobox'];
+        if(isset($this->template['sections']))
+            foreach($this->template['sections'] as $sectionKey=>$section) {
+                if(isset($this->template['fields'][$sectionKey])) $fields = $fields + $this->template['fields'][$sectionKey];
+            }
+
+        return $fields;
     }
 
 }

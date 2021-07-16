@@ -8,8 +8,8 @@ return [
     |--------------------------------------------------------------------------
     |
     | This is a list of subjects for pages, used to support some flexible routes
-    | and generation of subject pages. You should not edit this file unless you know
-    | precisely what you're doing.
+    | and generation of subject pages, among other things. You should not edit
+    | this file unless you know precisely what you're doing.
     |
     | All subjects must have a set name (used for page generation) and should have
     | a description that lays out the purpose of the subject at least in brief.
