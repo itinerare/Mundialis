@@ -17,12 +17,14 @@ WIP
 - Pages organized by subject (people, places, things, etc) and category (including sub-categories)
 - Page templates and template editing per-subject and per-category, including sub-categories, with optional selective change cascading from subject to categories and from categories to sub-categories (with optional recursive change cascading)-- that is, only new changes get applied, kinda like git but for page templates. They can be applied to all categories in a subject, all sub-categories of a category, or those and all *their* sub-categories ad infinitum. Forms for page editing are constructed from these templates, as well as pages themselves.
 - Specialized functions for handling time: ability to set divisions of time (e.g. days, weeks) and set (and sort) larger portions of time (chronologies) for use as secondary categories for events/to provide more overarching order
+- A specialized system for handling a project's lexicon, including configurable parts of speech and categories with an optional system for automatic conjugation/declension configurable per-category
+- Page editing built from the template system, with additional specialized fields for some subjects
 
 ## Setup
 WIP
 
 ## Contributing
-Thank you for considering contributing to Mundialis! Please see the [Contribution Guide]() for information on how best to contribute.
+Thank you for considering contributing to Mundialis! Please see the [Contribution Guide](https://github.com/itinerare/Mundialis/blob/main/CONTRIBUTING.md) for information on how best to contribute.
 
 ### Extending Mundialis
 If you are interested in providing optional/plugin-type functionality for Mundialis, please contact me first and foremost; while I am open to developing plugin support and would rather do so before any are made, I will not be doing so until there is concrete interest in it.
@@ -31,7 +33,9 @@ If you are interested in providing optional/plugin-type functionality for Mundia
 Beyond dependencies and contributions, this project owes its existence in part to some projects and people who provided valuable inspiration and insight.
 
 - [Lorekeeper](https://github.com/corowne/lorekeeper), a framework for running ARPG sites. Though this has been altogether rebuilt to suit a different purpose, much of Lorekeeper's blood-- and certainly many of the lessons I have learned while contributing to the project-- can still be seen in Mundialis.
-- @preimpression, in particular for the excellent [World Expansion](http://wiki.lorekeeper.me/index.php?title=Extensions:World_Expansion) extension for Lorekeeper, which brings a sort of wiki-lite functionality to it and which helped inspire Mundialis.
+- [preimpression](https://github.com/preimpression), in particular for the excellent [World Expansion](http://wiki.lorekeeper.me/index.php?title=Extensions:World_Expansion) extension for Lorekeeper, which brings a sort of wiki-lite functionality to it and which helped inspire Mundialis.
+- [ne-wt](https://github.com/ne-wt), whose work with the above as well as addition of a dictionary inspired me to build a more automated system for handling lexicons within the context of a Laravel app.
+- [PolyGlot](https://github.com/DraqueT/PolyGlot), a great and very robust project for handling language construction and lexicons in-depth, which inspired Mundialis' lexicon system in part-- in particular, the automatic conjugation/declension system.
 
 ## Contact
 If you have any questions, please contact me via email at [queries@itinerare.net](emailto:queries@itinerare.net).
