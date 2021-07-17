@@ -98,6 +98,26 @@ class SubjectCategory extends Model
     }
 
     /**
+     * Get the page's url.
+     *
+     * @return string
+     */
+    public function getUrlAttribute()
+    {
+        return url('pages/categories/'.$this->id);
+    }
+
+    /**
+     * Get the category name as a formatted link.
+     *
+     * @return string
+     */
+    public function getDisplayNameAttribute()
+    {
+        return '<a href="'.$this->url.'">'.$this->name.'</a>';
+    }
+
+    /**
      * Get the category's subject, with information from config.
      *
      * @return array

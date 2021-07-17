@@ -27,15 +27,33 @@ class PageController extends Controller
     */
 
     /**
-     * Shows the subject page index.
+     * Shows the page index.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getIndex()
+    public function getPageIndex()
     {
         return view('pages.index', [
 
         ]);
+    }
+
+    /**
+     * Shows the page index.
+     *
+     * @param  int        $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getPage($id)
+    {
+        $page = Page::visible()->where('id', $id)->first();
+        if(!$page) abort(404);
+
+        return view('pages.page', [
+            'page' => $page
+        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+            'dateHelper' => new TimeDivision
+        ] : []));
     }
 
     /**
@@ -102,7 +120,7 @@ class PageController extends Controller
         // Form an array of possible answers based on configured fields,
         // Set any un-set toggles (since Laravel does not pass anything on for them),
         // and collect any custom validation rules for the configured fields
-        $answerArray = ['title', 'summary', 'category_id', 'is_visible',
+        $answerArray = ['title', 'summary', 'description', 'category_id', 'is_visible',
         'parent_id'];
         $validationRules = ($id ? Page::$updateRules : Page::$createRules);
         foreach($category->formFields as $key=>$field) {
@@ -110,16 +128,22 @@ class PageController extends Controller
             if(isset($field['rules'])) $validationRules[$key] = $field['rules'];
             if($field['type'] == 'checkbox' && !isset($request[$key])) $request[$key] = 0;
         }
-        if($category->subject['key'] == 'time') foreach((new TimeDivision)->dateFields() as $key=>$field) {
-            $answerArray[] = $key;
-            if(isset($field['rules'])) $validationRules[$key] = $field['rules'];
-            if($field['type'] == 'checkbox' && !isset($request[$key])) $request[$key] = 0;
-        }
-        if($category->subject['key'] == 'people') foreach(['birth', 'death'] as $segment) {
-            $answerArray[] = $segment.'_place_id';
-            $answerArray[] = $segment.'_chronology_id';
-            foreach((new TimeDivision)->dateFields() as $key=>$field) {
-                $answerArray[] = $segment.'_'.$key;
+        if($category->subject['key'] == 'time')
+            foreach(['start', 'end'] as $segment) {
+                foreach((new TimeDivision)->dateFields() as $key=>$field) {
+                    $answerArray[] = 'date_'.$segment.'_'.$key;
+                    if(isset($field['rules'])) $validationRules['date_'.$segment.'_'.$key] = $field['rules'];
+                    if($field['type'] == 'checkbox' && !isset($request['date_'.$segment.'_'.$key])) $request['date_'.$segment.'_'.$key] = 0;
+                }
+            }
+        if($category->subject['key'] == 'people') {
+            $answerArray[] = 'people_name';
+            foreach(['birth', 'death'] as $segment) {
+                $answerArray[] = $segment.'_place_id';
+                $answerArray[] = $segment.'_chronology_id';
+                foreach((new TimeDivision)->dateFields() as $key=>$field) {
+                    $answerArray[] = $segment.'_'.$key;
+                }
             }
         }
 

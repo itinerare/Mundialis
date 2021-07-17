@@ -24,6 +24,10 @@ return [
             // This is used for documenting special fields included in the subjects' templates
             // as a matter of course.
             'infobox' => [
+                'name' => [
+                    'name' => 'Name (Optional)',
+                    'description' => 'This is provided as an optional convenience in the event that you want to have a person\'s name or full name above the birth and death information in a page\'s infobox, as all other infobox fields follow after.'
+                ],
                 'birth-death' => [
                     'name' => 'Birth & Death (Optional)',
                     'description' => 'These allow setting of the time and place of birth and/or death. If both are set, and both times are within the same <a href="/admin/data/time/chronology">chronology</a>, the site will attempt to calculate age at time of death (assuming that the greatest <a href="/admin/data/time/divisions">division of time</a> corresponds to years). This can be overridden by manually setting an age. Date settings use either a single generic year field (if no divisions of time are set) or date fields constructed according to the divisions enabled for use in dates.'

@@ -116,6 +116,9 @@ class PageManager extends Service
         // Fetch category-- either from the page if it already exists, or from the category ID
         $category = $page ? $page->category : SubjectCategory::where('id', $data['category_id'])->first();
 
+        // Record the introduction as necessary
+        $data['data']['description'] = isset($data['description']) ? $data['description'] : null;
+
         // Cycle through the category's form fields
         // Data is recorded here in a flat array/only according to key, as keys should not
         // be duplicated in a template, and the template accounts for form building as well
@@ -126,14 +129,17 @@ class PageManager extends Service
         // Process any subject-specific data
         switch($category->subject['key']) {
             case 'people';
+                // Record name
+                $data['data']['people_name'] = isset($data['people_name']) ? $data['people_name'] : null;
+
                 // Record birth and death data
                 foreach(['birth', 'death'] as $segment) {
-                    $data['data'][$segment] = [
+                    if(isset($data[$segment.'_place_id']) || isset($data[$segment.'_chronology_id'])) $data['data'][$segment] = [
                         'place' => isset($data[$segment.'_place_id']) ? $data[$segment.'_place_id'] : null,
                         'chronology' => isset($data[$segment.'_chronology_id']) ? $data[$segment.'_chronology_id'] : null
                     ];
                     foreach((new TimeDivision)->dateFields() as $key=>$field)
-                        $data['data'][$segment]['date'][$key] = isset($data[$segment.'_'.$key]) ? $data[$segment.'_'.$key] : null;
+                        if(isset($data[$segment.'_'.$key])) $data['data'][$segment]['date'][$key] = isset($data[$segment.'_'.$key]) ? $data[$segment.'_'.$key] : null;
                 }
                 break;
             case 'places';
@@ -143,9 +149,11 @@ class PageManager extends Service
             case 'time';
                 // Record chronology
                 $data['parent_id'] = isset($data['parent_id']) ? $data['parent_id'] : null;
-                // Record date
-                foreach((new TimeDivision)->dateFields() as $key=>$field)
-                    $data['data']['date'][$key] = isset($data[$key]) ? $data[$key] : null;
+                // Record dates
+                foreach(['start', 'end'] as $segment) {
+                    foreach((new TimeDivision)->dateFields() as $key=>$field)
+                        if(isset($data['date_'.$segment.'_'.$key])) $data['data']['date'][$segment][$key] = isset($data['date_'.$segment.'_'.$key]) ? $data['date_'.$segment.'_'.$key] : null;
+                }
                 break;
         }
 

@@ -1,3 +1,8 @@
+<div class="form-group">
+    {!! Form::label('Name (Optional)') !!}
+    {!! Form::text('people_name', isset($page->data['people_name']) ? $page->data['people_name'] : null, ['class' => 'form-control']) !!}
+</div>
+
 @foreach(['birth', 'death'] as $segment)
 <div class="mb-2">
     <div class="row">

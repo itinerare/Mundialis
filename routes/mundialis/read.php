@@ -10,6 +10,14 @@
 |
 */
 
+Route::group(['prefix' => 'pages', 'namespace' => 'Pages'], function() {
+    # BASIC VIEW ROUTES
+    Route::get('/', 'PageController@getPageIndex');
+    Route::get('{subject}', 'PageController@getSubject');
+    Route::get('category/{id}', 'PageController@getSubjectCategory');
+    Route::get('view/{id}', 'PageController@getPage');
+});
+
 # SPECIAL PAGES
 Route::group(['prefix' => 'special'], function() {
     Route::get('all-pages', 'SpecialController@getAllPages');

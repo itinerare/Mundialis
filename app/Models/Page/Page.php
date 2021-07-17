@@ -3,6 +3,7 @@
 namespace App\Models\Page;
 
 use App\Models\Subject\SubjectCategory;
+use App\Models\Subject\TimeDivision;
 
 use App\Models\Model;
 
@@ -61,6 +62,16 @@ class Page extends Model
     public function category()
     {
         return $this->belongsTo('App\Models\Subject\SubjectCategory', 'category_id');
+    }
+
+    /**
+     * Get the parent this page belongs to.
+     */
+    public function parent()
+    {
+        if($this->category->subject['key'] == 'time')
+            return $this->belongsTo('App\Models\Subject\TimeChronology', 'parent_id');
+        return $this->belongsTo('App\Models\Page\Page', 'parent_id');
     }
 
     /**********************************************************************************************
@@ -130,7 +141,46 @@ class Page extends Model
      */
     public function getUrlAttribute()
     {
-        return url('pages/'.$this->id.'.'.$this->slug);
+        return url('pages/view/'.$this->id.'.'.$this->slug);
+    }
+
+    /**
+     * Get the page title as a formatted link.
+     *
+     * @return string
+     */
+    public function getDisplayNameAttribute()
+    {
+        return '<a href="'.$this->url.'">'.$this->title.'</a>';
+    }
+
+    /**********************************************************************************************
+
+        OTHER FUNCTIONS
+
+    **********************************************************************************************/
+
+    /**
+     * Attempt to calculate the age of a person by comparing two time arrays.
+     *
+     * @param  array     $birth
+     * @param  array     $current
+     * @return string
+     */
+    public function personAge($birth, $current)
+    {
+        if(isset($birth['date'][
+            str_replace(' ', '_', strtolower(TimeDivision::dateEnabled()->orderBy('sort', 'DESC')->first()->name))
+            ]) &&
+        isset($current['date'][
+            str_replace(' ', '_', strtolower(TimeDivision::dateEnabled()->orderBy('sort', 'DESC')->first()->name))
+            ]) &&
+        (isset($birth['chronology']) && isset($current['chronology']) &&
+        ($birth['chronology'] == $current['chronology'])))
+            return $current['date'][str_replace(' ', '_', strtolower(TimeDivision::dateEnabled()->orderBy('sort', 'DESC')->first()->name))] -
+            $birth['date'][str_replace(' ', '_', strtolower(TimeDivision::dateEnabled()->orderBy('sort', 'DESC')->first()->name))];
+
+        return null;
     }
 
 }

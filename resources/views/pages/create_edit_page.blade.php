@@ -3,7 +3,7 @@
 @section('pages-title') {{ $page->id ? 'Edit' : 'Create' }} {{ $category->subject['term'] }} @endsection
 
 @section('pages-content')
-{!! breadcrumbs(['Pages' => 'pages', $category->subject['name'] => 'pages/'.$category->subject['key']] + ($page->id ? [$page->title => $page->url] : []) + [($page->id ? 'Edit' : 'Create').' '.$category->subject['term'] => $page->id ? 'pages/edit/'.$page->id : 'pages/create/'.$category->id]) !!}
+{!! breadcrumbs(['Pages' => 'pages', $category->subject['name'] => 'pages/'.$category->subject['key'], $category->name => 'pages/categories/'.$category->id] + ($page->id ? [$page->title => $page->url] : []) + [($page->id ? 'Edit' : 'Create').' '.$category->subject['term'] => $page->id ? 'pages/edit/'.$page->id : 'pages/create/'.$category->id]) !!}
 
 <h1>{{ $page->id ? 'Edit' : 'Create' }} {{ $category->subject['term'] }}
     @if($page->id)
@@ -23,6 +23,11 @@
 <div class="form-group">
     {!! Form::label('Summary (Optional)') !!} {!! add_help('A short summary of the page\'s contents. This will be displayed on the page index.') !!}
     {!! Form::text('summary', $page->summary, ['class' => 'form-control']) !!}
+</div>
+
+<div class="form-group">
+    {!! Form::label('Introduction (Optional)') !!} {!! add_help('The introduction is the first thing displayed on the page, before all other content (but beside the infobox). It\'s recommended to put a general overview of the page\'s contents here.') !!}
+    {!! Form::textarea('description', isset($page->data['description']) ? $page->data['description'] : null, ['class' => 'form-control wysiwyg']) !!}
 </div>
 
 @if(!$page->id)

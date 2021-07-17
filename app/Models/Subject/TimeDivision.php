@@ -69,7 +69,7 @@ class TimeDivision extends Model
      */
     public function getDisplayNameAttribute()
     {
-        if(isset($this->abbreviation)) return '<abbr data-toggle="tooltip" title="'.$this->name.'">'.$this->abbreviation.'</abbr>';
+        if(isset($this->abbreviation)) return '<abbr data-toggle="tooltip" title="'.$this->name.'">'.$this->abbreviation.'.</abbr>';
         return $this->name;
     }
 
@@ -87,7 +87,7 @@ class TimeDivision extends Model
     public function dateFields()
     {
         $fields = [];
-        foreach($this->dateEnabled()->orderBy('sort')->get() as $key=>$division) {
+        foreach($this->dateEnabled()->orderBy('sort')->get() as $division) {
             $fields[str_replace(' ', '_', strtolower($division->name))] = [
                 'label' => $division->name,
                 'type' => 'number',
@@ -98,6 +98,23 @@ class TimeDivision extends Model
             ];
         }
         return $fields;
+    }
+
+    /**
+     * Return a formatted datestring using date-enabled divisions.
+     *
+     * @param  array    $data
+     * @return string
+     */
+    public function formatTimeDate($data)
+    {
+        // Cycle through date-enabled divisions and add a formatted string to the array
+        foreach($this->dateEnabled()->orderBy('sort')->get() as $division) {
+            if(isset($data[str_replace(' ', '_', strtolower($division->name))]))
+                $date[] = $division->displayName.' '.$data[str_replace(' ', '_', strtolower($division->name))];
+        }
+
+        return implode(', ', $date);
     }
 
 }
