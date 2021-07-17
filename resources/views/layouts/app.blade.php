@@ -83,7 +83,7 @@
         <main class="container-fluid">
             <div class="row">
                 <div class="sidebar col-lg-2" id="sidebar">
-                    <img src="{{ asset('images/logo.png') }}" class="mw-100 p-2" />
+                    <img src="{{ asset('images/logo.png') }}" class="mw-100 p-2 mobile-hide" />
                     @yield('sidebar')
                 </div>
                 <div class="main-content col-lg no-gutters">
