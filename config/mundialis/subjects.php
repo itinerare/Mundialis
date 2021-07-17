@@ -19,6 +19,7 @@ return [
     'people' => [
         'name' => 'People',
         'description' => 'Pages for this subject represent people within or relevant to your project. These can include characters, both significant and not, NPCs, etc.',
+        'term' => 'Person',
         'segments' => [
             // This is used for documenting special fields included in the subjects' templates
             // as a matter of course.
@@ -34,10 +35,11 @@ return [
     'places' => [
         'name' => 'Places',
         'description' => 'Pages for this subject represent locations within or relevant to your project, big and small.',
+        'term' => 'Place',
         'segments' => [
             'general properties' => [
                 'parent' => [
-                    'name' => 'Parent Location (Optional)',
+                    'name' => 'Parent Place (Optional)',
                     'description' => 'The location that the location being edited exists within. For instance, countries exist within continents, neighborhoods exist within cities, etc.'
                 ]
             ]
@@ -46,22 +48,26 @@ return [
 
     'species' => [
         'name' => 'Flora & Fauna',
-        'description' => 'Pages for this subject represent species, plant and/or animal, within or relevant to your project.'
+        'description' => 'Pages for this subject represent species, plant and/or animal, within or relevant to your project.',
+        'term' => 'Species'
     ],
 
     'things' => [
         'name' => 'Things',
-        'description' => 'Pages for this subject represent inanimate objects within or relevant to your project. This can include anything from rather mundane things like clothing, tools, and food to objects of great rarity or import.'
+        'description' => 'Pages for this subject represent inanimate objects within or relevant to your project. This can include anything from rather mundane things like clothing, tools, and food to objects of great rarity or import.',
+        'term' => 'Thing'
     ],
 
     'concepts' => [
         'name' => 'Concepts',
-        'description' => 'Pages for this subject represent abstract concepts within or relevant to your project. This covers an immense amount of potential material; everything from natural laws to social constructs, laws, and culture. Time and language are technically part of this umbrella as well, though are represented independently.'
+        'description' => 'Pages for this subject represent abstract concepts within or relevant to your project. This covers an immense amount of potential material; everything from natural laws to social constructs, laws, and culture. Time and language are technically part of this umbrella as well, though are represented independently.',
+        'term' => 'Cocnept'
     ],
 
     'time' => [
         'name' => 'Time & Events',
         'description' => 'Pages for this subject correspond to individual events. While categories are used much like other subjects, this subject also has separate chronology settings that are used to order large spans of time (and events within them) as well as settings for divisions of time.',
+        'term' => 'Event',
         'pages' => [
             // This is used to generate links/interface with the generic views; routes etc must
             // be manually set as these correspond to particular/specialized functions
@@ -85,6 +91,7 @@ return [
     'language' => [
         'name' => 'Language',
         'description' => 'Pages for this subject cover concepts about and around language, such as grammar, etc. However, the heart of this subject is the lexicon system, which allows you to categorize and enter vocabulary used within your project. This can be as simple as some special terms that are important or unqiue to your project, or as elaborate as whole languages or linguistic structures. Lexicon settings cover the parts of speech (noun, verb, etc.) used, while lexicon categories allow for organization of words-- as well as some advanced functions like specifying cases and auto-conjucation/declension.',
+        'term' => 'Page',
         'pages' => [
             'lexicon-settings' => '<i class="fas fa-list-ul"></i> Lexicon Settings',
             'lexicon-categories' => '<i class="far fa-list-alt"></i> Lexicon Categories'
@@ -93,6 +100,7 @@ return [
 
     'misc' => [
         'name' => 'Miscellaneous',
+        'term' => 'Page',
         'description' => 'While the other subjects should be broad enough to cover most if not all use cases, this subject-of-sorts is here in the event that some content falls outside the others nonetheless.'
     ],
 ];

@@ -14,7 +14,7 @@ class Page extends Model
      * @var array
      */
     protected $fillable = [
-        'category_id', 'title', 'summary', 'data', 'is_visible'
+        'category_id', 'title', 'summary', 'data', 'is_visible', 'parent_id'
     ];
 
     /**
@@ -111,6 +111,26 @@ class Page extends Model
     {
         if(!isset($this->attributes['data'])) return null;
         return json_decode($this->attributes['data'], true);
+    }
+
+    /**
+     * Get the page's slug.
+     *
+     * @return string
+     */
+    public function getSlugAttribute()
+    {
+        return str_replace(' ', '_', $this->title);
+    }
+
+    /**
+     * Get the page's url.
+     *
+     * @return string
+     */
+    public function getUrlAttribute()
+    {
+        return url('pages/'.$this->id.'.'.$this->slug);
     }
 
 }

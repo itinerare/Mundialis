@@ -5,6 +5,7 @@ use App\Services\Service;
 use DB;
 
 use App\Models\Subject\SubjectCategory;
+use App\Models\Subject\TimeDivision;
 use App\Models\Page\Page;
 
 class PageManager extends Service
@@ -121,6 +122,32 @@ class PageManager extends Service
         // as page formatting
         foreach($category->formFields as $key=>$field)
             $data['data'][$key] = isset($data[$key]) ? $data[$key] : null;
+
+        // Process any subject-specific data
+        switch($category->subject['key']) {
+            case 'people';
+                // Record birth and death data
+                foreach(['birth', 'death'] as $segment) {
+                    $data['data'][$segment] = [
+                        'place' => isset($data[$segment.'_place_id']) ? $data[$segment.'_place_id'] : null,
+                        'chronology' => isset($data[$segment.'_chronology_id']) ? $data[$segment.'_chronology_id'] : null
+                    ];
+                    foreach((new TimeDivision)->dateFields() as $key=>$field)
+                        $data['data'][$segment]['date'][$key] = isset($data[$segment.'_'.$key]) ? $data[$segment.'_'.$key] : null;
+                }
+                break;
+            case 'places';
+                // Record parent location
+                $data['parent_id'] = isset($data['parent_id']) ? $data['parent_id'] : null;
+                break;
+            case 'time';
+                // Record chronology
+                $data['parent_id'] = isset($data['parent_id']) ? $data['parent_id'] : null;
+                // Record date
+                foreach((new TimeDivision)->dateFields() as $key=>$field)
+                    $data['data']['date'][$key] = isset($data[$key]) ? $data[$key] : null;
+                break;
+        }
 
         return $data;
     }

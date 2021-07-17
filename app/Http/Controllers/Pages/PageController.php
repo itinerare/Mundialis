@@ -6,6 +6,8 @@ use Auth;
 use Config;
 
 use App\Models\Subject\SubjectCategory;
+use App\Models\Subject\TimeDivision;
+use App\Models\Subject\TimeChronology;
 use App\Models\Page\Page;
 
 use App\Services\PageManager;
@@ -52,6 +54,11 @@ class PageController extends Controller
             'category' => $category
         ] + ($category->subject['key'] == 'places' ? [
             'placeOptions' => Page::visible()->subject('places')->pluck('title', 'id')
+        ] : []) + ($category->subject['key'] == 'time' ? [
+            'chronologyOptions' => TimeChronology::pluck('name', 'id')
+        ] : []) + ($category->subject['key'] == 'people' ? [
+            'placeOptions' => Page::visible()->subject('places')->pluck('title', 'id'),
+            'chronologyOptions' => TimeChronology::pluck('name', 'id')
         ] : []));
     }
 
@@ -71,6 +78,11 @@ class PageController extends Controller
             'category' => $page->category
         ] + ($page->category->subject['key'] == 'places' ? [
             'placeOptions' => Page::visible()->subject('places')->where('id', '!=', $page->id)->pluck('title', 'id')
+        ] : []) + ($page->category->subject['key'] == 'time' ? [
+            'chronologyOptions' => TimeChronology::pluck('name', 'id')
+        ] : []) + ($page->category->subject['key'] == 'people' ? [
+            'placeOptions' => Page::visible()->subject('places')->pluck('title', 'id'),
+            'chronologyOptions' => TimeChronology::pluck('name', 'id')
         ] : []));
     }
 
@@ -85,19 +97,33 @@ class PageController extends Controller
     public function postCreateEditPage(Request $request, PageManager $service, $id = null)
     {
         if(!$id) $category = SubjectCategory::where('id', $request->get('category_id'))->first();
+        else $category = Page::find($id)->category;
 
         // Form an array of possible answers based on configured fields,
         // Set any un-set toggles (since Laravel does not pass anything on for them),
         // and collect any custom validation rules for the configured fields
-        $answerArray = ['title', 'summary', 'category_id', 'is_visible']; $validationRules = ($id ? Page::$updateRules : Page::$createRules);
-        foreach(($id ? Page::find($id)->category->formFields : $category->formFields) as $key=>$field) {
+        $answerArray = ['title', 'summary', 'category_id', 'is_visible',
+        'parent_id'];
+        $validationRules = ($id ? Page::$updateRules : Page::$createRules);
+        foreach($category->formFields as $key=>$field) {
             $answerArray[] = $key;
             if(isset($field['rules'])) $validationRules[$key] = $field['rules'];
             if($field['type'] == 'checkbox' && !isset($request[$key])) $request[$key] = 0;
         }
+        if($category->subject['key'] == 'time') foreach((new TimeDivision)->dateFields() as $key=>$field) {
+            $answerArray[] = $key;
+            if(isset($field['rules'])) $validationRules[$key] = $field['rules'];
+            if($field['type'] == 'checkbox' && !isset($request[$key])) $request[$key] = 0;
+        }
+        if($category->subject['key'] == 'people') foreach(['birth', 'death'] as $segment) {
+            $answerArray[] = $segment.'_place_id';
+            $answerArray[] = $segment.'_chronology_id';
+            foreach((new TimeDivision)->dateFields() as $key=>$field) {
+                $answerArray[] = $segment.'_'.$key;
+            }
+        }
 
         $request->validate($validationRules);
-
         $data = $request->only($answerArray);
 
         if($id && $service->updatePage(Page::find($id), $data, Auth::user())) {

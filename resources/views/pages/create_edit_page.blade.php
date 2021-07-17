@@ -1,13 +1,13 @@
 @extends('pages.layout')
 
-@section('pages-title') {{ $page->id ? 'Edit' : 'Create' }} Page @endsection
+@section('pages-title') {{ $page->id ? 'Edit' : 'Create' }} {{ $category->subject['term'] }} @endsection
 
 @section('pages-content')
-{!! breadcrumbs(['Pages' => 'pages', $category->subject['name'] => 'pages/'.$category->subject['key'], ($page->id ? 'Edit' : 'Create').' Page' => $page->id ? 'pages/edit/'.$page->id : 'pages/create/'.$category->id]) !!}
+{!! breadcrumbs(['Pages' => 'pages', $category->subject['name'] => 'pages/'.$category->subject['key']] + ($page->id ? [$page->title => $page->url] : []) + [($page->id ? 'Edit' : 'Create').' '.$category->subject['term'] => $page->id ? 'pages/edit/'.$page->id : 'pages/create/'.$category->id]) !!}
 
-<h1>{{ $page->id ? 'Edit' : 'Create' }} Page
+<h1>{{ $page->id ? 'Edit' : 'Create' }} {{ $category->subject['term'] }}
     @if($page->id)
-        <a href="#" class="btn btn-danger float-right delete-page-button">Delete Page</a>
+        <a href="#" class="btn btn-danger float-right delete-page-button">Delete {{ $category->subject['term'] }}</a>
     @endif
 </h1>
 

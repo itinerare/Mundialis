@@ -40,6 +40,24 @@ class TimeDivision extends Model
 
     /**********************************************************************************************
 
+        SCOPES
+
+    **********************************************************************************************/
+
+    /**
+     * Scope a query to only include date-enabled divisions.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeDateEnabled($query)
+    {
+        return $query->where('use_for_dates', 1);
+    }
+
+    /**********************************************************************************************
+
         ACCESSORS
 
     **********************************************************************************************/
@@ -53,6 +71,33 @@ class TimeDivision extends Model
     {
         if(isset($this->abbreviation)) return '<abbr data-toggle="tooltip" title="'.$this->name.'">'.$this->abbreviation.'</abbr>';
         return $this->name;
+    }
+
+    /**********************************************************************************************
+
+        OTHER FUNCTIONS
+
+    **********************************************************************************************/
+
+    /**
+     * Return form field information for date-enabled divisions.
+     *
+     * @return array
+     */
+    public function dateFields()
+    {
+        $fields = [];
+        foreach($this->dateEnabled()->orderBy('sort')->get() as $key=>$division) {
+            $fields[str_replace(' ', '_', strtolower($division->name))] = [
+                'label' => $division->name,
+                'type' => 'number',
+                'rules' => null,
+                'choices' => null,
+                'value' => null,
+                'help' => null
+            ];
+        }
+        return $fields;
     }
 
 }
