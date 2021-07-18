@@ -34,13 +34,13 @@
     <div class="row">
         @foreach($pages->chunkWhile(function ($value, $key, $chunk) {return substr($value->title, 0, 1) === substr($chunk->first()->title, 0, 1);}) as $chunk)
             {!! $loop->first || $loop->iteration == 3 ? '<div class="col-md-3">' : '' !!}
-                <h4>{{ ucfirst(substr($chunk->last()->title, 0, 1)) }}</h4>
+                <h4>{{ ucfirst(substr($chunk->first()->title, 0, 1)) }}</h4>
                 <ul>
                     @foreach($chunk as $page)
                         <li>{!! $page->displayName !!}</li>
                     @endforeach
                 </ul>
-            {!! $loop->last || $loop->iteration == 3 ? '</div>' : '' !!}
+            {!! $loop->last || $loop->iteration == 2 ? '</div>' : '' !!}
             @php if($loop->last) unset($page); @endphp
         @endforeach
     </div>
