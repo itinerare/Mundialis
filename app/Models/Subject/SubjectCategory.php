@@ -77,7 +77,7 @@ class SubjectCategory extends Model
      */
     public function pages()
     {
-        return $this->hasMany('App\Models\Subject\SubjectPage');
+        return $this->hasMany('App\Models\Page\Page', 'category_id');
     }
 
     /**********************************************************************************************
@@ -104,7 +104,7 @@ class SubjectCategory extends Model
      */
     public function getUrlAttribute()
     {
-        return url('pages/categories/'.$this->id);
+        return url('pages/'.$this->attributes['subject'].'/categories/'.$this->id);
     }
 
     /**

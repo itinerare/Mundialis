@@ -41,6 +41,44 @@ class PageController extends Controller
     /**
      * Shows the page index.
      *
+     * @param  string         $subject
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getSubject($subject)
+    {
+        if(null == Config::get('mundialis.subjects.'.$subject)) abort(404);
+        $subjectKey = $subject; $subject = Config::get('mundialis.subjects.'.$subject);
+        $subject['key'] = $subjectKey;
+
+        return view('pages.subject', [
+            'subject' => $subject,
+            'categories' => SubjectCategory::where('subject', $subject['key'])->whereNull('parent_id')->orderBy('sort', 'DESC')->paginate(20)
+        ]);
+    }
+
+    /**
+     * Shows the page index.
+     *
+     * @param  string      $subject
+     * @param  int         $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getSubjectCategory($subject, $id)
+    {
+        $category = SubjectCategory::where('id', $id)->first();
+        if(!$category) abort(404);
+        if($category->subject['key'] != $subject) abort(404);
+
+        return view('pages.category', [
+            'category' => $category,
+            'pages' => $category->pages()->visible(Auth::check() ? Auth::user() : null)->paginate(20),
+            'dateHelper' => new TimeDivision
+        ]);
+    }
+
+    /**
+     * Shows the page index.
+     *
      * @param  int        $id
      * @return \Illuminate\Contracts\Support\Renderable
      */

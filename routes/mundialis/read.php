@@ -12,9 +12,9 @@
 
 Route::group(['prefix' => 'pages', 'namespace' => 'Pages'], function() {
     # BASIC VIEW ROUTES
-    Route::get('/', 'PageController@getPageIndex');
+    Route::get('/', 'PageController@getPagesIndex');
     Route::get('{subject}', 'PageController@getSubject');
-    Route::get('category/{id}', 'PageController@getSubjectCategory');
+    Route::get('{subject}/categories/{id}', 'PageController@getSubjectCategory');
     Route::get('view/{id}', 'PageController@getPage');
 });
 

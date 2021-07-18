@@ -14,14 +14,18 @@
 
 
 <div class="row">
-    <div class="mobile-show col-lg-4 mb-2">
-        @include('pages.content_builder._infobox_builder')
-    </div>
-    <div class="col-lg-12 col-md">
-        <!-- INFOBOX -->
-        <div class="float-right mobile-hide" style="width:25vw;">
+    @if(isset($page->category->template['infobox']) || $page->thumbnailUrl)
+        <div class="mobile-show col-lg-4 mb-2">
             @include('pages.content_builder._infobox_builder')
         </div>
+    @endif
+    <div class="col-lg-12 col-md">
+        <!-- INFOBOX -->
+        @if(isset($page->category->template['infobox']) || $page->thumbnailUrl)
+            <div class="float-right mobile-hide" style="width:25vw;">
+                @include('pages.content_builder._infobox_builder')
+            </div>
+        @endif
 
         <!-- INTRO -->
         {!! isset($page->data['description']) ? $page->data['description'] : '' !!}
