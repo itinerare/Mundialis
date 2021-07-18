@@ -1,4 +1,39 @@
 {!! $pages->render() !!}
+<div>
+    {!! Form::open(['method' => 'GET', 'class' => '']) !!}
+        <div class="form-inline justify-content-end">
+            <div class="form-group mb-3">
+                {!! Form::text('title', Request::get('title'), ['class' => 'form-control', 'placeholder' => 'Title']) !!}
+            </div>
+            @if(!isset($category))
+                <div class="form-group ml-3 mb-3">
+                    {!! Form::select('category_id', $categoryOptions, Request::get('category_id'), ['class' => 'form-control', 'placeholder' => 'Select a Category']) !!}
+                </div>
+            @endif
+        </div>
+        <div class="form-inline justify-content-end">
+            <div class="form-group mr-3 mb-3">
+                {!! Form::select('sort', [
+                    'newest'         => 'Newest First',
+                    'oldest'         => 'Oldest First',
+                    'alpha'          => 'Sort Alphabetically (A-Z)',
+                    'alpha-reverse'  => 'Sort Alphabetically (Z-A)',
+                ], Request::get('sort') ? : 'alpha', ['class' => 'form-control']) !!}
+            </div>
+            <div class="form-group mb-3">
+                {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
+            </div>
+        </div>
+    {!! Form::close() !!}
+</div>
+
+<div class="text-right mb-3">
+    <div class="btn-group">
+        <button type="button" class="btn btn-secondary active page-grid-view-button" data-toggle="tooltip" title="Grid View" alt="Grid View"><i class="fas fa-th"></i></button>
+        <button type="button" class="btn btn-secondary page-list-view-button" data-toggle="tooltip" title="List View" alt="List View"><i class="fas fa-bars"></i></button>
+    </div>
+</div>
+
 <div id="pageGridView" class="hide">
     <div class="row">
         @foreach($pages as $page)

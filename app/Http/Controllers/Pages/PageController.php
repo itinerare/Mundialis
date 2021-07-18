@@ -71,9 +71,35 @@ class PageController extends Controller
         if(!$category) abort(404);
         if($category->subject['key'] != $subject) abort(404);
 
+        $query = $category->pages()->visible(Auth::check() ? Auth::user() : null);
+        $sort = $request->only(['sort']);
+
+        if($request->get('title')) $query->where(function($query) use ($request) {
+            $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
+        });
+
+        if(isset($sort['sort']))
+        {
+            switch($sort['sort']) {
+                case 'alpha':
+                    $query->orderBy('title');
+                    break;
+                case 'alpha-reverse':
+                    $query->orderBy('title', 'DESC');
+                    break;
+                case 'newest':
+                    $query->orderBy('created_at', 'DESC');
+                    break;
+                case 'oldest':
+                    $query->orderBy('created_at', 'ASC');
+                    break;
+            }
+        }
+        else $query->orderBy('title');
+
         return view('pages.category', [
             'category' => $category,
-            'pages' => $category->pages()->visible(Auth::check() ? Auth::user() : null)->orderBy('title')->paginate(20)->appends($request->query()),
+            'pages' => $query->paginate(20)->appends($request->query()),
             'dateHelper' => new TimeDivision
         ]);
     }
@@ -86,8 +112,36 @@ class PageController extends Controller
      */
     public function getAllPages(Request $request)
     {
+        $query = Page::visible(Auth::check() ? Auth::user() : null);
+        $sort = $request->only(['sort']);
+
+        if($request->get('title')) $query->where(function($query) use ($request) {
+            $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
+        });
+        if($request->get('category_id')) $query->where('category_id', $request->get('category_id'));
+
+        if(isset($sort['sort']))
+        {
+            switch($sort['sort']) {
+                case 'alpha':
+                    $query->orderBy('title');
+                    break;
+                case 'alpha-reverse':
+                    $query->orderBy('title', 'DESC');
+                    break;
+                case 'newest':
+                    $query->orderBy('created_at', 'DESC');
+                    break;
+                case 'oldest':
+                    $query->orderBy('created_at', 'ASC');
+                    break;
+            }
+        }
+        else $query->orderBy('title');
+
         return view('pages.special_all', [
-            'pages' => Page::visible(Auth::check() ? Auth::user() : null)->orderBy('title')->paginate(20)->appends($request->query()),
+            'pages' => $query->paginate(20)->appends($request->query()),
+            'categoryOptions' => SubjectCategory::pluck('name', 'id'),
             'dateHelper' => new TimeDivision
         ]);
     }

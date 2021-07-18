@@ -28,12 +28,6 @@
 @endif
 
 <h2>Pages</h2>
-<div class="text-right mb-3">
-    <div class="btn-group">
-        <button type="button" class="btn btn-secondary active page-grid-view-button" data-toggle="tooltip" title="Grid View" alt="Grid View"><i class="fas fa-th"></i></button>
-        <button type="button" class="btn btn-secondary page-list-view-button" data-toggle="tooltip" title="List View" alt="List View"><i class="fas fa-bars"></i></button>
-    </div>
-</div>
 
 @include('pages._page_index_content')
 
