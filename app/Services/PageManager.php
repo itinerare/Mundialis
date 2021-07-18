@@ -118,6 +118,7 @@ class PageManager extends Service
 
         // Record the introduction as necessary
         $data['data']['description'] = isset($data['description']) ? $data['description'] : null;
+        if(!isset($data['is_visible'])) $data['is_visible'] = 0;
 
         // Cycle through the category's form fields
         // Data is recorded here in a flat array/only according to key, as keys should not
