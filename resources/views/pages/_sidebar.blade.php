@@ -22,5 +22,10 @@
                 <div class="sidebar-item"><a href="{{ url('pages/'.$subject) }}" class="{{ set_active('pages/'.$subject.'*') }}">{{ isset($values['name']) ? $values['name'] : ucfirst($subject) }}</a></div>
             @endforeach
         </li>
+
+        <li class="sidebar-section">
+            <div class="sidebar-section-header">Special Pages</div>
+            <div class="sidebar-item"><a href="{{ url('special/all-pages') }}" class="{{ set_active('special/all-pages') }}">All Pages</a></div>
+        </li>
     @endif
 </ul>

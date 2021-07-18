@@ -19,8 +19,8 @@ Route::group(['prefix' => 'pages', 'namespace' => 'Pages'], function() {
 });
 
 # SPECIAL PAGES
-Route::group(['prefix' => 'special'], function() {
-    Route::get('all-pages', 'SpecialController@getAllPages');
-    Route::get('wanted-pages', 'SpecialController@getWantedPages');
-    Route::get('protected-pages', 'SpecialController@getProtectedPages');
+Route::group(['prefix' => 'special', 'namespace' => 'Pages'], function() {
+    Route::get('all-pages', 'PageController@getAllPages');
+    Route::get('wanted-pages', 'PageController@getWantedPages');
+    Route::get('protected-pages', 'PageController@getProtectedPages');
 });

@@ -1,5 +1,4 @@
 {!! $pages->render() !!}
-
 <div id="pageGridView" class="hide">
     <div class="row">
         @foreach($pages as $page)
@@ -13,7 +12,11 @@
                         <h3>
                             {!! $page->displayName !!}
                         </h3>
-                        {!! $page->category->subject['key'] == 'time' && isset($page->data['date']['start']) ? $dateHelper->formatTimeDate($page->data['date']['start']).(isset($page->data['date']['start']) && isset($page->data['date']['end']) ? '-' : '' ).(isset($page->data['date']['end']) ? $dateHelper->formatTimeDate($page->data['date']['end']) : '') : '' !!}{{ ((isset($page->data['date']['start']) || isset($page->data['date']['end'])) && ($page->parent && (isset($page->parent->is_visible) ? ($page->parent->is_visible || (Auth::check() && Auth::user()->canWrite)) : 1))) ? ' ・ ' : '' }}{!! $page->parent && (isset($page->parent->is_visible) ? ($page->parent->is_visible || (Auth::check() && Auth::user()->canWrite)) : 1) ? $page->parent->displayName : '' !!}
+                        @if(isset($category))
+                            {!! $page->category->subject['key'] == 'time' && isset($page->data['date']['start']) ? $dateHelper->formatTimeDate($page->data['date']['start']).(isset($page->data['date']['start']) && isset($page->data['date']['end']) ? '-' : '' ).(isset($page->data['date']['end']) ? $dateHelper->formatTimeDate($page->data['date']['end']) : '') : '' !!}{{ ((isset($page->data['date']['start']) || isset($page->data['date']['end'])) && ($page->parent && (isset($page->parent->is_visible) ? ($page->parent->is_visible || (Auth::check() && Auth::user()->canWrite)) : 1))) ? ' ・ ' : '' }}{!! $page->parent && (isset($page->parent->is_visible) ? ($page->parent->is_visible || (Auth::check() && Auth::user()->canWrite)) : 1) ? $page->parent->displayName : '' !!}
+                        @else
+                            {!! $page->category->subject['term'].' ・ '.$page->category->displayName !!}{!! $page->category->subject['key'] == 'time' && isset($page->data['date']['start']) ? ' ・ '.$dateHelper->formatTimeDate($page->data['date']['start']).(isset($page->data['date']['start']) && isset($page->data['date']['end']) ? '-' : '' ).(isset($page->data['date']['end']) ? $dateHelper->formatTimeDate($page->data['date']['end']) : '') : '' !!}{!! $page->parent && (isset($page->parent->is_visible) ? ($page->parent->is_visible || (Auth::check() && Auth::user()->canWrite)) : 1) ? ' ・ '.$page->parent->displayName : '' !!}
+                        @endif
                     </div>
                     @if(isset($page->summary) && $page->summary)
                         <ul class="list-group list-group-flush text-center">
@@ -32,12 +35,12 @@
 </div>
 <div id="pageListView" class="hide">
     <div class="row">
-        @foreach($pages->chunkWhile(function ($value, $key, $chunk) {return substr($value->title, 0, 1) === substr($chunk->first()->title, 0, 1);}) as $chunk)
-            {!! $loop->first || $loop->iteration == 3 ? '<div class="col-md-3">' : '' !!}
-                <h4>{{ ucfirst(substr($chunk->first()->title, 0, 1)) }}</h4>
+        @foreach($pages->groupBy(function ($item, $key) {return substr(strtolower($item->title), 0, 1);}) as $group)
+            {!! $loop->first || $loop->iteration == 3 ? '<div class="col-md-4">' : '' !!}
+                <h4>{{ ucfirst(substr($group->first()->title, 0, 1)) }}</h4>
                 <ul>
-                    @foreach($chunk as $page)
-                        <li>{!! $page->displayName !!}</li>
+                    @foreach($group as $page)
+                        <li>{!! $page->displayName !!}{!! !isset($category) ? ' ('.$page->category->subject['term'].', '.$page->category->displayName.')' : '' !!}</li>
                     @endforeach
                 </ul>
             {!! $loop->last || $loop->iteration == 2 ? '</div>' : '' !!}

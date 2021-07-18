@@ -39,12 +39,13 @@ class PageController extends Controller
     }
 
     /**
-     * Shows the page index.
+     * Shows a subject's category index.
      *
-     * @param  string         $subject
+     * @param  string                    $subject
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSubject($subject)
+    public function getSubject($subject, Request $request)
     {
         if(null == Config::get('mundialis.subjects.'.$subject)) abort(404);
         $subjectKey = $subject; $subject = Config::get('mundialis.subjects.'.$subject);
@@ -52,18 +53,19 @@ class PageController extends Controller
 
         return view('pages.subject', [
             'subject' => $subject,
-            'categories' => SubjectCategory::where('subject', $subject['key'])->whereNull('parent_id')->orderBy('sort', 'DESC')->paginate(20)
+            'categories' => SubjectCategory::where('subject', $subject['key'])->whereNull('parent_id')->orderBy('sort', 'DESC')->paginate(20)->appends($request->query())
         ]);
     }
 
     /**
-     * Shows the page index.
+     * Shows a category's page.
      *
-     * @param  string      $subject
-     * @param  int         $id
+     * @param  string                    $subject
+     * @param  int                       $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSubjectCategory($subject, $id)
+    public function getSubjectCategory($subject, $id, Request $request)
     {
         $category = SubjectCategory::where('id', $id)->first();
         if(!$category) abort(404);
@@ -71,13 +73,27 @@ class PageController extends Controller
 
         return view('pages.category', [
             'category' => $category,
-            'pages' => $category->pages()->visible(Auth::check() ? Auth::user() : null)->paginate(20),
+            'pages' => $category->pages()->visible(Auth::check() ? Auth::user() : null)->orderBy('title')->paginate(20)->appends($request->query()),
             'dateHelper' => new TimeDivision
         ]);
     }
 
     /**
-     * Shows the page index.
+     * Shows list of all pages.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getAllPages(Request $request)
+    {
+        return view('pages.special_all', [
+            'pages' => Page::visible(Auth::check() ? Auth::user() : null)->orderBy('title')->paginate(20)->appends($request->query()),
+            'dateHelper' => new TimeDivision
+        ]);
+    }
+
+    /**
+     * Shows a page.
      *
      * @param  int        $id
      * @return \Illuminate\Contracts\Support\Renderable
