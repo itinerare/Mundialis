@@ -65,7 +65,7 @@ return [
     'concepts' => [
         'name' => 'Concepts',
         'description' => 'Pages for this subject represent abstract concepts within or relevant to your project. This covers an immense amount of potential material; everything from natural laws to social constructs, laws, and culture. Time and language are technically part of this umbrella as well, though are represented independently.',
-        'term' => 'Cocnept'
+        'term' => 'Concept'
     ],
 
     'time' => [
