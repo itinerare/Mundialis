@@ -46,7 +46,7 @@ class PageController extends Controller
      */
     public function getPage($id)
     {
-        $page = Page::visible()->where('id', $id)->first();
+        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
         if(!$page) abort(404);
 
         return view('pages.page', [
@@ -71,11 +71,11 @@ class PageController extends Controller
             'page' => new Page,
             'category' => $category
         ] + ($category->subject['key'] == 'places' ? [
-            'placeOptions' => Page::visible()->subject('places')->pluck('title', 'id')
+            'placeOptions' => Page::subject('places')->pluck('title', 'id')
         ] : []) + ($category->subject['key'] == 'time' ? [
             'chronologyOptions' => TimeChronology::pluck('name', 'id')
         ] : []) + ($category->subject['key'] == 'people' ? [
-            'placeOptions' => Page::visible()->subject('places')->pluck('title', 'id'),
+            'placeOptions' => Page::subject('places')->pluck('title', 'id'),
             'chronologyOptions' => TimeChronology::pluck('name', 'id')
         ] : []));
     }
@@ -95,11 +95,11 @@ class PageController extends Controller
             'page' => $page,
             'category' => $page->category
         ] + ($page->category->subject['key'] == 'places' ? [
-            'placeOptions' => Page::visible()->subject('places')->where('id', '!=', $page->id)->pluck('title', 'id')
+            'placeOptions' => Page::subject('places')->where('id', '!=', $page->id)->pluck('title', 'id')
         ] : []) + ($page->category->subject['key'] == 'time' ? [
             'chronologyOptions' => TimeChronology::pluck('name', 'id')
         ] : []) + ($page->category->subject['key'] == 'people' ? [
-            'placeOptions' => Page::visible()->subject('places')->pluck('title', 'id'),
+            'placeOptions' => Page::subject('places')->pluck('title', 'id'),
             'chronologyOptions' => TimeChronology::pluck('name', 'id')
         ] : []));
     }

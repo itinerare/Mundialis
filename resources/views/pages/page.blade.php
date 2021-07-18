@@ -5,7 +5,7 @@
 @section('pages-content')
 {!! breadcrumbs(['Pages' => 'pages', $page->category->subject['name'] => 'pages/'.$page->category->subject['key'], $page->category->name => 'pages/categories/'.$page->category->id, $page->title => $page->url]) !!}
 
-{!! $page->category->subject['term'].' ・ '.$page->category->displayName !!}{!! $page->category->subject['key'] == 'time' && isset($page->data['date']['start']) ? ' ・ '.$dateHelper->formatTimeDate($page->data['date']['start']).(isset($page->data['date']['start']) && isset($page->data['date']['end']) ? '-' : '' ).(isset($page->data['date']['end']) ? $dateHelper->formatTimeDate($page->data['date']['end']) : '') : '' !!}{!! $page->parent ? ' ・ '.$page->parent->displayName : '' !!}
+{!! $page->category->subject['term'].' ・ '.$page->category->displayName !!}{!! $page->category->subject['key'] == 'time' && isset($page->data['date']['start']) ? ' ・ '.$dateHelper->formatTimeDate($page->data['date']['start']).(isset($page->data['date']['start']) && isset($page->data['date']['end']) ? '-' : '' ).(isset($page->data['date']['end']) ? $dateHelper->formatTimeDate($page->data['date']['end']) : '') : '' !!}{!! $page->parent && (isset($page->parent->is_visible) ? ($page->parent->is_visible || (Auth::check() && Auth::user()->canWrite)) : 1) ? ' ・ '.$page->parent->displayName : '' !!}
 <h1>{{ $page->title }}
     @if(Auth::check() && Auth::user()->canWrite)
         <a href="{{ url('pages/edit/'.$page->id) }}" class="btn btn-secondary float-right">Edit {{ $page->category->subject['term'] }}</a>

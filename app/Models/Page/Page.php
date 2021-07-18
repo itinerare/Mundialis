@@ -84,11 +84,13 @@ class Page extends Model
      * Scope a query to only include visible pages.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  \App\Models\User\User                  $user
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeVisible($query)
+    public function scopeVisible($query, $user = null)
     {
+        if($user && $user->canWrite) return $query;
         return $query->where('is_visible', 1);
     }
 
