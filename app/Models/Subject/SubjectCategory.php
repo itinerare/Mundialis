@@ -104,7 +104,7 @@ class SubjectCategory extends Model
      */
     public function getUrlAttribute()
     {
-        return url('pages/'.$this->attributes['subject'].'/categories/'.$this->id);
+        return url($this->attributes['subject'].'/categories/'.$this->id);
     }
 
     /**

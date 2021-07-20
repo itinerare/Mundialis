@@ -1,5 +1,5 @@
 @if($page)
-    {!! Form::open(['url' => 'pages/delete/'.$page->id]) !!}
+    {!! Form::open(['url' => 'pages/'.$page->id.'/delete']) !!}
 
     <p>You are about to delete the page <strong>{{ $page->title }}</strong>. This is not reversible.</p>
     <p>Are you sure you want to delete <strong>{{ $page->title }}</strong>?</p>

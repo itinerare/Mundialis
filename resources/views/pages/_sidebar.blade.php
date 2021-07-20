@@ -1,25 +1,27 @@
 <ul>
     @if(isset($page) && $page->id)
-        <li class="sidebar-header"><a href="{{ url('pages/'.$page->category->subject['key']) }}" class="card-link">{{ $page->category->subject['name'] }}</a></li>
+        <li class="sidebar-header"><a href="{{ url($page->category->subject['key']) }}" class="card-link">{{ $page->category->subject['name'] }}/{!! $page->category->displayName !!}</a></li>
 
         <li class="sidebar-section">
             <div class="sidebar-section-header">{{ $page->title }}</div>
-            <div class="sidebar-item"><a href="{{ $page->url }}" class="{{ set_active('pages/view/'.$page->id.'.'.$page->slug) }}">Read</a></div>
-            @if(Auth::check() && Auth::user()->canWrite)
-                <div class="sidebar-item"><a href="{{ url('pages/edit/'.$page->id) }}" class="{{ set_active('pages/edit/'.$page->id) }}">Edit</a></div>
-            @endif
+            <div class="sidebar-item"><a href="{{ $page->url }}" class="{{ set_active('pages/'.$page->id.'.'.$page->slug) }}">Read Page</a></div>
+            <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/gallery') }}" class="{{ set_active('pages/'.$page->id.'/gallery*') }}">Gallery</a></div>
         </li>
 
         <li class="sidebar-section">
             <div class="sidebar-section-header">Page Tools</div>
+            @if(Auth::check() && Auth::user()->canWrite)
+                <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/edit') }}" class="{{ set_active('pages/'.$page->id.'/edit') }}">Edit Page</a></div>
+                <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/gallery/create') }}" class="{{ set_active('pages/'.$page->id.'/gallery/create') }}">Upload Image</a></div>
+            @endif
         </li>
     @else
-        <li class="sidebar-header"><a href="{{ url('pages') }}" class="card-link">Pages</a></li>
+        <li class="sidebar-header"><a href="{{ url('/') }}" class="card-link">Pages</a></li>
 
         <li class="sidebar-section">
             <div class="sidebar-section-header">Subjects</div>
             @foreach(Config::get('mundialis.subjects') as $subject=>$values)
-                <div class="sidebar-item"><a href="{{ url('pages/'.$subject) }}" class="{{ set_active('pages/'.$subject.'*') }}">{{ isset($values['name']) ? $values['name'] : ucfirst($subject) }}</a></div>
+                <div class="sidebar-item"><a href="{{ url($subject) }}" class="{{ set_active($subject.'*') }}">{{ isset($values['name']) ? $values['name'] : ucfirst($subject) }}</a></div>
             @endforeach
         </li>
 

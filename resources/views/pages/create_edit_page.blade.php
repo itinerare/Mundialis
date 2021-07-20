@@ -3,7 +3,7 @@
 @section('pages-title') {{ $page->id ? 'Edit' : 'Create' }} {{ $category->subject['term'] }} @endsection
 
 @section('pages-content')
-{!! breadcrumbs(['Pages' => 'pages', $category->subject['name'] => 'pages/'.$category->subject['key'], $category->name => 'pages/categories/'.$category->id] + ($page->id ? [$page->title => $page->url] : []) + [($page->id ? 'Edit' : 'Create').' '.$category->subject['term'] => $page->id ? 'pages/edit/'.$page->id : 'pages/create/'.$category->id]) !!}
+{!! breadcrumbs([$category->subject['name'] => 'pages/'.$category->subject['key'], $category->name => 'pages/categories/'.$category->id] + ($page->id ? [$page->title => $page->url] : []) + [($page->id ? 'Edit' : 'Create').' '.$category->subject['term'] => $page->id ? 'pages/edit/'.$page->id : 'pages/create/'.$category->id]) !!}
 
 <h1>{{ $page->id ? 'Edit' : 'Create' }} {{ $category->subject['term'] }}
     @if($page->id)
@@ -11,7 +11,7 @@
     @endif
 </h1>
 
-{!! Form::open(['url' => $page->id ? 'pages/edit/'.$page->id : 'pages/create']) !!}
+{!! Form::open(['url' => $page->id ? 'pages/'.$page->id.'/edit' : 'pages/create']) !!}
 
 <h2>Basic Information</h2>
 
@@ -88,7 +88,7 @@
 $( document ).ready(function() {
     $('.delete-page-button').on('click', function(e) {
         e.preventDefault();
-        loadModal("{{ url('pages/delete') }}/{{ $page->id }}", 'Delete Page');
+        loadModal("{{ url('pages') }}/{{ $page->id }}/delete", 'Delete Page');
     });
 });
 

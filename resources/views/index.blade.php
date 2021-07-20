@@ -2,6 +2,8 @@
 
 @section('title') Home @endsection
 
+@section('sidebar') @include('pages._sidebar', ['page' => null]) @endsection
+
 @section('content')
     @if(Settings::get('viewers_can_read') || Auth::check())
         {!! $page ? $page->text : 'Please finish set up!' !!}

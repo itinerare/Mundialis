@@ -1,3 +1,10 @@
+<div class="text-right mb-3">
+    <div class="btn-group">
+        <button type="button" class="btn btn-secondary active category-grid-view-button" data-toggle="tooltip" title="Grid View" alt="Grid View"><i class="fas fa-th"></i></button>
+        <button type="button" class="btn btn-secondary category-list-view-button" data-toggle="tooltip" title="List View" alt="List View"><i class="fas fa-bars"></i></button>
+    </div>
+</div>
+
 {!! $categories->render() !!}
 
 <div id="categoryGridView" class="hide">
@@ -21,11 +28,11 @@
 </div>
 <div id="categoryListView" class="hide">
     <div class="row">
-        @foreach($categories->chunkWhile(function ($value, $key, $chunk) {return substr($value->name, 0, 1) === substr($chunk->first()->name, 0, 1);}) as $chunk)
+        @foreach($categories->groupBy(function ($item, $key) {return substr(strtolower($item->title), 0, 1);}) as $group)
             {!! $loop->first || $loop->iteration == 3 ? '<div class="col-md-3">' : '' !!}
-                <h4>{{ ucfirst(substr($chunk->last()->name, 0, 1)) }}</h4>
+                <h4>{{ ucfirst(substr($group->last()->name, 0, 1)) }}</h4>
                 <ul>
-                    @foreach($chunk as $category)
+                    @foreach($group as $category)
                         <li>{!! $category->displayName !!}</li>
                     @endforeach
                 </ul>

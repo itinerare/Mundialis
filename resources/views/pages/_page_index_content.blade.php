@@ -1,4 +1,5 @@
 {!! $pages->render() !!}
+
 <div>
     {!! Form::open(['method' => 'GET', 'class' => '']) !!}
         <div class="form-inline justify-content-end">
@@ -41,8 +42,8 @@
             <div class="col-md-4 mb-3">
                 <div class="card h-100">
                     <div class="card-header text-center">
-                        @if($page->thumbnailUrl)
-                            <a href="{{ $page->url }}"><img src="{{ $page->thumbnailUrl }}" class="mw-100 mb-1" /></a>
+                        @if($page->image)
+                            <a href="{{ $page->url }}"><img src="{{ $page->image->thumbnailUrl }}" class="mw-100 mb-1" /></a>
                         @endif
                         <h3>
                             {!! $page->displayName !!}

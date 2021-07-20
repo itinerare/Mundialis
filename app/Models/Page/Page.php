@@ -2,6 +2,8 @@
 
 namespace App\Models\Page;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
 
@@ -9,13 +11,15 @@ use App\Models\Model;
 
 class Page extends Model
 {
+    use SoftDeletes;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'category_id', 'title', 'summary', 'data', 'is_visible', 'parent_id'
+        'category_id', 'title', 'summary', 'data', 'is_visible', 'parent_id', 'image_id'
     ];
 
     /**
@@ -33,7 +37,7 @@ class Page extends Model
     public $timestamps = true;
 
     /**
-     * Validation rules for category creation.
+     * Validation rules for page creation.
      *
      * @var array
      */
@@ -42,7 +46,7 @@ class Page extends Model
     ];
 
     /**
-     * Validation rules for category updating.
+     * Validation rules for page updating.
      *
      * @var array
      */
@@ -72,6 +76,22 @@ class Page extends Model
         if($this->category->subject['key'] == 'time')
             return $this->belongsTo('App\Models\Subject\TimeChronology', 'parent_id');
         return $this->belongsTo('App\Models\Page\Page', 'parent_id');
+    }
+
+    /**
+     * Get this page's primary image.
+     */
+    public function image()
+    {
+        return $this->hasOne('App\Models\Page\PageImage', 'id', 'image_id');
+    }
+
+    /**
+     * Get this page's images.
+     */
+    public function images()
+    {
+        return $this->belongsToMany('App\Models\Page\PageImage')->using('App\Models\Page\PagePageImage')->withPivot('is_valid');;
     }
 
     /**********************************************************************************************
@@ -143,7 +163,7 @@ class Page extends Model
      */
     public function getUrlAttribute()
     {
-        return url('pages/view/'.$this->id.'.'.$this->slug);
+        return url('pages/'.$this->id.'.'.$this->slug);
     }
 
     /**

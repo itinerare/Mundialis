@@ -2,26 +2,28 @@
 
 @section('pages-title') {{ $page->title }} @endsection
 
+@section('meta-img')
+    {{ $page->image ? $page->image->thumbnailUrl : asset('images/logo.png') }}
+@endsection
+
+@section('meta-desc')
+    {{ $page->summary ? $page->summary : Config::get('mundialis.settings.site_desc') }}
+@endsection
+
 @section('pages-content')
-{!! breadcrumbs(['Pages' => 'pages', $page->category->subject['name'] => 'pages/'.$page->category->subject['key'], $page->category->name => 'pages/categories/'.$page->category->id, $page->title => $page->url]) !!}
+{!! breadcrumbs([$page->category->subject['name'] => 'pages/'.$page->category->subject['key'], $page->category->name => $page->category->subject['key'].'/categories/'.$page->category->id, $page->title => $page->url]) !!}
 
-{!! $page->category->subject['term'].' ・ '.$page->category->displayName !!}{!! $page->category->subject['key'] == 'time' && isset($page->data['date']['start']) ? ' ・ '.$dateHelper->formatTimeDate($page->data['date']['start']).(isset($page->data['date']['start']) && isset($page->data['date']['end']) ? '-' : '' ).(isset($page->data['date']['end']) ? $dateHelper->formatTimeDate($page->data['date']['end']) : '') : '' !!}{!! $page->parent && (isset($page->parent->is_visible) ? ($page->parent->is_visible || (Auth::check() && Auth::user()->canWrite)) : 1) ? ' ・ '.$page->parent->displayName : '' !!}
-<h1>{{ $page->title }}
-    @if(Auth::check() && Auth::user()->canWrite)
-        <a href="{{ url('pages/edit/'.$page->id) }}" class="btn btn-secondary float-right">Edit {{ $page->category->subject['term'] }}</a>
-    @endif
-</h1>
-
+@include('pages._page_header')
 
 <div class="row">
-    @if(isset($page->category->template['infobox']) || $page->thumbnailUrl)
+    @if($page->image || isset($page->category->template['infobox']) || (isset($page->category->subject['segments']['infobox']) && View::exists('pages.content_builder._'.$page->category->subject['key'].'_infobox')))
         <div class="mobile-show col-lg-4 mb-2">
             @include('pages.content_builder._infobox_builder')
         </div>
     @endif
     <div class="col-lg-12 col-md">
         <!-- INFOBOX -->
-        @if(isset($page->category->template['infobox']) || $page->thumbnailUrl)
+        @if($page->image || isset($page->category->template['infobox']) || (isset($page->category->subject['segments']['infobox']) && View::exists('pages.content_builder._'.$page->category->subject['key'].'_infobox')))
             <div class="float-right mobile-hide" style="width:25vw;">
                 @include('pages.content_builder._infobox_builder')
             </div>
@@ -52,4 +54,9 @@
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
+@parent
+    @include('pages.images._info_popup_js', ['gallery' => false])
 @endsection

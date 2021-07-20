@@ -47,7 +47,6 @@ class PageController extends Controller
      */
     public function getSubject($subject, Request $request)
     {
-        if(null == Config::get('mundialis.subjects.'.$subject)) abort(404);
         $subjectKey = $subject; $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 

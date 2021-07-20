@@ -43,6 +43,7 @@
     <script src="{{ asset('js/selectize.min.js') }}"></script>
     <script src="{{ asset('js/jquery-ui-timepicker-addon.js') }}"></script>
     <script src="{{ asset('js/croppie.min.js') }}"></script>
+    <script src="{{ asset('js/magnific.min.js') }}"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -66,6 +67,7 @@
     <link href="{{ asset('css/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" rel="stylesheet">
     <link href="{{ asset('css/croppie.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/magnific.css') }}" rel="stylesheet">
     <link href="{{ asset('css/selectize.bootstrap4.css') }}" rel="stylesheet">
 
     @if(file_exists(public_path(). '/css/custom.css'))
@@ -129,15 +131,14 @@
                     convert_urls: false,
                     plugins: [
                         'advlist autolink lists link image charmap print preview anchor',
-                        'searchreplace visualblocks code fullscreen spoiler',
+                        'searchreplace visualblocks code fullscreen',
                         'insertdatetime media table paste code help wordcount'
                     ],
-                    toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | spoiler-add spoiler-remove | removeformat | code',
+                    toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | removeformat | code',
                     content_css: [
                         '{{ asset('css/app.css') }}',
                         '{{ asset('css/mundialis.css') }}'
                     ],
-                    spoiler_caption: 'Toggle Spoiler',
                     target_list: false
                 });
                 var $mobileMenuButton = $('#mobileMenuButton');
