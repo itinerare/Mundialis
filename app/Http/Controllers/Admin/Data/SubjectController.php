@@ -40,7 +40,6 @@ class SubjectController extends Controller
      */
     public function getSubjectIndex($subject)
     {
-        if(null == Config::get('mundialis.subjects.'.$subject)) abort(404);
         $subjectKey = $subject; $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
@@ -58,7 +57,6 @@ class SubjectController extends Controller
      */
     public function getEditTemplate($subject)
     {
-        if(null == Config::get('mundialis.subjects.'.$subject)) abort(404);
         $subjectKey = $subject; $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
@@ -105,7 +103,6 @@ class SubjectController extends Controller
      */
     public function getCreateCategory($subject)
     {
-        if(null == Config::get('mundialis.subjects.'.$subject)) abort(404);
         $subjectKey = $subject; $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 

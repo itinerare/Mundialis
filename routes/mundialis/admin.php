@@ -18,17 +18,23 @@ Route::get('/', 'AdminController@getIndex');
 
 Route::group(['prefix' => 'data', 'namespace' => 'Data'], function() {
     # GENERIC ROUTES
-    Route::get('{subject}', 'SubjectController@getSubjectIndex');
-    Route::get('{subject}/edit', 'SubjectController@getEditTemplate');
-    Route::get('{subject}/create', 'SubjectController@getCreateCategory');
-    Route::post('{subject}/edit', 'SubjectController@postEditTemplate');
-    Route::post('{subject}/create', 'SubjectController@postCreateEditCategory');
+    Route::get('{subject}', 'SubjectController@getSubjectIndex')
+        ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
+    Route::get('{subject}/edit', 'SubjectController@getEditTemplate')
+        ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));;
+    Route::get('{subject}/create', 'SubjectController@getCreateCategory')
+        ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
+    Route::post('{subject}/edit', 'SubjectController@postEditTemplate')
+        ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
+    Route::post('{subject}/create', 'SubjectController@postCreateEditCategory')
+        ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
 
     Route::get('categories/edit/{id}', 'SubjectController@getEditCategory');
     Route::get('categories/delete/{id}', 'SubjectController@getDeleteCategory');
     Route::post('categories/edit/{id?}', 'SubjectController@postCreateEditCategory');
     Route::post('categories/delete/{id}', 'SubjectController@postDeleteCategory');
-    Route::post('{subject}/sort', 'SubjectController@postSortCategory');
+    Route::post('{subject}/sort', 'SubjectController@postSortCategory')
+        ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
 
     # SPECIALIZED ROUTES
     Route::group(['prefix' => 'time'], function() {
