@@ -347,6 +347,9 @@ class ImageManager extends Service
                     }
                 }
             }
+            elseif(!isset($data['page_id']) && $image->pages->count() > 1) {
+                $image->pages()->where('page_id', '!=', $page->id)->delete();
+            }
 
             return $image;
         } catch(\Exception $e) {
