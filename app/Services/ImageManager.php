@@ -324,7 +324,7 @@ class ImageManager extends Service
 
                     // Delete removed page links
                     foreach($pageDiff['removed'] as $pageId) {
-                        $image->pages()->where('page_id', $pageId)->delete();
+                        $image->pages()->where('page_id', $pageId)->detach();
                     }
 
                     // Create added links
@@ -348,7 +348,7 @@ class ImageManager extends Service
                 }
             }
             elseif(!isset($data['page_id']) && $image->pages->count() > 1) {
-                $image->pages()->where('page_id', '!=', $page->id)->delete();
+                $image->pages()->where('page_id', '!=', $page->id)->detach();
             }
 
             return $image;
