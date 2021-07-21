@@ -143,6 +143,10 @@ class ImageManager extends Service
             // Unset this image ID from any pages where it is the active image
             if(Page::where('image_id', $image->id)->exists()) Page::where('image_id', $image->id)->update(['image_id' => null]);
 
+            // Delete the files
+            unlink($image->imagePath . '/' . $image->thumbnailFileName);
+            unlink($image->imagePath . '/' . $image->imageFileName);
+
             // Delete the image and any relevant objects
             // Delete creator records
             $image->creators()->delete();
@@ -171,6 +175,12 @@ class ImageManager extends Service
         try {
             // If new or re-uploading an image
             if(isset($data['image'])) {
+                // If the image already exists, unlink the old files
+                if($image) {
+                    unlink($image->imagePath . '/' . $image->thumbnailFileName);
+                    unlink($image->imagePath . '/' . $image->imageFileName);
+                }
+
                 $imageData = Arr::only($data, [
                     'use_cropper', 'x0', 'x1', 'y0', 'y1',
                 ]);
