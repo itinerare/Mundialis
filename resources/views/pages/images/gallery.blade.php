@@ -47,7 +47,7 @@
         <div class="col-md-3 mb-2">
             <a href="{{ url('pages/get-image/'.$page->id.'/'.$image->id) }}" class="image-link"><img src="{{ $image->thumbnailUrl }}" class="img-thumbnail mw-100" style="{{ !$image->pivot->is_valid ? 'filter: grayscale(60%) opacity(50%);' : '' }}"/></a>
         </div>
-        {!! $loop->count%3 != 0 && $loop->last ? '<div class="my-auto col mobile-hide"></div>' : '' !!}
+        {!! $loop->count%4 != 0 && $loop->last ? '<div class="my-auto col mobile-hide"></div>' : '' !!}
         {!! $loop->iteration % 4 == 0 ? '<div class="w-100"></div>' : '' !!}
     @endforeach
 </div>
