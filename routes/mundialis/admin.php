@@ -85,7 +85,23 @@ Route::group(['prefix' => 'users'], function() {
     MAINTENANCE
 */
 
-# RECENT CHANGES
+# SPECIAL PAGES
+Route::group(['prefix' => 'special'], function() {
+    Route::get('deleted-pages', 'SpecialController@getDeletedPages');
+    Route::get('deleted-pages/{id}', 'SpecialController@getDeletedPage')
+        ->whereNumber('id');
+    Route::get('deleted-pages/{id}/restore', 'SpecialController@getRestorePage')
+        ->whereNumber('id');
+    Route::post('deleted-pages/{id?}/restore', 'SpecialController@postRestorePage')
+        ->whereNumber('id');
+    Route::get('deleted-images', 'SpecialController@getDeletedImages');
+    Route::get('deleted-images/{id}', 'SpecialController@getDeletedImage')
+        ->whereNumber('id');
+    Route::get('deleted-images/{id}/restore', 'SpecialController@getRestoreImage')
+        ->whereNumber('id');
+    Route::post('deleted-images/{id?}/restore', 'SpecialController@postRestoreImage')
+        ->whereNumber('id');
+});
 
 /*
     SITE SETTINGS

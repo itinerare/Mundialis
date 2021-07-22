@@ -10,11 +10,13 @@
 
         <li class="sidebar-section">
             <div class="sidebar-section-header">Page Tools</div>
+            <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/history') }}" class="{{ set_active('pages/'.$page->id.'/history*') }}">History</a></div>
             @if(Auth::check() && Auth::user()->canWrite)
                 <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/edit') }}" class="{{ set_active('pages/'.$page->id.'/edit') }}">Edit Page</a></div>
                 <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/gallery/create') }}" class="{{ set_active('pages/'.$page->id.'/gallery/create') }}">Upload Image</a></div>
             @endif
         </li>
+
     @else
         <li class="sidebar-header"><a href="{{ url('/') }}" class="card-link">Pages</a></li>
 

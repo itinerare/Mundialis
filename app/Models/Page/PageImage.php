@@ -16,8 +16,7 @@ class PageImage extends Model
      * @var array
      */
     protected $fillable = [
-        'hash', 'extension', 'description', 'is_visible',
-        'use_cropper', 'x0', 'x1', 'y0', 'y1',
+        'description', 'is_visible'
     ];
 
     /**
@@ -76,6 +75,14 @@ class PageImage extends Model
         return $this->belongsToMany('App\Models\Page\Page')->using('App\Models\Page\PagePageImage')->withPivot('is_valid');
     }
 
+    /**
+     * Get this image's versions.
+     */
+    public function versions()
+    {
+        return $this->hasMany('App\Models\Page\PageImageVersion');
+    }
+
     /**********************************************************************************************
 
         SCOPES
@@ -103,6 +110,26 @@ class PageImage extends Model
     **********************************************************************************************/
 
     /**
+     * Get the image's most recent version.
+     *
+     * @return \App\Models\Page\PageImageVersion
+     */
+    public function getVersionAttribute()
+    {
+        return $this->versions()->orderBy('created_at', 'DESC')->first();
+    }
+
+    /**
+     * Get the image's most recent version with image.
+     *
+     * @return \App\Models\Page\PageImageVersion
+     */
+    public function getImageVersionAttribute()
+    {
+        return $this->versions()->whereNotNull('hash')->orderBy('created_at', 'DESC')->first();
+    }
+
+    /**
      * Gets the file directory containing the model's image.
      *
      * @return string
@@ -110,16 +137,6 @@ class PageImage extends Model
     public function getImageDirectoryAttribute()
     {
         return 'images/pages/'.floor($this->id / 1000);
-    }
-
-    /**
-     * Gets the file name of the model's image.
-     *
-     * @return string
-     */
-    public function getImageFileNameAttribute()
-    {
-        return $this->id . '_'.$this->hash.'.'.$this->extension;
     }
 
     /**
@@ -139,18 +156,7 @@ class PageImage extends Model
      */
     public function getImageUrlAttribute()
     {
-        if(!isset($this->hash)) return null;
-        return asset($this->imageDirectory . '/' . $this->imageFileName);
-    }
-
-    /**
-     * Gets the file name of the model's thumbnail image.
-     *
-     * @return string
-     */
-    public function getThumbnailFileNameAttribute()
-    {
-        return $this->id . '_'.$this->hash.'_th.'.$this->extension;
+        return $this->imageVersion->imageUrl;
     }
 
     /**
@@ -170,8 +176,7 @@ class PageImage extends Model
      */
     public function getThumbnailUrlAttribute()
     {
-        if(!isset($this->hash)) return null;
-        return asset($this->imageDirectory . '/' . $this->thumbnailFileName);
+        return $this->imageVersion->thumbnailUrl;
     }
 
 }

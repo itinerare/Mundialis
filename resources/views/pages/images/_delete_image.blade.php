@@ -1,7 +1,7 @@
 @if($image)
     {!! Form::open(['url' => 'pages/'.$page->id.'/gallery/delete/'.$image->id]) !!}
 
-    <p>You are about to delete image <strong>#{{ $image->id }}</strong>. This is not reversible.</p>
+    <p>You are about to delete image <strong>#{{ $image->id }}</strong>. Only admins are able to restore deleted images.</p>
     <p>Are you sure you want to delete <strong>#{{ $image->id }}</strong>?</p>
 
     <div class="text-right">

@@ -14,6 +14,8 @@ use App\Models\Subject\LexiconCategory;
 
 use App\Models\Page\Page;
 
+use App\Services\PageManager;
+
 class SubjectService extends Service
 {
     /*
@@ -181,10 +183,17 @@ class SubjectService extends Service
         DB::beginTransaction();
 
         try {
-            // Check first if the project is currently in use
+            // Check first if the category is currently in use
             if(SubjectCategory::where('parent_id', $category->id)->exists()) throw new \Exception('A sub-category of this category exists. Please move or delete it first.');
             if(Page::where('category_id', $category->id)->exists()) throw new \Exception("A page in this category exists. Please move or delete it first.");
 
+            // Permanently delete any remaining pages and associated data in the category,
+            // as without the category/its data they will not be recoverable anyway
+            if($category->pages()->withTrashed()->count()) {
+                foreach($category->pages as $page)
+                    (new PageManager)->deletePage($page, Auth::user(), true);
+            }
+            // Delete the categroy
             $category->delete();
 
             return $this->commitReturn(true);

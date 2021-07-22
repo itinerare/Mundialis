@@ -20,10 +20,14 @@ Route::group(['prefix' => 'pages', 'namespace' => 'Pages'], function() {
         ->whereNumber('id');
     Route::get('{id}/delete', 'PageController@getDeletePage')
         ->whereNumber('id');
+    Route::get('{page_id}/history/{id}/reset', 'PageController@getResetPage')
+        ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
     Route::post('create', 'PageController@postCreateEditPage');
     Route::post('{id?}/edit', 'PageController@postCreateEditPage');
     Route::post('{id}/delete', 'PageController@postDeletePage')
         ->whereNumber('id');
+    Route::post('{page_id}/history/{id}/reset', 'PageController@postResetPage')
+        ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
 
     # IMAGE ROUTES
     Route::get('{id}/gallery/create', 'ImageController@getCreateImage')
@@ -33,7 +37,7 @@ Route::group(['prefix' => 'pages', 'namespace' => 'Pages'], function() {
     Route::get('{page_id}/gallery/delete/{id}', 'ImageController@getDeleteImage')
         ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
     Route::post('{id}/gallery/create', 'ImageController@postCreateEditImage')
-        ->where('id', '[0-9]+');
+        ->whereNumber('id');
     Route::post('{page_id}/gallery/edit/{id?}', 'ImageController@postCreateEditImage')
         ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
     Route::post('{page_id}/gallery/delete/{id}', 'ImageController@postDeleteImage')

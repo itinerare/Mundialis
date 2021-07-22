@@ -1,19 +1,20 @@
-@extends('pages.layout')
+@extends('admin.layout')
 
-@section('pages-title') {{ $page->title }} - Image #{{ $image->id }}  @endsection
+@section('admin-title') Image #{{ $image->id }}  @endsection
 
-@section('meta-img')
-    {{ $image->thumbnailUrl }}
-@endsection
+@section('admin-content')
+{!! breadcrumbs(['Admin' => 'admin', 'Special/ Deleted Images' => 'admin/special/deleted-images', 'Image #'.$image->id => 'admin/special/deleted-images/'.$image->id]) !!}
 
-@section('meta-desc')
-    Image #{{ $image->id }} for the page {{ $page->title }}.
-@endsection
+<h1>
+    Deleted Image (#{{ $image->id }})
+    @if($image->pages()->count())
+        <a href="#" class="btn btn-info float-right restore-image-button">Restore Image</a>
+    @endif
+</h1>
 
-@section('pages-content')
-{!! breadcrumbs([$page->category->subject['name'] => $page->category->subject['key'], $page->category->name =>  $page->category->subject['key'].'/categories/'.$page->category->id, $page->title => $page->url, 'Gallery' => 'pages/'.$page->id.'/gallery', 'Image #'.$image->id => '']) !!}
-
-@include('pages._page_header', ['section' => 'Gallery - Image #'.$image->id])
+<div class="alert alert-danger">
+    This image was deleted at {!! format_date($image->version->created_at) !!} by {!! $image->version->user->displayName !!}. It can be restored as long as one or more of its linked pages are not currently deleted.
+</div>
 
 <img src="{{ $image->imageUrl }}" class="rounded bg-light mw-100 p-2 mb-2"/>
 
@@ -81,4 +82,18 @@
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
+@parent
+
+<script>
+$( document ).ready(function() {
+    $('.restore-image-button').on('click', function(e) {
+        e.preventDefault();
+        loadModal("{{ url('admin/special/deleted-images') }}/{{ $image->id }}/restore", 'Restore Image');
+    });
+});
+
+</script>
 @endsection

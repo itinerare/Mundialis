@@ -5,10 +5,14 @@ namespace App\Http\Controllers\Pages;
 use Auth;
 use Config;
 
+use App\Models\User\User;
+
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
 use App\Models\Subject\TimeChronology;
+
 use App\Models\Page\Page;
+use App\Models\Page\PageVersion;
 
 use App\Services\PageManager;
 
@@ -164,6 +168,68 @@ class PageController extends Controller
     }
 
     /**
+     * Shows a page's revision history.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int                       $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getPageHistory(Request $request, $id)
+    {
+        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        if(!$page) abort(404);
+
+        $query = PageVersion::where('page_id', $page->id);
+        $sort = $request->only(['sort']);
+
+        if($request->get('user_id')) {
+            $query->where('user_id', $request->get('user_id'));
+        }
+
+        if(isset($sort['sort']))
+        {
+            switch($sort['sort']) {
+                case 'newest':
+                    $query->orderBy('created_at', 'DESC');
+                    break;
+                case 'oldest':
+                    $query->orderBy('created_at', 'ASC');
+                    break;
+            }
+        }
+        else $query->orderBy('created_at', 'DESC');
+
+        return view('pages.page_history', [
+            'page' => $page,
+            'versions' => $query->paginate(20)->appends($request->query()),
+            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
+        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+            'dateHelper' => new TimeDivision
+        ] : []));
+    }
+
+    /**
+     * Shows a specific page version.
+     *
+     * @param  int        $pageId
+     * @param  int        $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getPageVersion($pageId, $id)
+    {
+        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $pageId)->first();
+        if(!$page) abort(404);
+        $version = $page->versions()->where('id', $id)->first();
+
+        return view('pages.page_version', [
+            'page' => $page,
+            'version' => $version
+        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+            'dateHelper' => new TimeDivision
+        ] : []));
+    }
+
+    /**
      * Shows the create page page.
      *
      * @param  string            $subject
@@ -262,12 +328,50 @@ class PageController extends Controller
         }
         else if (!$id && $page = $service->createPage($data, Auth::user())) {
             flash('Page created successfully.')->success();
-            return redirect()->to('pages/edit/'.$page->id);
+            return redirect()->to($page->url);
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
         }
         return redirect()->back();
+    }
+
+    /**
+     * Gets the page reset modal.
+     *
+     * @param  int       $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getResetPage($pageId, $id)
+    {
+        $page = Page::find($pageId);
+        $version = $page->versions()->where('id', $id)->first();
+
+        return view('pages._reset_page', [
+            'page' => $page,
+            'version' => $version
+        ]);
+    }
+
+    /**
+     * Resets a page to a given version.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  App\Services\PageManager     $service
+     * @param  int                          $pageId,
+     * @param  int                          $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postResetPage(Request $request, PageManager $service, $pageId, $id)
+    {
+        if($id && $service->resetPage(Page::find($pageId), PageVersion::find($id), Auth::user(), null)) {
+            flash('Page reset successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+            return redirect()->back();
+        }
+        return redirect()->to(Page::find($pageId)->url);
     }
 
     /**
@@ -295,13 +399,14 @@ class PageController extends Controller
      */
     public function postDeletePage(Request $request, PageManager $service, $id)
     {
-        if($id && $service->deletePage(Page::find($id))) {
+        if($id && $service->deletePage(Page::find($id), Auth::user())) {
             flash('Page deleted successfully.')->success();
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+            return redirect()->back();
         }
-        return redirect()->to('pages');
+        return redirect()->to('/');
     }
 
 }

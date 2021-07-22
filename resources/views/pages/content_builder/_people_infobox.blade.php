@@ -1,11 +1,13 @@
-<div class="row mb-2">
-    <div class="col-sm-5 bg-dark text-light rounded pt-1"><h6><strong>Name</strong></h6></div>
-    <div class="col-sm">
-        <div class="pt-1">
-            {{ isset($page->data['people_name']) ? $page->data['people_name'] : '' }}
+@if(isset($page->data['people_name']))
+    <div class="row mb-2">
+        <div class="col-sm-5 bg-dark text-light rounded pt-1"><h6><strong>Name</strong></h6></div>
+        <div class="col-sm">
+            <div class="pt-1">
+                {{ isset($page->data['people_name']) ? $page->data['people_name'] : '' }}
+            </div>
         </div>
     </div>
-</div>
+@endif
 @foreach(['birth', 'death'] as $segment)
     @if(isset($page->data[$segment]))
         <div class="row mb-2">

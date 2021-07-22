@@ -19,7 +19,7 @@ class Page extends Model
      * @var array
      */
     protected $fillable = [
-        'category_id', 'title', 'summary', 'data', 'is_visible', 'parent_id', 'image_id'
+        'category_id', 'title', 'summary', 'is_visible', 'parent_id', 'image_id'
     ];
 
     /**
@@ -94,6 +94,14 @@ class Page extends Model
         return $this->belongsToMany('App\Models\Page\PageImage')->using('App\Models\Page\PagePageImage')->withPivot('is_valid');;
     }
 
+    /**
+     * Get this page's versions.
+     */
+    public function versions()
+    {
+        return $this->hasMany('App\Models\Page\PageVersion');
+    }
+
     /**********************************************************************************************
 
         SCOPES
@@ -136,14 +144,24 @@ class Page extends Model
     **********************************************************************************************/
 
     /**
-     * Get the data attribute as an associative array.
+     * Get the page's most recent version.
+     *
+     * @return \App\Models\Page\PageVersion
+     */
+    public function getVersionAttribute()
+    {
+        return $this->versions()->orderBy('created_at', 'DESC')->first();
+    }
+
+    /**
+     * Get the current version's data attribute as an associative array.
      *
      * @return array
      */
     public function getDataAttribute()
     {
-        if(!isset($this->attributes['data'])) return null;
-        return json_decode($this->attributes['data'], true);
+        if(!$this->versions->count() || !isset($this->version->first()->data['data'])) return null;
+        return $this->version->first()->data['data'];
     }
 
     /**

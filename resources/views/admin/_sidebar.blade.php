@@ -9,8 +9,9 @@
     </li>
 
     <li class="sidebar-section">
-        <div class="sidebar-section-header">Maintenance</div>
-        <div class="sidebar-item"><a href="{{ url('admin/changes') }}" class="{{ set_active('admin/changes*') }}">Recent Changes</a></div>
+        <div class="sidebar-section-header">Special Pages</div>
+        <div class="sidebar-item"><a href="{{ url('admin/special/deleted-pages') }}" class="{{ set_active('admin/special/deleted-pages*') }}">Deleted Pages</a></div>
+        <div class="sidebar-item"><a href="{{ url('admin/special/deleted-images') }}" class="{{ set_active('admin/special/deleted-images*') }}">Deleted Images</a></div>
     </li>
 
     <li class="sidebar-section">

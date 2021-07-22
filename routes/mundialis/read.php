@@ -10,6 +10,8 @@
 |
 */
 
+Route::redirect('/pages', '/');
+
 Route::group(['namespace' => 'Pages'], function() {
     # SUBJECTS/CATEGORIES
     Route::get('{subject}', 'PageController@getSubject')
@@ -27,6 +29,11 @@ Route::group(['namespace' => 'Pages'], function() {
         Route::get('{page_id}/gallery/{id}', 'ImageController@getPageImage')
             ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
         Route::get('get-image/{page_id}/{id}', 'ImageController@getPageImagePopup')
+            ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
+
+        Route::get('{id}/history', 'PageController@getPageHistory')
+            ->whereNumber('id');
+        Route::get('{page_id}/history/{id}', 'PageController@getPageVersion')
             ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
     });
 

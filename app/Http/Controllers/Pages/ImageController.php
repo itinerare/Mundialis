@@ -9,6 +9,7 @@ use App\Models\User\User;
 use App\Models\Subject\TimeDivision;
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
+use App\Models\Page\PageImageVersion;
 use App\Models\Page\PageImageCreator;
 
 use App\Services\ImageManager;
@@ -80,19 +81,42 @@ class ImageController extends Controller
     /**
      * Shows the page for a given image.
      *
-     * @param  int                     $pageId
-     * @param  int                     $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int                       $pageId
+     * @param  int                       $id
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getPageImage($pageId, $id) {
+    public function getPageImage(Request $request, $pageId, $id) {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $pageId)->first();
         if(!$page) abort(404);
         $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $id)->first();
         if(!$image) abort(404);
 
+        $query = PageImageVersion::where('page_image_id', $image->id);
+        $sort = $request->only(['sort']);
+
+        if($request->get('user_id')) {
+            $query->where('user_id', $request->get('user_id'));
+        }
+
+        if(isset($sort['sort']))
+        {
+            switch($sort['sort']) {
+                case 'newest':
+                    $query->orderBy('created_at', 'DESC');
+                    break;
+                case 'oldest':
+                    $query->orderBy('created_at', 'ASC');
+                    break;
+            }
+        }
+        else $query->orderBy('created_at', 'DESC');
+
         return view('pages.images.image', [
             'page' => $page,
-            'image' => $image
+            'image' => $image,
+            'versions' => $query->paginate(20)->appends($request->query()),
+            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
         ]);
     }
 

@@ -1,7 +1,7 @@
 @if($page)
     {!! Form::open(['url' => 'pages/'.$page->id.'/delete']) !!}
 
-    <p>You are about to delete the page <strong>{{ $page->title }}</strong>. This is not reversible.</p>
+    <p>You are about to delete the page <strong>{{ $page->title }}</strong>. Only admins are able to restore deleted pages.</p>
     <p>Are you sure you want to delete <strong>{{ $page->title }}</strong>?</p>
 
     <div class="text-right">
