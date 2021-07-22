@@ -197,6 +197,7 @@ class SpecialController extends Controller
     public function getRestoreImage($id)
     {
         $image = PageImage::withTrashed()->find($id);
+        if(!$image->pages->count()) abort(404);
 
         return view('admin.special._restore_image', [
             'image' => $image
@@ -213,7 +214,10 @@ class SpecialController extends Controller
      */
     public function postRestoreImage(Request $request, ImageManager $service, $id)
     {
-        if($id && $service->restorePageImage(PageImage::withTrashed()->find($id), Auth::user())) {
+        $image = PageImage::withTrashed()->find($id);
+        if(!$image->pages->count()) abort(404);
+
+        if($id && $service->restorePageImage($image, Auth::user())) {
             flash('Image restored successfully.')->success();
         }
         else {
