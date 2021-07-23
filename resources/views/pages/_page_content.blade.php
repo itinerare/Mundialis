@@ -66,12 +66,23 @@
 
         @if(isset($page->category->template['sections']))
             @foreach($page->category->template['sections'] as $sectionKey=>$section)
-                <h2 id="section-{{ $sectionKey }}">{{ $section['name'] }}</h2>
-                @if(isset($page->category->template['fields'][$sectionKey]))
-                    @foreach($page->category->template['fields'][$sectionKey] as $fieldKey=>$field)
-                        @include('pages.content_builder._body_builder', ['key' => $fieldKey, 'field' => $field])
-                    @endforeach
-                @endif
+            @php
+                $length = 0;
+                if(isset($page->category->template['fields'][$sectionKey])) foreach($page->category->template['fields'][$sectionKey] as $fieldKey=>$field)
+                    if(isset($data[$fieldKey]) && $field['type'] != 'checkbox')
+                        $length = $length =+ strlen($data[$fieldKey]);
+            @endphp
+                <h2 id="section-{{ $sectionKey }}">
+                    {{ $section['name'] }}
+                    <a class="small collapse-toggle collapsed" href="#collapse-{{ $sectionKey }}" data-toggle="collapse">Show</a></h3>
+                </h2>
+                <div class="collapse {{ $length < 3000 ? 'show' : '' }}" id="collapse-{{ $sectionKey }}">
+                    @if(isset($page->category->template['fields'][$sectionKey]))
+                        @foreach($page->category->template['fields'][$sectionKey] as $fieldKey=>$field)
+                            @include('pages.content_builder._body_builder', ['key' => $fieldKey, 'field' => $field])
+                        @endforeach
+                    @endif
+                </div>
             @endforeach
         @endif
     </div>
