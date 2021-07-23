@@ -229,6 +229,7 @@ $( document ).ready(function() {
     });
 
     $('.dimension-regex').selectize({
+        plugins: ["restore_on_backspace", "remove_button"],
         delimiter: ";",
         persist: false,
         create: function (input) {
