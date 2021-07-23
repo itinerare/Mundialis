@@ -160,8 +160,8 @@ class Page extends Model
      */
     public function getDataAttribute()
     {
-        if(!$this->versions->count() || !isset($this->version->first()->data['data'])) return null;
-        return $this->version->first()->data['data'];
+        if(!$this->versions->count() || !isset($this->version->data['data'])) return null;
+        return $this->version->data['data'];
     }
 
     /**
