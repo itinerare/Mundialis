@@ -138,9 +138,10 @@ class ImageManager extends Service
      *
      * @param  \App\Models\Page\PageImage  $page
      * @param  \App\Models\User\User       $user
+     * @param  string                      $reason
      * @return bool
      */
-    public function restorePageImage($image, $user)
+    public function restorePageImage($image, $user, $reason)
     {
         DB::beginTransaction();
 
@@ -149,7 +150,7 @@ class ImageManager extends Service
             $image->restore();
 
             // Then, create a version logging the restoration
-            $version = $this->logImageVersion($image->id, $user->id, isset($data['reason']) ? $data['reason'] : null, 'Image Restored', null, $image->version->data, false);
+            $version = $this->logImageVersion($image->id, $user->id, null, 'Image Restored', $reason, $image->version->data, false);
             if(!$version) throw Exception('An error occurred while saving image version.');
 
             return $this->commitReturn($image);
@@ -164,9 +165,11 @@ class ImageManager extends Service
      *
      * @param  \App\Models\Page\PageImage  $image
      * @param  bool                        $forceDelete
+     * @param  \App\Models\User\User       $user
+     * @param  string                      $reason
      * @return bool
      */
-    public function deletePageImage($image, $forceDelete = false)
+    public function deletePageImage($image, $user, $reason, $forceDelete = false)
     {
         DB::beginTransaction();
 
@@ -194,7 +197,11 @@ class ImageManager extends Service
                 $image->forceDelete();
             }
             else {
-                // Just delete the image itself
+                // Create a log of the deletion
+                $version = $this->logImageVersion($image->id, $user->id, null, 'Image Deleted', $reason, $image->version->data, false);
+                if(!$version) throw new \Exception('Error occurred while logging image version.');
+
+                // Delete the image itself
                 $image->delete();
             }
 

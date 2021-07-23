@@ -294,7 +294,7 @@ class PageController extends Controller
         // Set any un-set toggles (since Laravel does not pass anything on for them),
         // and collect any custom validation rules for the configured fields
         $answerArray = ['title', 'summary', 'description', 'category_id', 'is_visible',
-        'parent_id'];
+        'parent_id', 'reason', 'is_minor'];
         $validationRules = ($id ? Page::$updateRules : Page::$createRules);
         foreach($category->formFields as $key=>$field) {
             $answerArray[] = $key;
@@ -364,7 +364,7 @@ class PageController extends Controller
      */
     public function postResetPage(Request $request, PageManager $service, $pageId, $id)
     {
-        if($id && $service->resetPage(Page::find($pageId), PageVersion::find($id), Auth::user(), null)) {
+        if($id && $service->resetPage(Page::find($pageId), PageVersion::find($id), Auth::user(), $request->get('reason'))) {
             flash('Page reset successfully.')->success();
         }
         else {
@@ -399,7 +399,7 @@ class PageController extends Controller
      */
     public function postDeletePage(Request $request, PageManager $service, $id)
     {
-        if($id && $service->deletePage(Page::find($id), Auth::user())) {
+        if($id && $service->deletePage(Page::find($id), Auth::user(), $request->get('reason'))) {
             flash('Page deleted successfully.')->success();
         }
         else {

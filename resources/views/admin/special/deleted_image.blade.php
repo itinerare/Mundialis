@@ -13,7 +13,7 @@
 </h1>
 
 <div class="alert alert-danger">
-    This image was deleted at {!! format_date($image->version->created_at) !!} by {!! $image->version->user->displayName !!}. It can be restored as long as one or more of its linked pages are not currently deleted.
+    This image was deleted at {!! format_date($image->version->created_at) !!} by {!! $image->version->user->displayName !!}{{ $image->version->reason ? ' for the reason: '.$image->version->reason : ''}}. It can be restored as long as one or more of its linked pages are not currently deleted.
 </div>
 
 <img src="{{ $image->imageUrl }}" class="rounded bg-light mw-100 p-2 mb-2"/>

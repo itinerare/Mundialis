@@ -104,7 +104,7 @@ class SpecialController extends Controller
      */
     public function postRestorePage(Request $request, PageManager $service, $id)
     {
-        if($id && $service->restorePage(Page::withTrashed()->find($id), Auth::user())) {
+        if($id && $service->restorePage(Page::withTrashed()->find($id), Auth::user(), $request->get('reason'))) {
             flash('Page restored successfully.')->success();
         }
         else {
@@ -217,7 +217,7 @@ class SpecialController extends Controller
         $image = PageImage::withTrashed()->find($id);
         if(!$image->pages->count()) abort(404);
 
-        if($id && $service->restorePageImage($image, Auth::user())) {
+        if($id && $service->restorePageImage($image, Auth::user(), $request->get('reason'))) {
             flash('Image restored successfully.')->success();
         }
         else {

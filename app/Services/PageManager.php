@@ -107,10 +107,10 @@ class PageManager extends Service
      * @param  \App\Models\Page\Page         $page
      * @param  \App\Models\Page\PageVersion  $version
      * @param  \App\Models\User\User         $user
-     * @param  array                         $data
+     * @param  string                        $reason
      * @return bool
      */
-    public function resetPage($page, $version, $user, $data)
+    public function resetPage($page, $version, $user, $reason)
     {
         DB::beginTransaction();
 
@@ -122,7 +122,7 @@ class PageManager extends Service
             $page->update($version->data);
 
             // Create a version logging the reset
-            $version = $this->logPageVersion($page->id, $user->id, 'Page Reset to Ver. #'.$version->id, isset($data['reason']) ? $data['reason'] : null, $version->data, false);
+            $version = $this->logPageVersion($page->id, $user->id, 'Page Reset to Ver. #'.$version->id, $reason, $version->data, false);
             if(!$version) throw Exception('An error occurred while saving page version.');
 
             return $this->commitReturn($page);
@@ -137,10 +137,11 @@ class PageManager extends Service
      *
      * @param  \App\Models\Page\Page     $page
      * @param  \App\Models\User\User     $user
+     * @param  string                    $reason
      * @param  bool                      $forceDelete
      * @return bool
      */
-    public function deletePage($page, $user, $forceDelete = false)
+    public function deletePage($page, $user, $reason, $forceDelete = false)
     {
         DB::beginTransaction();
 
@@ -180,7 +181,7 @@ class PageManager extends Service
                     }
 
                 // Create a version logging the deletion
-                $version = $this->logPageVersion($page->id, $user->id, 'Page Deleted', isset($data['reason']) ? $data['reason'] : null, $page->version->data, false);
+                $version = $this->logPageVersion($page->id, $user->id, 'Page Deleted', $reason, $page->version->data, false);
                 if(!$version) throw Exception('An error occurred while saving page version.');
 
                 // Delete the page
@@ -201,7 +202,7 @@ class PageManager extends Service
      * @param  \App\Models\User\User     $user
      * @return bool
      */
-    public function restorePage($page, $user)
+    public function restorePage($page, $user, $reason)
     {
         DB::beginTransaction();
 
@@ -217,7 +218,7 @@ class PageManager extends Service
             }
 
             // Finally, create a version logging the restoration
-            $version = $this->logPageVersion($page->id, $user->id, 'Page Restored', isset($data['reason']) ? $data['reason'] : null, $page->version->data, false);
+            $version = $this->logPageVersion($page->id, $user->id, 'Page Restored', $reason, $page->version->data, false);
             if(!$version) throw Exception('An error occurred while saving page version.');
 
             return $this->commitReturn($page);

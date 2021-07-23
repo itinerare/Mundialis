@@ -49,7 +49,7 @@
             </a>
         </div>
         <div class="col-md-2">{!! $version->user->displayName !!}</div>
-        <div class="col-md-2">{{ $version->type }}{!! $version->is_minor ? ' (<abbr data-toggle="tooltip" title="This version is minor">m</abbr>)' : '' !!}</div>
+        <div class="col-md-2">{{ $version->type }}{!! $version->is_minor ? ' (<abbr data-toggle="tooltip" title="This edit is minor">m</abbr>)' : '' !!}</div>
         <div class="col-md">
             {!! $version->lengthString !!} - {!! $version->reason ? 'Reason: <i>'.nl2br(htmlentities($version->reason)).'</i><br/>' : '' !!}<a class="collapse-toggle collapsed" href="#version-{{ $version->id }}" data-toggle="collapse">Show Raw Data <i class="fas fa-caret-right"></i></a></h3>
             <div class="collapse" id="version-{{ $version->id }}">

@@ -10,7 +10,7 @@
     <a href="#" class="btn btn-danger float-right delete-image-button">Delete Image</a>
 @endif
 
-{!! Form::open(['url' => $image->id ? 'pages/'.$page->id.'/gallery/edit/'.$image->id : 'pages/'.$page->id.'/gallery/create', 'files' => true]) !!}
+{!! Form::open(['url' => $image->id ? 'pages/'.$page->id.'/gallery/edit/'.$image->id : 'pages/'.$page->id.'/gallery/create', 'files' => true, 'id' => 'imageForm']) !!}
 
 <div class="form-group">
     {!! Form::label('Character Image') !!} {!! add_help('This is the full masterlist image. Note that the image is not protected in any way, so take precautions to avoid art/design theft.') !!}
@@ -118,9 +118,43 @@
     @endif
 </div>
 
-<div class="text-right">
-    {!! Form::submit(($image->id ? 'Edit' : 'Create').' Image', ['class' => 'btn btn-primary']) !!}
-</div>
+@if($image->id)
+    <div class="text-right">
+        <a href="#" class="btn btn-primary" id="submitButton">Edit Image</a>
+    </div>
+@else
+    <div class="text-right">
+        {!! Form::submit('Create Image', ['class' => 'btn btn-primary']) !!}
+    </div>
+@endif
+
+@if($image->id)
+    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title h5 mb-0">Confirm Edit</span>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Please provide some information about your edit before confirming it! This will be added to the image's version history.</p>
+                    <div class="form-group">
+                        {!! Form::label('Reason (Optional)') !!} {!! add_help('A short summary of what was edited and why. Optional, but recommended for recordkeeping and communication purposes.') !!}
+                        {!! Form::text('reason', null, ['class' => 'form-control']) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('is_minor', 'Is Minor', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Whether or not this edit is minor.') !!}
+                        {!! Form::checkbox('is_minor', 1, 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                    </div>
+                    <div class="text-right">
+                        <a href="#" id="formSubmit" class="btn btn-primary">Confirm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
 {!! Form::close() !!}
 
 <div class="creator-row hide mb-2">
@@ -144,4 +178,21 @@
     });
 
 </script>
+
+@if($image->id)
+    <script>
+        $( document ).ready(function() {
+            $('#submitButton').on('click', function(e) {
+                e.preventDefault();
+                $('#confirmationModal').modal('show');
+            });
+
+            $('#formSubmit').on('click', function(e) {
+                e.preventDefault();
+                $('#imageForm').submit();
+            });
+        });
+
+    </script>
+@endif
 @endsection

@@ -198,7 +198,9 @@ class ImageController extends Controller
         $data = $request->only([
             'image', 'thumbnail', 'x0', 'x1', 'y0', 'y1', 'use_cropper',
             'creator_id', 'creator_url', 'description', 'page_id',
-            'is_valid', 'is_visible', 'mark_invalid', 'mark_active']);
+            'is_valid', 'is_visible', 'mark_invalid', 'mark_active',
+            'is_minor', 'reason'
+        ]);
 
         $page = Page::where('id', $pageId)->first();
         if(!$page) abort(404);
@@ -246,7 +248,7 @@ class ImageController extends Controller
      */
     public function postDeleteImage(Request $request, ImageManager $service, $pageId, $id)
     {
-        if($id && $service->deletePageImage(PageImage::find($id))) {
+        if($id && $service->deletePageImage(PageImage::find($id), Auth::user(), $request->get('reason'))) {
             flash('Image deleted successfully.')->success();
         }
         else {

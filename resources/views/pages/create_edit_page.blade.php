@@ -11,7 +11,7 @@
     @endif
 </h1>
 
-{!! Form::open(['url' => $page->id ? 'pages/'.$page->id.'/edit' : 'pages/create']) !!}
+{!! Form::open(['url' => $page->id ? 'pages/'.$page->id.'/edit' : 'pages/create', 'id' => 'pageForm']) !!}
 
 <h2>Basic Information</h2>
 
@@ -74,9 +74,42 @@
     {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned off, visitors and regular users will not be able to see this page. Users with editor permissions will still be able to see it.') !!}
 </div>
 
-<div class="text-right">
-    {!! Form::submit($page->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
-</div>
+@if($page->id)
+    <div class="text-right">
+        <a href="#" class="btn btn-primary" id="submitButton">Edit</a>
+    </div>
+@else
+    <div class="text-right">
+        {!! Form::submit('Create', ['class' => 'btn btn-primary']) !!}
+    </div>
+@endif
+
+@if($page->id)
+    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title h5 mb-0">Confirm Edit</span>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Please provide some information about your edit before confirming it! This will be added to the page's version history.</p>
+                    <div class="form-group">
+                        {!! Form::label('Reason (Optional)') !!} {!! add_help('A short summary of what was edited and why. Optional, but recommended for recordkeeping and communication purposes.') !!}
+                        {!! Form::text('reason', null, ['class' => 'form-control']) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('is_minor', 'Is Minor', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Whether or not this edit to the page is minor.') !!}
+                        {!! Form::checkbox('is_minor', 1, 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                    </div>
+                    <div class="text-right">
+                        <a href="#" id="formSubmit" class="btn btn-primary">Confirm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
 
 {!! Form::close() !!}
 
@@ -91,6 +124,23 @@ $( document ).ready(function() {
         loadModal("{{ url('pages') }}/{{ $page->id }}/delete", 'Delete Page');
     });
 });
-
 </script>
+
+@if($page->id)
+    <script>
+        $( document ).ready(function() {
+            $('#submitButton').on('click', function(e) {
+                e.preventDefault();
+                $('#confirmationModal').modal('show');
+            });
+
+            $('#formSubmit').on('click', function(e) {
+                e.preventDefault();
+                $('#pageForm').submit();
+            });
+        });
+
+    </script>
+@endif
+
 @endsection
