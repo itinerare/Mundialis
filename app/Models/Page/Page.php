@@ -216,9 +216,36 @@ class Page extends Model
             str_replace(' ', '_', strtolower(TimeDivision::dateEnabled()->orderBy('sort', 'DESC')->first()->name))
             ]) &&
         (isset($birth['chronology']) && isset($current['chronology']) &&
-        ($birth['chronology'] == $current['chronology'])))
-            return $current['date'][str_replace(' ', '_', strtolower(TimeDivision::dateEnabled()->orderBy('sort', 'DESC')->first()->name))] -
+        ($birth['chronology'] == $current['chronology']))) {
+            // Cycle through both birth and current dates,
+            // collecting set values, then turn them into a "datestring"
+            foreach($birth['date'] as $date) {
+                // Trim leading zeros on each while collecting
+                $birthString[] = ltrim($date, 0);
+            }
+            $birthString = implode('', array_reverse($birthString));
+
+            foreach($current['date'] as $date) {
+                $currentString[] = ltrim($date, 0);
+            }
+            $currentString = implode('', array_reverse($currentString));
+
+            // Just calculate the rough age either for use or for checking against
+            $roughYear = $current['date'][str_replace(' ', '_', strtolower(TimeDivision::dateEnabled()->orderBy('sort', 'DESC')->first()->name))] -
             $birth['date'][str_replace(' ', '_', strtolower(TimeDivision::dateEnabled()->orderBy('sort', 'DESC')->first()->name))];
+
+            // If the birth and current strings are the same, more precisely
+            // calculate and return age
+            if(strlen($birthString) == strlen($currentString)) {
+                $ageString = floor($currentString - $birthString);
+
+                if($roughYear == $ageString) return $roughYear;
+                else return floor($ageString/pow(10, (strlen($ageString)-2)));
+            }
+
+            // Failing that, just return the rough age
+            return $roughYear;
+        }
 
         return null;
     }
