@@ -13,7 +13,7 @@
         @endif
 
         <!-- INTRO -->
-        {!! isset($page->data['description']) ? $page->data['description'] : '' !!}
+        {!! isset($data['description']) ? $data['description'] : '' !!}
 
         @if(isset($page->category->subject['segments']['general properties']) && View::exists('pages.content_builder._'.$page->category->subject['key'].'_general'))
             @include('pages.content_builder._'.$page->category->subject['key'].'_general')

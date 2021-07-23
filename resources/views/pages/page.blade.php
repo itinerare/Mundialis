@@ -15,7 +15,7 @@
 
 @include('pages._page_header')
 
-@include('pages._page_content')
+@include('pages._page_content', ['data' => $page->data])
 
 @endsection
 

@@ -14,7 +14,7 @@
 {!! breadcrumbs([$page->category->subject['name'] => 'pages/'.$page->category->subject['key'], $page->category->name => $page->category->subject['key'].'/categories/'.$page->category->id, $page->title => $page->url, 'History' => 'pages/'.$page->id.'/history', 'Version #'.$version->id => 'pages/'.$page->id.'/history/'.$version->id]) !!}
 
 <div class="alert alert-warning">
-    You are viewing a version of this page created at {!! format_date($version->created_at) !!}. This is{{ $version->id != $page->version->id ? ' not' : '' }} this page's most recent version.
+    You are viewing a version of this page created at {!! format_date($version->created_at) !!} by {!! $version->user->displayName !!}. This is{{ $version->id != $page->version->id ? ' not' : '' }} this page's most recent version.
 </div>
 <!--@if((Auth::check() && Auth::user()->canWrite) && $page->version->id != $version->id)@endif-->
 @if((Auth::check() && Auth::user()->canWrite))
@@ -22,7 +22,7 @@
 @endif
 @include('pages._page_header', ['section' => 'Version #'.$version->id])
 
-@include('pages._page_content')
+@include('pages._page_content', ['data' => $version->data['data']])
 
 @endsection
 

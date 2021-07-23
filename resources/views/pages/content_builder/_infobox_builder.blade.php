@@ -8,23 +8,23 @@
         @endif
         @if(isset($page->category->template['infobox']))
             @foreach($page->category->template['infobox'] as $key=>$field)
-                @if(isset($page->data[$key]))
+                @if(isset($data[$key]))
                     <div class="row mb-2">
                         <div class="col-sm-5 bg-dark text-light rounded pt-1"><h6><strong>{{ $field['label'] }}</strong></h6></div>
                         <div class="col-sm">
                             <div class="pt-1">
                                 @if($field['type'] == 'checkbox')
-                                    {!! isset($page->data[$key]) ? ($page->data[$key] ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i>') : '' !!}
+                                    {!! isset($data[$key]) ? ($data[$key] ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i>') : '' !!}
                                 @elseif(($field['type'] == 'multiple' || $field['type'] == 'choice') && isset($field['choices']))
                                     @if($field['type'] == 'multiple')
-                                        @foreach($page->data[$key] as $answer)
+                                        @foreach($data[$key] as $answer)
                                             {{ isset($field['choices'][$answer]) ? $field['choices'][$answer] : $answer }}{{ !$loop->last ? ',' : '-' }}
                                         @endforeach
                                     @else
-                                        {{ isset($page->data[$key]) ? $field['choices'][$page->data[$key]] : $page->data[$key] }}
+                                        {{ isset($data[$key]) ? $field['choices'][$data[$key]] : $data[$key] }}
                                     @endif
                                 @elseif($field['type'] != 'checkbox')
-                                    {!! isset($page->data[$key]) ? nl2br(htmlentities($page->data[$key])) : '-' !!}
+                                    {!! isset($data[$key]) ? nl2br(htmlentities($data[$key])) : '-' !!}
                                 @endif
                             </div>
                         </div>
