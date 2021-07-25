@@ -12,6 +12,9 @@
                 </div>
             @endif
         </div>
+        <div class="ml-auto w-50 justify-content-end form-group mb-3">
+            {!! Form::select('tags[]', $tags, Request::get('tags'), ['id' => 'tagList', 'class' => 'form-control', 'multiple', 'placeholder' => 'Tag(s)']) !!}
+        </div>
         <div class="form-inline justify-content-end">
             <div class="form-group mr-3 mb-3">
                 {!! Form::select('sort', [

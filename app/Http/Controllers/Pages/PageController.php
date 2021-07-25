@@ -81,6 +81,10 @@ class PageController extends Controller
             $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
         });
 
+        if($request->get('tags'))
+            foreach($request->get('tags') as $tag)
+                $query->whereIn('id', PageTag::tag()->where('tag', $tag)->pluck('page_id')->toArray());
+
         if(isset($sort['sort']))
         {
             switch($sort['sort']) {
@@ -103,6 +107,7 @@ class PageController extends Controller
         return view('pages.category', [
             'category' => $category,
             'pages' => $query->paginate(20)->appends($request->query()),
+            'tags' => PageTag::tag()->pluck('tag', 'tag')->unique(),
             'dateHelper' => new TimeDivision
         ]);
     }

@@ -44,6 +44,9 @@ class TagController extends Controller
             $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
         });
         if($request->get('category_id')) $query->where('category_id', $request->get('category_id'));
+        if($request->get('tags'))
+            foreach($request->get('tags') as $searchTag)
+                $query->whereIn('id', PageTag::tag()->where('tag', $searchTag)->pluck('page_id')->toArray());
 
         if(isset($sort['sort']))
         {
@@ -68,6 +71,7 @@ class TagController extends Controller
             'tag' => $tag,
             'pages' => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
+            'tags' => PageTag::tag()->pluck('tag', 'tag')->unique(),
             'dateHelper' => new TimeDivision
         ]);
     }

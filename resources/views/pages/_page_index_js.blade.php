@@ -1,5 +1,9 @@
 <script>
     $(document).ready(function() {
+        $('#tagList').selectize({
+            maxItems: 10
+        });
+
         var $pageGridButton = $('.page-grid-view-button');
         var $pageGridView = $('#pageGridView');
         var $pageListButton = $('.page-list-view-button');
