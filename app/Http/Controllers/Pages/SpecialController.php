@@ -33,7 +33,7 @@ class SpecialController extends Controller
      */
     public function getSpecialIndex()
     {
-        return view('pages.special');
+        return view('pages.special.special');
     }
 
     /**
@@ -83,7 +83,7 @@ class SpecialController extends Controller
         }
         else $query->orderBy('title');
 
-        return view('pages.special_all', [
+        return view('pages.special.special_all', [
             'pages' => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
             'dateHelper' => new TimeDivision
@@ -126,7 +126,7 @@ class SpecialController extends Controller
         }
         else $query->orderBy('title');
 
-        return view('pages.special_utility', [
+        return view('pages.special.special_utility', [
             'tag' => Config::get('mundialis.page_tags.'.$tag),
             'pages' => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
