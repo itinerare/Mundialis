@@ -28,16 +28,18 @@
 </div>
 <div id="categoryListView" class="hide">
     <div class="row">
-        @foreach($categories->groupBy(function ($item, $key) {return substr(strtolower($item->title), 0, 1);}) as $group)
-            {!! $loop->first || $loop->iteration == 3 ? '<div class="col-md-3">' : '' !!}
-                <h4>{{ ucfirst(substr($group->last()->name, 0, 1)) }}</h4>
-                <ul>
-                    @foreach($group as $category)
-                        <li>{!! $category->displayName !!}</li>
-                    @endforeach
-                </ul>
-            {!! $loop->last || $loop->iteration == 3 ? '</div>' : '' !!}
-            @php if($loop->last) unset($category); @endphp
+        @foreach($categories->chunk(10) as $chunk)
+            <div class="col-md">
+                @foreach($chunk->groupBy(function ($item, $key) {return substr(strtolower($item->title), 0, 1);}) as $group)
+                    <h4>{{ ucfirst(substr($group->last()->name, 0, 1)) }}</h4>
+                    <ul>
+                        @foreach($group as $category)
+                            <li>{!! $category->displayName !!}</li>
+                        @endforeach
+                    </ul>
+                    @php if($loop->last) unset($category); @endphp
+                @endforeach
+            </div>
         @endforeach
     </div>
 </div>

@@ -71,16 +71,18 @@
 </div>
 <div id="pageListView" class="hide">
     <div class="row">
-        @foreach($pages->groupBy(function ($item, $key) {return substr(strtolower($item->title), 0, 1);}) as $group)
-            {!! $loop->first || $loop->iteration == 3 ? '<div class="col-md-4">' : '' !!}
-                <h4>{{ ucfirst(substr($group->first()->title, 0, 1)) }}</h4>
-                <ul>
-                    @foreach($group as $page)
-                        <li>{!! $page->displayName !!}{!! !isset($category) ? ' ('.$page->category->subject['term'].', '.$page->category->displayName.')' : '' !!}</li>
-                    @endforeach
-                </ul>
-            {!! $loop->last || $loop->iteration == 2 ? '</div>' : '' !!}
-            @php if($loop->last) unset($page); @endphp
+        @foreach($pages->chunk(10) as $chunk)
+            <div class="col-md">
+                @foreach($chunk->groupBy(function ($item, $key) {return substr(strtolower($item->title), 0, 1);}) as $group)
+                    <h4>{{ ucfirst(substr($group->first()->title, 0, 1)) }}</h4>
+                    <ul>
+                        @foreach($group as $page)
+                            <li>{!! $page->displayName !!}{!! !isset($category) ? ' ('.$page->category->subject['term'].', '.$page->category->displayName.')' : '' !!}</li>
+                        @endforeach
+                    </ul>
+                    @php if($loop->last) unset($page); @endphp
+                @endforeach
+            </div>
         @endforeach
     </div>
 </div>
