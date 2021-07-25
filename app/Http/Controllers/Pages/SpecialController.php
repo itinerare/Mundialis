@@ -99,7 +99,7 @@ class SpecialController extends Controller
      */
     public function getUtilityTagPages(Request $request, $tag)
     {
-        $query = Page::visible(Auth::check() ? Auth::user() : null)->whereIn('id', PageTag::where('type', 'utility')->where('tag', $tag)->pluck('page_id')->toArray());
+        $query = Page::visible(Auth::check() ? Auth::user() : null)->whereIn('id', PageTag::utilityTag()->where('tag', $tag)->pluck('page_id')->toArray());
         $sort = $request->only(['sort']);
 
         if($request->get('title')) $query->where(function($query) use ($request) {

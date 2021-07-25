@@ -39,7 +39,10 @@
 
 @if($page->tags->count())
     <div class="alert alert-secondary">
-        Tags go here
+        <strong>Tags:</strong>
+        @foreach($page->tags as $tag)
+            {!! $tag->displayName !!}{{ !$loop->last ? ',' : '' }}
+        @endforeach
     </div>
 @endif
 

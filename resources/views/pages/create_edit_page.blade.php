@@ -79,6 +79,11 @@
 <p>Tags are optional organizational tools that can be used to label and sort pages independent of categories. While they have no mechanical function besides for organization, you can view a list of all pages with a given tag, and individual tags can be applied to pages in multiple different subjects.</p>
 
 <div class="form-group">
+    {!! Form::label('Tags') !!} {!! add_help('Enter one or more tags.') !!}
+    {!! Form::text('page_tag', null, ['class' => 'form-control tag-list', 'multiple', 'data-init-value' => $page->entryTags]) !!}
+</div>
+
+<div class="form-group">
     {{ Form::label('utility_tag', 'Maintenance Tags (Optional)') }} {!! add_help('These help keep track of pages around the site that could use more work. Pages with these tags are added to respective maintenance reports for easy tracking.') !!}
     @foreach(collect(Config::get('mundialis.page_tags'))->map(function ($tag, $key) {return $key = $tag['label']; })->toArray() as $key=>$answer)
         <div class="choice-wrapper">
@@ -135,6 +140,44 @@ $( document ).ready(function() {
     $('.delete-page-button').on('click', function(e) {
         e.preventDefault();
         loadModal("{{ url('pages') }}/{{ $page->id }}/delete", 'Delete Page');
+    });
+
+    $.ajax({
+        url: "/get/tags",
+        type: "GET",
+        dataType: 'json',
+
+        error: function () {
+            callback();
+        },
+        success: function (options) {
+            //console.log(options);
+            $('.tag-list').selectize({
+                plugins: ["restore_on_backspace", "remove_button"],
+                delimiter: ",",
+                valueField: 'tag',
+                labelField: 'tag',
+                searchField: 'tag',
+                persist: false,
+                create: true,
+                preload: true,
+                options: options,
+                onInitialize: function() {
+                    var existingOptions = JSON.parse(this.$input.attr('data-init-value'));
+                    var self = this;
+                    if(Object.prototype.toString.call( existingOptions ) === "[object Array]") {
+                        existingOptions.forEach( function (existingOption) {
+                            self.addOption(existingOption);
+                            self.addItem(existingOption[self.settings.valueField]);
+                        });
+                    }
+                    else if (typeof existingOptions === 'object') {
+                        self.addOption(existingOptions);
+                        self.addItem(existingOptions[self.settings.valueField]);
+                    }
+                }
+            });
+        },
     });
 });
 </script>

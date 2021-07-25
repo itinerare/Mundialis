@@ -210,6 +210,20 @@ class Page extends Model
         return '<a href="'.$this->url.'">'.$this->title.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '').'</a>';
     }
 
+    /**
+     * Get the page's tags for use by the tag entry field.
+     *
+     * @return string
+     */
+    public function getEntryTagsAttribute()
+    {
+        $tags = [];
+        foreach($this->tags()->pluck('tag') as $tag)
+            $tags[] = ['tag' => $tag];
+
+        return json_encode($tags);
+    }
+
     /**********************************************************************************************
 
         OTHER FUNCTIONS

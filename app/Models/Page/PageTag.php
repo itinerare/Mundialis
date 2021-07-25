@@ -45,8 +45,58 @@ class PageTag extends Model
 
     /**********************************************************************************************
 
+        SCOPES
+
+    **********************************************************************************************/
+
+    /**
+     * Scope a query to only include page tags.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeTag($query)
+    {
+        return $query->where('type', 'page_tag');
+    }
+
+    /**
+     * Scope a query to only include utility tags.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUtilityTag($query)
+    {
+        return $query->where('type', 'utility');
+    }
+
+    /**********************************************************************************************
+
         ACCESSORS
 
     **********************************************************************************************/
+
+    /**
+     * Get the page tag's url.
+     *
+     * @return string
+     */
+    public function getUrlAttribute()
+    {
+        return url('pages/tags/'.str_replace(' ', '_', $this->tag));
+    }
+
+    /**
+     * Get the page tag as a formatted link.
+     *
+     * @return string
+     */
+    public function getDisplayNameAttribute()
+    {
+        return '<a href="'.$this->url.'">'.$this->tag.'</a>';
+    }
 
 }

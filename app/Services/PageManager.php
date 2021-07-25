@@ -92,7 +92,9 @@ class PageManager extends Service
                     $versionType = 'Parent Changed';
                 elseif(isset($data['is_visible']) && $data['is_visible'] != $page->is_visible)
                     $versionType = 'Visibility Changed';
-                elseif(isset($data['utility_tag']) && isset($page->version->data['utility_tag']) && ($data['utility_tag'] != $page->version->data['utility_tag']))
+                elseif((isset($data['page_tag']) && isset($page->version->data['page_tag']) && ($data['page_tag'] != $page->version->data['page_tag']) || (isset($data['page_tag']) && !isset($page->version->data['page_tag']) || (!isset($data['page_tag']) && isset($page->version->data['page_tag'])))))
+                    $versionType = 'Page Tags Changed';
+                elseif((isset($data['utility_tag']) && isset($page->version->data['utility_tag']) && ($data['utility_tag'] != $page->version->data['utility_tag']) || (isset($data['utility_tag']) && !isset($page->version->data['utility_tag']) || (!isset($data['utility_tag']) && isset($page->version->data['utility_tag'])))))
                     $versionType = 'Utility Tags Changed';
             }
             if(!isset($versionType)) $versionType = 'Page Updated';
@@ -261,6 +263,8 @@ class PageManager extends Service
         foreach($category->formFields as $key=>$field)
             $data['data'][$key] = isset($data[$key]) ? $data[$key] : null;
 
+        if(isset($data['page_tag'])) $data['page_tag'] = explode(',', $data['page_tag']);
+
         // Process any subject-specific data
         switch($category->subject['key']) {
             case 'people';
@@ -351,6 +355,10 @@ class PageManager extends Service
                         if(!$tag) throw new \Exception('An error occurred while creating a tag.');
                 }
             }
+            // If utility tag data is not set, but the page has existing tags,
+            // delete all existing tags
+            elseif(!isset($data['utility_tag']) && $page->tags->count())
+                $page->utilityTags()->delete();
 
             // Process standard tags
             if(isset($data['page_tag'])) {
@@ -388,9 +396,13 @@ class PageManager extends Service
                             'type' => 'page_tag',
                             'tag' => $tag
                         ]);
-                        if(!$tag) throw new \Exception('An error occurred while creating a tag.');
+                    if(!$tag) throw new \Exception('An error occurred while creating a tag.');
                 }
             }
+            // If page tag data is not set, but the page has existing tags,
+            // delete all existing tags
+            elseif(!isset($data['page_tag']) && $page->tags->count())
+                $page->tags()->delete();
 
             return $this->commitReturn($data);
         } catch(\Exception $e) {

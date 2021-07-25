@@ -35,6 +35,10 @@ Route::group(['namespace' => 'Pages'], function() {
             ->whereNumber('id');
         Route::get('{page_id}/history/{id}', 'PageController@getPageVersion')
             ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
+
+        Route::group(['prefix' => 'tags'], function() {
+            Route::get('{tag}', 'TagController@getTag');
+        });
     });
 
     # SPECIAL PAGES

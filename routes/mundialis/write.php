@@ -13,6 +13,8 @@
     SUBJECTS/PAGES
 */
 
+Route::get('get/tags', 'Pages\TagController@getAllTags');
+
 Route::group(['prefix' => 'pages', 'namespace' => 'Pages'], function() {
     # BASIC CREATE/EDIT ROUTES
     Route::get('create/{category}', 'PageController@getCreatePage');
