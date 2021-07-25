@@ -51,6 +51,6 @@ Route::group(['namespace' => 'Pages'], function() {
         Route::get('wanted-pages', 'SpecialController@getWantedPages');
         Route::get('protected-pages', 'SpecialController@getProtectedPages');
         Route::get('{tag}-pages', 'SpecialController@getUtilityTagPages')
-            ->where('tag', implode('|', array_keys(Config::get('mundialis.page_tags'))));
+            ->where('tag', implode('|', array_keys(Config::get('mundialis.utility_tags'))));
     });
 });

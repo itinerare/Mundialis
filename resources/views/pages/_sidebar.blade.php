@@ -33,7 +33,7 @@
             <div class="sidebar-item"><a href="{{ url('special/all-pages') }}" class="{{ set_active('special/all-pages') }}">All Pages</a></div>
             <div class="sidebar-item"><a href="{{ url('special/random-page') }}">Random Page</a></div>
             @if(Auth::check() && Auth::user()->canWrite)
-                @foreach(Config::get('mundialis.page_tags') as $key=>$tag)
+                @foreach(Config::get('mundialis.utility_tags') as $key=>$tag)
                     <div class="sidebar-item"><a href="{{ url('special/'.$key.'-pages') }}" class="{{ set_active('special/'.$key.'-pages') }}">{{ $tag['name'] }}</a></div>
                 @endforeach
                 <div class="sidebar-item"><a href="{{ url('special/wanted-pages') }}" class="{{ set_active('special/wanted-pages') }}">Wanted Pages</a></div>

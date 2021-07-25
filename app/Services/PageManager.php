@@ -316,7 +316,7 @@ class PageManager extends Service
                 foreach($data['utility_tag'] as $tag)
                     // Utility tag options are already set by the config,
                     // but just in case, perform some extra validation
-                    if(Config::get('mundialis.page_tags.'.$tag) == null) throw new \Exception('One or more of the specified utility tags is invalid.');
+                    if(Config::get('mundialis.utility_tags.'.$tag) == null) throw new \Exception('One or more of the specified utility tags is invalid.');
 
                 // If the page already has utility tags, check against these
                 // and only modify as necessary
@@ -332,7 +332,7 @@ class PageManager extends Service
 
                     // Delete removed tags
                     foreach($diff['removed'] as $tag)
-                        $page->utilityTags()->where('tag', $tag)->delete();
+                        $page->utilityTags()->tagSearch($tag)->delete();
 
                     // Create added tags
                     foreach($diff['added'] as $tag) {
@@ -362,6 +362,14 @@ class PageManager extends Service
 
             // Process standard tags
             if(isset($data['page_tag'])) {
+                // Check to see if any of the entered tags are hub tags, and if so, ensure
+                // that a duplicate hub tag is not being added
+                foreach($data['page_tag'] as $tag) {
+                    $matches = [];
+                    preg_match(Config::get('mundialis.page_tags.hub.regex_alt'), $tag, $matches);
+                    if($matches != []) if(PageTag::tag()->where('tag', $tag)->where('page_id', '!=', $page->id)->exists()) throw new \Exception('A hub already exists for the tag '.$matches[1].'.');
+                }
+
                 // If the page already has tags, check against these
                 // and only modify as necessary
                 if($page->tags->count()) {
@@ -376,7 +384,7 @@ class PageManager extends Service
 
                     // Delete removed tags
                     foreach($diff['removed'] as $tag)
-                        $page->tags()->where('tag', $tag)->delete();
+                        $page->tags()->tagSearch($tag)->delete();
 
                     // Create added tags
                     foreach($diff['added'] as $tag) {

@@ -76,7 +76,13 @@
 
 <h2>Tags</h2>
 
-<p>Tags are optional organizational tools that can be used to label and sort pages independent of categories. While they have no mechanical function besides for organization, you can view a list of all pages with a given tag, and individual tags can be applied to pages in multiple different subjects.</p>
+<p>
+    Tags are optional organizational tools that can be used to label and sort pages independent of categories. You can view a list of all pages with a given tag, and individual tags can be applied to pages in multiple different subjects.
+</p>
+
+<p>
+    <strong>Navbox generation:</strong> Additionally, you may specify a tag with one of two prefixes: <span class="alert-secondary">Hub:</span> or <span class="alert-secondary">Context:</span> which will mark it as the "hub" page for a tag or for inclusion in the tag's navbox, respectively. Note that only one "hub" page can exist for a tag at a time. If any pages exist in a tag with one of these prefixes, pages with that tag will have the tag's navbox displayed on it. Otherwise, tags with these prefixes will be treated the same as the normal tag. Note that navboxes are organized by subject, category, and then subcategory; pages in sub-subcategories will not be listed in the navbox itself.
+</p>
 
 <div class="form-group">
     {!! Form::label('Tags') !!} {!! add_help('Enter one or more tags.') !!}
@@ -85,9 +91,9 @@
 
 <div class="form-group">
     {{ Form::label('utility_tag', 'Maintenance Tags (Optional)') }} {!! add_help('These help keep track of pages around the site that could use more work. Pages with these tags are added to respective maintenance reports for easy tracking.') !!}
-    @foreach(collect(Config::get('mundialis.page_tags'))->map(function ($tag, $key) {return $key = $tag['label']; })->toArray() as $key=>$answer)
+    @foreach(collect(Config::get('mundialis.utility_tags'))->map(function ($tag, $key) {return $key = $tag['label']; })->toArray() as $key=>$answer)
         <div class="choice-wrapper">
-            <label>{{ Form::checkbox('utility_tag[]', $key, $page->utilityTags()->where('tag', $key)->first() ? $key : null, ['class' => 'mr-1']) }} {{ $answer }}</label>
+            <label>{{ Form::checkbox('utility_tag[]', $key, $page->utilityTags()->tagSearch($key)->first() ? $key : null, ['class' => 'mr-1']) }} {{ $answer }}</label>
         </div>
     @endforeach
 </div>

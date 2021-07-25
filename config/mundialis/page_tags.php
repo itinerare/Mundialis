@@ -7,47 +7,26 @@ return [
     | Page Tags
     |--------------------------------------------------------------------------
     |
-    | This is a list of utility tags that can be applied to pages and for which
-    | maintenance reports can be viewed. These are used primarily for maintenance
-    | functions and indicators, e.g. on-page alerts to indicate WIP pages, stubs,
-    | etc., versus regular tags which are used for content organization.
+    | This is a list of page tag prefixes that can be used in page tags. By default,
+    | these do not do anything specific; additional functionality can be programmed
+    | for specific prefixes if desired. However, presence here allows prefixes to be
+    | disregarded when searching tags/for pages taged with these prefixes to appear
+    | in search results for the base, unprefixed tag.
     |
-    | This file can be fairly safely customized and tags added/removed at will.
-    | Make sure to follow the same formatting as the existing entries and include
-    | all properties present in them, as they are all required.
-    | Nonetheless, it's recommended not to have too many tags here. Also take care
-    | to avoid any added tags' keys conflicting with existing special page routes.
+    | This file can be safely added to, but do not remove the two default prefixes
+    | (Hub: and Context:) as this will cause site functionality to break.
     |
     */
 
-    'wip' => [
-        // Used for general site interface
-        'name' => 'WIP Pages',
-        // Used for selecting tags during page editing
-        'label' => 'WIP Page',
-        // Used for populating the alert on a tagged page
-        'message' => 'This page is a work-in-progress! The information present on it may change or be incomplete.',
-        'verb' => 'contributing to'
+    'hub' => [
+        'prefix' => 'Hub:',
+        'regex' => 'Hub:([A-Za-z0-9_-_\s]+)',
+        'regex_alt' => '/\Hub:([A-Za-z0-9_-_\s]+)/'
     ],
 
-    'stub' => [
-        'name' => 'Stubs',
-        'label' => 'Stub',
-        'message' => 'This page is a stub.',
-        'verb' => 'expanding'
+    'context' => [
+        'prefix' => 'Context:',
+        'regex' => 'Context:([A-Za-z0-9_-_\s]+)',
+        'regex_alt' => '/\Context:([A-Za-z0-9_-_\s]+)/'
     ],
-
-    'outdated' => [
-        'name' => 'Outdated Pages',
-        'label' => 'Outdated Page',
-        'message' => 'The content of this page is outdated.',
-        'verb' => 'updating'
-    ],
-
-    'cleanup' => [
-        'name' => 'Pages Needing Clean-up',
-        'label' => 'Needs Clean-up',
-        'message' => 'This page needs clean-up for formatting or other reasons.',
-        'verb' => 'resolving'
-    ]
 ];

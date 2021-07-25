@@ -18,9 +18,9 @@
 @if($page->utilityTags)
     @foreach($page->utilityTags()->where('tag', '!=', 'stub')->get() as $tag)
         <div class="alert alert-secondary border-danger" style="border-width:0 0 0 10px;">
-            {{ Config::get('mundialis.page_tags.'.$tag->tag.'.message') }}
+            {{ Config::get('mundialis.utility_tags.'.$tag->tag.'.message') }}
             @if(Auth::check() && Auth::user()->canWrite)
-                Consider <a href="{{ url('pages/'.$page->id.'/edit') }}">{{ Config::get('mundialis.page_tags.'.$tag->tag.'.verb') }} it</a>.
+                Consider <a href="{{ url('pages/'.$page->id.'/edit') }}">{{ Config::get('mundialis.utility_tags.'.$tag->tag.'.verb') }} it</a>.
             @endif
         </div>
     @endforeach
@@ -30,14 +30,20 @@
 
 @if($page->utilityTags()->where('tag', 'stub')->first())
     <p><i>
-        {{ Config::get('mundialis.page_tags.stub.message') }}
+        {{ Config::get('mundialis.utility_tags.stub.message') }}
         @if(Auth::check() && Auth::user()->canWrite)
-            Consider <a href="{{ url('pages/'.$page->id.'/edit') }}">{{ Config::get('mundialis.page_tags.stub.verb') }} it</a>.
+            Consider <a href="{{ url('pages/'.$page->id.'/edit') }}">{{ Config::get('mundialis.utility_tags.stub.verb') }} it</a>.
         @endif
     </i></p>
 @endif
 
 @if($page->tags->count())
+    @foreach($page->tags as $tag)
+        @if($tag->hasNavbox)
+            @include('pages.tags._navbox', ['tag' => $tag, 'navbox' => $tag->navboxInfo])
+        @endif
+    @endforeach
+
     <div class="alert alert-secondary">
         <strong>Tags:</strong>
         @foreach($page->tags as $tag)

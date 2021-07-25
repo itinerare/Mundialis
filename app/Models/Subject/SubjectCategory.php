@@ -166,7 +166,8 @@ class SubjectCategory extends Model
         if(isset($parent->data)) $template = $parent->data;
         elseif($parent->parent) $template = $this->fetchTemplateRecursive($parent);
 
-        return $template;
+        if(isset($template)) return $template;
+        else return null;
     }
 
     /**

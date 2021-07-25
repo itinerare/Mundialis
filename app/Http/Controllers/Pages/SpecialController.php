@@ -65,7 +65,7 @@ class SpecialController extends Controller
         if($request->get('category_id')) $query->where('category_id', $request->get('category_id'));
         if($request->get('tags'))
             foreach($request->get('tags') as $tag)
-                $query->whereIn('id', PageTag::tag()->where('tag', $tag)->pluck('page_id')->toArray());
+                $query->whereIn('id', PageTag::tagSearch($tag)->tag()->pluck('page_id')->toArray());
 
         if(isset($sort['sort']))
         {
@@ -89,13 +89,13 @@ class SpecialController extends Controller
         return view('pages.special.special_all', [
             'pages' => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
-            'tags' => PageTag::tag()->pluck('tag', 'tag')->unique(),
+            'tags' => (new PageTag)->listTags(),
             'dateHelper' => new TimeDivision
         ]);
     }
 
     /**
-     * Shows list of all pages.
+     * Shows list of all pages with a given utility tag.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string                    $tag
@@ -103,7 +103,7 @@ class SpecialController extends Controller
      */
     public function getUtilityTagPages(Request $request, $tag)
     {
-        $query = Page::visible(Auth::check() ? Auth::user() : null)->whereIn('id', PageTag::utilityTag()->where('tag', $tag)->pluck('page_id')->toArray());
+        $query = Page::visible(Auth::check() ? Auth::user() : null)->whereIn('id', PageTag::utilityTag()->tagSearch($tag)->pluck('page_id')->toArray());
         $sort = $request->only(['sort']);
 
         if($request->get('title')) $query->where(function($query) use ($request) {
@@ -111,8 +111,8 @@ class SpecialController extends Controller
         });
         if($request->get('category_id')) $query->where('category_id', $request->get('category_id'));
         if($request->get('tags'))
-            foreach($request->get('tags') as $tag)
-                $query->whereIn('id', PageTag::tag()->where('tag', $tag)->pluck('page_id')->toArray());
+            foreach($request->get('tags') as $searchTag)
+                $query->whereIn('id', PageTag::tagSearch($searchTag)->tag()->pluck('page_id')->toArray());
 
         if(isset($sort['sort']))
         {
@@ -134,10 +134,10 @@ class SpecialController extends Controller
         else $query->orderBy('title');
 
         return view('pages.special.special_utility', [
-            'tag' => Config::get('mundialis.page_tags.'.$tag),
+            'tag' => Config::get('mundialis.utility_tags.'.$tag),
             'pages' => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
-            'tags' => PageTag::tag()->pluck('tag', 'tag')->unique(),
+            'tags' => (new PageTag)->listTags(),
             'dateHelper' => new TimeDivision
         ]);
     }

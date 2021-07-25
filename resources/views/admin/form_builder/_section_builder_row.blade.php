@@ -14,13 +14,6 @@
                 {!! Form::text('section_name[]', null, ['class' => 'form-control', 'placeholder' => 'Section name/header']) !!}
             </div>
         </div>
-        <div class="col-md-12">
-            <div class="form-group">
-                {!! Form::label('Focus Subject (Optional)') !!}
-                @php $configSubjects = Config::get('mundialis.subjects'); foreach($configSubjects as $subject=>$values) $subjects[$subject] = $values['name']; @endphp
-                {!! Form::select('section_subject[]', $subjects, null, ['class' => 'form-control form-field-type', 'placeholder' => 'Select a subject; this allows relating the subject\'s page(s) when editing a page']) !!}
-            </div>
-        </div>
     </div>
     <hr/>
 </div>

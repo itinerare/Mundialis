@@ -12,8 +12,8 @@
             @foreach($page->category->template['infobox'] as $key=>$field)
                 @if(isset($data[$key]))
                     <div class="row mb-2">
-                        <div class="col-sm-5 bg-dark text-light rounded pt-1"><h6><strong>{{ $field['label'] }}</strong></h6></div>
-                        <div class="col-sm">
+                        <div class="col-sm-5 col-4 bg-dark text-light rounded pt-1"><h6><strong>{{ $field['label'] }}</strong></h6></div>
+                        <div class="col-sm col">
                             <div class="pt-1">
                                 @if($field['type'] == 'checkbox')
                                     {!! isset($data[$key]) ? ($data[$key] ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i>') : '' !!}

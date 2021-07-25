@@ -35,9 +35,9 @@ class TagController extends Controller
      */
     public function getTag(Request $request, $tag)
     {
-        $tag = PageTag::tag()->where('tag', str_replace('_', ' ', $tag))->first();
+        $tag = str_replace('_', ' ', $tag);
 
-        $query = Page::visible(Auth::check() ? Auth::user() : null)->whereIn('id', PageTag::tag()->where('tag', $tag->tag)->pluck('page_id')->toArray());
+        $query = Page::visible(Auth::check() ? Auth::user() : null)->whereIn('id', PageTag::tag()->tagSearch($tag)->pluck('page_id')->toArray());
         $sort = $request->only(['sort']);
 
         if($request->get('title')) $query->where(function($query) use ($request) {
@@ -46,7 +46,7 @@ class TagController extends Controller
         if($request->get('category_id')) $query->where('category_id', $request->get('category_id'));
         if($request->get('tags'))
             foreach($request->get('tags') as $searchTag)
-                $query->whereIn('id', PageTag::tag()->where('tag', $searchTag)->pluck('page_id')->toArray());
+                $query->whereIn('id', PageTag::tagSearch($searchTag)->tag()->pluck('page_id')->toArray());
 
         if(isset($sort['sort']))
         {
@@ -71,7 +71,7 @@ class TagController extends Controller
             'tag' => $tag,
             'pages' => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
-            'tags' => PageTag::tag()->pluck('tag', 'tag')->unique(),
+            'tags' => (new PageTag)->listTags(),
             'dateHelper' => new TimeDivision
         ]);
     }

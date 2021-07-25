@@ -31,7 +31,7 @@
     <div class="col-md">
         <ul>
             <li>Wanted Pages</li>
-            @foreach(Config::get('mundialis.page_tags') as $key=>$tag)
+            @foreach(Config::get('mundialis.utility_tags') as $key=>$tag)
                 <li><a href="{{ url('special/'.$key.'-pages') }}" class="{{ set_active('special/'.$key.'-pages') }}">{{ $tag['name'] }}</a></li>
             @endforeach
             @if(Auth::check() && Auth::user()->isAdmin)
