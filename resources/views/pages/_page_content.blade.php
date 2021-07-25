@@ -21,7 +21,7 @@
 
         <!-- AUTO-TOC -->
         @if(isset($page->category->template['sections']) && count($page->category->template['sections']) >= 3)
-            <div class="card mb-2" style="width: 25vw;">
+            <div class="card mb-2" style="width: 25vh;">
                 <div class="card-body">
                     <div class="row">
                         <div class="my-auto col mobile-hide">
