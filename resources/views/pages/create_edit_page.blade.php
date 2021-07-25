@@ -74,6 +74,19 @@
     {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned off, visitors and regular users will not be able to see this page. Users with editor permissions will still be able to see it.') !!}
 </div>
 
+<h2>Tags</h2>
+
+<p>Tags are optional organizational tools that can be used to label and sort pages independent of categories. While they have no mechanical function besides for organization, you can view a list of all pages with a given tag, and individual tags can be applied to pages in multiple different subjects.</p>
+
+<div class="form-group">
+    {{ Form::label('utility_tag', 'Maintenance Tags (Optional)') }} {!! add_help('These help keep track of pages around the site that could use more work. Pages with these tags are added to respective maintenance reports for easy tracking.') !!}
+    @foreach(collect(Config::get('mundialis.page_tags'))->map(function ($tag, $key) {return $key = $tag['label']; })->toArray() as $key=>$answer)
+        <div class="choice-wrapper">
+            <label>{{ Form::checkbox('utility_tag[]', $key, $page->utilityTags()->where('tag', $key)->first() ? $key : null, ['class' => 'mr-1']) }} {{ $answer }}</label>
+        </div>
+    @endforeach
+</div>
+
 @if($page->id)
     <div class="text-right">
         <a href="#" class="btn btn-primary" id="submitButton">Edit</a>

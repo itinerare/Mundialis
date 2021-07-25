@@ -3,11 +3,13 @@
 use App\Services\Service;
 
 use DB;
+use Config;
 
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
 use App\Models\Page\Page;
 use App\Models\Page\PageVersion;
+use App\Models\Page\PageTag;
 
 use App\Services\ImageManager;
 
@@ -44,6 +46,9 @@ class PageManager extends Service
             // Create page
             $page = Page::create($data);
 
+            // Process and create tags
+            if(!$this->processTags($page, $data)) throw new \Exception('Error occurred while updating tags.');
+
             // Create version
             $version = $this->logPageVersion($page->id, $user->id, 'Page Created', isset($data['reason']) ? $data['reason'] : null, $data['version'], false);
             if(!$version) throw Exception('An error occurred while saving page version.');
@@ -74,18 +79,23 @@ class PageManager extends Service
             // Process data for storage
             $data = $this->processPageData($data, $page);
 
-            // Ascertain cause of version broadly
-            if($data['data'] == $page->data) {
-                if(isset($data['parent_id'])) if($data['parent_id'] != $page->parent_id)
-                    $versionType = 'Parent Changed';
-                elseif($data['is_visible'] != $page->is_visible)
-                    $versionType = 'Visibility Changed';
-            }
-            if(!isset($versionType)) $versionType = 'Page Updated';
+            // Process and update tags
+            if(!$data = $this->processTags($page, $data)) throw new \Exception('Error occurred while updating tags.');
 
-            // Process data for recording
+            // Process data for version recording
             if(isset($data['data'])) $data['version'] = $this->processVersionData($data);
             else $data['version'] = null;
+
+            // Ascertain cause of version broadly
+            if($data['data'] == $page->data) {
+                if(isset($data['parent_id']) && $data['parent_id'] != $page->parent_id)
+                    $versionType = 'Parent Changed';
+                elseif(isset($data['is_visible']) && $data['is_visible'] != $page->is_visible)
+                    $versionType = 'Visibility Changed';
+                elseif(isset($data['utility_tag']) && isset($page->version->data['utility_tag']) && ($data['utility_tag'] != $page->version->data['utility_tag']))
+                    $versionType = 'Utility Tags Changed';
+            }
+            if(!isset($versionType)) $versionType = 'Page Updated';
 
             // Create version
             $version = $this->logPageVersion($page->id, $user->id, $versionType, isset($data['reason']) ? $data['reason'] : null, $data['version'], isset($data['is_minor']) ? $data['is_minor'] : false);
@@ -286,6 +296,110 @@ class PageManager extends Service
     }
 
     /**
+     * Processes tags.
+     *
+     * @param  \App\Models\Page\Page  $page
+     * @param  array                  $data
+     * @return array
+     */
+    private function processTags($page, $data)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Process utility tags
+            if(isset($data['utility_tag'])) {
+                foreach($data['utility_tag'] as $tag)
+                    // Utility tag options are already set by the config,
+                    // but just in case, perform some extra validation
+                    if(Config::get('mundialis.page_tags.'.$tag) == null) throw new \Exception('One or more of the specified utility tags is invalid.');
+
+                // If the page already has utility tags, check against these
+                // and only modify as necessary
+                if($page->utilityTags->count()) {
+                    $diff = [];
+
+                    // Fetch existing tags
+                    $data['old_tags']['utility'] = $page->utilityTags->pluck('tag')->toArray();
+
+                    // Compare old and new arrays for differences
+                    $diff['removed'] = array_diff($data['old_tags']['utility'], $data['utility_tag']);
+                    $diff['added'] = array_diff($data['utility_tag'], $data['old_tags']['utility']);
+
+                    // Delete removed tags
+                    foreach($diff['removed'] as $tag)
+                        $page->utilityTags()->where('tag', $tag)->delete();
+
+                    // Create added tags
+                    foreach($diff['added'] as $tag) {
+                        $tag = PageTag::create([
+                            'page_id' => $page->id,
+                            'type' => 'utility',
+                            'tag' => $tag
+                        ]);
+                        if(!$tag) throw new \Exception('An error occurred while creating a tag.');
+                    }
+                }
+                // Otherwise, just create the tags
+                else {
+                    foreach($data['utility_tag'] as $tag)
+                        $tag = PageTag::create([
+                            'page_id' => $page->id,
+                            'type' => 'utility',
+                            'tag' => $tag
+                        ]);
+                        if(!$tag) throw new \Exception('An error occurred while creating a tag.');
+                }
+            }
+
+            // Process standard tags
+            if(isset($data['page_tag'])) {
+                // If the page already has tags, check against these
+                // and only modify as necessary
+                if($page->tags->count()) {
+                    $diff = [];
+
+                    // Fetch existing tags
+                    $data['old_tags']['page'] = $page->tags->pluck('tag')->toArray();
+
+                    // Compare old and new arrays for differences
+                    $diff['removed'] = array_diff($data['old_tags']['page'], $data['page_tag']);
+                    $diff['added'] = array_diff($data['page_tag'], $data['old_tags']['page']);
+
+                    // Delete removed tags
+                    foreach($diff['removed'] as $tag)
+                        $page->tags()->where('tag', $tag)->delete();
+
+                    // Create added tags
+                    foreach($diff['added'] as $tag) {
+                        $tag = PageTag::create([
+                            'page_id' => $page->id,
+                            'type' => 'page_tag',
+                            'tag' => $tag
+                        ]);
+                        if(!$tag) throw new \Exception('An error occurred while creating a tag.');
+                    }
+                }
+                // Otherwise, just create the tags
+                else {
+                    foreach($data['page_tag'] as $tag)
+                        $tag = PageTag::create([
+                            'page_id' => $page->id,
+                            'type' => 'page_tag',
+                            'tag' => $tag
+                        ]);
+                        if(!$tag) throw new \Exception('An error occurred while creating a tag.');
+                }
+            }
+
+            return $this->commitReturn($data);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
      * Processes version data for storage.
      *
      * @param  array                 $data
@@ -302,7 +416,9 @@ class PageManager extends Service
         $versionData = $versionData + [
             'title' => $data['title'],
             'is_visible' => $data['is_visible'],
-            'summary' => $data['summary']
+            'summary' => $data['summary'],
+            'utility_tag' => isset($data['utility_tag']) ? $data['utility_tag'] : null,
+            'page_tag' => isset($data['page_tag']) ? $data['page_tag'] : null
         ];
         if(isset($data['parent_id']))
             $versionData = $versionData + ['parent_id' => $data['parent_id']];

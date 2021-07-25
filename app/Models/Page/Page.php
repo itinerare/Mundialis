@@ -91,7 +91,7 @@ class Page extends Model
      */
     public function images()
     {
-        return $this->belongsToMany('App\Models\Page\PageImage')->using('App\Models\Page\PagePageImage')->withPivot('is_valid');;
+        return $this->belongsToMany('App\Models\Page\PageImage')->using('App\Models\Page\PagePageImage')->withPivot('is_valid');
     }
 
     /**
@@ -100,6 +100,22 @@ class Page extends Model
     public function versions()
     {
         return $this->hasMany('App\Models\Page\PageVersion');
+    }
+
+    /**
+     * Get this page's tags.
+     */
+    public function tags()
+    {
+        return $this->hasMany('App\Models\Page\PageTag')->where('type', '!=', 'utility');
+    }
+
+    /**
+     * Get this page's utility tags.
+     */
+    public function utilityTags()
+    {
+        return $this->hasMany('App\Models\Page\PageTag')->where('type', 'utility');
     }
 
     /**********************************************************************************************
@@ -191,7 +207,7 @@ class Page extends Model
      */
     public function getDisplayNameAttribute()
     {
-        return '<a href="'.$this->url.'">'.$this->title.'</a>';
+        return '<a href="'.$this->url.'">'.$this->title.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '').'</a>';
     }
 
     /**********************************************************************************************

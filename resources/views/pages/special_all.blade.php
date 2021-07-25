@@ -3,7 +3,7 @@
 @section('pages-title') Special - All Pages @endsection
 
 @section('pages-content')
-{!! breadcrumbs(['Special: All Pages' => 'special/all-pages']) !!}
+{!! breadcrumbs(['Special' => 'special', 'All Pages' => 'special/all-pages']) !!}
 
 <h1>Special: All Pages</h1>
 
@@ -14,6 +14,5 @@
 @endsection
 
 @section('scripts')
-@include('pages._category_index_js')
 @include('pages._page_index_js')
 @endsection

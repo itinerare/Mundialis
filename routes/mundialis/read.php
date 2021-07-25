@@ -39,8 +39,14 @@ Route::group(['namespace' => 'Pages'], function() {
 
     # SPECIAL PAGES
     Route::group(['prefix' => 'special'], function() {
-        Route::get('all-pages', 'PageController@getAllPages');
-        Route::get('wanted-pages', 'PageController@getWantedPages');
-        Route::get('protected-pages', 'PageController@getProtectedPages');
+        Route::get('/', 'SpecialController@getSpecialIndex');
+        Route::get('all-pages', 'SpecialController@getAllPages');
+        Route::get('random-page', 'SpecialController@getRandomPage');
+
+        # MAINTENANCE REPORTS
+        Route::get('wanted-pages', 'SpecialController@getWantedPages');
+        Route::get('protected-pages', 'SpecialController@getProtectedPages');
+        Route::get('{tag}-pages', 'SpecialController@getUtilityTagPages')
+            ->where('tag', implode('|', array_keys(Config::get('mundialis.page_tags'))));
     });
 });

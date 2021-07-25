@@ -11,6 +11,7 @@ return [
     | Feel free to add more sites, as this file is used solely for link formatting.
     |
     */
+
     'deviantart' => [
         'full_name' => 'deviantART',
         'display_name' => 'dA',
