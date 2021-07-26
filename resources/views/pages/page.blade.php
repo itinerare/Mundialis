@@ -40,7 +40,7 @@
 @if($page->tags->count())
     @foreach($page->tags as $tag)
         @if($tag->hasNavbox)
-            @include('pages.tags._navbox', ['tag' => $tag, 'navbox' => $tag->navboxInfo])
+            @include('pages.tags._navbox', ['tag' => $tag, 'navbox' => $tag->navboxInfo(Auth::check() ? Auth::user() : null)])
         @endif
     @endforeach
 

@@ -202,32 +202,6 @@ class PageTag extends Model
         else return false;
     }
 
-    /**
-     * Gets navbox information, namely: the hub tag,
-     * and all context pages.
-     *
-     * @return array
-     */
-    public function getNavboxInfoAttribute()
-    {
-        $info = [];
-        // Check for/get hub tag
-        if($this->tagSearch('Hub:'.$this->baseTag)->first()) $info['hub'] = $this->tagSearch('Hub:'.$this->baseTag)->first();
-        // Check for/get context tags
-        if($this->tagSearch('Context:'.$this->baseTag)->count()) $info['context'] = $this->tagSearch('Context:'.$this->baseTag)->get();
-
-        // Fetch context pages and group by subject
-        if(isset($info['context'])) {
-            foreach($info['context'] as $contextTag) $info['pages'][] = $contextTag->page;
-            $info['pages'] = collect($info['pages']);
-            foreach($info['pages'] as $page)
-                $info['subjects'][$page->category->subject['key']][] = $page;
-        }
-
-        if($info != []) return $info;
-        return null;
-    }
-
     /**********************************************************************************************
 
         OTHER FUNCTIONS
@@ -266,6 +240,33 @@ class PageTag extends Model
         }
 
         return $returnTags;
+    }
+
+    /**
+     * Gets navbox information, namely: the hub tag,
+     * and all context pages.
+     *
+     * @param  \App\Models\User\User         $user
+     * @return array
+     */
+    public function navboxInfo($user = null)
+    {
+        $info = [];
+        // Check for/get hub tag
+        if($this->tagSearch('Hub:'.$this->baseTag)->first()) $info['hub'] = $this->tagSearch('Hub:'.$this->baseTag)->first();
+        // Check for/get context tags
+        if($this->tagSearch('Context:'.$this->baseTag)->count()) $info['context'] = $this->tagSearch('Context:'.$this->baseTag)->get();
+
+        // Fetch context pages and group by subject
+        if(isset($info['context'])) {
+            foreach($info['context'] as $contextTag) if($contextTag->page->is_visible || ($user && $user->canWrite)) $info['pages'][] = $contextTag->page;
+            $info['pages'] = collect($info['pages']);
+            foreach($info['pages'] as $page)
+                $info['subjects'][$page->category->subject['key']][] = $page;
+        }
+
+        if($info != []) return $info;
+        return null;
     }
 
 }
