@@ -286,18 +286,18 @@ abstract class Service {
                 if($count) {
                     foreach($matches as $match) {
                         // Attempt to locate an associated page
-                        $page = Page::where('title', $match[$i][0])->first();
+                        $page = Page::where('title', $match[1][0])->first();
                         // If there is a page, simply substitute out the text for a proper link
                         if($page) {
                             $pages[] = $page;
                             if($i == 1)
-                            $item = preg_replace('/\[\['.$match[1][0].'\]\]/', $page->displayName, $item);
+                                $item = preg_replace('/\[\['.$match[1][0].'\]\]/', $page->displayName, $item);
                             elseif($i == 2)
-                                $item = preg_replace('/\[\['.$match[1][0].'\|'.$match[2][0].'\]\]/', '<a href="'.$page->url.'" class="text-primary">'.$match[1][0].'</a>', $item);
+                                $item = preg_replace('/\[\['.$match[1][0].'\|'.$match[2][0].'\]\]/', '<a href="'.$page->url.'" class="text-primary">'.$match[2][0].'</a>', $item);
                             // And make a note that the page is being linked to
                             $data['data']['links'][] = [
                                 'link_id' => $page->id,
-                                'title' => $match[$i][0]
+                                'title' => $match[1][0]
                             ];
                         }
                         else {
