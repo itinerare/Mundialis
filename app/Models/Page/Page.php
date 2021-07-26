@@ -3,6 +3,7 @@
 namespace App\Models\Page;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Request;
 
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
@@ -118,6 +119,22 @@ class Page extends Model
         return $this->hasMany('App\Models\Page\PageTag')->where('type', 'utility');
     }
 
+    /**
+     * Get this page's associated links.
+     */
+    public function links()
+    {
+        return $this->hasMany('App\Models\Page\PageLink');
+    }
+
+    /**
+     * Get this page's associated links.
+     */
+    public function linked()
+    {
+        return $this->hasMany('App\Models\Page\PageLink', 'link_id');
+    }
+
     /**********************************************************************************************
 
         SCOPES
@@ -181,6 +198,17 @@ class Page extends Model
     }
 
     /**
+     * Get the current version's parsed data attribute as an associative array.
+     *
+     * @return array
+     */
+    public function getParsedDataAttribute()
+    {
+        if(!$this->versions->count() || !isset($this->version->data['data']['parsed'])) return null;
+        return $this->version->data['data']['parsed'];
+    }
+
+    /**
      * Get the page's slug.
      *
      * @return string
@@ -207,7 +235,11 @@ class Page extends Model
      */
     public function getDisplayNameAttribute()
     {
-        return '<a href="'.$this->url.'">'.$this->title.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '').'</a>';
+        if(url()->current() == $this->url) {
+            return $this->title.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
+        }
+        return
+            '<a href="'.$this->url.'" class=text-primary page-link">'.$this->title.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '').'</a>';
     }
 
     /**

@@ -26,7 +26,7 @@
     @endforeach
 @endif
 
-@include('pages._page_content', ['data' => $page->data])
+@include('pages._page_content', ['data' => $page->parsedData])
 
 @if($page->utilityTags()->where('tag', 'stub')->first())
     <p><i>

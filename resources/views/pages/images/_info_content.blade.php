@@ -33,7 +33,7 @@
             @endif
         </h5>
         @foreach($image->pages()->visible(Auth::check() ? Auth::user() : null)->get() as $page)
-            {!! $page->image_id == $image->id ? '<i class="fas fa-star text-primary" data-toggle="tooltip" title="This image is this page\'s primary image."></i> ' : '' !!}
+            {!! $page->image_id == $image->id ? '<i class="fas fa-star text-info" data-toggle="tooltip" title="This image is this page\'s primary image."></i> ' : '' !!}
             {!! !$page->pivot->is_valid ? '<i class="fas fa-exclamation-triangle text-danger" data-toggle="tooltip" title="This image is outdated for this page."></i> ' : '' !!}
             <strong>{!! $page->displayName !!}</strong>{{ !$loop->last ? ', ' : '' }}
         @endforeach

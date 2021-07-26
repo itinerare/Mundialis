@@ -10,6 +10,7 @@ use App\Models\Subject\TimeDivision;
 use App\Models\Page\Page;
 use App\Models\Page\PageVersion;
 use App\Models\Page\PageTag;
+use App\Models\Page\PageLink;
 
 use App\Services\ImageManager;
 
@@ -39,12 +40,18 @@ class PageManager extends Service
             // Process data for storage
             $data = $this->processPageData($data);
 
+            // Parse data for wiki-style links
+            $data = $this->parse_wiki_links($data);
+
             // Process data for recording
             if(isset($data['data'])) $data['version'] = $this->processVersionData($data);
             else $data['version'] = null;
 
             // Create page
             $page = Page::create($data);
+
+            // Process links
+            if(isset($data['data']['links'])) $data = $this->processLinks($page, $data['data']['links']);
 
             // Process and create tags
             if(!$this->processTags($page, $data)) throw new \Exception('Error occurred while updating tags.');
@@ -78,6 +85,12 @@ class PageManager extends Service
 
             // Process data for storage
             $data = $this->processPageData($data, $page);
+
+            // Parse data for wiki-style links
+            $data = $this->parse_wiki_links($data);
+
+            // Process links
+            if(isset($data['data']['links'])) $data['data']['links'] = $this->processLinks($page, $data['data']['links']);
 
             // Process and update tags
             if(!$data = $this->processTags($page, $data)) throw new \Exception('Error occurred while updating tags.');
@@ -297,6 +310,50 @@ class PageManager extends Service
         }
 
         return $data;
+    }
+
+    /**
+     * Processes tags.
+     *
+     * @param  \App\Models\Page\Page  $page
+     * @param  array                  $data
+     * @return array
+     */
+    private function processLinks($page, $data)
+    {
+        DB::beginTransaction();
+
+        try {
+            // If the page already has links...
+            if($page->links()->count()) {
+                $page->links()->delete();
+
+                foreach($data as $link) {
+                    $link = PageLink::create([
+                        'page_id' => $page->id,
+                        'link_id' => isset($link['link_id']) ? $link['link_id'] : null,
+                        'title' => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null
+                    ]);
+                    if(!$link) throw new \Exception('An error occurred while creating a link.');
+                }
+            }
+            // Otherwise, just record the links
+            else {
+                foreach($data as $link) {
+                    $link = PageLink::create([
+                        'page_id' => $page->id,
+                        'link_id' => isset($link['link_id']) ? $link['link_id'] : null,
+                        'title' => isset($link['title']) ? $link['title'] : null
+                    ]);
+                    if(!$link) throw new \Exception('An error occurred while creating a link.');
+                }
+            }
+
+            return $this->commitReturn($data);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
     }
 
     /**

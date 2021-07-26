@@ -22,7 +22,7 @@
 @endif
 @include('pages._page_header', ['section' => 'Version #'.$version->id])
 
-@include('pages._page_content', ['data' => $version->data['data']])
+@include('pages._page_content', ['data' => $version->data['data']['parsed']])
 
 @endsection
 
