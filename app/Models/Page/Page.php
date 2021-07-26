@@ -239,7 +239,7 @@ class Page extends Model
             return $this->title.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
         }
         return
-            '<a href="'.$this->url.'" class=text-primary page-link">'.$this->title.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '').'</a>';
+            '<a href="'.$this->url.'" class=text-primary page-link"'.($this->summary ? ' data-toggle="tooltip" title="'.$this->summary.'"' : '').'>'.$this->title.'</a>'.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
     }
 
     /**
