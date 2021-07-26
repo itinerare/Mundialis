@@ -17,14 +17,18 @@
                     <div class="col-sm col pl-1">
                         <div class="pt-1">
                             @foreach($subcatPages as $page)
-                                {!! $page->displayName !!}{{ !$loop->last ? '・' : '' }}
+                                @if($page->is_visible || (Auth::check() && Auth::user()->canWrite))
+                                    {{ !$loop->first ? '・' : '' }}{!! $page->displayName !!}
+                                @endif
                             @endforeach
                         </div>
                     </div>
                 </div>
             @endif
             @foreach($group as $page)
-                {!! $page->displayName !!}{{ !$loop->last ? '・' : '' }}
+                @if($page->is_visible || (Auth::check() && Auth::user()->canWrite))
+                    {{ !$loop->first ? '・' : '' }}{!! $page->displayName !!}
+                @endif
             @endforeach
         </div>
     </div>
