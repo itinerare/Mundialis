@@ -81,7 +81,7 @@ class PageManager extends Service
 
         try {
             // More specific validation
-            if(Page::where('title', $data['title'])->where('id', '!=', $page->id)->exists()) throw new \Exception("The page title has already been taken.");
+            if(Page::withTrashed()->where('title', $data['title'])->where('id', '!=', $page->id)->exists()) throw new \Exception("The page title has already been taken.");
 
             // Process data for storage
             $data = $this->processPageData($data, $page);
@@ -141,7 +141,7 @@ class PageManager extends Service
 
         try {
             // Double-check the title
-            if(Page::where('title', $version->data['title'])->where('id', '!=', $page->id)->exists()) throw new \Exception("The page title has already been taken.");
+            if(Page::withTrashed()->where('title', $version->data['title'])->where('id', '!=', $page->id)->exists()) throw new \Exception("The page title has already been taken.");
 
             // Update the page itself
             $page->update($version->data);
