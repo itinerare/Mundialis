@@ -325,25 +325,15 @@ class PageManager extends Service
 
         try {
             // If the page already has links...
-            if($page->links()->count()) {
+            if($page->links()->count())
                 $page->links()->delete();
 
-                foreach($data as $link) {
+            foreach($data as $link) {
+                if((isset($link['link_id']) && !$page->links()->where('link_id', $link['link_id'])->first()) || (isset($link['title']) && !$page->links()->where('title', $link['title'])->first())) {
                     $link = PageLink::create([
                         'page_id' => $page->id,
                         'link_id' => isset($link['link_id']) ? $link['link_id'] : null,
                         'title' => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null
-                    ]);
-                    if(!$link) throw new \Exception('An error occurred while creating a link.');
-                }
-            }
-            // Otherwise, just record the links
-            else {
-                foreach($data as $link) {
-                    $link = PageLink::create([
-                        'page_id' => $page->id,
-                        'link_id' => isset($link['link_id']) ? $link['link_id'] : null,
-                        'title' => isset($link['title']) ? $link['title'] : null
                     ]);
                     if(!$link) throw new \Exception('An error occurred while creating a link.');
                 }

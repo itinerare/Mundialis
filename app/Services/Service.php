@@ -316,9 +316,10 @@ abstract class Service {
                                 'title' => $match
                             ];
                         }
+                        $i2++;
                     }
                 }
-                $i++; $i2++;
+                $i++;
             }
             $data['data']['parsed'][$key] = $item;
         }
