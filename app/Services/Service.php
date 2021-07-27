@@ -280,31 +280,31 @@ abstract class Service {
             $i = 1;
             // Test content against both a wiki-style link pattern without label and one with
             foreach(['/\[\[([A-Za-z0-9_-_\s]+)\]\]/', '/\[\[([A-Za-z0-9_-_\s]+)\|([A-Za-z0-9_-_\s]+)\]\]/'] as $pattern) {
+                $i2 = 0;
                 $matches = null;
                 $links = [];
-                $count = preg_match_all($pattern, $item, $matches[]);
+                $count = preg_match_all($pattern, $item, $matches);
                 if($count) {
-                    foreach($matches as $match) {
+                    foreach($matches[1] as $match) {
                         // Attempt to locate an associated page
-                        $page = Page::where('title', $match[1][0])->first();
+                        $page = Page::where('title', $match)->first();
                         // If there is a page, simply substitute out the text for a proper link
                         if($page) {
                             $pages[] = $page;
                             if($i == 1)
-                                $item = preg_replace('/\[\['.$match[1][0].'\]\]/', $page->displayName, $item);
+                                $item = preg_replace('/\[\['.$match.'\]\]/', $page->displayName, $item);
                             elseif($i == 2)
-                                $item = preg_replace('/\[\['.$match[1][0].'\|'.$match[2][0].'\]\]/', '<a href="'.$page->url.'" class="text-primary"'.($page->summary ? ' data-toggle="tooltip" title="'.$page->summary.'"' : '').'>'.$match[2][0].'</a>', $item);
+                                $item = preg_replace('/\[\['.$match.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.$page->url.'" class="text-primary"'.($page->summary ? ' data-toggle="tooltip" title="'.$page->summary.'"' : '').'>'.$matches[$i][$i2].'</a>', $item);
                             // And make a note that the page is being linked to
                             $data['data']['links'][] = [
-                                'link_id' => $page->id,
-                                'title' => $match[1][0]
+                                'link_id' => $page->id
                             ];
                         }
                         else {
                             if($i == 1)
-                                $item = preg_replace('/\[\['.$match[1][0].'\]\]/', '<span class="text-danger">'.$match[1][0].'</span>', $item);
+                                $item = preg_replace('/\[\['.$match.'\]\]/', '<span class="text-danger">'.$match.'</span>', $item);
                             elseif($i == 2)
-                                $item = preg_replace('/\[\['.$match[1][0].'\|'.$match[2][0].'\]\]/', '<span class="text-danger">'.$match[1][0].'</span>', $item);
+                                $item = preg_replace('/\[\['.$match.'\|'.$matches[$i][$i2].'\]\]/', '<span class="text-danger">'.$matches[$i][$i2].'</span>', $item);
 
                             // If there's no page yet, log a placeholder link
                             // This won't do much, but it will store two pieces of info:
@@ -313,12 +313,12 @@ abstract class Service {
                             // which will help generate maintenance reports and, when the
                             // page is created, help update this page.
                             $data['data']['links'][] = [
-                                'title' => $match[$i][0]
+                                'title' => $match
                             ];
                         }
                     }
                 }
-                $i++;
+                $i++; $i2++;
             }
             $data['data']['parsed'][$key] = $item;
         }
