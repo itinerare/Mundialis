@@ -96,6 +96,47 @@ class SpecialController extends Controller
     }
 
     /**
+     * Shows list of most tagged pages.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string                    $mode
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUntaggedPages(Request $request)
+    {
+        $query = Page::visible(Auth::check() ? Auth::user() : null)->get()
+        ->filter(function ($page) {
+            return $page->tags->count() == 0;
+        })->sortBy('created_at');
+
+        return view('pages.special.special_untagged', [
+            'pages' => $query->paginate(20)->appends($request->query())
+        ]);
+    }
+
+    /**
+     * Shows list of most tagged pages.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string                    $mode
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getMostTaggedPages(Request $request)
+    {
+        $query = Page::visible(Auth::check() ? Auth::user() : null)->get()
+        ->filter(function ($page) {
+            return $page->tags->count() > 0;
+        })
+        ->sortByDesc(function ($page) {
+            return $page->tags->count();
+        });
+
+        return view('pages.special.special_most_tagged', [
+            'pages' => $query->paginate(20)->appends($request->query())
+        ]);
+    }
+
+    /**
      * Shows list of revised pages.
      *
      * @param  \Illuminate\Http\Request  $request

@@ -33,7 +33,7 @@
 
         <li class="sidebar-section">
             <div class="sidebar-section-header">Special Pages</div>
-            <div class="sidebar-item"><a href="{{ url('special') }}" class="{{ set_active('special') }}">All Special Pages</a></div>
+            <div class="sidebar-item"><a href="{{ url('special') }}" class="{{ set_active('special*') }}">All Special Pages</a></div>
             <div class="sidebar-item"><a href="{{ url('special/all-pages') }}" class="{{ set_active('special/all-pages') }}">All Pages</a></div>
             <div class="sidebar-item"><a href="{{ url('special/random-page') }}">Random Page</a></div>
             @if(Auth::check() && Auth::user()->canWrite)
