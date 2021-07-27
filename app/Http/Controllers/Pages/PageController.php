@@ -173,6 +173,26 @@ class PageController extends Controller
     }
 
     /**
+     * Shows the links to a page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int                       $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getLinksHere(Request $request, $id)
+    {
+        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        if(!$page) abort(404);
+
+        return view('pages.page_links_here', [
+            'page' => $page,
+            'links' => $page->linked()->paginate(20)->appends($request->query()),
+        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+            'dateHelper' => new TimeDivision
+        ] : []));
+    }
+
+    /**
      * Shows a specific page version.
      *
      * @param  int        $pageId

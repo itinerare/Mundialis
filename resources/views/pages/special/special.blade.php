@@ -30,7 +30,7 @@
     </div>
     <div class="col-md">
         <ul>
-            <li>Wanted Pages</li>
+            <li><a href="{{ url('special/wanted-pages') }}">Wanted Pages</a></li>
             @foreach(Config::get('mundialis.utility_tags') as $key=>$tag)
                 <li><a href="{{ url('special/'.$key.'-pages') }}" class="{{ set_active('special/'.$key.'-pages') }}">{{ $tag['name'] }}</a></li>
             @endforeach

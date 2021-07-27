@@ -25,7 +25,7 @@ Route::group(['namespace' => 'Pages'], function() {
         Route::get('{id}', 'PageController@getPage');
 
         Route::get('{id}/gallery', 'ImageController@getPageGallery')
-            ->where('id', '[0-9]+');
+            ->whereNumber('id');
         Route::get('{page_id}/gallery/{id}', 'ImageController@getPageImage')
             ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
         Route::get('get-image/{page_id}/{id}', 'ImageController@getPageImagePopup')
@@ -35,6 +35,9 @@ Route::group(['namespace' => 'Pages'], function() {
             ->whereNumber('id');
         Route::get('{page_id}/history/{id}', 'PageController@getPageVersion')
             ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
+
+        Route::get('{id}/links-here', 'PageController@getLinksHere')
+            ->whereNumber('id');
 
         Route::group(['prefix' => 'tags'], function() {
             Route::get('{tag}', 'TagController@getTag');

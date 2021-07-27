@@ -11,6 +11,7 @@ use App\Models\Subject\TimeChronology;
 
 use App\Models\Page\Page;
 use App\Models\Page\PageTag;
+use App\Models\Page\PageLink;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -139,6 +140,24 @@ class SpecialController extends Controller
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
             'tags' => (new PageTag)->listTags(),
             'dateHelper' => new TimeDivision
+        ]);
+    }
+
+    /**
+     * Shows list of all wanted pages.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getWantedPages(Request $request)
+    {
+        $query = PageLink::whereNotNull('title')->get()->groupBy('title')
+        ->sortByDesc(function ($group) {
+            return $group->count();
+        });
+
+        return view('pages.special.special_wanted', [
+            'pages' => $query->paginate(20)->appends($request->query())
         ]);
     }
 

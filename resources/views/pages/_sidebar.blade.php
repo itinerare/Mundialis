@@ -17,6 +17,10 @@
             @endif
         </li>
 
+        <li class="sidebar-section">
+            <div class="sidebar-section-header">More</div>
+            <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/links-here') }}" class="{{ set_active('pages/'.$page->id.'/links-here*') }}">What Links Here</a></div>
+        </li>
     @else
         <li class="sidebar-header"><a href="{{ url('/') }}" class="card-link">Pages</a></li>
 
