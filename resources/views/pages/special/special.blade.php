@@ -23,8 +23,8 @@
             <li>Most Used Categories</li>
             <li>Untagged Pages</li>
             <li>Pages with the Most Tags</li>
-            <li>Pages with the Fewest Revisions</li>
             <li>Pages with the Most Revisions</li>
+            <li><a href="{{ url('special/linked-pages') }}">Most Linked-To Pages</a></li>
             <li>Protected Pages</li>
         </ul>
     </div>

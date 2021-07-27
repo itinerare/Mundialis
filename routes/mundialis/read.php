@@ -51,8 +51,10 @@ Route::group(['namespace' => 'Pages'], function() {
         Route::get('random-page', 'SpecialController@getRandomPage');
 
         # MAINTENANCE REPORTS
-        Route::get('wanted-pages', 'SpecialController@getWantedPages');
         Route::get('protected-pages', 'SpecialController@getProtectedPages');
+        Route::get('linked-pages', 'SpecialController@getMostLinkedPages');
+
+        Route::get('wanted-pages', 'SpecialController@getWantedPages');
         Route::get('{tag}-pages', 'SpecialController@getUtilityTagPages')
             ->where('tag', implode('|', array_keys(Config::get('mundialis.utility_tags'))));
     });

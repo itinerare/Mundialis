@@ -15,7 +15,7 @@
 
 @include('pages._page_header', ['section' => 'What Links Here'])
 
-<p>This is a list of all pages that link to this page.</p>
+<p>This is a list of all pages that link to this page. Note that this list only counts links made within page content.</p>
 
 {!! $links->render() !!}
 

@@ -151,12 +151,34 @@ class SpecialController extends Controller
      */
     public function getWantedPages(Request $request)
     {
-        $query = PageLink::whereNotNull('title')->get()->groupBy('title')
-        ->sortByDesc(function ($group) {
+        $query = PageLink::whereNotNull('title')->get()->filter(function ($value) {
+            if(Auth::check() && Auth::user()->canWrite) return 1;
+            return $value->page->is_visible;
+        })->groupBy('title')->sortByDesc(function ($group) {
             return $group->count();
         });
 
         return view('pages.special.special_wanted', [
+            'pages' => $query->paginate(20)->appends($request->query())
+        ]);
+    }
+
+    /**
+     * Shows list of most linked-to pages.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getMostLinkedPages(Request $request)
+    {
+        $query = PageLink::whereNotNull('link_id')->get()->filter(function ($value) {
+            if(Auth::check() && Auth::user()->canWrite) return 1;
+            return $value->linkedPage->is_visible;
+        })->groupBy('link_id')->sortByDesc(function ($group) {
+            return $group->count();
+        });
+
+        return view('pages.special.special_linked', [
             'pages' => $query->paginate(20)->appends($request->query())
         ]);
     }
