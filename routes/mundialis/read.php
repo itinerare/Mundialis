@@ -47,15 +47,23 @@ Route::group(['namespace' => 'Pages'], function() {
     # SPECIAL PAGES
     Route::group(['prefix' => 'special'], function() {
         Route::get('/', 'SpecialController@getSpecialIndex');
-        Route::get('all-pages', 'SpecialController@getAllPages');
-        Route::get('random-page', 'SpecialController@getRandomPage');
 
         # MAINTENANCE REPORTS
-        Route::get('protected-pages', 'SpecialController@getProtectedPages');
+        Route::get('untagged-pages', 'SpecialController@getUntaggedPages');
+        Route::get('tagged-pages', 'SpecialController@getMostTaggedPages');
+        Route::get('{mode}-revised-pages', 'SpecialController@getRevisedPages')
+            ->whereAlphanumeric('mode');
         Route::get('linked-pages', 'SpecialController@getMostLinkedPages');
+        Route::get('protected-pages', 'SpecialController@getProtectedPages');
 
         Route::get('wanted-pages', 'SpecialController@getWantedPages');
         Route::get('{tag}-pages', 'SpecialController@getUtilityTagPages')
             ->where('tag', implode('|', array_keys(Config::get('mundialis.utility_tags'))));
+
+        # LISTS
+        Route::get('all-pages', 'SpecialController@getAllPages');
+
+        # OTHER
+        Route::get('random-page', 'SpecialController@getRandomPage');
     });
 });

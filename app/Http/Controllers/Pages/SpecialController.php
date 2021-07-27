@@ -96,6 +96,52 @@ class SpecialController extends Controller
     }
 
     /**
+     * Shows list of revised pages.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string                    $mode
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getRevisedPages(Request $request, $mode)
+    {
+        $query = Page::visible(Auth::check() ? Auth::user() : null)->get();
+
+        if($mode == 'least')
+            $query = $query->sortBy(function ($page) {
+                return $page->versions->count();
+            });
+        else
+            $query = $query->sortByDesc(function ($page) {
+                return $page->versions->count();
+            });
+
+        return view('pages.special.special_revised', [
+            'mode' => $mode,
+            'pages' => $query->paginate(20)->appends($request->query())
+        ]);
+    }
+
+    /**
+     * Shows list of most linked-to pages.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getMostLinkedPages(Request $request)
+    {
+        $query = PageLink::whereNotNull('link_id')->get()->filter(function ($value) {
+            if(Auth::check() && Auth::user()->canWrite) return 1;
+            return $value->linkedPage->is_visible;
+        })->groupBy('link_id')->sortByDesc(function ($group) {
+            return $group->count();
+        });
+
+        return view('pages.special.special_linked', [
+            'pages' => $query->paginate(20)->appends($request->query())
+        ]);
+    }
+
+    /**
      * Shows list of all pages with a given utility tag.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -159,26 +205,6 @@ class SpecialController extends Controller
         });
 
         return view('pages.special.special_wanted', [
-            'pages' => $query->paginate(20)->appends($request->query())
-        ]);
-    }
-
-    /**
-     * Shows list of most linked-to pages.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getMostLinkedPages(Request $request)
-    {
-        $query = PageLink::whereNotNull('link_id')->get()->filter(function ($value) {
-            if(Auth::check() && Auth::user()->canWrite) return 1;
-            return $value->linkedPage->is_visible;
-        })->groupBy('link_id')->sortByDesc(function ($group) {
-            return $group->count();
-        });
-
-        return view('pages.special.special_linked', [
             'pages' => $query->paginate(20)->appends($request->query())
         ]);
     }

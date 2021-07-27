@@ -21,9 +21,10 @@
         <ul>
             <li>Unused Categories</li>
             <li>Most Used Categories</li>
-            <li>Untagged Pages</li>
-            <li>Pages with the Most Tags</li>
-            <li>Pages with the Most Revisions</li>
+            <li><a href="{{ url('special/untagged-pages') }}">Untagged Pages</a></li>
+            <li><a href="{{ url('special/tagged-pages') }}">Pages with the Most Tags</a></li>
+            <li><a href="{{ url('special/least-revised-pages') }}">Pages with the Fewest Revisions</a></li>
+            <li><a href="{{ url('special/most-revised-pages') }}">Pages with the Most Revisions</a></li>
             <li><a href="{{ url('special/linked-pages') }}">Most Linked-To Pages</a></li>
             <li>Protected Pages</li>
         </ul>
