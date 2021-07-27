@@ -21,12 +21,12 @@
 
 <ul>
     @foreach($links as $link)
-        @if($link->page->is_visible || (Auth::check() && Auth::user()->canWrite))
-            <li>{!! $link->page->displayName !!}</li>
-        @endif
+        <li>{!! $link->page->displayName !!}</li>
     @endforeach
 </ul>
 
 {!! $links->render() !!}
+
+<div class="text-center mt-4 small text-muted">{{ $links->total() }} result{{ $links->total() == 1 ? '' : 's' }} found.</div>
 
 @endsection

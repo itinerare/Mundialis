@@ -184,9 +184,14 @@ class PageController extends Controller
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
         if(!$page) abort(404);
 
+        $query = $page->linked()->get()->filter(function ($link) {
+            if(Auth::check() && Auth::user()->canWrite) return 1;
+            return $link->page->is_visible;
+        });
+
         return view('pages.page_links_here', [
             'page' => $page,
-            'links' => $page->linked()->paginate(20)->appends($request->query()),
+            'links' => $query->paginate(20)->appends($request->query()),
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
             'dateHelper' => new TimeDivision
         ] : []));
