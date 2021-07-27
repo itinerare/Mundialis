@@ -1,21 +1,15 @@
 @extends('pages.layout')
 
-@section('pages-title') {{ $page->title }} - Gallery @endsection
-
-@section('meta-img')
-    {{ $page->image ? $page->image->thumbnailUrl : asset('images/logo.png') }}
-@endsection
-
-@section('meta-desc')
-    {{ $page->summary ? $page->summary : Config::get('mundialis.settings.site_desc') }}
-@endsection
+@section('pages-title') Special - All Images @endsection
 
 @section('pages-content')
-{!! breadcrumbs([$page->category->subject['name'] => $page->category->subject['key'], $page->category->name =>  $page->category->subject['key'].'/categories/'.$page->category->id, $page->title => $page->url, 'Gallery' => $page->url.'/gallery']) !!}
+{!! breadcrumbs(['Special' => 'special', 'All Images' => 'special/all-images']) !!}
 
-@include('pages._page_header', ['section' => 'Gallery'])
+<h1>Special: All Images</h1>
 
-<p>The following are all the images associated with this page. Click an image's thumbnail for more information about it.</p>
+<p>This is a list of all images associated with pages. Click an image's thumbnail for more information about it.</p>
+
+{!! $images->render() !!}
 
 <div>
     {!! Form::open(['method' => 'GET', 'class' => '']) !!}
@@ -47,7 +41,7 @@
     @foreach($images as $image)
         {!! ($loop->remaining+1) == ($loop->count%4) ? '<div class="my-auto col mobile-hide"></div>' : '' !!}
         <div class="col-md-3 mb-2">
-            <a href="{{ url('pages/get-image/'.$page->id.'/'.$image->id) }}" class="image-link"><img src="{{ $image->thumbnailUrl }}" class="img-thumbnail mw-100" style="{{ !$image->pivot->is_valid ? 'filter: grayscale(60%) opacity(50%);' : '' }}"/></a>
+            <a href="{{ url('special/get-image/'.$image->id) }}" class="image-link"><img src="{{ $image->thumbnailUrl }}" class="img-thumbnail mw-100"/></a>
         </div>
         {!! $loop->count%4 != 0 && $loop->last ? '<div class="my-auto col mobile-hide"></div>' : '' !!}
         {!! $loop->iteration % 4 == 0 ? '<div class="w-100"></div>' : '' !!}

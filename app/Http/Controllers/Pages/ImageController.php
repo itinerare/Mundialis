@@ -123,18 +123,23 @@ class ImageController extends Controller
     /**
      * Shows the popup for a given image.
      *
-     * @param  int                     $pageId
      * @param  int                     $id
+     * @param  int                     $imageId
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getPageImagePopup($pageId, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $pageId)->first();
-        if(!$page) abort(404);
-        $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $id)->first();
+    public function getPageImagePopup($id, $imageId = null) {
+        if(isset($id) && isset($imageId)) {
+            $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+            if(!$page) abort(404);
+            $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $imageId)->first();
+        }
+        else {
+            $image = PageImage::where('id', $id)->visible(Auth::check() ? Auth::user() : null)->first();
+        }
         if(!$image) abort(404);
 
         return view('pages.images._info_popup', [
-            'page' => $page,
+            'page' => isset($page) ? $page : null,
             'image' => $image
         ]);
     }

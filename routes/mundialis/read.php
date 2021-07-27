@@ -62,6 +62,10 @@ Route::group(['namespace' => 'Pages'], function() {
 
         # LISTS
         Route::get('all-pages', 'SpecialController@getAllPages');
+        Route::get('all-tags', 'SpecialController@getAllTags');
+        Route::get('all-images', 'SpecialController@getAllImages');
+        Route::get('get-image/{id}', 'ImageController@getPageImagePopup')
+            ->whereNumber('id');
 
         # OTHER
         Route::get('random-page', 'SpecialController@getRandomPage');

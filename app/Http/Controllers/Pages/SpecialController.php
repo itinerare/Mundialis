@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Pages;
 use Auth;
 use Config;
 
+use App\Models\User\User;
+
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
 use App\Models\Subject\TimeChronology;
@@ -12,6 +14,7 @@ use App\Models\Subject\TimeChronology;
 use App\Models\Page\Page;
 use App\Models\Page\PageTag;
 use App\Models\Page\PageLink;
+use App\Models\Page\PageImage;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -87,11 +90,73 @@ class SpecialController extends Controller
         }
         else $query->orderBy('title');
 
-        return view('pages.special.special_all', [
+        return view('pages.special.all_pages', [
             'pages' => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
             'tags' => (new PageTag)->listTags(),
             'dateHelper' => new TimeDivision
+        ]);
+    }
+
+    /**
+     * Shows list of all tags.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string                    $mode
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getAllTags(Request $request)
+    {
+        $query = PageTag::tag()->get()
+        ->filter(function ($tag) {
+            if(Auth::check() && Auth::user()->canWrite) return 1;
+            return $tag->page->is_visible;
+        })->groupBy('baseTag');
+
+        return view('pages.special.all_tags', [
+            'tags' => $query->paginate(20)->appends($request->query())
+        ]);
+    }
+
+    /**
+     * Shows list of all images.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getAllImages(Request $request)
+    {
+        $query = PageImage::visible(Auth::check() ? Auth::user() : null);
+
+        if($request->get('creator_url')) {
+            $creatorUrl = $request->get('creator_url');
+            $query->whereHas('creators', function($query) use ($creatorUrl) {
+                $query->where('url', 'LIKE', '%'.$creatorUrl.'%');
+            });
+        }
+        if($request->get('creator_id')) {
+            $creator = User::find($request->get('creator_id'));
+            $query->whereHas('creators', function($query) use ($creator) {
+                $query->where('user_id', $creator->id);
+            });
+        }
+
+        if(isset($sort['sort']))
+        {
+            switch($sort['sort']) {
+                case 'newest':
+                    $query->orderBy('created_at', 'DESC');
+                    break;
+                case 'oldest':
+                    $query->orderBy('created_at', 'ASC');
+                    break;
+            }
+        }
+        else $query->orderBy('created_at', 'DESC');
+
+        return view('pages.special.all_images', [
+            'images' => $query->paginate(20)->appends($request->query()),
+            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
         ]);
     }
 
@@ -109,7 +174,7 @@ class SpecialController extends Controller
             return $page->tags->count() == 0;
         })->sortBy('created_at');
 
-        return view('pages.special.special_untagged', [
+        return view('pages.special.untagged', [
             'pages' => $query->paginate(20)->appends($request->query())
         ]);
     }
@@ -131,7 +196,7 @@ class SpecialController extends Controller
             return $page->tags->count();
         });
 
-        return view('pages.special.special_most_tagged', [
+        return view('pages.special.most_tagged', [
             'pages' => $query->paginate(20)->appends($request->query())
         ]);
     }
@@ -156,7 +221,7 @@ class SpecialController extends Controller
                 return $page->versions->count();
             });
 
-        return view('pages.special.special_revised', [
+        return view('pages.special.revised', [
             'mode' => $mode,
             'pages' => $query->paginate(20)->appends($request->query())
         ]);
@@ -177,7 +242,7 @@ class SpecialController extends Controller
             return $group->count();
         });
 
-        return view('pages.special.special_linked', [
+        return view('pages.special.linked', [
             'pages' => $query->paginate(20)->appends($request->query())
         ]);
     }
@@ -221,7 +286,7 @@ class SpecialController extends Controller
         }
         else $query->orderBy('title');
 
-        return view('pages.special.special_utility', [
+        return view('pages.special.utility', [
             'tag' => Config::get('mundialis.utility_tags.'.$tag),
             'pages' => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
@@ -245,7 +310,7 @@ class SpecialController extends Controller
             return $group->count();
         });
 
-        return view('pages.special.special_wanted', [
+        return view('pages.special.wanted', [
             'pages' => $query->paginate(20)->appends($request->query())
         ]);
     }

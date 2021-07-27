@@ -19,8 +19,6 @@
 <div class="row">
     <div class="col-md">
         <ul>
-            <li>Unused Categories</li>
-            <li>Most Used Categories</li>
             <li><a href="{{ url('special/untagged-pages') }}">Untagged Pages</a></li>
             <li><a href="{{ url('special/tagged-pages') }}">Pages with the Most Tags</a></li>
             <li><a href="{{ url('special/least-revised-pages') }}">Pages with the Fewest Revisions</a></li>
@@ -45,10 +43,9 @@
 <h2>Lists of Pages, Etc.</h2>
 
 <ul>
-    <li>All Categories</li>
     <li><a href="{{ url('special/all-pages') }}">All Pages</a></li>
-    <li>All Page Tags</li>
-    <li>All Images</li>
+    <li><a href="{{ url('special/all-tags') }}">All Tags</a></li>
+    <li><a href="{{ url('special/all-images') }}">All Images</a></li>
     @if(Auth::check() && Auth::user()->isAdmin)
         <li><strong><a href="{{ url('admin/special/deleted-pages') }}">Deleted Pages</a></strong></li>
         <li><strong><a href="{{ url('admin/special/deleted-images') }}">Deleted Images</a></strong></li>
