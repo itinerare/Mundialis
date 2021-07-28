@@ -93,6 +93,15 @@ class SubjectService extends Service
             // Record subject
             $data['subject'] = $subject;
 
+            // Check for image
+            $image = null;
+            if(isset($data['image']) && $data['image']) {
+                $data['has_image'] = 1;
+                $image = $data['image'];
+                unset($data['image']);
+            }
+            else $data['has_image'] = 0;
+
             // Collect and record infobox and form fields
             $data = $this->processTemplateData($data);
 
@@ -108,6 +117,9 @@ class SubjectService extends Service
 
             // Create category
             $category = SubjectCategory::create($data);
+
+            // Handle image
+            if($image) $this->handleImage($image, $category->imagePath, $category->imageFileName);
 
             return $this->commitReturn($category);
         } catch(\Exception $e) {
@@ -131,6 +143,24 @@ class SubjectService extends Service
         try {
             // More specific validation
             if(SubjectCategory::where('name', $data['name'])->where('id', '!=', $category->id)->exists()) throw new \Exception("The name has already been taken.");
+
+            // Check to see if an existing image should be removed
+            if(isset($data['remove_image'])) {
+                if($category->has_image && $data['remove_image']) {
+                    $data['has_image'] = 0;
+                    $this->deleteImage($category->imagePath, $category->imageFileName);
+                }
+                unset($data['remove_image']);
+            }
+
+            // Check for image
+            $image = null;
+            if(isset($data['image']) && $data['image']) {
+                $data['has_image'] = 1;
+                $image = $data['image'];
+                unset($data['image']);
+            }
+            else $data['has_image'] = 0;
 
             // Collect and record template information
             $data = $this->processTemplateData($data);
@@ -164,6 +194,9 @@ class SubjectService extends Service
 
             // Update category
             $category->update($data);
+
+            // Handle image
+            if($image) $this->handleImage($image, $category->imagePath, $category->imageFileName);
 
             return $this->commitReturn($category);
         } catch(\Exception $e) {
