@@ -399,17 +399,29 @@ class PageController extends Controller
         $page = Page::find($id);
         if(!Auth::user()->canEdit($page)) abort (404);
 
-        $groupedCategories = SubjectCategory::where('id', '!=', $page->category_id)->get()->keyBy('id')->groupBy(function ($category) {
+        // Collect categories and information and group them
+        $groupedCategories = SubjectCategory::orderBy('sort', 'DESC')->where('id', '!=', $page->category_id)->get()->keyBy('id')->groupBy(function ($category) {
             return $category->subject['name'];
         }, $preserveKeys = true)->toArray();
+
+        // Collect subjects and information
+        $orderedSubjects = collect(Config::get('mundialis.subjects'))->filter(function ($subject) use ($groupedCategories) {
+            if(isset($groupedCategories[$subject['name']])) return 1;
+            else return 0;
+        })->pluck('name', 'name');
 
         foreach($groupedCategories as $subject=>$categories)
             foreach($categories as $id=>$category)
                 $groupedCategories[$subject][$id] = $category['name'];
 
+        // Organize them according to standard subject listing
+        $sortedCategories = $orderedSubjects->map(function($subject, $key) use($groupedCategories) {
+            return $groupedCategories[$subject];
+        });
+
         return view('pages.page_move', [
             'page' => $page,
-            'categories' => $groupedCategories
+            'categories' => $sortedCategories
         ]);
     }
 

@@ -41,6 +41,7 @@
 $( document ).ready(function() {
     $(".select-category").selectize({
         sortField: "text",
+        lockOptgroupOrder: true
     });
 });
 </script>
