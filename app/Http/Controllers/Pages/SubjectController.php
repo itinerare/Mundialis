@@ -12,6 +12,8 @@ use App\Models\Subject\TimeDivision;
 use App\Models\Subject\TimeChronology;
 use App\Models\Subject\LexiconCategory;
 
+use App\Models\Page\PageTag;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
