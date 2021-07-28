@@ -17,7 +17,8 @@ Route::get('get/tags', 'Pages\TagController@getAllTags');
 
 Route::group(['prefix' => 'pages', 'namespace' => 'Pages'], function() {
     # BASIC CREATE/EDIT ROUTES
-    Route::get('create/{category}', 'PageController@getCreatePage');
+    Route::get('create/{category}', 'PageController@getCreatePage')
+        ->whereNumber('category');
     Route::get('{id}/edit', 'PageController@getEditPage')
         ->whereNumber('id');
     Route::get('{id}/delete', 'PageController@getDeletePage')
@@ -52,5 +53,10 @@ Route::group(['prefix' => 'pages', 'namespace' => 'Pages'], function() {
         Route::post('{id?}/protect', 'PageController@postProtectPage')
             ->whereNumber('id');
     });
+});
+
+Route::group(['prefix' => 'special', 'namespace' => 'Pages'], function() {
+    Route::get('create-wanted/{title}', 'SpecialController@getCreateWantedPage');
+    Route::post('create-wanted', 'SpecialController@postCreateWantedPage');
 });
 

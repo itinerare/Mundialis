@@ -23,7 +23,7 @@
 
 <div class="form-group">
     {!! Form::label('Title') !!}
-    {!! Form::text('title', $page->title, ['class' => 'form-control']) !!}
+    {!! Form::text('title', $page->id ? $page->title : str_replace('_', ' ', Request::get('title')), ['class' => 'form-control']) !!}
 </div>
 
 <div class="form-group">

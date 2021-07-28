@@ -14,7 +14,7 @@
 <ul>
     @foreach($pages as $group)
         <li>
-            <span class="text-danger">{{ $group->first()->title }}</span> ({{ $group->count() }} link{{ $group->count() != 1 ? 's' : '' }}) <a class="collapse-toggle collapsed" href="#group-{{ $group->first()->id }}" data-toggle="collapse">Show <i class="fas fa-caret-right"></i></a></h3>
+            <a href="{{ url('special/create-wanted/'.$group->first()->title) }}" class="text-danger">{{ $group->first()->title }}</a> ({{ $group->count() }} link{{ $group->count() != 1 ? 's' : '' }}) <a class="collapse-toggle collapsed" href="#group-{{ $group->first()->id }}" data-toggle="collapse">Show <i class="fas fa-caret-right"></i></a></h3>
             <div class="collapse" id="group-{{ $group->first()->id }}">
                 <ul>
                     @foreach($group as $link)

@@ -315,4 +315,37 @@ class SpecialController extends Controller
         ]);
     }
 
+    /**
+     * Shows the interface to create a wanted page.
+     *
+     * @param  string                        $title
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCreateWantedPage($title)
+    {
+        $groupedCategories = SubjectCategory::get()->keyBy('id')->groupBy(function ($category) {
+            return $category->subject['name'];
+        }, $preserveKeys = true)->toArray();
+
+        foreach($groupedCategories as $subject=>$categories)
+            foreach($categories as $id=>$category)
+                $groupedCategories[$subject][$id] = $category['name'];
+
+        return view('pages.special.create_wanted', [
+            'title' => $title,
+            'categories' => $groupedCategories
+        ]);
+    }
+
+    /**
+     * Redirects to page creation based on provided input.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postCreateWantedPage(Request $request)
+    {
+        return redirect()->to('pages/create/'.$request->get('category_id').'?title='.$request->get('title'));
+    }
+
 }

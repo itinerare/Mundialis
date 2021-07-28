@@ -369,7 +369,7 @@ class PageController extends Controller
     }
 
     /**
-     * Resets a page to a given version.
+     * Updates a page's protection.
      *
      * @param  \Illuminate\Http\Request     $request
      * @param  App\Services\PageManager     $service

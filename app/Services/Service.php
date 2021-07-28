@@ -302,9 +302,9 @@ abstract class Service {
                         }
                         else {
                             if($i == 1)
-                                $item = preg_replace('/\[\['.$match.'\]\]/', '<span class="text-danger">'.$match.'</span>', $item);
+                                $item = preg_replace('/\[\['.$match.'\]\]/', '<a href="'.url('special/create-wanted/'.str_replace(' ', '_', $match)).'" class="text-danger">'.$match.'</a>', $item);
                             elseif($i == 2)
-                                $item = preg_replace('/\[\['.$match.'\|'.$matches[$i][$i2].'\]\]/', '<span class="text-danger">'.$matches[$i][$i2].'</span>', $item);
+                                $item = preg_replace('/\[\['.$match.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.url('special/create-wanted/'.str_replace(' ', '_', $match)).'" class="text-danger">'.$matches[$i][$i2].'</a>', $item);
 
                             // If there's no page yet, log a placeholder link
                             // This won't do much, but it will store two pieces of info:
