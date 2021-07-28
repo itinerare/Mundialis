@@ -43,7 +43,7 @@ class Page extends Model
      * @var array
      */
     public static $createRules = [
-        'title' => 'required|unique:pages'
+        'title' => 'required'
     ];
 
     /**
@@ -178,6 +178,19 @@ class Page extends Model
         );
     }
 
+    /**
+     * Scope a query to only include pages with a given title.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  string                                 $title
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeTitleSearch($query, $title)
+    {
+        return $query->where('title', $title);
+    }
+
     /**********************************************************************************************
 
         ACCESSORS
@@ -248,17 +261,41 @@ class Page extends Model
     }
 
     /**
+     * Get the formatted page title. Handles disambiguation.
+     *
+     * @return string
+     */
+    public function getDisplayTitleAttribute()
+    {
+        // Check if there is more than one page with this title
+        if($this->titleSearch($this->title)->count() > 1) {
+            $titlePages = $this->titleSearch($this->title);
+
+            // Check if there is more than one page within this subject with this title
+            if($titlePages->whereIn('category_id', SubjectCategory::where('subject', $this->category->subject['key'])->pluck('id')->toArray())->count() > 1) {
+                return $this->title.' ('.$this->category->subject['term'].'/'.$this->category->name.')';
+            }
+
+            // Otherwise just note the subject
+            return $this->title.' ('.$this->category->subject['term'].')';
+        }
+        return $this->title;
+    }
+
+    /**
      * Get the page title as a formatted link.
      *
      * @return string
      */
     public function getDisplayNameAttribute()
     {
+        // Check to see if this page is currently being viewed/the link would be redundant
         if(url()->current() == $this->url) {
-            return $this->title.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
+            return $this->displayTitle.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
         }
+        // Otherwise, return the link as usual
         return
-            '<a href="'.$this->url.'" class=text-primary page-link"'.($this->summary ? ' data-toggle="tooltip" title="'.$this->summary.'"' : '').'>'.$this->title.'</a>'.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
+            '<a href="'.$this->url.'" class=text-primary page-link"'.($this->summary ? ' data-toggle="tooltip" title="'.$this->summary.'"' : '').'>'.$this->displayTitle.'</a>'.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
     }
 
     /**

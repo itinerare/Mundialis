@@ -39,6 +39,9 @@ class PageManager extends Service
         DB::beginTransaction();
 
         try {
+            // More specific validation
+            if(Page::withTrashed()->where('title', $data['title'])->where('category_id', $data['category_id'])->exists()) throw new \Exception("The page title has already been taken within this category.");
+
             // Process data for storage
             $data = $this->processPageData($data);
 
@@ -86,7 +89,7 @@ class PageManager extends Service
             if(!$user->canEdit($page)) throw new \Exception('You don\'t have permission to edit this page.');
 
             // More specific validation
-            if(Page::withTrashed()->where('title', $data['title'])->where('id', '!=', $page->id)->exists()) throw new \Exception("The page title has already been taken.");
+            if(Page::withTrashed()->where('title', $data['title'])->where('category_id', $page->category->id)->where('id', '!=', $page->id)->exists()) throw new \Exception("The page title has already been taken within this category.");
 
             // Process data for storage
             $data = $this->processPageData($data, $page);
@@ -106,7 +109,9 @@ class PageManager extends Service
 
             // Ascertain cause of version broadly
             if($data['data'] == $page->data) {
-                if(isset($data['parent_id']) && $data['parent_id'] != $page->parent_id)
+                if($data['title'] != $page->title)
+                    $versionType = 'Title Changed';
+                elseif(isset($data['parent_id']) && $data['parent_id'] != $page->parent_id)
                     $versionType = 'Parent Changed';
                 elseif(isset($data['is_visible']) && $data['is_visible'] != $page->is_visible)
                     $versionType = 'Visibility Changed';
@@ -179,6 +184,9 @@ class PageManager extends Service
         try {
             // Ensure user can edit
             if(!$user->canEdit($page)) throw new \Exception('You don\'t have permission to edit this page.');
+
+            // More specific validation
+            if(Page::withTrashed()->where('title', $page->title)->where('category_id', $category->id)->where('id', '!=', $page->id)->exists()) throw new \Exception("The page title has already been taken within the target category.");
 
             // Note the old category
             $oldCategory = $page->category;
