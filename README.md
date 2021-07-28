@@ -13,12 +13,18 @@ Thus, this project was born out of a desire for a more efficient way to record w
 
 ## Features
 WIP
-- Support for multiple users with read and optional write permissions (note that this is explicitly **not** designed for many people, just a small group, e.g. friends)
-- Pages organized by subject (people, places, things, etc) and category (including sub-categories)
+- Support for multiple users with read/write permissions handled via a lightweight rank system (user/editor/admin) (note that this is explicitly **not** designed for many people, just a small group, e.g. friends, collaborators)
 - Page templates and template editing per-subject and per-category, including sub-categories, with optional selective change cascading from subject to categories and from categories to sub-categories (with optional recursive change cascading)-- that is, only new changes get applied, kinda like git but for page templates. They can be applied to all categories in a subject, all sub-categories of a category, or those and all *their* sub-categories ad infinitum. Forms for page editing are constructed from these templates, as well as pages themselves.
 - Specialized functions for handling time: ability to set divisions of time (e.g. days, weeks) and set (and sort) larger portions of time (chronologies) for use as secondary categories for events/to provide more overarching order
 - A specialized system for handling a project's lexicon, including configurable parts of speech and categories with an optional system for automatic conjugation/declension configurable per-category
-- Page editing built from the template system, with additional specialized fields for some subjects
+- Pages organized by subject (people, places, things, etc) and category (including sub-categories). Includes some conveniences such as automatically generating table-of-contents based on template information and collapsible sections that load collapsed for a section if its contents are long
+- Page editing built from the template system, with additional specialized fields for some subjects. Pages can also be moved or protected (set so only admins can edit)
+- Wiki-like link parsing for easy/convenient linking of on-site pages within page content
+- Page tagging-- either just for organization or for automated generation of navboxes-- including dedicated utility tags for keeping track of WIP, outdated, etc. pages
+- Images and per-page image galleries; images can have multiple on- or off-site creators noted directly via the system, and can be associated with more than one page at once (with their validity for a given page can be tracked per-page)
+- Version tracking for pages and images, including the ability to reset a page to a specific version and to restore deleted pages and images
+- Various special/utility pages for keeping track of pages via maintenance reports, etc. Includes things like un-/most-tagged pages, most and least revisions, pages with a given utility tag, and wanted pages as linked to within existing pages
+- A random page button (just delightful, in my opinion)
 
 ## Setup
 WIP
