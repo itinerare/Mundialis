@@ -240,8 +240,7 @@ class SubjectService extends Service
         // Collect and record sections if present
         if(isset($data['section_key'])) foreach($data['section_key'] as $key=>$section) {
             $data['data']['sections'][strtolower($section)] = [
-                'name' => $data['section_name'][$key],
-                'subject' => $data['section_subject'][$key]
+                'name' => $data['section_name'][$key]
             ];
         }
 
