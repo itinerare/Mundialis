@@ -132,7 +132,7 @@ class PageManager extends Service
     }
 
     /**
-     * Restore a deleted page.
+     * Updates a page's protection information.
      *
      * @param  \App\Models\Page\Page     $page
      * @param  \App\Models\User\User     $user
@@ -155,6 +155,40 @@ class PageManager extends Service
                 'reason' => $data['reason']
             ]);
             if(!$protection) throw new \Exception('An error occurred while creating the protection record.');
+
+            return $this->commitReturn($page);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Moves a page to a different category.
+     *
+     * @param  \App\Models\Page\Page                $page
+     * @param  \App\Models\Subject\SubjectCategory  $category
+     * @param  \App\Models\User\User                $user
+     * @param  string                               $reason
+     * @return bool
+     */
+    public function movePage($page, $category, $user, $reason)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Ensure user can edit
+            if(!$user->canEdit($page)) throw new \Exception('You don\'t have permission to edit this page.');
+
+            // Note the old category
+            $oldCategory = $page->category;
+
+            // Update the page's category
+            $page->update(['category_id' => $category->id]);
+
+            // Create a version logging the move
+            $version = $this->logPageVersion($page->id, $user->id, 'Page Moved from '.$oldCategory->name.' to '.$category->name, $reason, $page->version->data, false);
+            if(!$version) throw Exception('An error occurred while saving page version.');
 
             return $this->commitReturn($page);
         } catch(\Exception $e) {

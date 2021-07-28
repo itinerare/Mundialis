@@ -389,8 +389,54 @@ class PageController extends Controller
     }
 
     /**
+     * Gets the page move page.
+     *
+     * @param  int       $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getMovePage($id)
+    {
+        $page = Page::find($id);
+        if(!Auth::user()->canEdit($page)) abort (404);
+
+        $groupedCategories = SubjectCategory::where('id', '!=', $page->category_id)->get()->keyBy('id')->groupBy(function ($category) {
+            return $category->subject['name'];
+        }, $preserveKeys = true)->toArray();
+
+        foreach($groupedCategories as $subject=>$categories)
+            foreach($categories as $id=>$category)
+                $groupedCategories[$subject][$id] = $category['name'];
+
+        return view('pages.page_move', [
+            'page' => $page,
+            'categories' => $groupedCategories
+        ]);
+    }
+
+    /**
+     * Moves a page to a given category.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  App\Services\PageManager     $service
+     * @param  int                          $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postMovePage(Request $request, PageManager $service, $id)
+    {
+        if($id && $service->movePage(Page::find($id), SubjectCategory::find($request->get('category_id')), Auth::user(), $request->get('reason'))) {
+            flash('Page moved successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+            return redirect()->back();
+        }
+        return redirect()->to(Page::find($id)->url);
+    }
+
+    /**
      * Gets the page reset modal.
      *
+     * @param  int       $pageID
      * @param  int       $id
      * @return \Illuminate\Contracts\Support\Renderable
      */

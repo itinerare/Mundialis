@@ -17,6 +17,7 @@
                 @if(Auth::user()->isAdmin)
                     <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/protect') }}" class="{{ set_active('pages/'.$page->id.'/protect') }}">{{ $page->protection ? 'Edit Page Protection' : 'Protect Page' }}</a></div>
                 @endif
+                <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/move') }}" class="{{ set_active('pages/'.$page->id.'/move') }}">Move Page</a></div>
             </li>
         @endif
 
