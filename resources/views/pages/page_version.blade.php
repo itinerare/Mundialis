@@ -16,10 +16,11 @@
 <div class="alert alert-warning">
     You are viewing a version of this page created at {!! format_date($version->created_at) !!} by {!! $version->user->displayName !!}. This is{{ $version->id != $page->version->id ? ' not' : '' }} this page's most recent version.
 </div>
-<!--@if((Auth::check() && Auth::user()->canWrite) && $page->version->id != $version->id)@endif-->
-@if((Auth::check() && Auth::user()->canWrite))
-    <a href="#" class="btn btn-warning float-right reset-page-button">Reset {{ $page->category->subject['term'] }}</a>
+
+@if(Auth::check() && Auth::user()->canEdit($page) && $version->id != $page->version->id)
+    <a href="#" class="btn btn-warning float-right mt-4 ml-2 reset-page-button">Reset {{ $page->category->subject['term'] }}</a>
 @endif
+
 @include('pages._page_header', ['section' => 'Version #'.$version->id])
 
 @include('pages._page_content', ['data' => $version->data['data']['parsed']])

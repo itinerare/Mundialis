@@ -104,6 +104,14 @@ class Page extends Model
     }
 
     /**
+     * Get this page's protection records.
+     */
+    public function protections()
+    {
+        return $this->hasMany('App\Models\Page\PageProtection');
+    }
+
+    /**
      * Get this page's tags.
      */
     public function tags()
@@ -184,6 +192,17 @@ class Page extends Model
     public function getVersionAttribute()
     {
         return $this->versions()->orderBy('created_at', 'DESC')->first();
+    }
+
+    /**
+     * Get the page's most recent protection record.
+     *
+     * @return \App\Models\Page\PageProtection
+     */
+    public function getProtectionAttribute()
+    {
+        if(!$this->protections->count()) return null;
+        return $this->protections()->orderBy('created_at', 'DESC')->first();
     }
 
     /**

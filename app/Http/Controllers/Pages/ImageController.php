@@ -154,6 +154,7 @@ class ImageController extends Controller
     {
         $page = Page::where('id', $id)->first();
         if(!$page) abort(404);
+        if(!Auth::user()->canEdit($page)) abort (404);
 
         return view('pages.images.create_edit_image', [
             'image' => new PageImage,
@@ -175,6 +176,7 @@ class ImageController extends Controller
     {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $pageId)->first();
         if(!$page) abort(404);
+        if(!Auth::user()->canEdit($page)) abort (404);
         $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $id)->first();
         if(!$image) abort(404);
 
@@ -208,6 +210,7 @@ class ImageController extends Controller
         ]);
 
         $page = Page::where('id', $pageId)->first();
+        if(!Auth::user()->canEdit($page)) abort (404);
         if(!$page) abort(404);
 
         if($id && $service->updatePageImage($page, PageImage::find($id), $data, Auth::user())) {
@@ -234,6 +237,7 @@ class ImageController extends Controller
     {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $pageId)->first();
         if(!$page) abort(404);
+        if(!Auth::user()->canEdit($page)) abort (404);
         $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $id)->first();
         if(!$image) abort(404);
 

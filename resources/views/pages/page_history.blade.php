@@ -18,7 +18,7 @@
 <div>
     {!! Form::open(['method' => 'GET', 'class' => 'form-inline justify-content-end']) !!}
         <div class="form-group mr-2 mb-3">
-            {!! Form::select('user_id', $users, Request::get('creator_id'), ['class' => 'form-control selectize', 'placeholder' => 'Select a User']) !!}
+            {!! Form::select('user_id', $users, Request::get('user_id'), ['class' => 'form-control selectize', 'placeholder' => 'Select a User']) !!}
         </div>
         <div class="form-group mr-2 mb-3">
             {!! Form::select('sort', [
@@ -44,7 +44,7 @@
     @foreach($versions as $version)
     <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
         <div class="col-md-3">
-            <a href="{{ url('pages/'.$page->id.'/history/'.$version->id) }}" data-toggle="tooltip" title="Click to view page at this version{{ Auth::check() && Auth::user()->canWrite ? ' and reset to this version if desired' : '' }}">
+            <a href="{{ url('pages/'.$page->id.'/history/'.$version->id) }}" data-toggle="tooltip" title="Click to view page at this version{{ Auth::check() && Auth::user()->canEdit($page) ? ' and reset to this version if desired.' : '' }}">
                 <strong>#{{ $version->id }}</strong> {!! format_date($version->created_at) !!}
             </a>
         </div>

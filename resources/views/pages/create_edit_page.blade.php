@@ -11,6 +11,12 @@
     @endif
 </h1>
 
+@if($page->protection && $page->protection->is_protected)
+    <div class="alert alert-warning">
+        You are editing a protected page. This page was protected by {!! $page->protection->user->displayName !!} at {!! format_date($page->protection->created_at) !!}{{ $page->protection->reason ? ' with the reason: '.$page->protection->reason : '' }}.
+    </div>
+@endif
+
 {!! Form::open(['url' => $page->id ? 'pages/'.$page->id.'/edit' : 'pages/create', 'id' => 'pageForm']) !!}
 
 <h2>Basic Information</h2>

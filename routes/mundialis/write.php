@@ -44,5 +44,13 @@ Route::group(['prefix' => 'pages', 'namespace' => 'Pages'], function() {
         ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
     Route::post('{page_id}/gallery/delete/{id}', 'ImageController@postDeleteImage')
         ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
+
+    # PROTECTION ROUTES
+    Route::group(['middleware' => ['admin']], function() {
+        Route::get('{id}/protect', 'PageController@getProtectPage')
+            ->whereNumber('id');
+        Route::post('{id?}/protect', 'PageController@postProtectPage')
+            ->whereNumber('id');
+    });
 });
 

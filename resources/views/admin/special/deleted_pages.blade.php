@@ -12,7 +12,7 @@
 <div>
     {!! Form::open(['method' => 'GET', 'class' => 'form-inline justify-content-end']) !!}
         <div class="form-group mr-2 mb-3">
-            {!! Form::select('user_id', $users, Request::get('creator_id'), ['class' => 'form-control selectize', 'placeholder' => 'Select a User']) !!}
+            {!! Form::select('user_id', $users, Request::get('user_id'), ['class' => 'form-control selectize', 'placeholder' => 'Select a User']) !!}
         </div>
         <div class="form-group mr-2 mb-3">
             {!! Form::select('sort', [

@@ -7,10 +7,12 @@ use Config;
 
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
+
 use App\Models\Page\Page;
 use App\Models\Page\PageVersion;
 use App\Models\Page\PageTag;
 use App\Models\Page\PageLink;
+use App\Models\Page\PageProtection;
 
 use App\Services\ImageManager;
 
@@ -80,6 +82,9 @@ class PageManager extends Service
         DB::beginTransaction();
 
         try {
+            // Ensure user can edit
+            if(!$user->canEdit($page)) throw new \Exception('You don\'t have permission to edit this page.');
+
             // More specific validation
             if(Page::withTrashed()->where('title', $data['title'])->where('id', '!=', $page->id)->exists()) throw new \Exception("The page title has already been taken.");
 
@@ -127,6 +132,38 @@ class PageManager extends Service
     }
 
     /**
+     * Restore a deleted page.
+     *
+     * @param  \App\Models\Page\Page     $page
+     * @param  \App\Models\User\User     $user
+     * @param  array                     $data
+     * @return bool
+     */
+    public function protectPage($page, $user, $data)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Check toggle
+            if(!isset($data['is_protected'])) $data['is_protected'] = 0;
+
+            // Create new protection data
+            $protection = PageProtection::create([
+                'page_id' => $page->id,
+                'user_id' => $user->id,
+                'is_protected' => $data['is_protected'],
+                'reason' => $data['reason']
+            ]);
+            if(!$protection) throw new \Exception('An error occurred while creating the protection record.');
+
+            return $this->commitReturn($page);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
      * Resets a page to a given version.
      *
      * @param  \App\Models\Page\Page         $page
@@ -140,6 +177,9 @@ class PageManager extends Service
         DB::beginTransaction();
 
         try {
+            // Ensure user can edit
+            if(!$user->canEdit($page)) throw new \Exception('You don\'t have permission to edit this page.');
+
             // Double-check the title
             if(Page::withTrashed()->where('title', $version->data['title'])->where('id', '!=', $page->id)->exists()) throw new \Exception("The page title has already been taken.");
 
@@ -171,6 +211,9 @@ class PageManager extends Service
         DB::beginTransaction();
 
         try {
+            // Ensure user can edit
+            if(!$user->canEdit($page)) throw new \Exception('You don\'t have permission to edit this page.');
+
             if(Page::where('parent_id', $page->id)->count()) throw new \Exception('A page exists with this as its parent. Please remove or reassign the page\'s parentage first.');
 
             // Unset the parent ID of any pages with this as their parent
@@ -183,6 +226,9 @@ class PageManager extends Service
             if($forceDelete) {
                 // Delete the page's versions
                 $page->versions()->delete();
+
+                // Delete the page's protection records
+                $page->protections()->delete();
 
                 // Check to see if any images are linked only to this page,
                 // and if so, force delete them
@@ -225,6 +271,7 @@ class PageManager extends Service
      *
      * @param  \App\Models\Page\Page     $page
      * @param  \App\Models\User\User     $user
+     * @param  string                    $reason
      * @return bool
      */
     public function restorePage($page, $user, $reason)

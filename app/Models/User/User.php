@@ -143,4 +143,32 @@ class User extends Authenticatable
     {
         return ($this->avatar);
     }
+
+    /**********************************************************************************************
+
+        OTHER FUNCTIONS
+
+    **********************************************************************************************/
+
+    /**
+     * Check if a user can edit a specific page.
+     *
+     * @param  \App\Models\Page\Page     $page
+     * @return bool
+     */
+    public function canEdit($page)
+    {
+        // Admins can always edit pages, so just return true
+        if($this->isAdmin) return true;
+        // Normally, users with write permissions will be able to edit,
+        // but if a page is protected, they cannot
+        if($this->canWrite) {
+            if($page->protection) {
+                if($page->protection->is_protected) return false;
+            }
+            else return true;
+        }
+
+        return false;
+    }
 }

@@ -14,6 +14,7 @@ use App\Models\Subject\TimeChronology;
 use App\Models\Page\Page;
 use App\Models\Page\PageVersion;
 use App\Models\Page\PageTag;
+use App\Models\Page\PageProtection;
 
 use App\Services\PageManager;
 
@@ -252,6 +253,7 @@ class PageController extends Controller
     {
         $page = Page::find($id);
         if(!$page) abort(404);
+        if(!Auth::user()->canEdit($page)) abort (404);
 
         return view('pages.create_edit_page', [
             'page' => $page,
@@ -326,6 +328,67 @@ class PageController extends Controller
     }
 
     /**
+     * Shows a page's protection settings.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  int                          $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getProtectPage(Request $request, $id)
+    {
+        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        if(!$page) abort(404);
+
+        $query = PageProtection::where('page_id', $page->id);
+        $sort = $request->only(['sort']);
+
+        if($request->get('user_id')) {
+            $query->where('user_id', $request->get('user_id'));
+        }
+
+        if(isset($sort['sort']))
+        {
+            switch($sort['sort']) {
+                case 'newest':
+                    $query->orderBy('created_at', 'DESC');
+                    break;
+                case 'oldest':
+                    $query->orderBy('created_at', 'ASC');
+                    break;
+            }
+        }
+        else $query->orderBy('created_at', 'DESC');
+
+        return view('pages.page_protection', [
+            'page' => $page,
+            'protections' => $query->paginate(20)->appends($request->query()),
+            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
+        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+            'dateHelper' => new TimeDivision
+        ] : []));
+    }
+
+    /**
+     * Resets a page to a given version.
+     *
+     * @param  \Illuminate\Http\Request     $request
+     * @param  App\Services\PageManager     $service
+     * @param  int                          $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postProtectPage(Request $request, PageManager $service, $id)
+    {
+        if($id && $service->protectPage(Page::find($id), Auth::user(), $request->only(['reason', 'is_protected']))) {
+            flash('Page protection updated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+            return redirect()->back();
+        }
+        return redirect()->back();
+    }
+
+    /**
      * Gets the page reset modal.
      *
      * @param  int       $id
@@ -335,6 +398,7 @@ class PageController extends Controller
     {
         $page = Page::find($pageId);
         $version = $page->versions()->where('id', $id)->first();
+        if(!Auth::user()->canEdit($page)) abort (404);
 
         return view('pages._reset_page', [
             'page' => $page,
@@ -347,7 +411,7 @@ class PageController extends Controller
      *
      * @param  \Illuminate\Http\Request     $request
      * @param  App\Services\PageManager     $service
-     * @param  int                          $pageId,
+     * @param  int                          $pageId
      * @param  int                          $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -372,6 +436,7 @@ class PageController extends Controller
     public function getDeletePage($id)
     {
         $page = Page::find($id);
+        if(!Auth::user()->canEdit($page)) abort (404);
 
         return view('pages._delete_page', [
             'page' => $page

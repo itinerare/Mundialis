@@ -31,7 +31,7 @@
 @if($page->utilityTags()->where('tag', 'stub')->first())
     <p><i>
         {{ Config::get('mundialis.utility_tags.stub.message') }}
-        @if(Auth::check() && Auth::user()->canWrite)
+        @if(Auth::check() && Auth::user()->canEdit($page))
             Consider <a href="{{ url('pages/'.$page->id.'/edit') }}">{{ Config::get('mundialis.utility_tags.stub.verb') }} it</a>.
         @endif
     </i></p>

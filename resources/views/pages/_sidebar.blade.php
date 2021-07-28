@@ -9,13 +9,16 @@
             <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/gallery') }}" class="{{ set_active('pages/'.$page->id.'/gallery*') }}">Gallery</a></div>
         </li>
 
-        <li class="sidebar-section">
-            <div class="sidebar-section-header">Page Tools</div>
-            @if(Auth::check() && Auth::user()->canWrite)
+        @if(Auth::check() && Auth::user()->canEdit($page))
+            <li class="sidebar-section">
+                <div class="sidebar-section-header">Page Tools</div>
                 <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/edit') }}" class="{{ set_active('pages/'.$page->id.'/edit') }}">Edit Page</a></div>
                 <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/gallery/create') }}" class="{{ set_active('pages/'.$page->id.'/gallery/create') }}">Upload Image</a></div>
-            @endif
-        </li>
+                @if(Auth::user()->isAdmin)
+                    <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/protect') }}" class="{{ set_active('pages/'.$page->id.'/protect') }}">{{ $page->protection ? 'Edit Page Protection' : 'Protect Page' }}</a></div>
+                @endif
+            </li>
+        @endif
 
         <li class="sidebar-section">
             <div class="sidebar-section-header">More</div>

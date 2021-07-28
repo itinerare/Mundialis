@@ -38,6 +38,9 @@ class ImageManager extends Service
         DB::beginTransaction();
 
         try {
+            // Ensure user can edit the parent page
+            if(!$user->canEdit($page)) throw new \Exception('You don\'t have permission to edit this page.');
+
             // Process toggles
             if(!isset($data['is_valid'])) $data['is_valid'] = 0;
             if(!isset($data['is_visible'])) $data['is_visible'] = 0;
@@ -84,6 +87,9 @@ class ImageManager extends Service
         DB::beginTransaction();
 
         try {
+            // Ensure user can edit the parent page
+            if(!$user->canEdit($page)) throw new \Exception('You don\'t have permission to edit this page.');
+
             // Process toggles
             if(!isset($data['is_valid'])) $data['is_valid'] = 0;
             if(!isset($data['is_visible'])) $data['is_visible'] = 0;
@@ -376,18 +382,29 @@ class ImageManager extends Service
                     // This is just a matter of checking to see if there are changes in
                     // the list of page IDs.
                     $oldPages = $image->pages()->pluck('pages.id')->toArray();
-                    array_diff($oldPages, $data['page_id']);
 
                     $pageDiff['removed'] = array_diff($oldPages, $data['page_id']);
                     $pageDiff['added'] = array_diff($data['page_id'], $oldPages);
 
                     // Delete removed page links
                     foreach($pageDiff['removed'] as $pageId) {
-                        $image->pages()->where('page_id', $pageId)->detach();
+                        // Check to see if the user can detach the page
+                        if(Page::find($pageId)->protection && Page::find($pageId)->protection->is_protected && !$user->canEdit(Page::find($pageId))) throw new \Exception('One or more of the pages being detached is protected; you do not have permission to detach it from this image.');
+
+                        // Check to see if the image is the page's active image, and if so,
+                        // unset it
+                        if($image->pages()->where('pages.id', $pageId)->where('image_id', $image->id)) $image->pages()->where('pages.id', $pageId)->where('image_id', $image->id)->update(['image_id' => null]);
+
+                        // Delete the link
+                        $image->pages()->newPivotStatementForId($pageId)->wherePageImageId($image->id)->delete();
                     }
 
                     // Create added links
                     foreach($pageDiff['added'] as $pageId) {
+                        // Check to see if the user can attach the page
+                        if(Page::find($pageId)->protection && Page::find($pageId)->protection->is_protected && !$user->canEdit(Page::find($pageId))) throw new \Exception('One or more of the pages being added is protected; you do not have permission to add it to this image.');
+
+                        // Create the link
                         PagePageImage::create([
                             'page_id' => $pageId,
                             'page_image_id' => $image->id,
@@ -398,6 +415,10 @@ class ImageManager extends Service
                 else {
                     // Just attach links
                     foreach($data['page_id'] as $pageId) {
+                        // Check to see if the user can attach the page
+                        if(Page::find($pageId)->protection && Page::find($pageId)->protection->is_protected && !$user->canEdit(Page::find($pageId))) throw new \Exception('One or more of the pages being added is protected; you do not have permission to add it to this image.');
+
+                        // Create the link
                         if($pageId != $page->id)
                             PagePageImage::create([
                                 'page_id' => $pageId,
