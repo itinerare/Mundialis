@@ -15,7 +15,7 @@
 
 @if($category->children()->count())
 <h2>Sub-Categories</h2>
-    @include('pages._category_index_content', ['categories' => $category->children()->paginate(10)])
+    @include('pages.subjects._category_index_content', ['categories' => $category->children()->paginate(10)])
 
     <hr/>
 @endif
@@ -27,6 +27,6 @@
 @endsection
 
 @section('scripts')
-@include('pages._category_index_js')
+@include('pages.subjects._category_index_js')
 @include('pages._page_index_js')
 @endsection

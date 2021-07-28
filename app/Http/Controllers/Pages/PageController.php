@@ -56,7 +56,7 @@ class PageController extends Controller
         $subjectKey = $subject; $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
-        return view('pages.subject', [
+        return view('pages.subjects.subject', [
             'subject' => $subject,
             'categories' => SubjectCategory::where('subject', $subject['key'])->whereNull('parent_id')->orderBy('sort', 'DESC')->paginate(20)->appends($request->query())
         ]);
@@ -106,7 +106,7 @@ class PageController extends Controller
         }
         else $query->orderBy('title');
 
-        return view('pages.category', [
+        return view('pages.subjects.category', [
             'category' => $category,
             'pages' => $query->paginate(20)->appends($request->query()),
             'tags' => (new PageTag)->listTags(),
