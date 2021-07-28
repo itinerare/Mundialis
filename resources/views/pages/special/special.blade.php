@@ -24,7 +24,7 @@
             <li><a href="{{ url('special/least-revised-pages') }}">Pages with the Fewest Revisions</a></li>
             <li><a href="{{ url('special/most-revised-pages') }}">Pages with the Most Revisions</a></li>
             <li><a href="{{ url('special/linked-pages') }}">Most Linked-To Pages</a></li>
-            <li>Protected Pages</li>
+            <li><a href="{{ url('special/protected-pages') }}">Protected Pages</a></li>
         </ul>
     </div>
     <div class="col-md">

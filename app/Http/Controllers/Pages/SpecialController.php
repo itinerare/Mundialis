@@ -15,6 +15,7 @@ use App\Models\Page\Page;
 use App\Models\Page\PageTag;
 use App\Models\Page\PageLink;
 use App\Models\Page\PageImage;
+use App\Models\Page\PageProtection;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -243,6 +244,24 @@ class SpecialController extends Controller
         });
 
         return view('pages.special.linked', [
+            'pages' => $query->paginate(20)->appends($request->query())
+        ]);
+    }
+
+    /**
+     * Shows list of all protected pages.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getProtectedPages(Request $request)
+    {
+        $query = Page::visible(Auth::check() ? Auth::user() : null)->get()->filter(function ($page) {
+            if($page->protection && $page->protection->is_protected) return 1;
+            return 0;
+        })->sortBy('name');
+
+        return view('pages.special.protected', [
             'pages' => $query->paginate(20)->appends($request->query())
         ]);
     }
