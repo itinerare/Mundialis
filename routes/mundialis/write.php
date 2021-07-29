@@ -15,52 +15,56 @@
 
 Route::get('get/tags', 'Pages\TagController@getAllTags');
 
-Route::group(['prefix' => 'pages', 'namespace' => 'Pages'], function() {
-    # BASIC CREATE/EDIT ROUTES
-    Route::get('create/{category}', 'PageController@getCreatePage')
-        ->whereNumber('category');
-    Route::get('{id}/edit', 'PageController@getEditPage')
-        ->whereNumber('id');
-    Route::get('{id}/delete', 'PageController@getDeletePage')
-        ->whereNumber('id');
-    Route::get('{page_id}/history/{id}/reset', 'PageController@getResetPage')
-        ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
-    Route::get('{id}/move', 'PageController@getMovePage')
-        ->whereNumber('id');
-    Route::post('create', 'PageController@postCreateEditPage');
-    Route::post('{id?}/edit', 'PageController@postCreateEditPage');
-    Route::post('{id}/delete', 'PageController@postDeletePage')
-        ->whereNumber('id');
-    Route::post('{page_id}/history/{id}/reset', 'PageController@postResetPage')
-        ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
-    Route::post('{id}/move', 'PageController@postMovePage')
-        ->whereNumber('id');
-
-    # IMAGE ROUTES
-    Route::get('{id}/gallery/create', 'ImageController@getCreateImage')
-        ->whereNumber('id');
-    Route::get('{page_id}/gallery/edit/{id}', 'ImageController@getEditImage')
-        ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
-    Route::get('{page_id}/gallery/delete/{id}', 'ImageController@getDeleteImage')
-        ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
-    Route::post('{id}/gallery/create', 'ImageController@postCreateEditImage')
-        ->whereNumber('id');
-    Route::post('{page_id}/gallery/edit/{id?}', 'ImageController@postCreateEditImage')
-        ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
-    Route::post('{page_id}/gallery/delete/{id}', 'ImageController@postDeleteImage')
-        ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
-
-    # PROTECTION ROUTES
-    Route::group(['middleware' => ['admin']], function() {
-        Route::get('{id}/protect', 'PageController@getProtectPage')
+Route::group(['namespace' => 'Pages'], function() {
+    Route::group(['prefix' => 'pages'], function() {
+        # BASIC CREATE/EDIT ROUTES
+        Route::get('create/{category}', 'PageController@getCreatePage')
+            ->whereNumber('category');
+        Route::get('{id}/edit', 'PageController@getEditPage')
             ->whereNumber('id');
-        Route::post('{id?}/protect', 'PageController@postProtectPage')
+        Route::get('{id}/delete', 'PageController@getDeletePage')
             ->whereNumber('id');
+        Route::get('{page_id}/history/{id}/reset', 'PageController@getResetPage')
+            ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
+        Route::get('{id}/move', 'PageController@getMovePage')
+            ->whereNumber('id');
+        Route::post('create', 'PageController@postCreateEditPage');
+        Route::post('{id?}/edit', 'PageController@postCreateEditPage');
+        Route::post('{id}/delete', 'PageController@postDeletePage')
+            ->whereNumber('id');
+        Route::post('{page_id}/history/{id}/reset', 'PageController@postResetPage')
+            ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
+        Route::post('{id}/move', 'PageController@postMovePage')
+            ->whereNumber('id');
+
+        # IMAGE ROUTES
+        Route::get('{id}/gallery/create', 'ImageController@getCreateImage')
+            ->whereNumber('id');
+        Route::get('{page_id}/gallery/edit/{id}', 'ImageController@getEditImage')
+            ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
+        Route::get('{page_id}/gallery/delete/{id}', 'ImageController@getDeleteImage')
+            ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
+        Route::post('{id}/gallery/create', 'ImageController@postCreateEditImage')
+            ->whereNumber('id');
+        Route::post('{page_id}/gallery/edit/{id?}', 'ImageController@postCreateEditImage')
+            ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
+        Route::post('{page_id}/gallery/delete/{id}', 'ImageController@postDeleteImage')
+            ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
+
+        # PROTECTION ROUTES
+        Route::group(['middleware' => ['admin']], function() {
+            Route::get('{id}/protect', 'PageController@getProtectPage')
+                ->whereNumber('id');
+            Route::post('{id?}/protect', 'PageController@postProtectPage')
+                ->whereNumber('id');
+        });
     });
-});
 
-Route::group(['prefix' => 'special', 'namespace' => 'Pages'], function() {
-    Route::get('create-wanted/{title}', 'SpecialController@getCreateWantedPage');
-    Route::post('create-wanted', 'SpecialController@postCreateWantedPage');
+    Route::group(['prefix' => 'special'], function() {
+        # SPECIAL ROUTES
+        Route::get('create-wanted/{title}', 'SpecialController@getCreateWantedPage');
+        Route::post('create-wanted', 'SpecialController@postCreateWantedPage');
+    });
+
 });
 
