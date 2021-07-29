@@ -106,7 +106,7 @@ class PageController extends Controller
 
         $query = $page->linked()->get()->filter(function ($link) {
             if(Auth::check() && Auth::user()->canWrite) return 1;
-            return $link->page->is_visible;
+            return $link->linked->is_visible;
         });
 
         return view('pages.page_links_here', [

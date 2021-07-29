@@ -60,6 +60,20 @@ Route::group(['namespace' => 'Pages'], function() {
         });
     });
 
+    Route::group(['prefix' => 'language/lexicon'], function() {
+        # LEXICON ROUTES
+        Route::get('create', 'SubjectController@getCreateLexiconEntry');
+        Route::get('edit/{id?}', 'SubjectController@getEditLexiconEntry')
+            ->whereNumber('id');
+        Route::get('delete/{id?}', 'SubjectController@getDeleteLexiconEntry')
+            ->whereNumber('id');
+        Route::post('create', 'SubjectController@postCreateEditLexiconEntry');
+        Route::post('edit/{id?}', 'SubjectController@postCreateEditLexiconEntry')
+            ->whereNumber('id');
+        Route::post('delete/{id?}', 'SubjectController@postDeleteLexiconEntry')
+            ->whereNumber('id');
+    });
+
     Route::group(['prefix' => 'special'], function() {
         # SPECIAL ROUTES
         Route::get('create-wanted/{title}', 'SpecialController@getCreateWantedPage');

@@ -44,6 +44,14 @@ Route::group(['namespace' => 'Pages'], function() {
         });
     });
 
+    # LEXICON
+    Route::group(['prefix' => 'language/lexicon'], function() {
+        Route::get('{id}', 'SubjectController@getLexiconCategory')
+            ->whereNumber('id');
+        Route::get('entries/{id}', 'SubjectController@getLexiconEntryModal')
+            ->whereNumber('id');
+    });
+
     # SPECIAL PAGES
     Route::group(['prefix' => 'special'], function() {
         Route::get('/', 'SpecialController@getSpecialIndex');

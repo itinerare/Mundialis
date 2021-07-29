@@ -252,6 +252,7 @@ class ImageController extends Controller
      *
      * @param  \Illuminate\Http\Request      $request
      * @param  App\Services\ImageManager     $service
+     * @param  int                           $pageId
      * @param  int                           $id
      * @return \Illuminate\Http\RedirectResponse
      */

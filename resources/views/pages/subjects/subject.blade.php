@@ -11,8 +11,17 @@
 
 @include('pages.subjects._category_index_content')
 
+@if(View::exists('pages.subjects._'.$subject['key']))
+    <hr/>
+    @include('pages.subjects._'.$subject['key'])
+@endif
+
 @endsection
 
 @section('scripts')
 @include('pages.subjects._category_index_js')
+
+@if(View::exists('pages.subjects._'.$subject['key'].'_js'))
+    @include('pages.subjects._'.$subject['key'].'_js')
+@endif
 @endsection

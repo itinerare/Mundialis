@@ -18,7 +18,7 @@
             <div class="collapse" id="group-{{ $group->first()->id }}">
                 <ul>
                     @foreach($group as $link)
-                        <li>{!! $link->page->displayName !!}</li>
+                        <li>{!! $link->parent->displayName !!}</li>
                     @endforeach
                 </ul>
             </div>

@@ -132,7 +132,7 @@ class Page extends Model
      */
     public function links()
     {
-        return $this->hasMany('App\Models\Page\PageLink');
+        return $this->hasMany('App\Models\Page\PageLink', 'parent_id')->where('parent_type', $page);
     }
 
     /**
@@ -140,7 +140,7 @@ class Page extends Model
      */
     public function linked()
     {
-        return $this->hasMany('App\Models\Page\PageLink', 'link_id');
+        return $this->hasMany('App\Models\Page\PageLink', 'link_id')->where('parent_type', 'page');
     }
 
     /**********************************************************************************************

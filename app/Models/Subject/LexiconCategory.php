@@ -63,6 +63,14 @@ class LexiconCategory extends Model
         return $this->hasMany('App\Models\Subject\LexiconCategory', 'parent_id');
     }
 
+    /**
+     * Get entries in this category.
+     */
+    public function entries()
+    {
+        return $this->hasMany('App\Models\Lexicon\LexiconEntry', 'category_id');
+    }
+
     /**********************************************************************************************
 
         ACCESSORS
@@ -78,6 +86,26 @@ class LexiconCategory extends Model
     {
         if(!isset($this->attributes['data'])) return null;
         return json_decode($this->attributes['data'], true);
+    }
+
+    /**
+     * Get the category's url.
+     *
+     * @return string
+     */
+    public function getUrlAttribute()
+    {
+        return url('language/lexicon/'.$this->id);
+    }
+
+    /**
+     * Get the category name as a formatted link.
+     *
+     * @return string
+     */
+    public function getDisplayNameAttribute()
+    {
+        return '<a href="'.$this->url.'">'.$this->name.'</a>';
     }
 
     /**********************************************************************************************

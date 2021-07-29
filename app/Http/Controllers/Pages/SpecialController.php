@@ -324,7 +324,7 @@ class SpecialController extends Controller
     {
         $query = PageLink::whereNotNull('title')->get()->filter(function ($value) {
             if(Auth::check() && Auth::user()->canWrite) return 1;
-            return $value->page->is_visible;
+            return $value->parent->is_visible;
         })->groupBy('title')->sortByDesc(function ($group) {
             return $group->count();
         });

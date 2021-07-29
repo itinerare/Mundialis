@@ -21,7 +21,7 @@
 
 <ul>
     @foreach($links as $link)
-        <li>{!! $link->page->displayName !!}</li>
+        <li>{!! $link->parent->displayName !!}</li>
     @endforeach
 </ul>
 

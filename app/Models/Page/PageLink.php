@@ -12,7 +12,7 @@ class PageLink extends Model
      * @var array
      */
     protected $fillable = [
-        'page_id', 'link_id', 'title'
+        'parent_id', 'link_id', 'title', 'parent_type', 'linked_type'
     ];
 
     /**
@@ -36,19 +36,31 @@ class PageLink extends Model
     **********************************************************************************************/
 
     /**
-     * Get the page this version belongs to.
+     * Get the parent this link belongs to.
      */
-    public function page()
+    public function parent()
     {
-        return $this->belongsTo('App\Models\Page\Page');
+        switch($this->parent_type) {
+            case 'page';
+                return $this->belongsTo('App\Models\Page\Page');
+                break;
+            case 'entry';
+                return $this->belongsTo('App\Models\Lexicon\Entry');
+        }
     }
 
     /**
-     * Get the page this version belongs to.
+     * Get the object this link goes to.
      */
-    public function linkedPage()
+    public function linked()
     {
-        return $this->belongsTo('App\Models\Page\Page', 'link_id');
+        switch($this->linked_type) {
+            case 'page';
+            return $this->belongsTo('App\Models\Page\Page', 'link_id');
+                break;
+            case 'entry';
+                return $this->belongsTo('App\Models\Lexicon\Entry');
+        }
     }
 
 }

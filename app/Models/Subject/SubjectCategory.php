@@ -100,7 +100,7 @@ class SubjectCategory extends Model
     }
 
     /**
-     * Get the page's url.
+     * Get the category's url.
      *
      * @return string
      */
