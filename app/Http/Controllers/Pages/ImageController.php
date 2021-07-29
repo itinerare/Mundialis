@@ -174,7 +174,7 @@ class ImageController extends Controller
      */
     public function getEditImage($pageId, $id)
     {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $pageId)->first();
+        $page = Page::where('id', $pageId)->first();
         if(!$page) abort(404);
         if(!Auth::user()->canEdit($page)) abort (404);
         $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $id)->first();
@@ -191,7 +191,7 @@ class ImageController extends Controller
     }
 
     /**
-     * Creates a new image for a character.
+     * Creates or edits a page image.
      *
      * @param  \Illuminate\Http\Request       $request
      * @param  App\Services\ImageManager      $service
@@ -235,7 +235,7 @@ class ImageController extends Controller
      */
     public function getDeleteImage($pageId, $id)
     {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $pageId)->first();
+        $page = Page::where('id', $pageId)->first();
         if(!$page) abort(404);
         if(!Auth::user()->canEdit($page)) abort (404);
         $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $id)->first();
