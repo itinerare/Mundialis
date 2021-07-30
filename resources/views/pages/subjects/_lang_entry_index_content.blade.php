@@ -46,7 +46,9 @@
         <div class="col-md">{{ $entry->meaning }}</div>
         <div class="col-md-2 text-right">
             <a href="" class="btn btn-info btn-sm lang-entry-item" data-id="{{ $entry->id }}">See More</a>
-            <a href="{{ url('language/lexicon/edit/'.$entry->id) }}" class="btn btn-primary btn-sm">Edit</a>
+            @if(Auth::check() && Auth::user()->canWrite)
+                <a href="{{ url('language/lexicon/edit/'.$entry->id) }}" class="btn btn-primary btn-sm">Edit</a>
+            @endif
         </div>
     </div>
     @endforeach
