@@ -31,7 +31,7 @@
     {!! Form::text('summary', $page->summary, ['class' => 'form-control']) !!}
 </div>
 
-<p>When editing fields from this point on, wiki link syntax can be used to create links to other pages on this site, and in fact is encouraged; not only is it convenient, links created this way are tracked by the site for various purposes, not the least of which is tracking wanted pages (pages which have been linked to using this system but which do not yet exist). Links can be created like so:</p>
+<p>When editing fields from this point on, wiki link syntax can be used to create links to other pages on this site, and in fact is encouraged; not only is it convenient, links created this way are tracked by the site for various purposes, not the least of which is tracking wanted pages (pages which have been linked to using this system but which do not yet exist). Links can be created like so, using the title with disambiguation for affected pages (e.g. <span class="alert-secondary">Link (Place)</span>):</p>
 
 <ul>
     <li>[[Page Title Here]]</li>

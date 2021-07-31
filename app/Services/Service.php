@@ -274,57 +274,68 @@ abstract class Service {
      */
     public function parse_wiki_links($data) {
 
-        $data['data']['parsed'] = $data['data'];
+        try {
+            $data['data']['parsed'] = $data['data'];
 
-        foreach($data['data']['parsed'] as $key=>$item) {
-            $i = 1;
-            // Test content against both a wiki-style link pattern without label and one with
-            foreach(['/\[\[([A-Za-z0-9_-_\s]+)\]\]/', '/\[\[([A-Za-z0-9_-_\s]+)\|([A-Za-z0-9_-_\s]+)\]\]/'] as $pattern) {
-                $i2 = 0;
-                $matches = null;
-                $links = [];
-                $count = preg_match_all($pattern, $item, $matches);
-                if($count) {
-                    foreach($matches[1] as $match) {
-                        // Attempt to locate an associated page
-                        $page = Page::where('title', $match)->first();
-                        // If there is a page, simply substitute out the text for a proper link
-                        if($page) {
-                            $pages[] = $page;
-                            if($i == 1)
-                                $item = preg_replace('/\[\['.$match.'\]\]/', $page->displayName, $item);
-                            elseif($i == 2)
-                                $item = preg_replace('/\[\['.$match.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.$page->url.'" class="text-primary"'.($page->summary ? ' data-toggle="tooltip" title="'.$page->summary.'"' : '').'>'.$matches[$i][$i2].'</a>', $item);
-                            // And make a note that the page is being linked to
-                            $data['data']['links'][] = [
-                                'link_id' => $page->id
-                            ];
-                        }
-                        else {
-                            if($i == 1)
-                                $item = preg_replace('/\[\['.$match.'\]\]/', '<a href="'.url('special/create-wanted/'.str_replace(' ', '_', $match)).'" class="text-danger">'.$match.'</a>', $item);
-                            elseif($i == 2)
-                                $item = preg_replace('/\[\['.$match.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.url('special/create-wanted/'.str_replace(' ', '_', $match)).'" class="text-danger">'.$matches[$i][$i2].'</a>', $item);
+            foreach($data['data']['parsed'] as $key=>$item) {
+                $i = 1;
+                // Test content against both a wiki-style link pattern without label and one with
+                foreach(['/\[\[([A-Za-z0-9_-_\s\(\)\',:;]+)\]\]/', '/\[\[([A-Za-z0-9_-_\s\(\)\',:;]+)\|([A-Za-z0-9_-_\s\(\)\',:;]+)\]\]/'] as $pattern) {
+                    $i2 = 0;
+                    $matches = null;
+                    $links = [];
+                    if(is_string($item)) $count = preg_match_all($pattern, $item, $matches);
+                    if(isset($count) && $count) {
+                        foreach($matches[1] as $match) {
+                            // Attempt to locate an associated page
+                            $page = Page::get()->where('displayTitle', $match)->first();
 
-                            // If there's no page yet, log a placeholder link
-                            // This won't do much, but it will store two pieces of info:
-                            // 1. That the linked-to page is wanted
-                            // 2. That this specific page tried to link to it
-                            // which will help generate maintenance reports and, when the
-                            // page is created, help update this page.
-                            $data['data']['links'][] = [
-                                'title' => $match
-                            ];
+                            // Make a version of the match suitable for regex replacement
+                            $regexMatch = str_replace('(', '\(', $match);
+                            $regexMatch = str_replace(')', '\)', $regexMatch);
+
+                            // If there is a page, simply substitute out the text for a proper link
+                            if($page) {
+                                if($i == 1) {
+                                    $item = preg_replace('/\[\['.$regexMatch.'\]\]/', $page->displayName, $item);
+                                }
+                                elseif($i == 2) {
+                                    $item = preg_replace('/\[\['.$regexMatch.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.$page->url.'" class="text-primary"'.($page->summary ? ' data-toggle="tooltip" title="'.$page->summary.'"' : '').'>'.$matches[$i][$i2].'</a>', $item);
+                                }
+                                // And make a note that the page is being linked to
+                                $data['data']['links'][] = [
+                                    'link_id' => $page->id
+                                ];
+                            }
+                            else {
+                                if($i == 1)
+                                    $item = preg_replace('/\[\['.$regexMatch.'\]\]/', '<a href="'.url('special/create-wanted/'.str_replace(' ', '_', $match)).'" class="text-danger">'.$match.'</a>', $item);
+                                elseif($i == 2)
+                                    $item = preg_replace('/\[\['.$regexMatch.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.url('special/create-wanted/'.str_replace(' ', '_', $match)).'" class="text-danger">'.$matches[$i][$i2].'</a>', $item);
+
+                                // If there's no page yet, log a placeholder link
+                                // This won't do much, but it will store two pieces of info:
+                                // 1. That the linked-to page is wanted
+                                // 2. That this specific page tried to link to it
+                                // which will help generate maintenance reports and, when the
+                                // page is created, help update this page.
+                                $data['data']['links'][] = [
+                                    'title' => $match
+                                ];
+                            }
+                            $i2++;
                         }
-                        $i2++;
                     }
+                    $i++;
                 }
-                $i++;
+                $data['data']['parsed'][$key] = $item;
             }
-            $data['data']['parsed'][$key] = $item;
-        }
 
-        return $data;
+            return $this->commitReturn($data);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
     }
 
 }
