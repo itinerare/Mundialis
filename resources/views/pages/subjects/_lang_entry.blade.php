@@ -23,11 +23,7 @@
     @if($entry->descendants->count())
         <hr/>
         <h5>Descendants</h5>
-        <ul>
-            @foreach($entry->descendants as $descendant)
-                <li>{!! $descendant->entry->displayWord !!}</li>
-            @endforeach
-        </ul>
+        {!! $entry->getDescendants() !!}
     @endif
 @else
     Invalid entry selected.

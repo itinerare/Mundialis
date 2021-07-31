@@ -166,4 +166,23 @@ class LexiconEntry extends Model
         return implode('', $parentString);
     }
 
+    /**
+     * Returns formatted descendant information for this entry.
+     *
+     * @return string
+     */
+    public function getDescendants()
+    {
+        if(!$this->descendants->count()) return null;
+
+        // Cycle through parents
+        $i = 0;
+        foreach($this->descendants as $descendant) {
+            $descendantString[] = '<li>'.$descendant->entry->displayWord.($descendant->entry->descendants->count() ? $descendant->entry->getDescendants() : null).'</li>';
+            $i++;
+        }
+
+        return '<ul>'.implode('', $descendantString).'</ul>';
+    }
+
 }
