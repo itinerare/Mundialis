@@ -177,7 +177,7 @@ class LexiconEntry extends Model
 
         // Cycle through parents
         $i = 0;
-        foreach($this->descendants as $descendant) {
+        foreach($this->descendants->sortBy(function ($descendant) {return $descendant->entry->word;}) as $descendant) {
             $descendantString[] = '<li>'.$descendant->entry->displayWord.($descendant->entry->descendants->count() ? $descendant->entry->getDescendants() : null).'</li>';
             $i++;
         }
