@@ -3,7 +3,7 @@
 @section('pages-title') {{ $entry->id ? 'Edit' : 'Create' }} Entry @endsection
 
 @section('pages-content')
-{!! breadcrumbs(['Language' => 'language', $entry->id ? 'Edit' : 'Create'.' Lexicon Entry' => $entry->id ? 'language/lexicon/edit/'.$entry->id : 'language/lexicon/create' ]) !!}
+{!! breadcrumbs(['Language' => 'language'] + ($entry->id && $entry->category ? [$entry->category->name => 'language/lexicon/'.$entry->category_id] : []) + [$entry->id ? 'Edit' : 'Create'.' Lexicon Entry' => $entry->id ? 'language/lexicon/edit/'.$entry->id : 'language/lexicon/create' ]) !!}
 
 <h1>{{ $entry->id ? 'Edit' : 'Create' }} Lexicon Entry
     @if($entry->id)
@@ -52,6 +52,27 @@
 </div>
 
 <div class="form-group">
+    {!! Form::label('Etymology') !!} {!! add_help('Either select an on-site lexicon entry, or enter an off-site parent word.') !!}
+    <div id="etymologyList">
+        @if(!$entry->id || !$entry->etymologies->count())
+            <div class="mb-2 d-flex">
+                {!! Form::select('parent_id[]', $entryOptions, null, ['class'=> 'form-control mr-2 selectize', 'placeholder' => 'Select an Entry']) !!}
+                {!! Form::text('parent[]', null, ['class' => 'form-control mr-2', 'placeholder' => 'Enter Parent Word']) !!}
+                <a href="#" class="add-etymology btn btn-link" data-toggle="tooltip" title="Add another parent">+</a>
+            </div>
+        @else
+            @foreach($entry->etymologies as $etymology)
+                <div class="mb-2 d-flex">
+                    {!! Form::select('parent_id[]', $entryOptions, $etymology->parent_id, ['class'=> 'form-control mr-2 selectize', 'placeholder' => 'Select an Entry']) !!}
+                    {!! Form::text('parent[]', $etymology->parent, ['class' => 'form-control mr-2', 'placeholder' => 'Enter Parent Word']) !!}
+                    <a href="#" class="add-etymology btn btn-link" data-toggle="tooltip" title="Add another parent">+</a>
+                </div>
+            @endforeach
+        @endif
+    </div>
+</div>
+
+<div class="form-group">
     {!! Form::checkbox('is_visible', 1, $entry->id ? $entry->is_visible : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
     {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned off, visitors and regular users will not be able to see this entry. Users with editor permissions will still be able to see it.') !!}
 </div>
@@ -62,6 +83,12 @@
 
 {!! Form::close() !!}
 
+<div class="etymology-row hide mb-2">
+    {!! Form::select('parent_id[]', $entryOptions, null, ['class'=> 'form-control mr-2 etymology-select', 'placeholder' => 'Select an Entry']) !!}
+    {!! Form::text('parent[]', null, ['class' => 'form-control mr-2', 'placeholder' => 'Enter Parent Word']) !!}
+    <a href="#" class="add-etymology btn btn-link" data-toggle="tooltip" title="Add another parent">+</a>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -71,6 +98,25 @@
             e.preventDefault();
             loadModal("{{ url('language/lexicon/delete') }}/{{ $entry->id }}", 'Delete Entry');
         });
+
+        $(".selectize").selectize();
+
+        $('.add-etymology').on('click', function(e) {
+            e.preventDefault();
+            addEtymologyRow($(this));
+        });
+        function addEtymologyRow($trigger) {
+            var $clone = $('.etymology-row').clone();
+            $('#etymologyList').append($clone);
+            $clone.removeClass('hide etymology-row');
+            $clone.addClass('d-flex');
+            $clone.find('.add-etymology').on('click', function(e) {
+                e.preventDefault();
+                addEtymologyRow($(this));
+            })
+            $trigger.css({ visibility: 'hidden' });
+            $clone.find('.etymology-select').selectize();
+        }
     });
 </script>
 

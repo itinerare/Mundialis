@@ -6,12 +6,28 @@
         <h6>({{ $entry->pronunciation }})</h6>
     @endif
 
-    <strong>Meaning:</strong> {{ $entry->meaning }}
+    <strong>Means:</strong> {{ $entry->meaning }}
+
+    @if($entry->etymologies->count())
+        <hr/>
+        <h5>Etymology</h5>
+        {!! ucfirst($entry->getEtymology()) !!}.
+    @endif
 
     @if($entry->definition)
         <hr/>
         <h5>Definition:</h5>
         {!! $entry->definition !!}
+    @endif
+
+    @if($entry->descendants->count())
+        <hr/>
+        <h5>Descendants</h5>
+        <ul>
+            @foreach($entry->descendants as $descendant)
+                <li>{!! $descendant->entry->displayWord !!}</li>
+            @endforeach
+        </ul>
     @endif
 @else
     Invalid entry selected.

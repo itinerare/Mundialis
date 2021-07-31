@@ -65,6 +65,30 @@ class LexiconEntry extends Model
         return $this->belongsTo('App\Models\Subject\LexiconCategory', 'category_id');
     }
 
+    /**
+     * Get the part of speech this entry belongs to.
+     */
+    public function lexicalClass()
+    {
+        return $this->belongsTo('App\Models\Subject\LexiconSetting', 'class', 'name');
+    }
+
+    /**
+     * Get this entry's roots.
+     */
+    public function etymologies()
+    {
+        return $this->hasMany('App\Models\Lexicon\LexiconEtymology', 'entry_id');
+    }
+
+    /**
+     * Get this entry's descendants.
+     */
+    public function descendants()
+    {
+        return $this->hasMany('App\Models\Lexicon\LexiconEtymology', 'parent_id');
+    }
+
     /**********************************************************************************************
 
         SCOPES
@@ -83,6 +107,63 @@ class LexiconEntry extends Model
     {
         if($user && $user->canWrite) return $query;
         return $query->where('is_visible', 1);
+    }
+
+    /**********************************************************************************************
+
+        ACCESSORS
+
+    **********************************************************************************************/
+
+    /**
+     * Get the word linked to its category or to the subject.
+     *
+     * @return string
+     */
+    public function getDisplayNameAttribute()
+    {
+        return '<a href="'.($this->category ? $this->category->url.'?word='.$this->word : 'language/lexicon?word='.$this->word).'">'.$this->word.'</a>';
+    }
+
+    /**
+     * Get the formatted version of the word.
+     *
+     * @return string
+     */
+    public function getDisplayWordAttribute()
+    {
+        return $this->displayName.($this->lexicalClass->abbreviation ? ' <i>'.$this->lexicalClass->abbreviation.'.</i>' : ', '.$this->lexicalClass->name).', "'.$this->meaning.'"'.($this->category ? ' ('.$this->category->displayName.')' : null);
+    }
+
+    /**********************************************************************************************
+
+        OTHER FUNCTIONS
+
+    **********************************************************************************************/
+
+    /**
+     * Returns formatted etymology information for this entry.
+     *
+     * @return string
+     */
+    public function getEtymology()
+    {
+        if(!$this->etymologies->count()) return null;
+
+        // Cycle through parents
+        $i = 0;
+        foreach($this->etymologies as $parent) {
+            // If there is a parent entry
+            if($parent->parentEntry) {
+                $parentString[] = ($i == 0 ? 'from ' : ' and ').($parent->parentEntry->category ? $parent->parentEntry->category->displayName.' ' : null ).'<i>'.$parent->parentEntry->displayName.'</i> ('.($this->lexicalClass->abbreviation ? '<i>'.$this->lexicalClass->abbreviation.'.</i>' : $this->lexicalClass->name.', ').' "'.strtolower($parent->parentEntry->meaning).'")'.($parent->parentEntry->etymologies->count() ? ' '.$parent->parentEntry->getEtymology() : null);
+            }
+            // If there is only a string
+            else $parentString[] = ($i == 0 ? 'from ' : ' and ').$parent->parent;
+
+            $i++;
+        }
+
+        return implode('', $parentString);
     }
 
 }

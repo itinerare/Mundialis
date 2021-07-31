@@ -228,7 +228,8 @@ class SubjectController extends Controller
         return view('pages.subjects.create_edit_lexicon_entry', [
             'entry' => new LexiconEntry,
             'categoryOptions' => LexiconCategory::pluck('name', 'id'),
-            'classOptions' => LexiconSetting::orderBy('sort', 'DESC')->pluck('name', 'name')
+            'classOptions' => LexiconSetting::orderBy('sort', 'DESC')->pluck('name', 'name'),
+            'entryOptions' => LexiconEntry::pluck('word', 'id')
         ]);
     }
 
@@ -246,7 +247,8 @@ class SubjectController extends Controller
         return view('pages.subjects.create_edit_lexicon_entry', [
             'entry' => $entry,
             'categoryOptions' => LexiconCategory::pluck('name', 'id'),
-            'classOptions' => LexiconSetting::orderBy('sort', 'DESC')->pluck('name', 'name')
+            'classOptions' => LexiconSetting::orderBy('sort', 'DESC')->pluck('name', 'name'),
+            'entryOptions' => LexiconEntry::where('id', '!=', $entry->id)->pluck('word', 'id')
         ]);
     }
 
@@ -264,8 +266,8 @@ class SubjectController extends Controller
 
         $data = $request->only([
             'word', 'category_id', 'class',
-            'meaning', 'pronunciation', 'definition',
-            'is_visible'
+            'meaning', 'pronunciation', 'definition', 'is_visible',
+            'parent_id', 'parent'
         ]);
 
         if($id && $service->updateLexiconEntry(LexiconEntry::find($id), $data, Auth::user())) {
