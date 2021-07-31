@@ -131,12 +131,14 @@ class LexiconManager extends Service
 
                 // Create etymology record
                 foreach($data['parent_id'] as $key=>$parent) {
-                    $etymology = LexiconEtymology::create([
-                        'entry_id' => $entry->id,
-                        'parent_id' => isset($parent) ? $parent : null,
-                        'parent' => !isset($parent) && isset($data['parent'][$key]) ? $data['parent'][$key] : null
-                    ]);
-                    if(!$etymology) throw new \Exception('An error occurred while creating an etymology record.');
+                    if($parent || $data['parent'][$key]) {
+                        $etymology = LexiconEtymology::create([
+                            'entry_id' => $entry->id,
+                            'parent_id' => isset($parent) ? $parent : null,
+                            'parent' => !isset($parent) && isset($data['parent'][$key]) ? $data['parent'][$key] : null
+                        ]);
+                        if(!$etymology) throw new \Exception('An error occurred while creating an etymology record.');
+                    }
                 }
             }
 
