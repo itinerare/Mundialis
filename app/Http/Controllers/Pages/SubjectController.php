@@ -70,6 +70,12 @@ class SubjectController extends Controller
                     case 'alpha-reverse':
                         $query->orderBy('word', 'DESC');
                         break;
+                    case 'meaning':
+                        $query->orderBy('meaning');
+                        break;
+                    case 'meaning-reverse':
+                        $query->orderBy('meaning', 'DESC');
+                        break;
                     case 'newest':
                         $query->orderBy('created_at', 'DESC');
                         break;
@@ -184,6 +190,12 @@ class SubjectController extends Controller
                     break;
                 case 'alpha-reverse':
                     $query->orderBy('word', 'DESC');
+                    break;
+                case 'meaning':
+                    $query->orderBy('meaning');
+                    break;
+                case 'meaning-reverse':
+                    $query->orderBy('meaning', 'DESC');
                     break;
                 case 'newest':
                     $query->orderBy('created_at', 'DESC');

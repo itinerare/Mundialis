@@ -17,10 +17,12 @@
             </div>
             <div class="form-group mx-3 mb-3">
                 {!! Form::select('sort', [
-                    'alpha'          => 'Alphabetical Sort',
-                    'alpha-reverse'  => 'Alphabetical Sort (Reverse)',
-                    'newest'         => 'Sort by Newest First',
-                    'oldest'         => 'Sort by Oldest First',
+                    'alpha'           => 'Alphabetical Sort',
+                    'alpha-reverse'   => 'Alphabetical Sort (Reverse)',
+                    'meaning'         => 'Sort by Meaning',
+                    'meaning-reverse' => 'Sort by Meaning (Reverse)',
+                    'newest'          => 'Sort by Newest First',
+                    'oldest'          => 'Sort by Oldest First',
                 ], Request::get('sort') ? : 'alpha', ['class' => 'form-control']) !!}
             </div>
             <div class="form-group mb-3">
