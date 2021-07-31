@@ -299,61 +299,18 @@ class ImageManager extends Service
                 }
             }
 
-            // Process creator information
-            if($image && $image->creators->count()) {
-                // Collect old and new creator information, ommitting image ID
-                // as it will be the same across the board
-                foreach($image->creators as $creator) {
-                    $oldCreators[] = [
-                        'url' => $creator->url,
-                        'user_id' => $creator->user_id
-                    ];
-                }
-                foreach($data['creator_id'] as $key => $id) {
-                    if($id || $data['creator_url'][$key])
-                        $newCreators[] = [
-                            'url' => $id ? null : $data['creator_url'][$key],
-                            'user_id' => $id
-                        ];
-                }
+            // Delete existing creator records
+            if($image && $image->creators->count())
+                $image->creators()->delete();
 
-                // Compare them
-                foreach($oldCreators as $key=>$creator) {
-                    if(isset($newCreators[$key]))
-                        $creatorDiff['removed'] = array_diff($creator, $newCreators[$key]);
-                    else $creatorDiff['removed'][] = $creator;
-                }
-                foreach($newCreators as $key=>$creator) {
-                    if(isset($oldCreators[$key]))
-                        $creatorDiff['added'] = array_diff($creator, $oldCreators[$key]);
-                    else $creatorDiff['added'][] = $creator;
-                }
-
-                // Delete removed creators
-                foreach($creatorDiff['removed'] as $creator) {
-                    $image->creators()->where('url', $creator['url'])->delete();
-                    $image->creators()->where('user_id', $creator['user_id'])->delete();
-                }
-
-                // Create added creators
-                foreach($creatorDiff['added'] as $creator) {
+            // Just attach creators
+            foreach($data['creator_id'] as $key => $id) {
+                if($id || $data['creator_url'][$key])
                     PageImageCreator::create([
                         'page_image_id' => $image->id,
-                        'url' => $creator['url'],
-                        'user_id' => $creator['user_id']
+                        'url' => $id ? null : $data['creator_url'][$key],
+                        'user_id' => $id
                     ]);
-                }
-            }
-            else {
-                // Just attach creators
-                foreach($data['creator_id'] as $key => $id) {
-                    if($id || $data['creator_url'][$key])
-                        PageImageCreator::create([
-                            'page_image_id' => $image->id,
-                            'url' => $id ? null : $data['creator_url'][$key],
-                            'user_id' => $id
-                        ]);
-                }
             }
 
             // Check that pages with the specified id(s) exist on site
