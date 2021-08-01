@@ -22,8 +22,11 @@
 
     @if($entry->category->classCombinations($entry->lexicalClass->id))
         <hr/>
-        <h5>Conjugation/Declension:</h5>
-        <div class="row mb-2">
+        <h5>
+            Conjugation/Declension:
+            <a class="small collapse-toggle collapsed" href="#conjdecl" data-toggle="collapse">Show</a></h3>
+        </h5>
+        <div class="row mb-2 collapse" id="conjdecl">
             @foreach($entry->category->classCombinations($entry->lexicalClass->id) as $key=>$combination)
                 <div class="col-md-{{ (count($entry->category->data[$entry->lexicalClass->id]['properties']) <= 2 && (count(collect($entry->category->data[$entry->lexicalClass->id]['properties'])->first()['dimensions']) == 2 || count(collect($entry->category->data[$entry->lexicalClass->id]['properties'])->last()['dimensions']) == 2)) && count($entry->category->classCombinations($entry->lexicalClass->id)) < 20 ? 6 : (count($entry->category->classCombinations($entry->lexicalClass->id))%3 == 0 && count($entry->category->classCombinations($entry->lexicalClass->id)) < 30 ? 4 : (count($entry->category->classCombinations($entry->lexicalClass->id))%4 == 0 ? 3 : (count($entry->category->classCombinations($entry->lexicalClass->id)) < 20 ? 6 : 2))) }} text-center mb-2">
                     <h6><strong>{{ $combination }}</strong></h6>
