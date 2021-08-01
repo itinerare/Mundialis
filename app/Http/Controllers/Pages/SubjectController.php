@@ -279,7 +279,7 @@ class SubjectController extends Controller
         $data = $request->only([
             'word', 'category_id', 'class',
             'meaning', 'pronunciation', 'definition', 'is_visible',
-            'parent_id', 'parent'
+            'parent_id', 'parent', 'conjdecl', 'autoconj'
         ]);
 
         if($id && $service->updateLexiconEntry(LexiconEntry::find($id), $data, Auth::user())) {

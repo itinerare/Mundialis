@@ -77,6 +77,36 @@
     {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned off, visitors and regular users will not be able to see this entry. Users with editor permissions will still be able to see it.') !!}
 </div>
 
+@if($entry->id && $entry->category)
+    <h2>Conjugation/Declension Settings</h2>
+
+    <p>Here you can set conjugated/declined forms for this word, if configured for this category. If automatic conjugation/declension rules are configured, you can also choose to automatically create these forms using those settings.</p>
+
+    @if($entry->category->classCombinations($entry->lexicalClass->id))
+        <div class="row mb-2">
+            @foreach($entry->category->classCombinations($entry->lexicalClass->id) as $key=>$combination)
+                <div class="col-md-{{ (count($entry->category->data[$entry->lexicalClass->id]['properties']) <= 2 && (count(collect($entry->category->data[$entry->lexicalClass->id]['properties'])->first()['dimensions']) == 2 || count(collect($entry->category->data[$entry->lexicalClass->id]['properties'])->last()['dimensions']) == 2)) && count($entry->category->classCombinations($entry->lexicalClass->id)) < 20 ? 6 : (count($entry->category->classCombinations($entry->lexicalClass->id))%3 == 0 && count($entry->category->classCombinations($entry->lexicalClass->id)) < 30 ? 4 : (count($entry->category->classCombinations($entry->lexicalClass->id))%4 == 0 ? 3 : (count($entry->category->classCombinations($entry->lexicalClass->id)) < 20 ? 6 : 2))) }} mb-2">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6>{{ $combination }}</h6>
+                            {!! Form::text('conjdecl['.$combination.']',  isset($entry->data[$combination]) ? $entry->data[$combination] : null, ['class' => 'form-control dimension-regex']) !!}
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        @if(isset($entry->category->data[$entry->lexicalClass->id]['conjugation']))
+            <div class="form-group">
+                {!! Form::checkbox('autoconj', 1, 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                {!! Form::label('autoconj', 'Auto-Generate', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is turned on, conjugated/declined forms of this word will be generated using the settings for this entry\'s category. <strong>This will override any existing or entered forms for this word!</strong>') !!}
+            </div>
+        @endif
+    @else
+        <p>No conjugation/declension settings configured for this category.</p>
+    @endif
+@endif
+
 <div class="text-right">
     {!! Form::submit($entry->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
 </div>

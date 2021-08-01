@@ -116,6 +116,17 @@ class LexiconEntry extends Model
     **********************************************************************************************/
 
     /**
+     * Get the data attribute as an associative array.
+     *
+     * @return array
+     */
+    public function getDataAttribute()
+    {
+        if(!isset($this->attributes['data'])) return null;
+        return json_decode($this->attributes['data'], true);
+    }
+
+    /**
      * Get the word linked to its category or to the subject.
      *
      * @return string

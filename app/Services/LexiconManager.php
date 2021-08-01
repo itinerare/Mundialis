@@ -69,6 +69,10 @@ class LexiconManager extends Service
             // Process toggles
             if(!isset($data['is_visible'])) $data['is_visible'] = 0;
 
+            // Process conjugation/declension data
+            if($entry->category)
+                $data['data'] = $this->processConjData($entry, $data);
+
             // Process etymology data
             if(!$this->processEtymology($entry, $data)) throw new \Exception('An error occurred while creating etymology records.');
 
@@ -147,6 +151,51 @@ class LexiconManager extends Service
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Processes conjugation/declension data.
+     *
+     * @param  \App\Models\Lexicon\LexiconEntry    $entry
+     * @param  array                               $data
+     * @return array
+     */
+    private function processConjData($entry, $data)
+    {
+        if(!isset($data['autoconj'])) $data['autoconj'] = 0;
+
+        // Auto-conjugation/declension
+        if($data['autoconj']) {
+            $conjData = isset($entry->category->data[$entry->lexicalClass->id]['conjugation']) ? $entry->category->data[$entry->lexicalClass->id]['conjugation'] : null;
+
+            // This option should only be offered in the first place if the data exists,
+            // but as a safeguard, double-check
+            if(isset($conjData) && $conjData) {
+                // Cycle through combinations for the category
+                foreach($entry->category->classCombinations($entry->lexicalClass->id) as $key=>$combination) {
+                    // If this is the first combination and there are no settings for it,
+                    // Substitute in the word itself
+                    if($key == 0 && !isset($conjData[$key])) $data['conjdecl'][$combination] = $entry->word;
+
+                    // Otherwise, check to see if instructions exist, then process the word
+                    elseif(isset($conjData[$key])) {
+                        foreach($conjData[$key]['criteria'] as $conjKey=>$criteria) {
+                            $matches = [];
+                            preg_match("/".$criteria."/", $entry->word, $matches);
+                            if($matches != []) {
+                                $data['conjdecl'][$combination] = preg_replace(isset($conjData[$key]['regex'][$conjKey]) ? "/".$conjData[$key]['regex'][$conjKey]."/" : "/".$conjData[$key]['regex'][0]."/", $conjData[$key]['replacement'][$conjKey], $entry->word);
+                            }
+                            else $data['conjdecl'][$combination] = null;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Process inputs for recording
+        $data['data'] = json_encode($data['conjdecl']);
+
+        return $data['data'];
     }
 
 }

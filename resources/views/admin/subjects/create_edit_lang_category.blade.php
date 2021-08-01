@@ -93,12 +93,12 @@
                                     <h6>{{ $combination }}</h6>
                                     <div class="row">
                                         <div class="col-md">
-                                            {!! Form::label('Criteria') !!} {!! add_help('Enter one or more regex patterns. Only words matching these criteria will have transformations applied to them.') !!}
+                                            {!! Form::label('Criteria') !!} {!! add_help('Enter one or more regex patterns. Only words matching these criteria will have transformations applied to them. Note that delimiters are automatically added.') !!}
                                             {!! Form::text('declension_criteria['.$class->id.']['.$key.']', isset($category->data[$class->id]['conjugation'][$key]) ? implode(';', $category->data[$class->id]['conjugation'][$key]['criteria']) : null, ['class' => 'form-control dimension-regex']) !!}
                                         </div>
                                         <div class="w-100 mb-1"></div>
                                         <div class="col-md">
-                                            {!! Form::label('Regex') !!} {!! add_help('Enter one or more regex patterns to replace.') !!}
+                                            {!! Form::label('Regex') !!} {!! add_help('Enter one or more regex patterns to replace. Note that delimiters are automatically added.') !!}
                                             {!! Form::text('declension_regex['.$class->id.']['.$key.']', isset($category->data[$class->id]['conjugation'][$key]) ? implode(';', $category->data[$class->id]['conjugation'][$key]['regex']) : null, ['class' => 'form-control dimension-regex']) !!}
                                         </div>
                                         <div class="col-md">
