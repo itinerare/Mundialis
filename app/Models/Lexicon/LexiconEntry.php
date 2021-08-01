@@ -12,7 +12,7 @@ class LexiconEntry extends Model
      * @var array
      */
     protected $fillable = [
-        'category_id', 'class', 'word', 'meaning', 'pronunciation', 'definition', 'data'
+        'category_id', 'class', 'word', 'meaning', 'pronunciation', 'definition', 'parsed_definition', 'data'
     ];
 
     /**
@@ -87,6 +87,14 @@ class LexiconEntry extends Model
     public function descendants()
     {
         return $this->hasMany('App\Models\Lexicon\LexiconEtymology', 'parent_id');
+    }
+
+    /**
+     * Get this entry's associated links.
+     */
+    public function links()
+    {
+        return $this->hasMany('App\Models\Page\PageLink', 'parent_id')->where('parent_type', 'entry');
     }
 
     /**********************************************************************************************

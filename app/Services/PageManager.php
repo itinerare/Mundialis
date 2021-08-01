@@ -46,7 +46,7 @@ class PageManager extends Service
             $data = $this->processPageData($data);
 
             // Parse data for wiki-style links
-            $data = $this->parse_wiki_links($data);
+            $data['data'] = $this->parse_wiki_links($data['data']);
 
             // Process data for recording
             if(isset($data['data'])) $data['version'] = $this->processVersionData($data);
@@ -95,7 +95,7 @@ class PageManager extends Service
             $data = $this->processPageData($data, $page);
 
             // Parse data for wiki-style links
-            $data = $this->parse_wiki_links($data);
+            $data['data'] = $this->parse_wiki_links($data['data']);
 
             // Process links
             if(isset($data['data']['links'])) $data['data']['links'] = $this->processLinks($page, $data['data']['links']);
@@ -420,7 +420,7 @@ class PageManager extends Service
             foreach($data as $link) {
                 if((isset($link['link_id']) && !$page->links()->where('link_id', $link['link_id'])->first()) || (isset($link['title']) && !$page->links()->where('title', $link['title'])->first())) {
                     $link = PageLink::create([
-                        'page_id' => $page->id,
+                        'parent_id' => $page->id,
                         'link_id' => isset($link['link_id']) ? $link['link_id'] : null,
                         'title' => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null
                     ]);

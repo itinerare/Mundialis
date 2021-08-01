@@ -275,9 +275,9 @@ abstract class Service {
     public function parse_wiki_links($data) {
 
         try {
-            $data['data']['parsed'] = $data['data'];
+            $data['parsed'] = $data;
 
-            foreach($data['data']['parsed'] as $key=>$item) {
+            foreach($data['parsed'] as $key=>$item) {
                 $i = 1;
                 // Test content against both a wiki-style link pattern without label and one with
                 foreach(['/\[\[([A-Za-z0-9_-_\s\(\)\',:;]+)\]\]/', '/\[\[([A-Za-z0-9_-_\s\(\)\',:;]+)\|([A-Za-z0-9_-_\s\(\)\',:;]+)\]\]/'] as $pattern) {
@@ -303,7 +303,7 @@ abstract class Service {
                                     $item = preg_replace('/\[\['.$regexMatch.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.$page->url.'" class="text-primary"'.($page->summary ? ' data-toggle="tooltip" title="'.$page->summary.'"' : '').'>'.$matches[$i][$i2].'</a>', $item);
                                 }
                                 // And make a note that the page is being linked to
-                                $data['data']['links'][] = [
+                                $data['links'][] = [
                                     'link_id' => $page->id
                                 ];
                             }
@@ -319,7 +319,7 @@ abstract class Service {
                                 // 2. That this specific page tried to link to it
                                 // which will help generate maintenance reports and, when the
                                 // page is created, help update this page.
-                                $data['data']['links'][] = [
+                                $data['links'][] = [
                                     'title' => $match
                                 ];
                             }
@@ -328,7 +328,7 @@ abstract class Service {
                     }
                     $i++;
                 }
-                $data['data']['parsed'][$key] = $item;
+                $data['parsed'][$key] = $item;
             }
 
             return $this->commitReturn($data);

@@ -46,6 +46,13 @@
     </div>
 </div>
 
+<p>When editing the long-form definition, wiki link syntax can be used to create links to other pages on this site, and in fact is encouraged; not only is it convenient, links created this way are tracked by the site for various purposes, not the least of which is tracking wanted pages (pages which have been linked to using this system but which do not yet exist). Links can be created like so, using the title with disambiguation for affected pages (e.g. <span class="alert-secondary">Link (Place)</span>):</p>
+
+<ul>
+    <li>[[Page Title Here]]</li>
+    <li>[[Page Title Here|Label/Text Used for Link Here]]</li>
+</ul>
+
 <div class="form-group">
     {!! Form::label('Definition (Optional)') !!} {!! add_help('If desired, you can provide a longer-form definition for the word here.') !!}
     {!! Form::textarea('definition', $entry->definition, ['class' => 'form-control wysiwyg']) !!}

@@ -14,10 +14,10 @@
         {!! ucfirst($entry->getEtymology()) !!}.
     @endif
 
-    @if($entry->definition)
+    @if($entry->parsed_definition)
         <hr/>
         <h5>Definition:</h5>
-        {!! $entry->definition !!}
+        {!! $entry->parsed_definition !!}
     @endif
 
     @if($entry->category->classCombinations($entry->lexicalClass->id))

@@ -45,7 +45,7 @@ class PageLink extends Model
                 return $this->belongsTo('App\Models\Page\Page');
                 break;
             case 'entry';
-                return $this->belongsTo('App\Models\Lexicon\Entry');
+                return $this->belongsTo('App\Models\Lexicon\LexiconEntry');
         }
     }
 
@@ -59,7 +59,7 @@ class PageLink extends Model
             return $this->belongsTo('App\Models\Page\Page', 'link_id');
                 break;
             case 'entry';
-                return $this->belongsTo('App\Models\Lexicon\Entry');
+                return $this->belongsTo('App\Models\Lexicon\LexiconEntry');
         }
     }
 
