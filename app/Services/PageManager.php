@@ -55,6 +55,27 @@ class PageManager extends Service
             // Create page
             $page = Page::create($data);
 
+            // If the page is wanted, update the existing page(s)
+            if(PageLink::where('title', $page->displayTitle)->exists()) {
+                foreach(PageLink::where('title', $page->displayTitle)->get() as $link) {
+                    $version = PageVersion::find($link->parent->version->id);
+                    $versionData = $version->data;
+                    if(isset($versionData['data']['parsed'])) unset($versionData['data']['parsed']);
+                    if(isset($versionData['data']['links'])) unset($versionData['data']['links']);
+
+                    // Parse data and update version
+                    $newData['data'] = $this->parse_wiki_links($versionData['data']);
+                    $version->data = json_encode($newData);
+                    $version->save();
+
+                    // And update the links themselves
+                    $link->update([
+                        'link_id' => $page->id,
+                        'title' => null
+                    ]);
+                }
+            }
+
             // Process links
             if(isset($data['data']['links'])) $data = $this->processLinks($page, $data['data']['links']);
 
