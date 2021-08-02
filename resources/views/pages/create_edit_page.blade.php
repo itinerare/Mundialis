@@ -98,7 +98,7 @@
 </p>
 
 <div class="form-group">
-    {!! Form::label('Tags') !!} {!! add_help('Enter one or more tags.') !!}
+    {!! Form::label('Tags (Optional)') !!} {!! add_help('Enter one or more tags.') !!}
     {!! Form::text('page_tag', null, ['class' => 'form-control tag-list', 'multiple', 'data-init-value' => $page->entryTags]) !!}
 </div>
 
