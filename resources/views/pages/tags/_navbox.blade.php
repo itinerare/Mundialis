@@ -6,7 +6,7 @@
         </h5>
     </div>
 
-    <div class="collapse {{ $navbox['pages']->count() < 30 ? 'show' : '' }}" id="navbox-{{ $tag->id }}">
+    <div class="collapse {{ isset($navbox['pages']) && $navbox['pages']->count() < 30 ? 'show' : '' }}" id="navbox-{{ $tag->id }}">
         @if(isset($navbox['subjects']))
             <div class="px-2">
                 @foreach(Config::get('mundialis.subjects') as $subjectKey=>$subjectValues)
