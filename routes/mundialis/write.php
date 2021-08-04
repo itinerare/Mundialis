@@ -51,6 +51,20 @@ Route::group(['namespace' => 'Pages'], function() {
         Route::post('{page_id}/gallery/delete/{id}', 'ImageController@postDeleteImage')
             ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
 
+        # RELATIONSHIP ROUTES
+        Route::get('{id}/relationships/create', 'RelationshipController@getCreateRelationship')
+            ->whereNumber('id');
+        Route::get('{page_id}/relationships/edit/{id}', 'RelationshipController@getEditRelationship')
+            ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
+        Route::get('{page_id}/relationships/delete/{id}', 'RelationshipController@getDeleteRelationship')
+            ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
+        Route::post('{id}/relationships/create', 'RelationshipController@postCreateEditRelationship')
+            ->whereNumber('id');
+        Route::post('{page_id}/relationships/edit/{id?}', 'RelationshipController@postCreateEditRelationship')
+            ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
+        Route::post('{page_id}/relationships/delete/{id}', 'RelationshipController@postDeleteRelationship')
+            ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
+
         # PROTECTION ROUTES
         Route::group(['middleware' => ['admin']], function() {
             Route::get('{id}/protect', 'PageController@getProtectPage')

@@ -36,6 +36,9 @@ Route::group(['namespace' => 'Pages'], function() {
         Route::get('{page_id}/history/{id}', 'PageController@getPageVersion')
             ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
 
+        Route::get('{id}/relationships', 'RelationshipController@getPageRelationships')
+            ->whereNumber('id');
+
         Route::get('{id}/links-here', 'PageController@getLinksHere')
             ->whereNumber('id');
 

@@ -7,6 +7,9 @@
             <div class="sidebar-item"><a href="{{ $page->url }}" class="{{ set_active('pages/'.$page->id.'.'.$page->slug) }}">Read Page</a></div>
             <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/history') }}" class="{{ set_active('pages/'.$page->id.'/history*') }}">History</a></div>
             <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/gallery') }}" class="{{ set_active('pages/'.$page->id.'/gallery*') }}">Gallery</a></div>
+            @if($page->category->subject['key'] == 'people')
+                <div class="sidebar-item"><a href="{{ url('pages/'.$page->id.'/relationships') }}" class="{{ set_active('pages/'.$page->id.'/relationships*') }}">Relationships</a></div>
+            @endif
         </li>
 
         @if(Auth::check() && Auth::user()->canEdit($page))

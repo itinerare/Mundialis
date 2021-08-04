@@ -143,6 +143,22 @@ class Page extends Model
         return $this->hasMany('App\Models\Page\PageLink', 'link_id');
     }
 
+    /**
+     * Get this page's relationships.
+     */
+    public function relationships()
+    {
+        return $this->hasMany('App\Models\Page\PageRelationship', 'page_one_id', 'id');
+    }
+
+    /**
+     * Get this page's relationships.
+     */
+    public function related()
+    {
+        return $this->hasMany('App\Models\Page\PageRelationship', 'page_two_id', 'id');
+    }
+
     /**********************************************************************************************
 
         SCOPES
