@@ -20,17 +20,17 @@
 
     <div class="form-group">
         {!! Form::label('Relationship Type') !!}
-        {!! Form::select($relationship->page_one_id != $page->id ? 'type_two' : 'type_one', $relationshipOptions, $relationship->id ? ($relationship->page_one_id != $page->id ? $relationship->type_two : $relationship->type_one) : null, ['class' => 'form-control selectize', 'placeholder' => 'Select a Type']) !!}
+        {!! Form::select($relationship->page_one_id != $page->id && $relationship->id ? 'type_two' : 'type_one', $relationshipOptions, $relationship->id ? ($relationship->page_one_id != $page->id ? $relationship->type_two : $relationship->type_one) : null, ['class' => 'form-control selectize', 'placeholder' => 'Select a Type']) !!}
     </div>
 
     <div class="form-group">
         {!! Form::label('Info (Semi-Optional)') !!} {!! add_help('Any additional specifications for the relationship. If \'custom\' is selected avove, this field is <strong>required</strong>.') !!}
-        {!! Form::text($relationship->page_one_id != $page->id ? 'type_two_info' : 'type_one_info', $relationship->page_one_id != $page->id ? $relationship->type_two_info : $relationship->type_one_info, ['class' => 'form-control']) !!}
+        {!! Form::text($relationship->page_one_id != $page->id && $relationship->id ? 'type_two_info' : 'type_one_info', $relationship->page_one_id != $page->id ? $relationship->type_two_info : $relationship->type_one_info, ['class' => 'form-control']) !!}
     </div>
 
     <div class="form-group">
         {!! Form::label('Details (Optional)') !!}
-        {!! Form::textarea($relationship->page_one_id != $page->id ? 'details_two' : 'details_one', $relationship->page_one_id != $page->id ? $relationship->details_two : $relationship->details_one, ['class' => 'form-control']) !!}
+        {!! Form::textarea($relationship->page_one_id != $page->id && $relationship->id ? 'details_two' : 'details_one', $relationship->page_one_id != $page->id ? $relationship->details_two : $relationship->details_one, ['class' => 'form-control']) !!}
     </div>
 
     <hr/>
@@ -39,17 +39,17 @@
 
     <div class="form-group">
         {!! Form::label('Relationship Type') !!}
-        {!! Form::select($relationship->page_one_id == $page->id ? 'type_two' : 'type_one', $relationshipOptions, $relationship->id ? ($relationship->page_one_id == $page->id ? $relationship->type_two : $relationship->type_one) : null, ['class' => 'form-control selectize', 'placeholder' => 'Select a Type']) !!}
+        {!! Form::select($relationship->page_one_id == $page->id || !$relationship->id ? 'type_two' : 'type_one', $relationshipOptions, $relationship->id ? ($relationship->page_one_id == $page->id ? $relationship->type_two : $relationship->type_one) : null, ['class' => 'form-control selectize', 'placeholder' => 'Select a Type']) !!}
     </div>
 
     <div class="form-group">
         {!! Form::label('Info (Semi-Optional)') !!} {!! add_help('Any additional specifications for the relationship. If \'custom\' is selected avove, this field is <strong>required</strong>.') !!}
-        {!! Form::text($relationship->page_one_id == $page->id ? 'type_two_info' : 'type_one_info', $relationship->page_one_id == $page->id ? $relationship->type_two_info : $relationship->type_one_info, ['class' => 'form-control']) !!}
+        {!! Form::text($relationship->page_one_id == $page->id || !$relationship->id ? 'type_two_info' : 'type_one_info', $relationship->page_one_id == $page->id ? $relationship->type_two_info : $relationship->type_one_info, ['class' => 'form-control']) !!}
     </div>
 
     <div class="form-group">
         {!! Form::label('Details (Optional)') !!}
-        {!! Form::textarea($relationship->page_one_id == $page->id ? 'details_two' : 'details_one', $relationship->page_one_id == $page->id ? $relationship->details_two : $relationship->details_one, ['class' => 'form-control']) !!}
+        {!! Form::textarea($relationship->page_one_id == $page->id || !$relationship->id ? 'details_two' : 'details_one', $relationship->page_one_id == $page->id ? $relationship->details_two : $relationship->details_one, ['class' => 'form-control']) !!}
     </div>
 
     <div class="text-right">
