@@ -15,11 +15,14 @@
 
 @include('pages._page_header', ['section' => 'Relationships'])
 
-@if(Auth::check() && Auth::user()->canEdit($page))
-    <div class="text-right mb-4">
+<div class="text-right mb-4">
+    @if($page->personRelations())
+        <a href="{{ url('pages/'.$page->id.'/relationships/tree') }}" class="btn btn-secondary mt-4 ml-2">Family Tree</a>
+    @endif
+    @if(Auth::check() && Auth::user()->canEdit($page))
         <a href="#" class="btn btn-primary mt-4 ml-2 add-relationship-button">Add Relationship</a>
-    </div>
-@endif
+    @endif
+</div>
 
 <div>
     {!! Form::open(['method' => 'GET', 'class' => '']) !!}

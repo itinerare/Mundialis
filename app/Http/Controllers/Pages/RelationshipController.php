@@ -72,6 +72,25 @@ class RelationshipController extends Controller
     }
 
     /**
+     * Shows a page's family tree.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getPageFamilyTree($id)
+    {
+        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        if(!$page) abort(404);
+        if(!$page->personRelations()) abort(404);
+
+        return view('pages.relationships.family_tree', [
+            'page' => $page
+        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+            'dateHelper' => new TimeDivision
+        ] : []));
+    }
+
+    /**
      * Shows the create relationship modal.
      *
      * @param  int  $id

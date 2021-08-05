@@ -38,6 +38,8 @@ Route::group(['namespace' => 'Pages'], function() {
 
         Route::get('{id}/relationships', 'RelationshipController@getPageRelationships')
             ->whereNumber('id');
+        Route::get('{id}/relationships/tree', 'RelationshipController@getPageFamilyTree')
+            ->whereNumber('id');
 
         Route::get('{id}/links-here', 'PageController@getLinksHere')
             ->whereNumber('id');

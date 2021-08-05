@@ -4,6 +4,7 @@ namespace App\Models\Page;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Request;
+use Config;
 
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
@@ -381,6 +382,72 @@ class Page extends Model
             return $roughYear;
         }
 
+        return null;
+    }
+
+    /**
+     * Gather a person's family from extant relationships.
+     *
+     * @param  string    $type
+     * @return array
+     */
+    public function personRelations($type = null)
+    {
+        // Gather family types depending on the type
+        switch($type) {
+            case 'parents':
+                $familyTypes = [
+                    'familial_parent' => 'Parent'
+                ];
+                break;
+            case 'children':
+                $familyTypes = [
+                    'familial_child' => 'Child',
+                    'familial_adopted' => 'Child (Adopted)'
+                ];
+                break;
+            case 'siblings':
+                $familyTypes = [
+                    'familial_sibling' => 'Sibling'
+                ];
+                break;
+            default:
+                $familyTypes =
+                    Config::get('mundialis.people_relationships.Familial') +
+                    Config::get('mundialis.people_relationships.Romantic') +
+                    ['platonic_partner' => 'Partner (platonic)'];
+                break;
+        }
+
+        // Gather relationships with these types
+        $family = $this->relationships()->get()->filter(function ($relationship) use ($familyTypes) {
+            return isset($familyTypes[$relationship->type_two]);
+        });
+        $family = $family->concat($this->related()->get()->filter(function ($related) use ($familyTypes) {
+            return isset($familyTypes[$related->type_one]);
+        }));
+
+        // Cycle through family members and assemble a stripped-down array for convenience
+        foreach($family as $familyMember) {
+            if($familyMember->page_one_id == $this->id)
+                $familyMembers[] = [
+                    'link' => $familyMember,
+                    'type' => $familyMember->type_two,
+                    'displayType' => $familyMember->displayTypeTwo,
+                    'page' => $familyMember->pageTwo
+                ];
+            elseif($familyMember->page_two_id == $this->id)
+                $familyMembers[] = [
+                    'link' => $familyMember,
+                    'type' => $familyMember->type_one,
+                    'displayType' => $familyMember->displayTypeOne,
+                    'page' => $familyMember->pageOne
+                ];
+        }
+
+        $familyMembers = collect(isset($familyMembers) ? $familyMembers : null);
+
+        if($familyMembers->count()) return $familyMembers;
         return null;
     }
 
