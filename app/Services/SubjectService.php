@@ -527,10 +527,9 @@ class SubjectService extends Service
      * Sorts chronology order.
      *
      * @param  array   $data
-     * @param  string  $subject
      * @return bool
      */
-    public function sortChronology($data, $subject)
+    public function sortChronology($data)
     {
         DB::beginTransaction();
 
@@ -539,7 +538,7 @@ class SubjectService extends Service
             $sort = array_reverse(explode(',', $data));
 
             foreach($sort as $key => $s) {
-                TimeChronology::where('subject', $subject)->where('id', $s)->update(['sort' => $key]);
+                TimeChronology::where('id', $s)->update(['sort' => $key]);
             }
 
             return $this->commitReturn(true);
