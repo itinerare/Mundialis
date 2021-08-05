@@ -49,6 +49,12 @@ Route::group(['namespace' => 'Pages'], function() {
         });
     });
 
+    # TIME
+    Route::group(['prefix' => 'time'], function() {
+        Route::get('chronologies/{id}', 'SubjectController@getTimeChronology')
+            ->whereNumber('id');
+    });
+
     # LEXICON
     Route::group(['prefix' => 'language/lexicon'], function() {
         Route::get('{id}', 'SubjectController@getLexiconCategory')

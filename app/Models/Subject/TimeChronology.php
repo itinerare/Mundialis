@@ -70,6 +70,14 @@ class TimeChronology extends Model
         return $this->hasMany('App\Models\Subject\TimeChronology', 'parent_id');
     }
 
+    /**
+     * Get pages in this category.
+     */
+    public function pages()
+    {
+        return $this->hasMany('App\Models\Page\Page', 'parent_id')->whereIn('category_id', SubjectCategory::where('subject', 'time')->pluck('id')->toArray());
+    }
+
     /**********************************************************************************************
 
         ACCESSORS
@@ -77,14 +85,34 @@ class TimeChronology extends Model
     **********************************************************************************************/
 
     /**
-     * Return the display name (abbreviation if present, name if not)
+     * Return the display name (abbreviation if present, name if not) as a formatted link
      *
      * @return string
      */
     public function getDisplayNameAttribute()
     {
-        if(isset($this->abbreviation)) return '<abbr data-toggle="tooltip" title="'.$this->name.'">'.$this->abbreviation.'</abbr>';
-        return $this->name;
+        if(isset($this->abbreviation)) return '<a href="'.$this->url.'"><abbr data-toggle="tooltip" title="'.$this->name.'">'.$this->abbreviation.'</abbr></a>';
+        return '<a href="'.$this->url.'">'.$this->name.'</a>';
+    }
+
+    /**
+     * Return the full display name as a formatted link
+     *
+     * @return string
+     */
+    public function getDisplayNameFullAttribute()
+    {
+        return '<a href="'.$this->url.'">'.$this->name.'</a>';
+    }
+
+    /**
+     * Get the chronology's url.
+     *
+     * @return string
+     */
+    public function getUrlAttribute()
+    {
+        return url('time/chronologies/'.$this->id);
     }
 
 }

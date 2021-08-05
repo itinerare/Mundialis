@@ -94,6 +94,8 @@ class SubjectController extends Controller
             'langCategories' => LexiconCategory::whereNull('parent_id')->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
             'entries' => $query->paginate(20)->appends($request->query()),
             'classOptions' => LexiconSetting::orderBy('sort', 'DESC')->pluck('name', 'name')
+        ] : []) + ($subject['key'] == 'time' ? [
+            'timeCategories' => TimeChronology::whereNull('parent_id')->orderBy('sort', 'DESC')->paginate(20)->appends($request->query())
         ] : []));
     }
 
@@ -144,6 +146,61 @@ class SubjectController extends Controller
         return view('pages.subjects.category', [
             'category' => $category,
             'pages' => $query->paginate(20)->appends($request->query()),
+            'tags' => (new PageTag)->listTags(),
+            'dateHelper' => new TimeDivision
+        ]);
+    }
+
+    /******************************************************************************
+        SPECIALIZED - TIME
+    *******************************************************************************/
+
+    /**
+     * Shows a category's page.
+     *
+     * @param  int                       $id
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getTimeChronology($id, Request $request)
+    {
+        $chronology = TimeChronology::where('id', $id)->first();
+        if(!$chronology) abort(404);
+
+        $query = $chronology->pages()->visible(Auth::check() ? Auth::user() : null);
+        $sort = $request->only(['sort']);
+
+        if($request->get('title')) $query->where(function($query) use ($request) {
+            $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
+        });
+
+        if($request->get('tags'))
+            foreach($request->get('tags') as $tag)
+                $query->whereIn('id', PageTag::tagSearch($tag)->tag()->pluck('page_id')->toArray());
+
+        if(isset($sort['sort']))
+        {
+            switch($sort['sort']) {
+                case 'alpha':
+                    $query->orderBy('title');
+                    break;
+                case 'alpha-reverse':
+                    $query->orderBy('title', 'DESC');
+                    break;
+                case 'newest':
+                    $query->orderBy('created_at', 'DESC');
+                    break;
+                case 'oldest':
+                    $query->orderBy('created_at', 'ASC');
+                    break;
+            }
+        }
+        else $query->orderBy('title');
+
+        return view('pages.subjects.time_chronology', [
+            'chronology' => $chronology,
+            'pages' => $query->paginate(20)->appends($request->query()),
+            'categoryOptions' => SubjectCategory::pluck('name', 'id'),
             'tags' => (new PageTag)->listTags(),
             'dateHelper' => new TimeDivision
         ]);
