@@ -83,7 +83,7 @@ class SubjectController extends Controller
 
         $data = $request->only([
             'section_key', 'section_name', 'section_subject', 'cascade_template',
-            'infobox_key', 'infobox_type', 'infobox_label', 'infobox_rules', 'infobox_choices', 'infobox_value', 'infobox_help', 'widget_key', 'widget_section',
+            'infobox_key', 'infobox_type', 'infobox_label', 'infobox_rules', 'infobox_choices', 'infobox_value', 'infobox_help',
             'field_key', 'field_type', 'field_label', 'field_rules', 'field_choices', 'field_value', 'field_help', 'field_is_subsection', 'field_section'
         ]);
         if($service->editTemplate($subject, $data, Auth::user())) {
@@ -147,7 +147,7 @@ class SubjectController extends Controller
         $data = $request->only([
             'name', 'description', 'image', 'remove_image', 'summary', 'parent_id', 'populate_template', 'cascade_template', 'cascade_recursively',
             'section_key', 'section_name', 'section_subject',
-            'infobox_key', 'infobox_type', 'infobox_label', 'infobox_rules', 'infobox_choices', 'infobox_value', 'infobox_help', 'widget_key', 'widget_section',
+            'infobox_key', 'infobox_type', 'infobox_label', 'infobox_rules', 'infobox_choices', 'infobox_value', 'infobox_help',
             'field_key', 'field_type', 'field_label', 'field_rules', 'field_choices', 'field_value', 'field_help', 'field_is_subsection', 'field_section'
         ]);
         if(is_numeric($subject) && $service->updateCategory(SubjectCategory::find($subject), $data, Auth::user())) {

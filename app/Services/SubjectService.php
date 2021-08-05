@@ -292,11 +292,6 @@ class SubjectService extends Service
             ];
         }
 
-        // Format and record widgets if present
-        if(isset($data['widget_key'])) foreach($data['widget_key'] as $key=>$widget) {
-            $data['data']['widgets'][$data['widget_section'][$key]][] = $widget;
-        }
-
         // Format and record form fields if present
         if(isset($data['field_key'])) foreach($data['field_key'] as $key=>$fieldKey) {
             if(isset($data['field_choices'][$key]))
@@ -360,7 +355,7 @@ class SubjectService extends Service
             // Perform any removals
             if(isset($data['changes']['removed'])) {
                 foreach($data['changes']['removed'] as $segment=>$items) {
-                    if($segment == 'sections' || $segment == 'fields' || $segment == 'widgets') {
+                    if($segment == 'sections' || $segment == 'fields') {
                         // If segment is nested, step down first
                         foreach($items as $section=>$sectionData) {
                             foreach($sectionData as $itemKey=>$item) {

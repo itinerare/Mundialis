@@ -6,10 +6,6 @@
     @include('admin.form_builder._section_builder_row')
 </div>
 
-<div class="hide mb-2" id="widget-row">
-    @include('admin.form_builder._widget_builder_row')
-</div>
-
 <div class="hide mb-2" id="field-row">
     @include('admin.form_builder._field_builder_row')
 </div>
