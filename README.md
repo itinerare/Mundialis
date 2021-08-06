@@ -1,5 +1,5 @@
 # Mundialis
-Mundialis is a Laravel-based framework for managing story, character, and world information. It aims to reduce the friction of recording these by streamlining the process of template creation, use, and information formatting.
+Mundialis is a Laravel-based framework for managing story, character, and world information. It aims to reduce the friction of recording these by streamlining the process of template creation, use, and information formatting, while adding some specialized functionality.
 
 - Support Discord: https://discord.gg/mVqUzgQXMd
 
