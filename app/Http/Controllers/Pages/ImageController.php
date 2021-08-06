@@ -156,10 +156,30 @@ class ImageController extends Controller
         if(!$page) abort(404);
         if(!Auth::user()->canEdit($page)) abort (404);
 
+        // Collect pages and information and group them
+        $groupedPages = Page::orderBy('title')->get()->keyBy('id')->groupBy(function ($page) {
+            return $page->category->subject['name'];
+        }, $preserveKeys = true)->toArray();
+
+        // Collect subjects and information
+        $orderedSubjects = collect(Config::get('mundialis.subjects'))->filter(function ($subject) use ($groupedPages) {
+            if(isset($groupedPages[$subject['name']])) return 1;
+            else return 0;
+        })->pluck('name', 'name');
+
+        foreach($groupedPages as $subject=>$pages)
+            foreach($pages as $id=>$groupPage)
+                $groupedPages[$subject][$id] = $groupPage['title'];
+
+        // Organize them according to standard subject listing
+        $sortedPages = $orderedSubjects->map(function($subject, $key) use($groupedPages) {
+            return $groupedPages[$subject];
+        });
+
         return view('pages.images.create_edit_image', [
             'image' => new PageImage,
             'page' => $page,
-            'pageOptions' => Page::where('id', '!=', $page->id)->pluck('title', 'id'),
+            'pageOptions' => $sortedPages,
             'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
             'dateHelper' => new TimeDivision
@@ -180,10 +200,30 @@ class ImageController extends Controller
         $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $id)->first();
         if(!$image) abort(404);
 
+        // Collect pages and information and group them
+        $groupedPages = Page::orderBy('title')->get()->keyBy('id')->groupBy(function ($page) {
+            return $page->category->subject['name'];
+        }, $preserveKeys = true)->toArray();
+
+        // Collect subjects and information
+        $orderedSubjects = collect(Config::get('mundialis.subjects'))->filter(function ($subject) use ($groupedPages) {
+            if(isset($groupedPages[$subject['name']])) return 1;
+            else return 0;
+        })->pluck('name', 'name');
+
+        foreach($groupedPages as $subject=>$pages)
+            foreach($pages as $id=>$groupPage)
+                $groupedPages[$subject][$id] = $groupPage['title'];
+
+        // Organize them according to standard subject listing
+        $sortedPages = $orderedSubjects->map(function($subject, $key) use($groupedPages) {
+            return $groupedPages[$subject];
+        });
+
         return view('pages.images.create_edit_image', [
             'image' => $image,
             'page' => $page,
-            'pageOptions' => Page::where('id', '!=', $page->id)->pluck('title', 'id'),
+            'pageOptions' => $sortedPages,
             'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
             'dateHelper' => new TimeDivision
