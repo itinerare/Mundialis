@@ -191,7 +191,7 @@ class Page extends Model
     public function scopeSubject($query, $subject)
     {
         return $query->whereIn('category_id',
-            SubjectCategory::where('subject', 'places')->pluck('id')->toArray()
+            SubjectCategory::where('subject', $subject)->pluck('id')->toArray()
         );
     }
 
