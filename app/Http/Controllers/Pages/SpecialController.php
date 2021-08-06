@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pages;
 
 use Auth;
 use Config;
+use Carbon\Carbon;
 
 use App\Models\User\User;
 
@@ -12,9 +13,11 @@ use App\Models\Subject\TimeDivision;
 use App\Models\Subject\TimeChronology;
 
 use App\Models\Page\Page;
+use App\Models\Page\PageVersion;
 use App\Models\Page\PageTag;
 use App\Models\Page\PageLink;
 use App\Models\Page\PageImage;
+use App\Models\Page\PageImageVersion;
 use App\Models\Page\PageProtection;
 
 use Illuminate\Http\Request;
@@ -245,6 +248,62 @@ class SpecialController extends Controller
 
         return view('pages.special.linked', [
             'pages' => $query->paginate(20)->appends($request->query())
+        ]);
+    }
+
+    /**
+     * Shows list of recent page edits.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getRecentPages(Request $request)
+    {
+        $query = PageVersion::orderBy('created_at', 'DESC')->get()->filter(function ($version) {
+            if(Auth::check() && Auth::user()->isAdmin) return 1;
+            if(!$version->page || isset($version->page->deleted_at)) return 0;
+            if(Auth::check() && Auth::user()->canWrite) return 1;
+            return $version->page->is_visible;
+        });
+
+        $mode = $request->get('mode');
+        if(isset($mode) && is_numeric($mode)) {
+            $query = $query->filter(function ($version) use ($mode) {
+                if($version->created_at > Carbon::now()->subDays($mode)) return 1;
+                return 0;
+            });
+        }
+
+        return view('pages.special.recent_pages', [
+            'pages' => $query->paginate(20)->appends($request->query())
+        ]);
+    }
+
+    /**
+     * Shows list of recent image edits.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getRecentImages(Request $request)
+    {
+        $query = PageImageVersion::orderBy('updated_at', 'DESC')->get()->filter(function ($version) {
+            if(Auth::check() && Auth::user()->isAdmin) return 1;
+            if(!$version->image || isset($version->image->deleted_at)) return 0;
+            if(Auth::check() && Auth::user()->canWrite) return 1;
+            return $version->image->is_visible;
+        });
+
+        $mode = $request->get('mode');
+        if(isset($mode) && is_numeric($mode)) {
+            $query = $query->filter(function ($version) use ($mode) {
+                if($version->created_at > Carbon::now()->subDays($mode)) return 1;
+                return 0;
+            });
+        }
+
+        return view('pages.special.recent_images', [
+            'images' => $query->paginate(20)->appends($request->query())
         ]);
     }
 

@@ -74,9 +74,11 @@ Route::group(['namespace' => 'Pages'], function() {
         Route::get('{mode}-revised-pages', 'SpecialController@getRevisedPages')
             ->whereAlphanumeric('mode');
         Route::get('linked-pages', 'SpecialController@getMostLinkedPages');
-        Route::get('protected-pages', 'SpecialController@getProtectedPages');
+        Route::get('recent-pages', 'SpecialController@getRecentPages');
+        Route::get('recent-images', 'SpecialController@getRecentImages');
 
         Route::get('wanted-pages', 'SpecialController@getWantedPages');
+        Route::get('protected-pages', 'SpecialController@getProtectedPages');
         Route::get('{tag}-pages', 'SpecialController@getUtilityTagPages')
             ->where('tag', implode('|', array_keys(Config::get('mundialis.utility_tags'))));
 

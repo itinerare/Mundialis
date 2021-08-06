@@ -24,12 +24,14 @@
             <li><a href="{{ url('special/least-revised-pages') }}">Pages with the Fewest Revisions</a></li>
             <li><a href="{{ url('special/most-revised-pages') }}">Pages with the Most Revisions</a></li>
             <li><a href="{{ url('special/linked-pages') }}">Most Linked-To Pages</a></li>
-            <li><a href="{{ url('special/protected-pages') }}">Protected Pages</a></li>
+            <li><a href="{{ url('special/recent-pages') }}">Recently Edited Pages</a></li>
+            <li><a href="{{ url('special/recent-images') }}">Recently Edited Images</a></li>
         </ul>
     </div>
     <div class="col-md">
         <ul>
             <li><a href="{{ url('special/wanted-pages') }}">Wanted Pages</a></li>
+            <li><a href="{{ url('special/protected-pages') }}">Protected Pages</a></li>
             @foreach(Config::get('mundialis.utility_tags') as $key=>$tag)
                 <li><a href="{{ url('special/'.$key.'-pages') }}" class="{{ set_active('special/'.$key.'-pages') }}">{{ $tag['name'] }}</a></li>
             @endforeach
