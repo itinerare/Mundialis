@@ -28,7 +28,7 @@
 
 <div class="row ml-md-2 mb-4">
     <div class="d-flex row flex-wrap col-12 pb-1 px-0 ubt-bottom">
-        <div class="col-md-2 font-weight-bold">Page</div>
+      <div class="col-md-2 font-weight-bold">Page</div>
       <div class="col-md-3 font-weight-bold">Version/Date</div>
       <div class="col-md-1 font-weight-bold">User</div>
       <div class="col-md-2 font-weight-bold">Type</div>

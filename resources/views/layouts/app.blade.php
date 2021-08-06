@@ -84,10 +84,12 @@
 
         <main class="container-fluid">
             <div class="row">
-                <div class="sidebar col-lg-2" id="sidebar">
-                    <img src="{{ asset('images/logo.png') }}" class="mw-100 p-2 mobile-hide" />
-                    @yield('sidebar')
-                </div>
+                @if(Settings::get('visitors_can_read') || Auth::check())
+                    <div class="sidebar col-lg-2" id="sidebar">
+                        <a href="{{ url('/') }}" class="py-2"><img src="{{ asset('images/logo.png') }}" class="mw-100 mobile-hide" /></a>
+                        @yield('sidebar')
+                    </div>
+                @endif
                 <div class="main-content col-lg no-gutters">
 
                     <div class="p-4">

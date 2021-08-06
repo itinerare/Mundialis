@@ -9,21 +9,52 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="{{ url('/') }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        Subjects <span class="caret"></span>
-                    </a>
+            @if(Settings::get('visitors_can_read') || Auth::check())
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="{{ url('/') }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            Subjects <span class="caret"></span>
+                        </a>
 
-                    <div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdown">
-                        @foreach(Config::get('mundialis.subjects') as $subject=>$values)
-                            <a class="dropdown-item" href="{{ url($subject) }}">
-                                {{ $values['name'] }}
+                        <div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdown">
+                            @foreach(Config::get('mundialis.subjects') as $subject=>$values)
+                                <a class="dropdown-item" href="{{ url($subject) }}">
+                                    {{ $values['name'] }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="{{ url('/') }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            Special Pages <span class="caret"></span>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ url('special') }}">
+                                All Special Pages
                             </a>
-                        @endforeach
-                    </div>
-                </li>
-            </ul>
+                            <a class="dropdown-item" href="{{ url('special/all-pages') }}">
+                                All Pages
+                            </a>
+                            <a class="dropdown-item" href="{{ url('special/random-page') }}">
+                                Random Page
+                            </a>
+                            @if(Auth::check() && Auth::user()->canWrite)
+                                <div class="dropdown-divider"></div>
+                                @foreach(Config::get('mundialis.utility_tags') as $key=>$tag)
+                                    <a class="dropdown-item" href="{{ url('special/'.$key.'-pages') }}">
+                                        {{ $tag['name'] }}
+                                    </a>
+                                @endforeach
+                                <a class="dropdown-item" href="{{ url('special/wanted-pages') }}">
+                                    Wanted Pages
+                                </a>
+                            @endif
+                        </div>
+                    </li>
+                </ul>
+            @endif
 
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
