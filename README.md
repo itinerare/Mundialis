@@ -22,12 +22,50 @@ WIP
 - Page tagging-- either just for organization or for automated generation of navboxes-- including dedicated utility tags for keeping track of WIP, outdated, etc. pages
 - Images and per-page image galleries; images can have multiple on- or off-site creators noted directly via the system, and can be associated with more than one page at once (with their validity for a given page can be tracked per-page)
 - Version tracking for pages and images, including the ability to reset a page to a specific version and to restore deleted pages and images
-- Relationship tracking for pages in the "people" subject, with bi-directional display and editing supporting configurable pre-defined as well as custom relationship types
+- Relationship tracking for pages in the "people" subject, with bi-directional display and editing supporting configurable pre-defined as well as custom relationship types, and family member listing for pages with set family
 - Various special/utility pages for keeping track of pages via maintenance reports, etc. Includes things like un-/most-tagged pages, most and least revisions, pages with a given utility tag, and wanted pages as linked to within existing pages
 - A random page button (just delightful, in my opinion)
 
 ## Setup
-WIP
+Important: For those who are not familiar with web development, please refer to the [Full Guide]() for a much more detailed set of instructions!
+
+### Obtain a copy of the code
+
+```
+$ git clone https://github.com/itinerare/mundialis.git
+```
+
+### Configure .env in the directory
+
+```
+$ cp .env.example .env
+```
+
+Fill out .env as appropriate. The following are required:
+
+- APP_NAME=(Your site's name, without spaces)
+- APP_ENV=production
+- APP_DEBUG=false
+- APP_URL= ()
+- CONTACT_ADDRESS=(Email address)
+
+## Setting up
+
+Install packages with composer:
+```
+$ composer install
+```
+
+Generate app key and run database migrations:
+```
+$ php artisan key:generate 
+$ php artisan migrate
+```
+
+Perform general site setup:
+```
+$ php artisan setup-mundialis
+```
 
 ## Contributing
 Thank you for considering contributing to Mundialis! Please see the [Contribution Guide](https://github.com/itinerare/Mundialis/blob/main/CONTRIBUTING.md) for information on how best to contribute.
