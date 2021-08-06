@@ -23,6 +23,7 @@ WIP
 - Images and per-page image galleries; images can have multiple on- or off-site creators noted directly via the system, and can be associated with more than one page at once (with their validity for a given page can be tracked per-page)
 - Version tracking for pages and images, including the ability to reset a page to a specific version and to restore deleted pages and images
 - Relationship tracking for pages in the "people" subject, with bi-directional display and editing supporting configurable pre-defined as well as custom relationship types, and family member listing for pages with set family
+- A timeline display for events, filterable by tag(s)
 - Various special/utility pages for keeping track of pages via maintenance reports, etc. Includes things like un-/most-tagged pages, most and least revisions, pages with a given utility tag, and wanted pages as linked to within existing pages
 - A random page button (just delightful, in my opinion)
 
