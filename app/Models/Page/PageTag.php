@@ -38,7 +38,7 @@ class PageTag extends Model
     **********************************************************************************************/
 
     /**
-     * Get the page this version belongs to.
+     * Get the page this tag belongs to.
      */
     public function page()
     {
@@ -200,6 +200,21 @@ class PageTag extends Model
         // Else check if there are prefixed tags for this tag
         elseif($this->tagSearch($this->tag)->prefixedTags()->count()) return true;
         else return false;
+    }
+
+    /**
+     * Checks if a tag has associated events.
+     *
+     * @return bool
+     */
+    public function getHasTimelineAttribute()
+    {
+        $timePages = $this->page->subject('time')->whereIn('id', $this->tagSearch($this->baseTag)->tag()->pluck('page_id')->toArray())->get()->filter(function ($page) {
+            if(isset($page->parent_id) || isset($page->data['date']['start'])) return true;
+            return false;
+        });
+        if($timePages->count()) return true;
+        return false;
     }
 
     /**********************************************************************************************

@@ -51,6 +51,7 @@ Route::group(['namespace' => 'Pages'], function() {
 
     # TIME
     Route::group(['prefix' => 'time'], function() {
+        Route::get('timeline', 'SubjectController@getTimeTimeline');
         Route::get('chronologies/{id}', 'SubjectController@getTimeChronology')
             ->whereNumber('id');
     });

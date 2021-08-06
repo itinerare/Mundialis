@@ -1,3 +1,5 @@
+<p>Events with a start date and/or chronology will be displayed in the <a href="{{ url('time/timeline') }}">timeline</a>, organized by chronology if set, and then by start date if set. Conversely, to "hide" a page in this subject from the timeline, do not set either a start date or chronology.</p>
+
 <h6>Dates (Optional)  {!! add_help('If the event transpires over a single date, leave one or the other blank.') !!}</h6>
 @foreach(['start', 'end'] as $segment)
     <div class="row mb-2">

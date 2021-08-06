@@ -451,4 +451,73 @@ class Page extends Model
         return null;
     }
 
+    /**
+     * Organize events in chronological order.
+     *
+     * @param  \App\Models\User\User    $user
+     * @param  int                      $chronology
+     * @param  array                    $tags
+     * @return \Illuminate\Support\Collection
+     */
+    public function timeOrderedEvents($user = null, $chronology = null, $tags = null)
+    {
+        // Gather relevant pages
+        $timePages = $this->subject('time')->visible($user ? $user : null);
+        if($chronology) $timePages = $timePages->where('parent_id', $chronology);
+        else $timePages = $timePages->whereNull('parent_id');
+        if($tags) {
+            foreach($tags as $tag) {
+                $timePages = $timePages->whereIn('id', PageTag::tagSearch($tag)->tag()->pluck('page_id')->toArray());
+            }
+        }
+        $timePages = $timePages->get()->filter(function ($page) use ($chronology) {
+            if((isset($page->parent_id) && $chronology) ||
+            isset($page->data['date']['start'])) return true;
+            return false;
+        });
+
+        // Get list of date-enabled divisions
+        $dateDivisions = TimeDivision::dateEnabled()->orderBy('sort', 'DESC')->get();
+        foreach($dateDivisions as $division) {
+            $divisionNames[] = str_replace(' ', '_', strtolower($division->name));
+        }
+
+        // Recursively group events
+        $timePages = $this->timeGroupEvents($timePages, $divisionNames);
+
+        if($timePages->count()) return $timePages;
+        return null;
+    }
+
+    /**
+     * Help organize events recursively.
+     *
+     * @param  \Illuminate\Support\Collection  $group
+     * @param  array                           $divisionNames
+     * @param  int                             $i
+     * @return \Illuminate\Support\Collection
+     */
+    public function timeGroupEvents($group, $divisionNames, $i = 0)
+    {
+        // Group the pages by the current division
+        $group = $group->groupBy(function ($page) use ($divisionNames, $i) {
+            if(isset($page->data['date']['start'][$divisionNames[$i]])) {
+                return $page->data['date']['start'][$divisionNames[$i]];
+            }
+            return '00';
+        })->sortBy(function ($group, $key) {
+            return $key;
+        });
+
+        // See if there is a smaller division
+        if(isset($divisionNames[$i+1])) {
+            // And if so, group the pages by it, etc
+            $group = $group->map(function ($subGroup) use ($divisionNames, $i) {
+                return $this->timeGroupEvents($subGroup, $divisionNames, $i+1);
+            });
+        }
+
+        return $group;
+    }
+
 }

@@ -14,7 +14,7 @@
 
 <p>This is a list of sequences of time that make up the overall chronology used by pages on this site. These serve as a sort of secondary category system for events, allowing them to be placed within larger spans of time that are themselves ordered. This assists with functions such as building timelines.</p>
 
-<p>Chronologies are optional; if they are not used, all events will be ordered as if they were all in one. If they are used but some events do not have one set, these events will be considered most recent. It's recommended to use these in combination with <a href="{{ url('admin/data/time/divisions') }}">divisions</a>-- the basic units of time for your project that can be set per-event-- and only create chronologies for your project's broadest spans of time.</p>
+<p>Chronologies are optional; if they are not used, all events will be ordered as if they were all in one. If they are used but some events do not have one set, these events will be considered most recent. It's recommended to use these in combination with <a href="{{ url('admin/data/time/divisions') }}">divisions</a>-- the basic units of time for your project that can be set per-event-- and only create chronologies for your project's broadest spans of time. Chronologies should be ordered from oldest to most recent, so that the oldest is at the top of this list.</p>
 
 <div class="text-right mb-3">
     <a class="btn btn-primary" href="{{ url('admin/data/time/chronology/create') }}"><i class="fas fa-plus"></i> Create New Chronology</a>

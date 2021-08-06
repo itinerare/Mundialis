@@ -6,7 +6,7 @@
         </h5>
     </div>
 
-    <div class="collapse {{ isset($navbox['pages']) && $navbox['pages']->count() < 30 ? 'show' : '' }}" id="navbox-{{ $tag->id }}">
+    <div class="collapse {{ !isset($navbox['pages']) || $navbox['pages']->count() < 30 ? 'show' : '' }}" id="navbox-{{ $tag->id }}">
         @if(isset($navbox['subjects']))
             <div class="px-2">
                 @foreach(Config::get('mundialis.subjects') as $subjectKey=>$subjectValues)
@@ -32,10 +32,12 @@
             </div>
         @endif
 
-        @if(isset($navbox['hub']))
+        @if(isset($navbox['hub']) || $tag->hasTimeline)
             <div class="card-header pt-2 pb-0 text-center">
                 <h6>
-                    {!! $tag->displayNameBase !!}
+                    {!! isset($navbox['hub']) ? $tag->displayNameBase : null !!}
+                    {{ isset($navbox['hub']) && $tag->hasTimeline ? '・' : ''}}
+                    {!! $tag->hasTimeline ? '<a href="'.url('time/timeline?tags[]='.str_replace(' ', '+', $tag->baseTag)).'">Timeline</a>' : '' !!}
                 </h6>
             </div>
         @endif

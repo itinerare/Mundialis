@@ -12,6 +12,7 @@ use App\Models\Subject\TimeChronology;
 use App\Models\Subject\LexiconCategory;
 use App\Models\Subject\LexiconSetting;
 
+use App\Models\Page\Page;
 use App\Models\Page\PageTag;
 use App\Models\Lexicon\LexiconEntry;
 use Illuminate\Http\Request;
@@ -203,6 +204,22 @@ class SubjectController extends Controller
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
             'tags' => (new PageTag)->listTags(),
             'dateHelper' => new TimeDivision
+        ]);
+    }
+
+    /**
+     * Shows the timeline page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getTimeTimeline()
+    {
+        return view('pages.subjects.time_timeline', [
+            'tags' => (new PageTag)->listTags(),
+            'chronologies' => TimeChronology::whereNull('parent_id')->orderBy('sort', 'DESC')->get(),
+            'eventHelper' => new Page,
+            'dateHelper' => new TimeDivision,
+            'divisions' => (new TimeDivision)->dateEnabled()->orderBy('sort', 'DESC')->get()
         ]);
     }
 
