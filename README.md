@@ -49,7 +49,7 @@ Fill out .env as appropriate. The following are required:
 - APP_URL= ()
 - CONTACT_ADDRESS=(Email address)
 
-## Setting up
+### Setting up
 
 Install packages with composer:
 ```
