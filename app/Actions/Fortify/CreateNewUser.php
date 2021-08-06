@@ -2,13 +2,17 @@
 
 namespace App\Actions\Fortify;
 
+use Carbon\Carbon;
+
 use Settings;
 use App\Models\User\User;
-use App\Models\Invitation;
+use App\Models\User\InvitationCode;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
+
+use App\Services\InvitationService;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -28,16 +32,24 @@ class CreateNewUser implements CreatesNewUsers
             'agreement' => ['required', 'accepted'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'code' => ['string', function ($attribute, $value, $fail) {
-                    $invitation = Invitation::where('code', $value)->whereNull('recipient_id')->first();
+                    $invitation = InvitationCode::where('code', $value)->whereNull('recipient_id')->first();
                     if(!$invitation) $fail('Invalid code entered.');
                 }
             ]
         ])->validate();
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
+            'rank_id' => 3,
         ]);
+
+        $user->email_verified_at = Carbon::now();
+        $user->save();
+
+        if(!(new InvitationService)->useInvitation(InvitationCode::where('code', $input['code'])->whereNull('recipient_id')->first(), $user)) throw new \Exception('An error occurred while using the invitation code.');
+
+        return $user;
     }
 }

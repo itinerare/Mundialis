@@ -3,7 +3,7 @@
 @section('title') Register @endsection
 
 @section('content')
-@if(!Settings::get('is_registration_open'))
+@if(Settings::get('is_registration_open'))
     @if($userCount)
         <div class="row">
             <div class="col-md-6 offset-md-4">

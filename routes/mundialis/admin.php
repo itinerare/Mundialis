@@ -79,6 +79,12 @@ Route::group(['prefix' => 'users'], function() {
         Route::get('edit/{id}', 'RankController@getEditRank');
         Route::post('edit/{id?}', 'RankController@postEditRank');
     });
+
+    Route::group(['prefix' => 'invitations'], function() {
+        Route::get('/', 'InvitationController@getIndex');
+        Route::post('create', 'InvitationController@postGenerateKey');
+        Route::post('delete/{id}', 'InvitationController@postDeleteKey');
+    });
 });
 
 /*
