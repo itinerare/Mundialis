@@ -10,7 +10,7 @@
 <p>
     This is a list of all special pages. Special pages are automatically populated and serve various purposes, such as providing maintenance reports and lists of pages.
     @if(Auth::check() && Auth::user()->isAdmin)
-        Special pages listed in <strong>bold</strong> are admin-only. While they are also listed in the <a href="{{ url('admin') }}">admin panel</a>, they are included here in the interests of convenience and completeness.
+        Special pages listed in <strong>bold</strong> are admin-only.
     @endif
 </p>
 
@@ -36,7 +36,7 @@
                 <li><a href="{{ url('special/'.$key.'-pages') }}" class="{{ set_active('special/'.$key.'-pages') }}">{{ $tag['name'] }}</a></li>
             @endforeach
             @if(Auth::check() && Auth::user()->isAdmin)
-                <li><strong>Unwatched Pages</strong></li>
+                <li><a href="{{ url('admin/special/unwatched-pages') }}"><strong>Unwatched Pages</strong></a></li>
             @endif
         </ul>
     </div>

@@ -108,6 +108,8 @@ Route::group(['prefix' => 'users'], function() {
 
 # SPECIAL PAGES
 Route::group(['prefix' => 'special'], function() {
+    Route::get('unwatched-pages', 'SpecialController@getUnwatchedPages');
+
     Route::get('deleted-pages', 'SpecialController@getDeletedPages');
     Route::get('deleted-pages/{id}', 'SpecialController@getDeletedPage')
         ->whereNumber('id');

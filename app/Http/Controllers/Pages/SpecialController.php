@@ -166,7 +166,7 @@ class SpecialController extends Controller
     }
 
     /**
-     * Shows list of most tagged pages.
+     * Shows list of untagged pages.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string                    $mode

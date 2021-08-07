@@ -27,6 +27,25 @@ class SpecialController extends Controller
     */
 
     /**
+     * Shows list of unwatched pages.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string                    $mode
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUnwatchedPages(Request $request)
+    {
+        $query = Page::visible(Auth::check() ? Auth::user() : null)->get()
+        ->filter(function ($page) {
+            return $page->watchers->count() == 0;
+        })->sortBy('title');
+
+        return view('pages.special.unwatched', [
+            'pages' => $query->paginate(20)->appends($request->query())
+        ]);
+    }
+
+    /**
      * Shows the list of deleted pages.
      *
      * @param  \Illuminate\Http\Request        $request
