@@ -6,6 +6,7 @@ use DB;
 use Image;
 use Arr;
 use Config;
+use Auth;
 
 use App\Models\User\User;
 use App\Models\Page\Page;
@@ -67,10 +68,10 @@ class ImageManager extends Service
                 $page->save();
             }
 
+            // Send a notification to users that have watched this page
             if($page->watchers->count()) {
                 foreach($page->watchers as $recipient) {
                     if($recipient->id != Auth::user()->id) {
-                        // Send a notification to users that have watched this page
                         Notifications::create('WATCHED_PAGE_IMAGE_UPDATED', $recipient, [
                             'page_url' => $page->url,
                             'page_title' => $page->title,
@@ -146,10 +147,10 @@ class ImageManager extends Service
             // Update image
             $image->update($data);
 
+            // Send a notification to users that have watched this page
             if($page->watchers->count()) {
                 foreach($page->watchers as $recipient) {
                     if($recipient->id != Auth::user()->id) {
-                        // Send a notification to users that have watched this page
                         Notifications::create('WATCHED_PAGE_IMAGE_UPDATED', $recipient, [
                             'page_url' => $page->url,
                             'page_title' => $page->title,

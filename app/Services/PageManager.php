@@ -5,6 +5,7 @@ use App\Services\Service;
 use DB;
 use Config;
 use Notifications;
+use Auth;
 
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
@@ -14,6 +15,8 @@ use App\Models\Page\PageVersion;
 use App\Models\Page\PageTag;
 use App\Models\Page\PageLink;
 use App\Models\Page\PageProtection;
+
+use App\Models\User\WatchedPage;
 
 use App\Services\ImageManager;
 
@@ -151,10 +154,10 @@ class PageManager extends Service
             // Update page
             $page->update($data);
 
+            // Send a notification to users that have watched this page
             if($page->watchers->count()) {
                 foreach($page->watchers as $recipient) {
                     if($recipient->id != Auth::user()->id) {
-                        // Send a notification to users that have watched this page
                         Notifications::create('WATCHED_PAGE_UPDATED', $recipient, [
                             'page_url' => $page->url,
                             'page_title' => $page->title,
@@ -326,8 +329,25 @@ class PageManager extends Service
                 // and if so, soft-delete them
                 foreach($page->images as $image)
                     if($image->pages->count() == 1) {
-                        if(!(new ImageManager)->deletePageImage($image)) throw new \Exception('An error occurred deleting an image.');
+                        if(!(new ImageManager)->deletePageImage($image, $user, 'Page Deleted')) throw new \Exception('An error occurred deleting an image.');
                     }
+
+                // Send a notification to users that have watched this page
+                if($page->watchers->count()) {
+                    foreach($page->watchers as $recipient) {
+                        if($recipient->id != Auth::user()->id) {
+                            Notifications::create('WATCHED_PAGE_DELETED', $recipient, [
+                                'page_title' => $page->title,
+                                'user_url' => $user->url,
+                                'user_name' => $user->name
+                            ]);
+                        }
+                    }
+                }
+
+                // Delete page watches
+                if(WatchedPage::where('page_id', $page->id)->exists())
+                    WatchedPage::where('page_id', $page->id)->delete();
 
                 // Create a version logging the deletion
                 $version = $this->logPageVersion($page->id, $user->id, 'Page Deleted', $reason, $page->version->data, false);

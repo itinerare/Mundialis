@@ -104,4 +104,5 @@ class Notification extends Model
 
     const WATCHED_PAGE_UPDATED        = 0;
     const WATCHED_PAGE_IMAGE_UPDATED  = 1;
+    const WATCHED_PAGE_DELETED        = 2;
 }

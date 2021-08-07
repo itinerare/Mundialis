@@ -24,4 +24,11 @@ return [
         'message' => 'A page you have watched (<a href="{page_url}">{page_title}</a>) has had its images updated by <a href="{user_url}">{user_name}</a>. (<a href="{url}">View Watched Pages</a>)',
         'url' => 'account/watched-pages'
     ],
+
+    // WATCHED_PAGE_DELETED
+    2 => [
+        'name' => 'Watched Page Deleted',
+        'message' => 'A page you have watched ({page_title}) was deleted by <a href="{user_url}">{user_name}</a>. (<a href="{url}">View Watched Pages</a>)',
+        'url' => 'account/watched-pages'
+    ],
 ];
