@@ -46,7 +46,7 @@
 $( document ).ready(function() {
     $('.edit-rank-button').on('click', function(e) {
         e.preventDefault();
-        loadModal("{{ url('admin/users/ranks/edit') }}" + '/' + $(this).data('id'), 'Edit Rank');
+        loadModal("{{ url('admin/ranks/edit') }}" + '/' + $(this).data('id'), 'Edit Rank');
     });
 });
 </script>

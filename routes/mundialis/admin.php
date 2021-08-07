@@ -72,19 +72,18 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data'], function() {
     USERS
 */
 
-Route::group(['prefix' => 'users'], function() {
-    # RANKS
-    Route::group(['prefix' => 'ranks'], function() {
-        Route::get('/', 'RankController@getIndex');
-        Route::get('edit/{id}', 'RankController@getEditRank');
-        Route::post('edit/{id?}', 'RankController@postEditRank');
-    });
+# RANKS
+Route::group(['prefix' => 'ranks'], function() {
+    Route::get('/', 'RankController@getIndex');
+    Route::get('edit/{id}', 'RankController@getEditRank');
+    Route::post('edit/{id?}', 'RankController@postEditRank');
+});
 
-    Route::group(['prefix' => 'invitations'], function() {
-        Route::get('/', 'InvitationController@getIndex');
-        Route::post('create', 'InvitationController@postGenerateKey');
-        Route::post('delete/{id}', 'InvitationController@postDeleteKey');
-    });
+# INVITATIONS
+Route::group(['prefix' => 'invitations'], function() {
+    Route::get('/', 'InvitationController@getIndex');
+    Route::post('create', 'InvitationController@postGenerateKey');
+    Route::post('delete/{id}', 'InvitationController@postDeleteKey');
 });
 
 /*

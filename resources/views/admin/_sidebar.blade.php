@@ -17,8 +17,8 @@
     <li class="sidebar-section">
         <div class="sidebar-section-header">Users</div>
         <div class="sidebar-item"><a href="{{ url('admin/users') }}" class="{{ set_active('admin/users') }}">User Index</a></div>
-        <div class="sidebar-item"><a href="{{ url('admin/users/invitations') }}" class="{{ set_active('admin/users/invitations*') }}">Invitation Codes</a></div>
-        <div class="sidebar-item"><a href="{{ url('admin/users/ranks') }}" class="{{ set_active('admin/users/ranks*') }}">User Ranks</a></div>
+        <div class="sidebar-item"><a href="{{ url('admin/invitations') }}" class="{{ set_active('admin/invitations*') }}">Invitation Codes</a></div>
+        <div class="sidebar-item"><a href="{{ url('admin/ranks') }}" class="{{ set_active('admin/ranks*') }}">User Ranks</a></div>
     </li>
 
     <li class="sidebar-section">
