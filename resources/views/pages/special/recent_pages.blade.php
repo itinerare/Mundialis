@@ -37,7 +37,7 @@
     @foreach($pages as $version)
     <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
         <div class="col-md-2">
-            {!! $version->page->displayName !!}
+            {!! $version->page ? $version->page->displayName : 'Deleted Page' !!}
         </div>
         <div class="col-md-3">
             <a href="{{ url('pages/'.$version->page->id.'/history/'.$version->id) }}" data-toggle="tooltip" title="Click to view page at this version{{ Auth::check() && Auth::user()->canEdit($version->page) ? ' and reset to this version if desired.' : '' }}">

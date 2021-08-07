@@ -38,7 +38,11 @@
     @foreach($images as $version)
     <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
         <div class="col-md-1 text-center align-self-center">
-            <a href="{{ url('special/get-image/'.$version->image->id) }}" class="image-link mw-100"><img src="{{ $version->image->thumbnailUrl }}" class="img-thumbnail mw-100"/></a>
+            @if($version->image)
+                <a href="{{ url('special/get-image/'.$version->image->id) }}" class="image-link mw-100"><img src="{{ $version->image->thumbnailUrl }}" class="img-thumbnail mw-100"/></a>
+            @else
+                Deleted image
+            @endif
         </div>
         <div class="col-md-2 text-center align-self-center">
             @if($version->hash)
