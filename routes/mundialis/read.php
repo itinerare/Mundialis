@@ -96,6 +96,9 @@ Route::group(['namespace' => 'Pages'], function() {
         Route::get('get-image/{id}', 'ImageController@getPageImagePopup')
             ->whereNumber('id');
 
+        # USERS
+        Route::get('user-list', 'SpecialController@getUserList');
+
         # OTHER
         Route::get('random-page', 'SpecialController@getRandomPage');
     });

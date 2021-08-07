@@ -7,6 +7,7 @@ use Config;
 use Carbon\Carbon;
 
 use App\Models\User\User;
+use App\Models\User\Rank;
 
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
@@ -436,6 +437,49 @@ class SpecialController extends Controller
     public function postCreateWantedPage(Request $request)
     {
         return redirect()->to('pages/create/'.$request->get('category_id').'?title='.$request->get('title'));
+    }
+
+    /**
+     * Shows the user list.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserList(Request $request)
+    {
+        $query = User::join('ranks','users.rank_id', '=', 'ranks.id')->select('ranks.name AS rank_name', 'users.*');
+        $sort = $request->only(['sort']);
+
+        if($request->get('name')) $query->where(function($query) use ($request) {
+            $query->where('users.name', 'LIKE', '%' . $request->get('name') . '%');
+        });
+        if($request->get('rank_id')) $query->where('rank_id', $request->get('rank_id'));
+
+        switch(isset($sort['sort']) ? $sort['sort'] : null) {
+            default:
+                $query->orderBy('ranks.sort', 'DESC')->orderBy('name');
+                break;
+            case 'alpha':
+                $query->orderBy('name');
+                break;
+            case 'alpha-reverse':
+                $query->orderBy('name', 'DESC');
+                break;
+            case 'rank':
+                $query->orderBy('ranks.sort', 'DESC')->orderBy('name');
+                break;
+            case 'newest':
+                $query->orderBy('created_at', 'DESC');
+                break;
+            case 'oldest':
+                $query->orderBy('created_at', 'ASC');
+                break;
+        }
+
+        return view('pages.special.user_list', [
+            'users' => $query->paginate(30)->appends($request->query()),
+            'ranks' => [0 => 'Any Rank'] + Rank::orderBy('ranks.sort', 'DESC')->pluck('name', 'id')->toArray()
+        ]);
     }
 
 }

@@ -57,7 +57,7 @@
 <h2>Users</h2>
 
 <ul>
-    <li>User List</li>
+    <li><a href="{{ url('special/user-list') }}">User List</a></li>
 </ul>
 
 <h2>Other</h2>
