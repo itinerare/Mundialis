@@ -58,7 +58,6 @@
 
 <ul>
     <li>User List</li>
-    <li>User Contributions</li>
 </ul>
 
 <h2>Other</h2>

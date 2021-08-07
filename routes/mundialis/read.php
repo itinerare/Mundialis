@@ -12,6 +12,13 @@
 
 Route::redirect('/pages', '/');
 
+# PROFILES
+Route::group(['prefix' => 'user', 'namespace' => 'Users'], function() {
+    Route::get('{name}', 'UserController@getUser');
+    Route::get('{name}/page-revisions', 'UserController@getUserPageRevisions');
+    Route::get('{name}/image-revisions', 'UserController@getUserImageRevisions');
+});
+
 Route::group(['namespace' => 'Pages'], function() {
     # SUBJECTS/CATEGORIES
     Route::get('{subject}', 'SubjectController@getSubject')
