@@ -303,7 +303,7 @@ class SpecialController extends Controller
         }
 
         return view('pages.special.recent_images', [
-            'images' => $query->paginate(20)->appends($request->query())
+            'images' => $query->paginate(15)->appends($request->query())
         ]);
     }
 
