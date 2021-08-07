@@ -4,6 +4,7 @@ use App\Services\Service;
 
 use DB;
 use Config;
+use Notifications;
 
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
@@ -149,6 +150,20 @@ class PageManager extends Service
 
             // Update page
             $page->update($data);
+
+            if($page->watchers->count()) {
+                foreach($page->watchers as $recipient) {
+                    if($recipient->id != Auth::user()->id) {
+                        // Send a notification to users that have watched this page
+                        Notifications::create('WATCHED_PAGE_UPDATED', $recipient, [
+                            'page_url' => $page->url,
+                            'page_title' => $page->title,
+                            'user_url' => $user->url,
+                            'user_name' => $user->name
+                        ]);
+                    }
+                }
+            }
 
             return $this->commitReturn($page);
         } catch(\Exception $e) {

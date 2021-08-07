@@ -25,3 +25,9 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function() {
     Route::post('watched-pages/{id}', 'AccountController@postWatchPage');
 });
 
+Route::group(['prefix' => 'notifications', 'namespace' => 'Users'], function() {
+    Route::get('/', 'AccountController@getNotifications');
+    Route::get('delete/{id}', 'AccountController@getDeleteNotification');
+    Route::post('clear', 'AccountController@postClearNotifications');
+    Route::post('clear/{type}', 'AccountController@postClearNotifications');
+});

@@ -67,6 +67,20 @@ class ImageManager extends Service
                 $page->save();
             }
 
+            if($page->watchers->count()) {
+                foreach($page->watchers as $recipient) {
+                    if($recipient->id != Auth::user()->id) {
+                        // Send a notification to users that have watched this page
+                        Notifications::create('WATCHED_PAGE_IMAGE_UPDATED', $recipient, [
+                            'page_url' => $page->url,
+                            'page_title' => $page->title,
+                            'user_url' => $user->url,
+                            'user_name' => $user->name
+                        ]);
+                    }
+                }
+            }
+
             return $this->commitReturn($image);
         } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
@@ -131,6 +145,20 @@ class ImageManager extends Service
 
             // Update image
             $image->update($data);
+
+            if($page->watchers->count()) {
+                foreach($page->watchers as $recipient) {
+                    if($recipient->id != Auth::user()->id) {
+                        // Send a notification to users that have watched this page
+                        Notifications::create('WATCHED_PAGE_IMAGE_UPDATED', $recipient, [
+                            'page_url' => $page->url,
+                            'page_title' => $page->title,
+                            'user_url' => $user->url,
+                            'user_name' => $user->name
+                        ]);
+                    }
+                }
+            }
 
             return $this->commitReturn($image);
         } catch(\Exception $e) {

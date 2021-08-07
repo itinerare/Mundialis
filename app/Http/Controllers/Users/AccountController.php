@@ -290,4 +290,46 @@ class AccountController extends Controller
         }
         return redirect()->back();
     }
+
+    /**
+     * Shows the notifications page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getNotifications()
+    {
+        $notifications = Auth::user()->notifications()->orderBy('id', 'DESC')->paginate(30);
+        Auth::user()->notifications()->update(['is_unread' => 0]);
+        Auth::user()->notifications_unread = 0;
+        Auth::user()->save();
+
+        return view('account.notifications', [
+            'notifications' => $notifications
+        ]);
+    }
+
+    /**
+     * Deletes a notification and returns a response.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getDeleteNotification($id)
+    {
+        $notification = Notification::where('id', $id)->where('user_id', Auth::user()->id)->first();
+        if($notification) $notification->delete();
+        return response(200);
+    }
+
+    /**
+     * Deletes all of the user's notifications.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postClearNotifications($type = null)
+    {
+        if(isset($type) && $type) Auth::user()->notifications()->where('notification_type_id', $type)->delete();
+        else Auth::user()->notifications()->delete();
+        flash('Notifications cleared successfully.')->success();
+        return redirect()->back();
+    }
 }
