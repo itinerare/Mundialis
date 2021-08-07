@@ -160,6 +160,17 @@ class Page extends Model
         return $this->hasMany('App\Models\Page\PageRelationship', 'page_two_id', 'id');
     }
 
+    /**
+     * Get the page's watchers.
+     */
+    public function watchers()
+    {
+        return $this->hasManyThrough(
+            'App\Models\User\User', 'App\Models\User\WatchedPage',
+            'page_id', 'id', 'id', 'user_id'
+        );
+    }
+
     /**********************************************************************************************
 
         SCOPES

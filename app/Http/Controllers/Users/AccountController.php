@@ -7,6 +7,9 @@ use File;
 use Image;
 
 use App\Models\User\User;
+use App\Models\Subject\SubjectCategory;
+use App\Models\Page\Page;
+use App\Models\Page\PageTag;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -218,6 +221,69 @@ class AccountController extends Controller
         ]);
         if($service->disableTwoFactor($request->only(['code']), Auth::user())) {
             flash('2FA disabled succesfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Shows the watched pages page.
+     *
+     * @param  \Illuminate\Http\Request        $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getWatchedPages(Request $request)
+    {
+        $query = Auth::user()->watched()->visible(Auth::user());
+        $sort = $request->only(['sort']);
+
+        if($request->get('title')) $query->where(function($query) use ($request) {
+            $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
+        });
+        if($request->get('category_id')) $query->where('category_id', $request->get('category_id'));
+        if($request->get('tags'))
+            foreach($request->get('tags') as $tag)
+                $query->whereIn('pages.id', PageTag::tagSearch($tag)->tag()->pluck('page_id')->toArray());
+
+        if(isset($sort['sort']))
+        {
+            switch($sort['sort']) {
+                case 'alpha':
+                    $query->orderBy('title');
+                    break;
+                case 'alpha-reverse':
+                    $query->orderBy('title', 'DESC');
+                    break;
+                case 'newest':
+                    $query->orderBy('created_at', 'DESC');
+                    break;
+                case 'oldest':
+                    $query->orderBy('created_at', 'ASC');
+                    break;
+            }
+        }
+        else $query->orderBy('title');
+
+        return view('account.watched_pages', [
+            'pages' => $query->paginate(20)->appends($request->query()),
+            'categoryOptions' => SubjectCategory::pluck('name', 'id'),
+            'tags' => (new PageTag)->listTags()
+        ]);
+    }
+
+    /**
+     * Watches/unwatches a page.
+     *
+     * @param  \Illuminate\Http\Request        $request
+     * @param  App\Services\UserService        $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postWatchPage(Request $request, UserService $service, $id)
+    {
+        if($service->watchPage(Page::find($id), Auth::user())) {
+            flash('Page watch status updated successfully.')->success();
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();

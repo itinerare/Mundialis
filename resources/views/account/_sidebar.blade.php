@@ -4,4 +4,8 @@
         <div class="sidebar-section-header">Account & Settings</div>
         <div class="sidebar-item"><a href="{{ url('account/settings') }}" class="{{ set_active('account/settings') }}">Settings</a></div>
     </li>
+    <li class="sidebar-section">
+        <div class="sidebar-section-header">Watched Pages</div>
+        <div class="sidebar-item"><a href="{{ url('account/watched-pages') }}" class="{{ set_active('account/watched-pages') }}">Watched Pages</a></div>
+    </li>
 </ul>

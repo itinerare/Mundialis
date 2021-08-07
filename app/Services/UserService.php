@@ -10,6 +10,7 @@ use Carbon\Carbon;
 
 use App\Models\User\User;
 use App\Models\User\Rank;
+use App\Models\User\WatchedPage;
 use App\Models\User\UserUpdateLog;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -216,6 +217,40 @@ class UserService extends Service
                 $user->save();
 
                 UserUpdateLog::create(['staff_id' => $staff->id, 'user_id' => $user->id, 'data' => json_encode(['is_banned' => 'No']), 'type' => 'Unban']);
+            }
+
+            return $this->commitReturn(true);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Toggles favorite status on a submission for a user.
+     *
+     * @param  \App\Models\Page\Page              $page
+     * @param  \App\Models\User\User              $user
+     * @return bool|\App\Models\User\WatchedPage
+     */
+    public function watchPage($page, $user)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Check that the submission can be favorited
+            if(!$user->canWrite && !$page->is_visible) throw new \Exception("This page isn't visible to be watched.");
+
+            // Check if the user has an existing favorite, and if so, delete it
+            // or else create one.
+            if($user->watched()->where('page_id', $page->id)->first() != null) {
+                if(!WatchedPage::where('user_id', $user->id)->where('page_id', $page->id)->delete()) throw new \Exception('An error occurred while unwatching the page.');
+            }
+            else {
+                WatchedPage::create([
+                    'user_id' => $user->id,
+                    'page_id' => $page->id
+                ]);
             }
 
             return $this->commitReturn(true);

@@ -92,6 +92,9 @@
                             <a class="dropdown-item" href="{{ url('notifications') }}">
                                 Notifications
                             </a>
+                            <a class="dropdown-item" href="{{ url('account/watched-pages') }}">
+                                Watched Pages
+                            </a>
                             <a class="dropdown-item" href="{{ url('account/settings') }}">
                                 Settings
                             </a>

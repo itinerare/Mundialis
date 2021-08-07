@@ -86,6 +86,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo('App\Models\User\Rank');
     }
 
+    /**
+     * Get the user's watched pages.
+     */
+    public function watched()
+    {
+        return $this->hasManyThrough(
+            'App\Models\Page\Page', 'App\Models\User\WatchedPage',
+            'user_id', 'id', 'id', 'page_id'
+        );
+    }
+
     /**********************************************************************************************
 
         ACCESSORS

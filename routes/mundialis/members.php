@@ -20,5 +20,8 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function() {
     Route::post('two-factor/enable', 'AccountController@postEnableTwoFactor');
     Route::post('two-factor/confirm', 'AccountController@postConfirmTwoFactor');
     Route::post('two-factor/disable', 'AccountController@postDisableTwoFactor');
+
+    Route::get('watched-pages', 'AccountController@getWatchedPages');
+    Route::post('watched-pages/{id}', 'AccountController@postWatchPage');
 });
 
