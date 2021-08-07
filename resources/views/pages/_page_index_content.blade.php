@@ -1,5 +1,3 @@
-{!! $pages->render() !!}
-
 <div>
     {!! Form::open(['method' => 'GET', 'class' => '']) !!}
         <div class="form-inline justify-content-end">
@@ -37,6 +35,8 @@
         <button type="button" class="btn btn-secondary page-list-view-button" data-toggle="tooltip" title="List View" alt="List View"><i class="fas fa-bars"></i></button>
     </div>
 </div>
+
+{!! $pages->render() !!}
 
 <div id="pageGridView" class="hide">
     <div class="row">
