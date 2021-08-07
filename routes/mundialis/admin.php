@@ -86,6 +86,22 @@ Route::group(['prefix' => 'invitations'], function() {
     Route::post('delete/{id}', 'InvitationController@postDeleteKey');
 });
 
+# USERS
+Route::group(['prefix' => 'users'], function() {
+    Route::get('/', 'UserController@getUserIndex');
+    Route::get('{name}/edit', 'UserController@getUser');
+    Route::get('{name}/updates', 'UserController@getUserUpdates');
+    Route::post('{name}/basic', 'UserController@postUserBasicInfo');
+    Route::post('{name}/account', 'UserController@postUserAccount');
+    Route::post('{name}/forgot-password', 'UserController@postForgotPassword');
+
+    Route::get('{name}/ban', 'UserController@getBan');
+    Route::get('{name}/ban-confirm', 'UserController@getBanConfirmation');
+    Route::post('{name}/ban', 'UserController@postBan');
+    Route::get('{name}/unban-confirm', 'UserController@getUnbanConfirmation');
+    Route::post('{name}/unban', 'UserController@postUnban');
+});
+
 /*
     MAINTENANCE
 */

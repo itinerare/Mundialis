@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserUpdateLogTable extends Migration
+class CreateUserUpdateLog extends Migration
 {
     /**
      * Run the migrations.
@@ -17,11 +17,11 @@ class CreateUserUpdateLogTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
 
-            $table->integer('user_id')->index();
-            $table->integer('staff_id')->index();
+            $table->integer('staff_id')->unsigned()->nullable()->default(null);
+            $table->integer('user_id')->unsigned()->index();
 
             $table->string('type');
-            $table->text('data')->nullable()->default(null);
+            $table->string('data', 512);
 
             $table->timestamps();
         });

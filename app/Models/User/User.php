@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 use App\Models\Model;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
@@ -19,7 +19,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'rank_id', 'profile_text', 'avatar'
+        'name', 'email', 'password', 'rank_id', 'profile_text', 'avatar',
+        'is_banned', 'ban_reason', 'banned_at'
     ];
 
     /**
@@ -39,6 +40,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Dates on the model to convert to Carbon instances.
+     *
+     * @var array
+     */
+    protected $dates = ['banned_at'];
 
     /**********************************************************************************************
 
@@ -91,6 +99,7 @@ class User extends Authenticatable
      */
     public function getIsAdminAttribute()
     {
+        if($this->is_banned) return false;
         return $this->rank->isAdmin;
     }
 
@@ -101,6 +110,7 @@ class User extends Authenticatable
      */
     public function getCanWriteAttribute()
     {
+        if($this->is_banned) return false;
         return $this->rank->canWrite;
     }
 

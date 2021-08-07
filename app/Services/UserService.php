@@ -43,10 +43,6 @@ class UserService extends Service
             'password' => Hash::make($data['password']),
         ]);
 
-        // Mark the user's email as verified for simplicity...
-        $user->email_verified_at = Carbon::now();
-        $user->save();
-
         return $user;
     }
 
@@ -60,7 +56,15 @@ class UserService extends Service
     {
         $user = User::find($data['id']);
         if(isset($data['password'])) $data['password'] = Hash::make($data['password']);
-        if($user) $user->update($data);
+        if(isset($data['email']) && $user && $data['email'] != $user->email) {
+            $user->forceFill(['email_verified_at' => null]);
+            $data['email_old'] = $user->email;
+        }
+
+        if($user) {
+            $user->update($data);
+            if(isset($data['email_old'])) $$user->sendEmailVerificationNotification();
+        }
 
         return $user;
     }
@@ -101,8 +105,10 @@ class UserService extends Service
     public function updateEmail($data, $user)
     {
         $user->email = $data['email'];
-        $user->email_verified_at = Carbon::now();
+        $user->email_verified_at = null;
         $user->save();
+
+        $user->sendEmailVerificationNotification();
 
         return true;
     }
@@ -171,18 +177,18 @@ class UserService extends Service
                 // For a new ban, create an update log
                 UserUpdateLog::create(['staff_id' => $staff->id, 'user_id' => $user->id, 'data' => json_encode(['is_banned' => 'Yes', 'ban_reason' => isset($data['ban_reason']) ? $data['ban_reason'] : null]), 'type' => 'Ban']);
 
-                $user->settings->banned_at = Carbon::now();
+                $user->banned_at = Carbon::now();
 
                 $user->is_banned = 1;
-                $user->rank_id = Rank::orderBy('sort')->first()->id;
+                $user->rank_id = 3;
                 $user->save();
             }
             else {
                 UserUpdateLog::create(['staff_id' => $staff->id, 'user_id' => $user->id, 'data' => json_encode(['ban_reason' => isset($data['ban_reason']) ? $data['ban_reason'] : null]), 'type' => 'Ban Update']);
             }
 
-            $user->settings->ban_reason = isset($data['ban_reason']) && $data['ban_reason'] ? $data['ban_reason'] : null;
-            $user->settings->save();
+            $user->ban_reason = isset($data['ban_reason']) && $data['ban_reason'] ? $data['ban_reason'] : null;
+            $user->save();
 
             return $this->commitReturn(true);
         } catch(\Exception $e) {
@@ -205,11 +211,10 @@ class UserService extends Service
         try {
             if($user->is_banned) {
                 $user->is_banned = 0;
+                $user->ban_reason = null;
+                $user->banned_at = null;
                 $user->save();
 
-                $user->settings->ban_reason = null;
-                $user->settings->banned_at = null;
-                $user->settings->save();
                 UserUpdateLog::create(['staff_id' => $staff->id, 'user_id' => $user->id, 'data' => json_encode(['is_banned' => 'No']), 'type' => 'Unban']);
             }
 

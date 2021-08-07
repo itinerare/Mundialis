@@ -86,7 +86,7 @@
             <div class="row">
                 @if(Settings::get('visitors_can_read') || Auth::check())
                     <div class="sidebar col-lg-2" id="sidebar">
-                        <a href="{{ url('/') }}" class="py-2"><img src="{{ asset('images/logo.png') }}" class="mw-100 mobile-hide" /></a>
+                        <a href="{{ url('/') }}" class="py-2"><img src="{{ asset('images/logo.png') }}" class="mw-100 mobile-hide rounded" /></a>
                         @yield('sidebar')
                     </div>
                 @endif

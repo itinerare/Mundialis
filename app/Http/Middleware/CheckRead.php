@@ -16,6 +16,10 @@ class CheckRead
      */
     public function handle($request, Closure $next)
     {
+        if($request->user()->is_banned) {
+            return redirect('/banned');
+        }
+
         if (!Settings::get('visitors_can_read') && !$request->user()) {
             flash('You must be logged in to view this page!')->error();
             return redirect('/');

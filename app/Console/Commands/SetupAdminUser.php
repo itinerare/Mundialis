@@ -92,14 +92,6 @@ class SetupAdminUser extends Command
             $this->line("Email: ".$email);
             $confirm = $this->confirm("Proceed to create account with this information?");
 
-            // If env variables indicate a local instance, double-check
-            if(App::environment('local')) {
-                if(!$this->confirm('Are you on a local or testing instance and not a live site?')) {
-                    $this->info('Please adjust your APP_ENV to Production and APP_DEBUG to false in your .env file before continuing set-up!');
-                    return;
-                }
-            }
-
             if($confirm) {
                 $service = new UserService;
                 $user = $service->createUser([
@@ -108,12 +100,24 @@ class SetupAdminUser extends Command
                     'rank_id' => $adminRank->id,
                     'password' => $password
                 ]);
-                $user->email_verified_at = Carbon::now();
-                $user->save();
 
                 $this->line('Admin account created. You can now log in with the registered email and password.');
                 $this->line('If necessary, you can run this command again to change the email address and password of the admin account.');
                 return;
+
+                // If env variables indicate a local instance, double-check
+                if(App::environment('local')) {
+                    if(!$this->confirm('Are you on a local or testing instance and not a live site?')) {
+                        $this->info('Please adjust your APP_ENV to Production and APP_DEBUG to false in your .env file before continuing set-up!');
+                        return;
+                    }
+
+                    if($this->confirm('would you like to verify this account\'s email address now?')) {
+                        $this->line('Marking email address as verified...');
+                        $user->email_verified_at = Carbon::now();
+                        $user->save();
+                    }
+                }
             }
         }
         else {
@@ -132,14 +136,9 @@ class SetupAdminUser extends Command
                         'password' => $password
                     ]);
 
-                    $this->line('Marking email address as verified...');
-                    $user->email_verified_at = Carbon::now();
-                    $user->save();
-
                     $this->line('Updates complete.');
 
                     $this->line('Admin account email and password changed.');
-
                 }
 
                 // If env variables indicate a local instance, double-check
@@ -147,6 +146,12 @@ class SetupAdminUser extends Command
                     if(!$this->confirm('Are you on a local or testing instance and not a live site?')) {
                         $this->info('Please adjust your APP_ENV to Production and APP_DEBUG to false in your .env file before continuing set-up!');
                         return;
+                    }
+
+                    if($this->confirm('would you like to verify this account\'s email address now?')) {
+                        $this->line('Marking email address as verified...');
+                        $user->email_verified_at = Carbon::now();
+                        $user->save();
                     }
                 }
             }

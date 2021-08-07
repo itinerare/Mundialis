@@ -6,6 +6,7 @@ use Carbon\Carbon;
 
 use Settings;
 use App\Models\User\User;
+use App\Models\User\Rank;
 use App\Models\User\InvitationCode;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -44,9 +45,6 @@ class CreateNewUser implements CreatesNewUsers
             'password' => Hash::make($input['password']),
             'rank_id' => 3,
         ]);
-
-        $user->email_verified_at = Carbon::now();
-        $user->save();
 
         if(!(new InvitationService)->useInvitation(InvitationCode::where('code', $input['code'])->whereNull('recipient_id')->first(), $user)) throw new \Exception('An error occurred while using the invitation code.');
 
