@@ -41,16 +41,15 @@ class LexiconManager extends Service
             // Process toggles
             if(!isset($data['is_visible'])) $data['is_visible'] = 0;
 
+            // Create entry
+            $entry = LexiconEntry::create($data);
+
             if(isset($data['definition'])) {
                 $parseData = $this->parse_wiki_links((array) $data['definition']);
                 $data['parsed_definition'] = $parseData['parsed'][0];
 
-                // If the page already has links...
-                if($entry->links()->count())
-                    $entry->links()->delete();
-
-                foreach($parseData['links'] as $link) {
-                    if((isset($link['link_id']) && !$entry->links()->where('link_id', $link['link_id'])->first()) || (isset($link['title']) && !$entry->links()->where('title', $link['title'])->first())) {
+                if(isset($parseData['links'])) foreach($parseData['links'] as $link) {
+                    if(isset($link['link_id']) || isset($link['title'])) {
                         $link = PageLink::create([
                             'parent_id' => $entry->id,
                             'parent_type' => 'entry',
@@ -62,9 +61,6 @@ class LexiconManager extends Service
                 }
             }
             else $data['parsed_definition'] = null;
-
-            // Create entry
-            $entry = LexiconEntry::create($data);
 
             // Process etymology data
             if(!$this->processEtymology($entry, $data)) throw new \Exception('An error occurred while creating etymology records.');
@@ -100,7 +96,7 @@ class LexiconManager extends Service
                 if($entry->links()->count())
                     $entry->links()->delete();
 
-                foreach($parseData['links'] as $link) {
+                if(isset($parseData['links'])) foreach($parseData['links'] as $link) {
                     if((isset($link['link_id']) && !$entry->links()->where('link_id', $link['link_id'])->first()) || (isset($link['title']) && !$entry->links()->where('title', $link['title'])->first())) {
                         $link = PageLink::create([
                             'parent_id' => $entry->id,
@@ -228,7 +224,7 @@ class LexiconManager extends Service
                             $matches = [];
                             preg_match("/".$criteria."/", $entry->word, $matches);
                             if($matches != []) {
-                                $data['conjdecl'][$combination] = preg_replace(isset($conjData[$key]['regex'][$conjKey]) ? "/".$conjData[$key]['regex'][$conjKey]."/" : "/".$conjData[$key]['regex'][0]."/", $conjData[$key]['replacement'][$conjKey], $entry->word);
+                                $data['conjdecl'][$combination] = preg_replace(isset($conjData[$key]['regex'][$conjKey]) ? "/".$conjData[$key]['regex'][$conjKey]."/" : "/".$conjData[$key]['regex'][0]."/", $conjData[$key]['replacement'][$conjKey], lcfirst($entry->word));
                                 break;
                             }
                             else $data['conjdecl'][$combination] = null;
