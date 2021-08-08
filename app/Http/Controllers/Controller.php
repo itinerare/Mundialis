@@ -44,4 +44,34 @@ class Controller extends BaseController
             'imageVersions' => $imageVersions->take(10)
         ]);
     }
+
+    /**
+     * Show the terms of service page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getTermsOfService()
+    {
+        $page = SitePage::where('key', 'terms')->first();
+        if(!$page) abort(404);
+
+        return view('text_page', [
+            'page' => $page
+        ]);
+    }
+
+    /**
+     * Show the privacy policy page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getPrivacyPolicy()
+    {
+        $page = SitePage::where('key', 'privacy')->first();
+        if(!$page) abort(404);
+
+        return view('text_page', [
+            'page' => $page
+        ]);
+    }
 }
