@@ -44,8 +44,6 @@ class LexiconManager extends Service
             if(isset($data['definition'])) $data['parsed_definition'] = $this->parse_wiki_links($data['definition']);
             else $data['parsed_definition'] = null;
 
-            dd($data);
-
             // Create entry
             $entry = LexiconEntry::create($data);
 
