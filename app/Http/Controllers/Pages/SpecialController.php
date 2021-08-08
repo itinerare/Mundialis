@@ -115,6 +115,7 @@ class SpecialController extends Controller
         $query = PageTag::tag()->get()
         ->filter(function ($tag) {
             if(Auth::check() && Auth::user()->canWrite) return 1;
+            if(!$tag->page) return 0;
             return $tag->page->is_visible;
         })->groupBy('baseTag');
 

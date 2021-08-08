@@ -42,7 +42,7 @@ class PageTag extends Model
      */
     public function page()
     {
-        return $this->belongsTo('App\Models\Page\Page')->withTrashed();
+        return $this->belongsTo('App\Models\Page\Page');
     }
 
     /**********************************************************************************************
@@ -268,13 +268,13 @@ class PageTag extends Model
     {
         $info = [];
         // Check for/get hub tag
-        if($this->tagSearch('Hub:'.$this->baseTag)->first()) $info['hub'] = $this->tagSearch('Hub:'.$this->baseTag)->first();
+        if($this->tagSearch('Hub:'.$this->baseTag)->first() && $this->tagSearch('Hub:'.$this->baseTag)->first()->page) $info['hub'] = $this->tagSearch('Hub:'.$this->baseTag)->first();
         // Check for/get context tags
         if($this->tagSearch('Context:'.$this->baseTag)->count()) $info['context'] = $this->tagSearch('Context:'.$this->baseTag)->get();
 
         // Fetch context pages and group by subject
         if(isset($info['context'])) {
-            foreach($info['context'] as $contextTag) if($contextTag->page->is_visible || ($user && $user->canWrite)) $info['pages'][] = $contextTag->page;
+            foreach($info['context'] as $contextTag) if($contextTag->page && $contextTag->page->is_visible || ($user && $user->canWrite)) $info['pages'][] = $contextTag->page;
             $info['pages'] = collect($info['pages']);
             foreach($info['pages'] as $page)
                 $info['subjects'][$page->category->subject['key']][] = $page;
