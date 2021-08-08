@@ -110,12 +110,14 @@ class LexiconManager extends Service
             }
             else $data['parsed_definition'] = null;
 
-            // Process conjugation/declension data
-            if($entry->category)
+            // Process etymology data
+            if(isset($data['conjdecl'])) {
+                // Process conjugation/declension data
+                if($entry->category)
                 $data['data'] = $this->processConjData($entry, $data);
 
-            // Process etymology data
-            if(!$this->processEtymology($entry, $data)) throw new \Exception('An error occurred while creating etymology records.');
+                if(!$this->processEtymology($entry, $data)) throw new \Exception('An error occurred while creating etymology records.');
+            }
 
             // Update entry
             $entry->update($data);
