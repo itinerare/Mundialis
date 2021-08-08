@@ -384,7 +384,7 @@ class PageManager extends Service
             // being linked to the page when it was deleted
             foreach($page->images()->withTrashed()->whereNotNull('deleted_at')->get() as $image)
             if($image->pages()->count() == 1) {
-                if(!(new ImageManager)->restorePageImage($image, $user)) throw new \Exception('An error occurred restoring an image.');
+                if(!(new ImageManager)->restorePageImage($image, $user, 'Page Restored')) throw new \Exception('An error occurred restoring an image.');
             }
 
             // Finally, create a version logging the restoration
