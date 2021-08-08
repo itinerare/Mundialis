@@ -3,10 +3,14 @@ name: Laravel-Tests
 on:
   push:
     branches:
-      [main, 'develop', 'release/**']
+      - main
+      - 'develop'
+      - 'release/**'
   pull_request:
     branches:
-      [main, 'develop', 'release/**']
+      - main
+      - 'develop'
+      - 'release/**'
 
 jobs:
   laravel-tests:
