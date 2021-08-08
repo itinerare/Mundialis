@@ -61,6 +61,7 @@ class LexiconManager extends Service
                 }
             }
             else $data['parsed_definition'] = null;
+            $entry->update($data);
 
             // Process etymology data
             if(!$this->processEtymology($entry, $data)) throw new \Exception('An error occurred while creating etymology records.');
