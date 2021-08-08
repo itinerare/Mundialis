@@ -52,6 +52,7 @@ class SpecialController extends Controller
      */
     public function getRandomPage()
     {
+        if(!Page::visible(Auth::check() ? Auth::user() : null)->count()) return redirect('/');
         $page = Page::visible(Auth::check() ? Auth::user() : null)->get()->random();
 
         return redirect($page->url);
