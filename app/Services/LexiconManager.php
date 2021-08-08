@@ -210,6 +210,7 @@ class LexiconManager extends Service
                             preg_match("/".$criteria."/", $entry->word, $matches);
                             if($matches != []) {
                                 $data['conjdecl'][$combination] = preg_replace(isset($conjData[$key]['regex'][$conjKey]) ? "/".$conjData[$key]['regex'][$conjKey]."/" : "/".$conjData[$key]['regex'][0]."/", $conjData[$key]['replacement'][$conjKey], $entry->word);
+                                break;
                             }
                             else $data['conjdecl'][$combination] = null;
                         }
