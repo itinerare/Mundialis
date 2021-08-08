@@ -16,6 +16,7 @@ use App\Models\Page\PageTag;
 use App\Models\Page\PageLink;
 use App\Models\Page\PageProtection;
 
+use App\Models\Lexicon\LexiconEntry;
 use App\Models\User\WatchedPage;
 
 use App\Services\ImageManager;
@@ -61,7 +62,7 @@ class PageManager extends Service
 
             // If the page is wanted, update the existing page(s)
             if(PageLink::where('title', $page->displayTitle)->exists()) {
-                foreach(PageLink::where('title', $page->displayTitle)->get() as $link) {
+                foreach(PageLink::where('title', $page->displayTitle)->where('parent_type', 'page')->get() as $link) {
                     $version = PageVersion::find($link->parent->version->id);
                     $versionData = $version->data;
                     if(isset($versionData['data']['parsed'])) unset($versionData['data']['parsed']);
@@ -71,6 +72,23 @@ class PageManager extends Service
                     $newData['data'] = $this->parse_wiki_links($versionData['data']);
                     $version->data = json_encode($newData);
                     $version->save();
+
+                    // And update the links themselves
+                    $link->update([
+                        'link_id' => $page->id,
+                        'title' => null
+                    ]);
+                }
+
+                // As well as entries
+                foreach(PageLink::where('title', $page->displayTitle)->where('parent_type', 'entry')->get() as $link) {
+                    $entry = $link->parent;
+
+                    $parsed = $this->parse_wiki_links((array)$entry->definition);
+
+                    // Parse data and update version
+                    $entry->parsed_definition = $parsed['parsed'][0];
+                    $entry->save();
 
                     // And update the links themselves
                     $link->update([

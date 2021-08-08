@@ -41,7 +41,26 @@ class LexiconManager extends Service
             // Process toggles
             if(!isset($data['is_visible'])) $data['is_visible'] = 0;
 
-            if(isset($data['definition'])) $data['parsed_definition'] = $this->parse_wiki_links($data['definition']);
+            if(isset($data['definition'])) {
+                $parseData = $this->parse_wiki_links((array) $data['definition']);
+                $data['parsed_definition'] = $parseData['parsed'][0];
+
+                // If the page already has links...
+                if($entry->links()->count())
+                    $entry->links()->delete();
+
+                foreach($parseData['links'] as $link) {
+                    if((isset($link['link_id']) && !$entry->links()->where('link_id', $link['link_id'])->first()) || (isset($link['title']) && !$entry->links()->where('title', $link['title'])->first())) {
+                        $link = PageLink::create([
+                            'parent_id' => $entry->id,
+                            'parent_type' => 'entry',
+                            'link_id' => isset($link['link_id']) ? $link['link_id'] : null,
+                            'title' => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null
+                        ]);
+                        if(!$link) throw new \Exception('An error occurred while creating a link.');
+                    }
+                }
+            }
             else $data['parsed_definition'] = null;
 
             // Create entry
