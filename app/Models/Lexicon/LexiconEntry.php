@@ -174,7 +174,7 @@ class LexiconEntry extends Model
         foreach($this->etymologies as $parent) {
             // If there is a parent entry
             if($parent->parentEntry) {
-                $parentString[] = ($i == 0 ? 'from ' : ' and ').($parent->parentEntry->category ? $parent->parentEntry->category->displayName.' ' : null ).'<i>'.$parent->parentEntry->displayName.'</i> ('.($this->lexicalClass->abbreviation ? '<i>'.$this->lexicalClass->abbreviation.'.</i>' : $this->lexicalClass->name.', ').' "'.strtolower($parent->parentEntry->meaning).'")'.($parent->parentEntry->etymologies->count() ? ' '.$parent->parentEntry->getEtymology() : null);
+                $parentString[] = ($i == 0 ? 'from ' : ' and ').($parent->parentEntry->category ? $parent->parentEntry->category->displayName.' ' : null ).'<i>'.$parent->parentEntry->displayName.'</i> ('.($parent->parentEntry->lexicalClass->abbreviation ? '<i>'.$parent->parentEntry->lexicalClass->abbreviation.'.</i>' : $parent->parentEntry->lexicalClass->name.', ').' "'.strtolower($parent->parentEntry->meaning).'")'.($parent->parentEntry->etymologies->count() ? ' '.$parent->parentEntry->getEtymology() : null);
             }
             // If there is only a string
             else $parentString[] = ($i == 0 ? 'from ' : ' and ').$parent->parent;
