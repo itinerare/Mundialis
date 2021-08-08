@@ -38,6 +38,10 @@ class UpdateMundialis extends Command
 
         if($this->confirm('Have you run the composer install command or equivalent?')) {
             // Run migrations
+            $this->line("\n".'Clearing caches...');
+            $this->call('config:cache');
+
+            // Run migrations
             $this->line("\n".'Running migrations...');
             $this->call('migrate');
 
