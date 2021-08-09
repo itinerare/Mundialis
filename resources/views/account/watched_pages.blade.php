@@ -1,6 +1,6 @@
 @extends('account.layout')
 
-@section('account-title') Settings @endsection
+@section('account-title') Watched Pages @endsection
 
 @section('account-content')
 {!! breadcrumbs(['My Account' => Auth::user()->url, 'Watched Pages' => 'account/watched-pages']) !!}
