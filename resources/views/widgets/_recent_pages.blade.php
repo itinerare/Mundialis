@@ -13,7 +13,7 @@
             @foreach($pageVersions as $version)
             <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
                 <div class="col-md">
-                    {!! $version->page->displayName !!}
+                    {!! $version->page ? $version->page->displayName : 'Deleted page' !!}
                 </div>
                 <div class="col-md">
                     {!! pretty_date($version->created_at) !!}

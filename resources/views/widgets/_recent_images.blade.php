@@ -13,7 +13,11 @@
             @foreach($imageVersions as $version)
             <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
                 <div class="col-md text-center align-self-center">
-                    <a href="{{ url('special/get-image/'.$version->image->id) }}" class="image-link mw-100"><img src="{{ $version->image->thumbnailUrl }}" class="img-thumbnail mw-100"/></a>
+                    @if($version->image)
+                        <a href="{{ url('special/get-image/'.$version->image->id) }}" class="image-link mw-100"><img src="{{ $version->image->thumbnailUrl }}" class="img-thumbnail mw-100"/></a>
+                    @else
+                        Deleted image
+                    @endif
                 </div>
                 <div class="col-md align-self-center">{!! pretty_date($version->created_at) !!}</div>
                 <div class="col-md align-self-center">{!! $version->user->displayName !!}</div>
