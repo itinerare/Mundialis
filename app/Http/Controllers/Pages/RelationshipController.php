@@ -45,7 +45,7 @@ class RelationshipController extends Controller
 
         $query = $query->concat($page->related()->get()->filter(function ($related) {
             if(Auth::check() && Auth::user()->canWrite) return 1;
-            return $relationship->pageOne->is_visible;
+            return $related->pageOne->is_visible;
         }));
 
         $sort = $request->only(['sort']);
