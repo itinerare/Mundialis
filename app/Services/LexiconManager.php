@@ -45,7 +45,7 @@ class LexiconManager extends Service
             $entry = LexiconEntry::create($data);
 
             if(isset($data['definition'])) {
-                $parseData = $this->parse_wiki_links((array) $data['definition']);
+                if(!$parseData = $this->parse_wiki_links((array) $data['definition'])) throw new \Exception('An error occurred while parsing links.');
                 $data['parsed_definition'] = $parseData['parsed'][0];
 
                 if(isset($parseData['links'])) foreach($parseData['links'] as $link) {
@@ -90,7 +90,7 @@ class LexiconManager extends Service
             if(!isset($data['is_visible'])) $data['is_visible'] = 0;
 
             if(isset($data['definition'])) {
-                $parseData = $this->parse_wiki_links((array) $data['definition']);
+                if(!$parseData = $this->parse_wiki_links((array) $data['definition'])) throw new \Exception('An error occurred while parsing links.');
                 $data['parsed_definition'] = $parseData['parsed'][0];
 
                 // If the page already has links...

@@ -282,10 +282,11 @@ abstract class Service {
                 // Test content against both a wiki-style link pattern without label and one with
                 foreach(['/\[\[([A-Za-z0-9_-_\s!-@~-ʷ]+)\]\]/', '/\[\[([A-Za-z0-9_-_\s!-@~-ʷ]+)\|([A-Za-z0-9_-_\s!-@~-ʷ]+)\]\]/'] as $pattern) {
                     $i2 = 0;
+
                     $matches = null;
                     $links = [];
                     if(is_string($item)) $count = preg_match_all($pattern, $item, $matches);
-                    if(isset($count) && $count) {
+                    if(isset($count) && $count && isset($matches[1])) {
                         foreach($matches[1] as $match) {
                             // Attempt to locate an associated page
                             $page = Page::get()->where('displayTitle', $match)->first();
@@ -308,10 +309,12 @@ abstract class Service {
                                 ];
                             }
                             else {
-                                if($i == 1)
+                                if($i == 1) {
                                     $item = preg_replace('/\[\['.$regexMatch.'\]\]/', '<a href="'.url('special/create-wanted/'.str_replace(' ', '_', $match)).'" class="text-danger">'.$match.'</a>', $item);
-                                elseif($i == 2)
+                                }
+                                elseif($i == 2) {
                                     $item = preg_replace('/\[\['.$regexMatch.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.url('special/create-wanted/'.str_replace(' ', '_', $match)).'" class="text-danger">'.$matches[$i][$i2].'</a>', $item);
+                                }
 
                                 // If there's no page yet, log a placeholder link
                                 // This won't do much, but it will store two pieces of info:

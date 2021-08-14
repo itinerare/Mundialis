@@ -51,7 +51,7 @@ class PageManager extends Service
             $data = $this->processPageData($data);
 
             // Parse data for wiki-style links
-            $data['data'] = $this->parse_wiki_links($data['data']);
+            if(!$data['data'] = $this->parse_wiki_links($data['data'])) throw new \Exception('An error occurred while parsing links.');
 
             // Process data for recording
             if(isset($data['data'])) $data['version'] = $this->processVersionData($data);
@@ -138,7 +138,7 @@ class PageManager extends Service
             $data = $this->processPageData($data, $page);
 
             // Parse data for wiki-style links
-            $data['data'] = $this->parse_wiki_links($data['data']);
+            if(!$data['data'] = $this->parse_wiki_links($data['data'])) throw new \Exception('An error occurred while parsing links.');
 
             // Process links
             if(isset($data['data']['links'])) $data['data']['links'] = $this->processLinks($page, $data['data']['links']);
