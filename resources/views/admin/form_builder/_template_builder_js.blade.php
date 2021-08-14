@@ -13,7 +13,7 @@
             removeInfoboxRow($(this));
         })
         function addInfoboxRow() {
-            var $clone = $('#infobox-row').clone();
+            var $clone = $('.infobox-row').clone();
             $('#infoboxList').append($clone);
             $clone.removeClass('hide infobox-row');
             $clone.find('.remove-infobox').on('click', function(e) {
@@ -51,7 +51,7 @@
             removeSectionRow($(this));
         })
         function addSectionRow() {
-            var $clone = $('#section-row').clone();
+            var $clone = $('.section-row').clone();
             $('#sectionList').append($clone);
             $clone.removeClass('hide section-row');
             $clone.find('.remove-section').on('click', function(e) {
@@ -70,7 +70,7 @@
         function attachListeners(node) {
             node.find('.add-field').on('click', function(e) {
                 e.preventDefault();
-                var $clone = $('#field-row').clone();
+                var $clone = $('.field-row').clone();
                 $(this).parent().parent().find('.field-list').append($clone);
                 $clone.removeClass('hide field-row');
                 $clone.find('.remove-field').on('click', function(e) {
