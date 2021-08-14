@@ -25,14 +25,12 @@ class Controller extends BaseController
     public function getIndex()
     {
         $pageVersions = PageVersion::orderBy('created_at', 'DESC')->get()->filter(function ($version) {
-            if(Auth::check() && Auth::user()->isAdmin) return 1;
             if(!$version->page || isset($version->page->deleted_at)) return 0;
             if(Auth::check() && Auth::user()->canWrite) return 1;
             return $version->page->is_visible;
         });
 
         $imageVersions = PageImageVersion::orderBy('updated_at', 'DESC')->get()->filter(function ($version) {
-            if(Auth::check() && Auth::user()->isAdmin) return 1;
             if(!$version->image || isset($version->image->deleted_at)) return 0;
             if(Auth::check() && Auth::user()->canWrite) return 1;
             return $version->image->is_visible;
