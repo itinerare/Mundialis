@@ -99,7 +99,7 @@ class PageManager extends Service
             }
 
             // Process links
-            if(isset($data['data']['links'])) $data = $this->processLinks($page, $data['data']['links']);
+            if(isset($data['data']['links'])) $data['data']['links'] = $this->processLinks($page, $data['data']['links']);
 
             // Process and create tags
             if(!$this->processTags($page, $data)) throw new \Exception('Error occurred while updating tags.');
