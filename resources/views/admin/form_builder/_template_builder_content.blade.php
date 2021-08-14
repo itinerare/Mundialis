@@ -4,15 +4,15 @@
 
 <p>Fields in this section will be used to build a page's infobox, which displays basic at-a-glance information about the subject of the page. Fields for this section should expect content to be brief. Fields can also be reordered; however, note that moving fields does not cascade due to how change detection is handled.</p>
 
-<div class="text-right mb-3">
-    <a href="#" class="btn btn-outline-info" id="add-infobox">Add Field</a>
-</div>
 <div id="infoboxList" class="sortable">
     @if(isset($template->data['infobox']))
         @foreach($template->data['infobox'] as $key=>$field)
             @include('admin.form_builder._infobox_builder_entry', ['key' => $key, 'field' => $field])
         @endforeach
     @endif
+</div>
+<div class="text-right mb-3">
+    <a href="#" class="btn btn-outline-info" id="add-infobox">Add Field</a>
 </div>
 
 <h2>Main Page</h2>
