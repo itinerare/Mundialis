@@ -10,7 +10,7 @@
 |
 */
 
-Route::redirect('/pages', '/');
+Route::redirect('pages', '/');
 
 # PROFILES
 Route::group(['prefix' => 'user', 'namespace' => 'Users'], function() {
@@ -27,8 +27,7 @@ Route::group(['namespace' => 'Pages'], function() {
         ->where(['subject' => implode('|', array_keys(Config::get('mundialis.subjects'))), 'id' => '[0-9]+']);
 
     # PAGES
-    Route::group(['prefix' => 'pages'], function() {
-        Route::get('/', 'PageController@getPagesIndex');
+    Route::group(['prefix' => 'pages'], function() {;
         Route::get('{id}', 'PageController@getPage');
 
         Route::get('{id}/gallery', 'ImageController@getPageGallery')
