@@ -15,7 +15,9 @@
 
 @include('pages._page_header', ['section' => 'Gallery - Image #'.$image->id])
 
-<img src="{{ $image->imageUrl }}" class="rounded bg-light mw-100 p-2 mb-2"/>
+<div class="text-center">
+    <img src="{{ $image->imageUrl }}" class="rounded bg-light mw-100 p-2 mb-2"/>
+</div>
 
 <hr/>
 
