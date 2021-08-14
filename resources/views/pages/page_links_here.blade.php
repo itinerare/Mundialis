@@ -11,7 +11,7 @@
 @endsection
 
 @section('pages-content')
-{!! breadcrumbs([$page->category->subject['name'] => 'pages/'.$page->category->subject['key'], $page->category->name => $page->category->subject['key'].'/categories/'.$page->category->id, $page->title => $page->url, 'What Links Here' => 'pages/'.$page->id.'/links-here']) !!}
+{!! breadcrumbs([$page->category->subject['name'] => $page->category->subject['key'], $page->category->name => $page->category->subject['key'].'/categories/'.$page->category->id, $page->title => $page->url, 'What Links Here' => 'pages/'.$page->id.'/links-here']) !!}
 
 @include('pages._page_header', ['section' => 'What Links Here'])
 

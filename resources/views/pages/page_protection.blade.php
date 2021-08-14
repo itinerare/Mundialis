@@ -11,7 +11,7 @@
 @endsection
 
 @section('pages-content')
-{!! breadcrumbs([$page->category->subject['name'] => 'pages/'.$page->category->subject['key'], $page->category->name => $page->category->subject['key'].'/categories/'.$page->category->id, $page->title => $page->url, ($page->protection && $page->protection->is_protected ? 'Edit Page Protection' : 'Protect Page') => 'pages/'.$page->id.'/protect']) !!}
+{!! breadcrumbs([$page->category->subject['name'] => $page->category->subject['key'], $page->category->name => $page->category->subject['key'].'/categories/'.$page->category->id, $page->title => $page->url, ($page->protection && $page->protection->is_protected ? 'Edit Page Protection' : 'Protect Page') => 'pages/'.$page->id.'/protect']) !!}
 
 @include('pages._page_header', ['section' => ($page->protection && $page->protection->is_protected ? 'Edit Page Protection' : 'Protect Page')])
 
