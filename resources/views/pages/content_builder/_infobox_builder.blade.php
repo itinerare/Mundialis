@@ -26,7 +26,7 @@
                                         {{ isset($data[$key]) ? $field['choices'][$data[$key]] : $data[$key] }}
                                     @endif
                                 @elseif($field['type'] != 'checkbox')
-                                    {!! isset($data[$key]) ? nl2br(htmlentities($data[$key])) : '-' !!}
+                                    {!! isset($data[$key]) ? $data[$key] : '-' !!}
                                 @endif
                             </div>
                         </div>
