@@ -7,7 +7,7 @@
     <div class="col-lg-12 col-md">
         <!-- INFOBOX -->
         @if($page->image || isset($page->category->template['infobox']) || (isset($page->category->subject['segments']['infobox']) && View::exists('pages.content_builder._'.$page->category->subject['key'].'_infobox')))
-            <div class="float-right mobile-hide m-2" style="width:25vw;">
+            <div class="float-right mobile-hide m-2 ml-4" style="width:25vw;">
                 @include('pages.content_builder._infobox_builder')
             </div>
         @endif
