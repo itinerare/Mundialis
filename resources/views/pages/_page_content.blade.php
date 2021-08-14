@@ -68,9 +68,13 @@
             @foreach($page->category->template['sections'] as $sectionKey=>$section)
             @php
                 $length = 0;
-                if(isset($page->category->template['fields'][$sectionKey])) foreach($page->category->template['fields'][$sectionKey] as $fieldKey=>$field)
-                    if(isset($data[$fieldKey]) && $field['type'] != 'checkbox')
-                        $length = $length =+ strlen($data[$fieldKey]);
+                if(isset($page->category->template['fields'][$sectionKey])) {
+                    foreach($page->category->template['fields'][$sectionKey] as $fieldKey=>$field) {
+                        if(isset($data[$fieldKey]) && $field['type'] != 'checkbox') {
+                            $length = $length += strlen($data[$fieldKey]);
+                        }
+                    }
+                }
             @endphp
                 <h2 id="section-{{ $sectionKey }}">
                     {{ $section['name'] }}
