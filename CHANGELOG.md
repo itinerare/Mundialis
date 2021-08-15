@@ -4,6 +4,82 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.0.0-pre2](https://github.com/itinerare/Mundialis/compare/1.0.0-pre1...v1.0.0-pre2) (2021-08-15)
+### Features
+
+* Add further .env files to ignore ([532f94](https://github.com/itinerare/Mundialis/commit/532f9445788430018e139fa6673e007e2e0d6010))
+* Tos/privacy policy pages/fix them ([7d7480](https://github.com/itinerare/Mundialis/commit/7d7480430bbebabea901b86edd647db06ace41db))
+
+##### Auth
+
+* Adjust user/acc page title formatting ([dae788](https://github.com/itinerare/Mundialis/commit/dae788805c687a7d0c118cf8fce546e5e6d8f9e6))
+
+##### Lang
+
+* Capitalize ucfirst()'d entry autoconj ([6f99e2](https://github.com/itinerare/Mundialis/commit/6f99e2089148c12048f83501d75869e549055906))
+
+##### Resources
+
+* Add cache clear to update command ([4a31a7](https://github.com/itinerare/Mundialis/commit/4a31a7d62745d494b84ef048d0f5a4917a143e57))
+* Update composer.lock ([9a954a](https://github.com/itinerare/Mundialis/commit/9a954aa23a6ae35b5736d816dcb09f846d166f1c))
+
+### Bug Fixes
+
+* Cannot upload site images ([699ab0](https://github.com/itinerare/Mundialis/commit/699ab04115ca9de93aa647d0b949fa8d5b27c04c))
+* Categories indexes list view group incorrectly ([dd3759](https://github.com/itinerare/Mundialis/commit/dd3759946e46ebf25a33b2eb9bea128af4a01f3b))
+* Error cloning template rows ([080596](https://github.com/itinerare/Mundialis/commit/080596ce17059266fe2d011749b245060ee160c7))
+* Error deleting subject categories ([813a86](https://github.com/itinerare/Mundialis/commit/813a86ddf41bb32537cbcda51bae75a426ce48ce))
+* Infobox 'add field' button at top ([a5c78a](https://github.com/itinerare/Mundialis/commit/a5c78a70dc9913da1eb0f267187fcdeb5208002e))
+* Infobox field validation rule issues ([4891b9](https://github.com/itinerare/Mundialis/commit/4891b91d97ee40b61a08689069b830804c35bf91))
+* Lang, time page titles nonspecific ([f14180](https://github.com/itinerare/Mundialis/commit/f14180fdbd0b6d8bfd71cf56ad6e6f82d5938f9b))
+* Read check errors when logged out ([3ec976](https://github.com/itinerare/Mundialis/commit/3ec976c9eba1a67eef485931f53853259afd3a80))
+* Section 'add field' button also at top ([2efc74](https://github.com/itinerare/Mundialis/commit/2efc7427fcb020d9bfbca279bbf94f09fc8e1b24))
+
+##### Auth
+
+* Extraneous user settings alert ([8ff4b5](https://github.com/itinerare/Mundialis/commit/8ff4b5d8b6625823f731938d2cbe073429aa8b68))
+* Watched pages title incorrect ([618670](https://github.com/itinerare/Mundialis/commit/618670adeccadeb5f830b62cd33506f65d2158ba))
+
+##### Lang
+
+* Errant dd() ([3a0240](https://github.com/itinerare/Mundialis/commit/3a02406ebadc59238e64ba2209f6afd7b2548a74))
+* Error creating/editing entries ([51f80a](https://github.com/itinerare/Mundialis/commit/51f80ad112d8aad03e76c00f62b9bfe4b2269e5f))
+* Error editing entries w/o conj/decl ([326d55](https://github.com/itinerare/Mundialis/commit/326d5525cd1e8ec1341f879fca0b1b9f54ee3285))
+* Error updating entry etymology ([be922f](https://github.com/itinerare/Mundialis/commit/be922f8112f0000cdd1f3dcae7332111ed29d699))
+* Error viewing categoryless entries ([8bd4ed](https://github.com/itinerare/Mundialis/commit/8bd4edec1bf17cddc65065c51b492d5bb343463c))
+* Etymology entry def is all lowercase ([fdae6e](https://github.com/itinerare/Mundialis/commit/fdae6e13025883424ab02d27db6b24db80ca7af2))
+* Etymology shows own lex class ([721987](https://github.com/itinerare/Mundialis/commit/721987e590ab654d9d4206c920b83c095b5d7572))
+* Issue w conj/decl autogen ([3eb780](https://github.com/itinerare/Mundialis/commit/3eb7803e1ab5c2b3937de8897ab67fe97edea7f2))
+* New entry parsed description not saved ([0ffdcc](https://github.com/itinerare/Mundialis/commit/0ffdcc3e9a835530e6ec3c9c897d02ed0cd89fc0))
+* Wiki link parse error on create entry ([8b9b03](https://github.com/itinerare/Mundialis/commit/8b9b03ca5a58ecd35e1b5e2e4e42ec4b12a66399))
+
+##### Pages
+
+* Allow dashes in parsed links ([ec5b6f](https://github.com/itinerare/Mundialis/commit/ec5b6f149d1bd79709196fd76d5c45e47858338e))
+* Current page is in image edit pages ([496ee7](https://github.com/itinerare/Mundialis/commit/496ee7aebdd3e73992a4ffdfb6a69a247cfdd0c7))
+* Deleted page/image results in recent edits ([4c71f8](https://github.com/itinerare/Mundialis/commit/4c71f88413de4637b7e1b0f8662bc37a79ffb5a2))
+* Error creating pages ([de4c42](https://github.com/itinerare/Mundialis/commit/de4c42a86f9ce6d58415441625830459cf8c3871))
+* Error restoring page ([08bce5](https://github.com/itinerare/Mundialis/commit/08bce56cacb89aef5fde51e6313a2b4778a88d05))
+* Error viewing recent page/image widget ([b387a1](https://github.com/itinerare/Mundialis/commit/b387a19d40a8ca0c7fbebc7cde367d62a62d7006))
+* Handle link parse special chars better ([3bc7e2](https://github.com/itinerare/Mundialis/commit/3bc7e24babac2513101e0e8624a511cbbbe15713))
+* Image info formatting tweak ([543ee8](https://github.com/itinerare/Mundialis/commit/543ee8136b44bc5b3a84dc22b351697aba681594))
+* Images in info popup/page not centered ([9282ca](https://github.com/itinerare/Mundialis/commit/9282cadad8fcb28e8ed5ac31c804ff04d7d6e272))
+* Introduction crowds infobox ([8c6c3e](https://github.com/itinerare/Mundialis/commit/8c6c3e1ad293de539fdb8fc116a3cebd90eab28b))
+* Link parsing error ([142392](https://github.com/itinerare/Mundialis/commit/14239233a77b1e1b0c1ae06c247d52b81d7d1438))
+* Navbox displays deleted pages ([251163](https://github.com/itinerare/Mundialis/commit/2511635fa9d858825a365025cf0ebe2433adf3f5))
+* Navbox doesn't display subcat pages... ([8329fb](https://github.com/itinerare/Mundialis/commit/8329fb11fe7f7c8dec1d72011c2b5701cc3f06df))
+* Parsed links don't display in infobox ([a59195](https://github.com/itinerare/Mundialis/commit/a59195ea51eff9c16ee3bded1ce04827faecb8eb))
+* Random page errors when no pages ([a4056d](https://github.com/itinerare/Mundialis/commit/a4056d5b13f4a63045dd5b51de33352d154a59ce))
+* Routing error ([893f3a](https://github.com/itinerare/Mundialis/commit/893f3a43f30f52ddb571ec9fb2ffe13f17e055af))
+* Section length calc doesn't add right ([904a6a](https://github.com/itinerare/Mundialis/commit/904a6a1bcce147ac7f100bc749bf68cc0af58cb1))
+* Subject breadcrumbs links outdated ([c86294](https://github.com/itinerare/Mundialis/commit/c862949f09b079afc0bb0be12a84a5704f332faa))
+
+##### People
+
+* Error viewing relationships ([db68ae](https://github.com/itinerare/Mundialis/commit/db68ae25cc34e667163821c537edd23d9867ec89))
+
+---
+
 ## [1.0.0-pre1](https://github.com/itinerare/Mundialis/compare/8c3e2c6ef82213b81555484b5694b4ae87dba3c4...v1.0.0) (2021-08-07)
 
 
