@@ -1,8 +1,7 @@
 @extends('layouts.app')
 
-@section('title') 
-    Account :: 
-    @yield('account-title')
+@section('title')
+    Account:@yield('account-title')
 @endsection
 
 @section('sidebar')

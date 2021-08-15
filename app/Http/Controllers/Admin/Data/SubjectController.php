@@ -188,7 +188,8 @@ class SubjectController extends Controller
      */
     public function postDeleteCategory(Request $request, SubjectService $service, $id)
     {
-        $category = SubjectCategory::find($id); $subject = $category->subject;
+        $category = SubjectCategory::find($id);
+        $subject = $category->subject;
         if($id && $service->deleteCategory($category)) {
             flash('Category deleted successfully.')->success();
         }
@@ -196,7 +197,7 @@ class SubjectController extends Controller
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
             return redirect()->back();
         }
-        return redirect()->to('admin/data/'.$subject);
+        return redirect()->to('admin/data/'.$subject['key']);
     }
 
     /**

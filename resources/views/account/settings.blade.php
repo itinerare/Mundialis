@@ -18,10 +18,6 @@
             <div class="col-md">
                 <h3>Avatar</h3>
                 <div class="text-left"><div class="alert alert-warning">Please note a hard refresh may be required to see your updated avatar. Also please note that uploading a .gif will display a 500 error after; the upload should still work, however.</div></div>
-                @if(Auth::user()->isStaff)
-                        <div class="alert alert-danger">For admins - note that .GIF avatars leave a tmp file in the directory (e.g php2471.tmp). There is an automatic schedule to delete these files.
-                        </div>
-                    @endif
                 <form enctype="multipart/form-data" action="avatar" method="POST">
                     <label>Update Profile Image</label><br>
                     <input type="file" name="avatar">

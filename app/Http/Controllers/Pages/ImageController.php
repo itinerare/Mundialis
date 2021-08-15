@@ -157,7 +157,7 @@ class ImageController extends Controller
         if(!Auth::user()->canEdit($page)) abort (404);
 
         // Collect pages and information and group them
-        $groupedPages = Page::orderBy('title')->get()->keyBy('id')->groupBy(function ($page) {
+        $groupedPages = Page::orderBy('title')->where('id', '!=', $page->id)->get()->keyBy('id')->groupBy(function ($page) {
             return $page->category->subject['name'];
         }, $preserveKeys = true)->toArray();
 
@@ -201,7 +201,7 @@ class ImageController extends Controller
         if(!$image) abort(404);
 
         // Collect pages and information and group them
-        $groupedPages = Page::orderBy('title')->get()->keyBy('id')->groupBy(function ($page) {
+        $groupedPages = Page::orderBy('title')->where('id', '!=', $page->id)->get()->keyBy('id')->groupBy(function ($page) {
             return $page->category->subject['name'];
         }, $preserveKeys = true)->toArray();
 

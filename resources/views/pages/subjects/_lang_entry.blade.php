@@ -20,7 +20,7 @@
         {!! $entry->parsed_definition !!}
     @endif
 
-    @if($entry->category->classCombinations($entry->lexicalClass->id))
+    @if($entry->category && $entry->category->classCombinations($entry->lexicalClass->id))
         <hr/>
         <h5>
             Conjugation/Declension:

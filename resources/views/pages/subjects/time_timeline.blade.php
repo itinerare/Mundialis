@@ -1,6 +1,6 @@
 @extends('pages.layout')
 
-@section('pages-title') Time: Timeline @endsection
+@section('title') Time: Timeline @endsection
 
 @section('pages-content')
 {!! breadcrumbs(['Time & Events' => 'time', 'Timeline' => 'time/timeline']) !!}

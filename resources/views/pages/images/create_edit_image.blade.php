@@ -58,7 +58,7 @@
 <h3>Image Information</h3>
 <div class="form-group">
     {!! Form::label('Page(s) (Optional)') !!} {!! add_help('Pages to associate this image with <strong>in addition to</strong> this one.') !!}
-    {!! Form::select('page_id[]', $pageOptions, $image->pages ? $image->pages()->pluck('pages.id')->toArray() : null, ['class' => 'form-control select-page', 'multiple']) !!}
+    {!! Form::select('page_id[]', $pageOptions, $image->pages ? $image->pages()->where('pages.id', '!=', $page->id)->pluck('pages.id')->toArray() : null, ['class' => 'form-control select-page', 'multiple']) !!}
 </div>
 
 <div class="form-group">

@@ -36,10 +36,10 @@ class SubjectTemplate extends Model
      */
     public static $rules = [
         'section_name.*' => 'required_with:section_key.*',
-        'infobox_key.*' => 'nullable|between:3,25|alpha_dash',
-        'infobox_type.*' => 'nullable|required_with:field_key.*',
-        'infobox_label.*' => 'nullable|string|required_with:field_key.*',
-        'infobox_choices.*' => 'nullable|string|required_if:field_type.*,choice,multiple',
+        'infobox_key.*' => 'between:3,25|alpha_dash',
+        'infobox_type.*' => 'nullable|required_with:infobox_key.*',
+        'infobox_label.*' => 'nullable|string|required_with:infobox_key.*',
+        'infobox_choices.*' => 'nullable|string|required_if:infobox_type.*,choice,multiple',
         'infobox_rules.*' => 'nullable|string|max:255',
         'infobox_value.*' => 'nullable|string|max:255',
         'infobox_help.*' => 'nullable|string|max:255',

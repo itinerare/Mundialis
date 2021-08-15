@@ -1,6 +1,6 @@
 @extends('pages.layout')
 
-@section('pages-title') {{ $entry->id ? 'Edit' : 'Create' }} Entry @endsection
+@section('title') Language: {{ $entry->id ? 'Edit' : 'Create' }} Entry @endsection
 
 @section('pages-content')
 {!! breadcrumbs(['Language' => 'language'] + ($entry->id && $entry->category ? [$entry->category->name => 'language/lexicon/'.$entry->category_id] : []) + [$entry->id ? 'Edit' : 'Create'.' Lexicon Entry' => $entry->id ? 'language/lexicon/edit/'.$entry->id : 'language/lexicon/create' ]) !!}

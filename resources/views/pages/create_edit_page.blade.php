@@ -3,7 +3,7 @@
 @section('pages-title') {{ $page->id ? 'Edit' : 'Create' }} {{ $category->subject['term'] }} @endsection
 
 @section('pages-content')
-{!! breadcrumbs([$category->subject['name'] => 'pages/'.$category->subject['key'], $category->name => 'pages/categories/'.$category->id] + ($page->id ? [$page->title => $page->url] : []) + [($page->id ? 'Edit' : 'Create').' '.$category->subject['term'] => $page->id ? 'pages/edit/'.$page->id : 'pages/create/'.$category->id]) !!}
+{!! breadcrumbs([$category->subject['name'] => $category->subject['key'], $category->name => $category->subject['key'].'/categories/'.$category->id] + ($page->id ? [$page->title => $page->url] : []) + [($page->id ? 'Edit' : 'Create').' '.$category->subject['term'] => $page->id ? 'pages/edit/'.$page->id : 'pages/create/'.$category->id]) !!}
 
 <h1>{{ $page->id ? 'Edit' : 'Create' }} {{ $category->subject['term'] }}
     @if($page->id)

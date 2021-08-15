@@ -23,9 +23,11 @@
                     </div>
                 </div>
             @endif
-            @foreach($group as $page)
-                {!! $page->displayName !!}{{ !$loop->last ? '・' : '' }}
-            @endforeach
+            <div class="pt-1">
+                @foreach($group as $page)
+                    {!! $page->displayName !!}{{ !$loop->last ? '・' : '' }}
+                @endforeach
+            </div>
         </div>
     </div>
 </div>

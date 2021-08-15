@@ -16,6 +16,7 @@ use App\Models\Page\PageTag;
 use App\Models\Page\PageLink;
 use App\Models\Page\PageProtection;
 
+use App\Models\Lexicon\LexiconEntry;
 use App\Models\User\WatchedPage;
 
 use App\Services\ImageManager;
@@ -50,7 +51,7 @@ class PageManager extends Service
             $data = $this->processPageData($data);
 
             // Parse data for wiki-style links
-            $data['data'] = $this->parse_wiki_links($data['data']);
+            if(!$data['data'] = $this->parse_wiki_links($data['data'])) throw new \Exception('An error occurred while parsing links.');
 
             // Process data for recording
             if(isset($data['data'])) $data['version'] = $this->processVersionData($data);
@@ -61,7 +62,7 @@ class PageManager extends Service
 
             // If the page is wanted, update the existing page(s)
             if(PageLink::where('title', $page->displayTitle)->exists()) {
-                foreach(PageLink::where('title', $page->displayTitle)->get() as $link) {
+                foreach(PageLink::where('title', $page->displayTitle)->where('parent_type', 'page')->get() as $link) {
                     $version = PageVersion::find($link->parent->version->id);
                     $versionData = $version->data;
                     if(isset($versionData['data']['parsed'])) unset($versionData['data']['parsed']);
@@ -78,10 +79,27 @@ class PageManager extends Service
                         'title' => null
                     ]);
                 }
+
+                // As well as entries
+                foreach(PageLink::where('title', $page->displayTitle)->where('parent_type', 'entry')->get() as $link) {
+                    $entry = $link->parent;
+
+                    $parsed = $this->parse_wiki_links((array)$entry->definition);
+
+                    // Parse data and update version
+                    $entry->parsed_definition = $parsed['parsed'][0];
+                    $entry->save();
+
+                    // And update the links themselves
+                    $link->update([
+                        'link_id' => $page->id,
+                        'title' => null
+                    ]);
+                }
             }
 
             // Process links
-            if(isset($data['data']['links'])) $data = $this->processLinks($page, $data['data']['links']);
+            if(isset($data['data']['links'])) $data['data']['links'] = $this->processLinks($page, $data['data']['links']);
 
             // Process and create tags
             if(!$this->processTags($page, $data)) throw new \Exception('Error occurred while updating tags.');
@@ -120,7 +138,7 @@ class PageManager extends Service
             $data = $this->processPageData($data, $page);
 
             // Parse data for wiki-style links
-            $data['data'] = $this->parse_wiki_links($data['data']);
+            if(!$data['data'] = $this->parse_wiki_links($data['data'])) throw new \Exception('An error occurred while parsing links.');
 
             // Process links
             if(isset($data['data']['links'])) $data['data']['links'] = $this->processLinks($page, $data['data']['links']);
@@ -384,7 +402,7 @@ class PageManager extends Service
             // being linked to the page when it was deleted
             foreach($page->images()->withTrashed()->whereNotNull('deleted_at')->get() as $image)
             if($image->pages()->count() == 1) {
-                if(!(new ImageManager)->restorePageImage($image, $user)) throw new \Exception('An error occurred restoring an image.');
+                if(!(new ImageManager)->restorePageImage($image, $user, 'Page Restored')) throw new \Exception('An error occurred restoring an image.');
             }
 
             // Finally, create a version logging the restoration

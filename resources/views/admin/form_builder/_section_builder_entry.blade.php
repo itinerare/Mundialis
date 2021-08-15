@@ -16,15 +16,15 @@
         </div>
     </div>
     <div>
-        <div class="text-right mb-3">
-            <a href="#" class="btn btn-outline-info add-field" value="{{ $key }}">Add Field</a>
-        </div>
         <div class="field-list">
             @if(isset($template->data['fields'][$key]))
                 @foreach($template->data['fields'][$key] as $fieldKey=>$field)
                     @include('admin.form_builder._field_builder_entry', ['key' => $fieldKey, 'field' => $field, 'section' => $key])
                 @endforeach
             @endif
+        </div>
+        <div class="text-right mb-3">
+            <a href="#" class="btn btn-outline-info add-field" value="{{ $key }}">Add Field</a>
         </div>
     </div>
     <hr/>

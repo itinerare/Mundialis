@@ -11,7 +11,7 @@
 @endsection
 
 @section('pages-content')
-{!! breadcrumbs([$page->category->subject['name'] => 'pages/'.$page->category->subject['key'], $page->category->name => $page->category->subject['key'].'/categories/'.$page->category->id, $page->title => $page->url, 'Relationships' => 'pages/'.$page->id.'/relationships']) !!}
+{!! breadcrumbs([$page->category->subject['name'] => $page->category->subject['key'], $page->category->name => $page->category->subject['key'].'/categories/'.$page->category->id, $page->title => $page->url, 'Relationships' => 'pages/'.$page->id.'/relationships']) !!}
 
 @include('pages._page_header', ['section' => 'Relationships'])
 

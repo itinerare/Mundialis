@@ -16,7 +16,7 @@ class CheckRead
      */
     public function handle($request, Closure $next)
     {
-        if($request->user()->is_banned) {
+        if($request->user() && $request->user()->is_banned) {
             return redirect('/banned');
         }
 

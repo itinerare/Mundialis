@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'Controller@getIndex')->name('home');
-Route::get('/terms', 'Controller@getTermsOfService');
-Route::get('/privacy', 'Controller@getPrivacyPolicy');
+Route::get('info/terms', 'Controller@getTermsOfService');
+Route::get('info/privacy', 'Controller@getPrivacyPolicy');
 
 Route::group(['middleware' => ['auth']], function() {
     # BANNED

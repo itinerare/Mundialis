@@ -52,6 +52,7 @@ class SpecialController extends Controller
      */
     public function getRandomPage()
     {
+        if(!Page::visible(Auth::check() ? Auth::user() : null)->count()) return redirect('/');
         $page = Page::visible(Auth::check() ? Auth::user() : null)->get()->random();
 
         return redirect($page->url);
@@ -115,6 +116,7 @@ class SpecialController extends Controller
         $query = PageTag::tag()->get()
         ->filter(function ($tag) {
             if(Auth::check() && Auth::user()->canWrite) return 1;
+            if(!$tag->page) return 0;
             return $tag->page->is_visible;
         })->groupBy('baseTag');
 
@@ -261,7 +263,6 @@ class SpecialController extends Controller
     public function getRecentPages(Request $request)
     {
         $query = PageVersion::orderBy('created_at', 'DESC')->get()->filter(function ($version) {
-            if(Auth::check() && Auth::user()->isAdmin) return 1;
             if(!$version->page || isset($version->page->deleted_at)) return 0;
             if(Auth::check() && Auth::user()->canWrite) return 1;
             return $version->page->is_visible;
@@ -289,7 +290,6 @@ class SpecialController extends Controller
     public function getRecentImages(Request $request)
     {
         $query = PageImageVersion::orderBy('updated_at', 'DESC')->get()->filter(function ($version) {
-            if(Auth::check() && Auth::user()->isAdmin) return 1;
             if(!$version->image || isset($version->image->deleted_at)) return 0;
             if(Auth::check() && Auth::user()->canWrite) return 1;
             return $version->image->is_visible;
