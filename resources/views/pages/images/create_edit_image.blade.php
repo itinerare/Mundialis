@@ -108,7 +108,7 @@
             </div>
         </div>
     @endif
-    @if((!$page->image_id || $page->image_id != $image->id) && ($image->id && $page->images()->where('page_images.id', $image->id)->first()->pivot->is_valid))
+    @if((!$page->image_id || $page->image_id != $image->id) && (!$image->id || ($image->id && $page->images()->where('page_images.id', $image->id)->first()->pivot->is_valid)))
         <div class="col-md">
             <div class="form-group">
                 {!! Form::checkbox('mark_active', 1, !$page->image_id || !$image->id ? 1 : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
