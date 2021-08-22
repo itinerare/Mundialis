@@ -4,6 +4,17 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.0.0-pre3](https://github.com/itinerare/Mundialis/compare/1.0.0-pre2...v1.0.1-pre2) (2021-08-22)
+### Bug Fixes
+
+
+##### Pages
+
+* Create image active toggle not shown ([ee8dfa](https://github.com/itinerare/Mundialis/commit/ee8dfab142b471e30c947e5e0dc73dc514c52c70))
+* Image height in popup not capped ([b6fed7](https://github.com/itinerare/Mundialis/commit/b6fed7953b0a2d0ff8a75f91d9c5b24bc273a759))
+
+---
+
 ## [1.0.0-pre2](https://github.com/itinerare/Mundialis/compare/1.0.0-pre1...v1.0.0-pre2) (2021-08-15)
 ### Features
 
