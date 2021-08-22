@@ -4,7 +4,7 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
-## [1.0.0-pre3](https://github.com/itinerare/Mundialis/compare/1.0.0-pre2...v1.0.1-pre2) (2021-08-22)
+## [1.0.0-pre3](https://github.com/itinerare/Mundialis/compare/1.0.0-pre2...1.0.0-pre3) (2021-08-22)
 ### Bug Fixes
 
 
@@ -15,7 +15,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## [1.0.0-pre2](https://github.com/itinerare/Mundialis/compare/1.0.0-pre1...v1.0.0-pre2) (2021-08-15)
+## [1.0.0-pre2](https://github.com/itinerare/Mundialis/compare/1.0.0-pre1...1.0.0-pre2) (2021-08-15)
 ### Features
 
 * Add further .env files to ignore ([532f94](https://github.com/itinerare/Mundialis/commit/532f9445788430018e139fa6673e007e2e0d6010))
