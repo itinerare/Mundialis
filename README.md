@@ -28,7 +28,7 @@ Thus, this project was born out of a desire for a more efficient way to record w
 - A random page button (just delightful, in my opinion)
 
 ## Setup
-Important: For those who are not familiar with web development, please refer to the [Full Guide](https://github.com/itinerare/Mundialis/wiki/Set-up-Guide) for a much more detailed set of instructions!
+Important: For those who are not familiar with web development, please refer to the [Full Guide](https://github.com/itinerare/Mundialis/wiki/Setup-Guide) for a much more detailed set of instructions!
 
 ### Obtain a copy of the code
 
