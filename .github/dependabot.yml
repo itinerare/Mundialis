@@ -5,8 +5,14 @@ updates:
     target-branch: "develop"
     schedule:
       interval: "weekly"
+    commit_message:
+      prefix: "chore"
+      include_scope: true
   - package-ecosystem: "composer"
     directory: "/"
     target-branch: "develop"
     schedule:
       interval: "weekly"
+    commit_message:
+      prefix: "chore"
+      include_scope: true
