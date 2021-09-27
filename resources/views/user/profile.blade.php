@@ -110,3 +110,8 @@
 
 
 @endsection
+
+@section('scripts')
+@parent
+    @include('pages.images._info_popup_js')
+@endsection
