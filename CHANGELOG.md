@@ -4,6 +4,32 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.0.0-pre4](https://github.com/itinerare/Mundialis/compare/1.0.0-pre3...v1.0.0-pre4) (2021-10-10)
+### Bug Fixes
+
+
+##### Dep
+
+* Composer.json version string ([7ac90a](https://github.com/itinerare/Mundialis/commit/7ac90a9461180d792f679caa4a2d09d9a7b04cfc))
+
+##### Pages
+
+* Minor infobox field display issue ([7784fb](https://github.com/itinerare/Mundialis/commit/7784fb4955a51d2f05c2018e1b2dcc38ac50aec1))
+
+##### Tests
+
+* Error running basic feature test ([748af1](https://github.com/itinerare/Mundialis/commit/748af1d0b1b40922ab5c5dee9c96887388bfaa69))
+* Error running tests ([b9cbbf](https://github.com/itinerare/Mundialis/commit/b9cbbfd214b8827e5211206dae0286f3be8463ed))
+* Remove unit test, since currently empty ([a796b1](https://github.com/itinerare/Mundialis/commit/a796b1bdbc1e39e2da04da59e7ee9f5665c6c31b))
+
+##### Users
+
+* Cleaner canWrite, admin checks ([d2781c](https://github.com/itinerare/Mundialis/commit/d2781cd4c1740b5999d42aa6e616f950820ff8f7))
+* More consistent canWrite check ([b6dcd7](https://github.com/itinerare/Mundialis/commit/b6dcd76bd0c5385bd57da651144c8e35cbce1de2))
+* Recent images preview error on profile ([7a1396](https://github.com/itinerare/Mundialis/commit/7a139625214fa1a777a83e92778c63e616bf3673))
+
+---
+
 ## [1.0.0-pre3](https://github.com/itinerare/Mundialis/compare/1.0.0-pre2...1.0.0-pre3) (2021-08-22)
 ### Bug Fixes
 
