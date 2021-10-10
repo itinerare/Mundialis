@@ -177,7 +177,7 @@ class UserController extends Controller
 
     public function postBan(Request $request, UserService $service, $name)
     {
-        $user = User::where('name', $name)->with('settings')->first();
+        $user = User::where('name', $name)->first();
         $wasBanned = $user->is_banned;
         if(!$user) {
             flash('Invalid user.')->error();
