@@ -45,7 +45,7 @@ class accessTest extends TestCase
      */
     public function test_visitorCannotReadWhenClosed()
     {
-        // Necessary for some reason
+        // Ensure site settings are present to modify
         $this->artisan('add-site-settings');
 
         // Set the site to private to test
@@ -64,7 +64,7 @@ class accessTest extends TestCase
      */
     public function test_visitorCanReadWhenOpen()
     {
-        // Necessary for some reason
+        // Ensure site settings are present to modify
         $this->artisan('add-site-settings');
 
         // Set the site to open to test

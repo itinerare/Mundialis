@@ -49,13 +49,29 @@ class UserFactory extends Factory
         }
 
         return [
-            'name' => $this->faker->name(),
+            'name' => $this->faker->userName(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'rank_id' => Rank::orderBy('sort', 'ASC')->first(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
         ];
+    }
+
+    /**
+     * Indicate that the user is banned.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function banned()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'is_banned' => 1,
+                'ban_reason' => 'Generated as banned',
+                'banned_at' => now()
+            ];
+        });
     }
 
     /**
