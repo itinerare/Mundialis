@@ -57,7 +57,7 @@ class Rank extends Model
      */
     public function getCanWriteAttribute()
     {
-        if($this->id == Rank::where('id', 2)->first()->id || $this->isAdmin) return true;
+        if($this->id == Rank::orderBy('sort', 'DESC')->skip(1)->first()->id || $this->isAdmin) return true;
         return false;
     }
 
