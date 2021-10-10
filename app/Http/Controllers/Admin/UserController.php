@@ -201,7 +201,7 @@ class UserController extends Controller
      */
     public function getUnbanConfirmation($name)
     {
-        $user = User::where('name', $name)->with('settings')->first();
+        $user = User::where('name', $name)->first();
 
         if(!$user) abort(404);
 
