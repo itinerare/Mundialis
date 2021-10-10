@@ -43,7 +43,7 @@ class CreateNewUser implements CreatesNewUsers
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
-            'rank_id' => 3,
+            'rank_id' => Rank::orderBy('sort', 'ASC')->first()->id,
         ]);
 
         if(!(new InvitationService)->useInvitation(InvitationCode::where('code', $input['code'])->whereNull('recipient_id')->first(), $user)) throw new \Exception('An error occurred while using the invitation code.');

@@ -63,7 +63,7 @@ class AdminController extends Controller
             flash('Setting updated successfully.')->success();
         }
         else {
-            flash('Invalid setting selected.')->success();
+            flash('Invalid setting selected.')->error();
         }
         return redirect()->back();
     }

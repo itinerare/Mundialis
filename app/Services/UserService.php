@@ -181,7 +181,7 @@ class UserService extends Service
                 $user->banned_at = Carbon::now();
 
                 $user->is_banned = 1;
-                $user->rank_id = 3;
+                $user->rank_id = Rank::orderBy('sort', 'ASC')->first()->id;
                 $user->save();
             }
             else {

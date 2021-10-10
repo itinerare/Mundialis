@@ -92,7 +92,7 @@ class UserController extends Controller
         if(!$user){
             flash('Invalid user.')->error();
         }
-        elseif ($user->rank->id == 1) {
+        elseif ($user->rank->sort == 2) {
             flash('You cannot edit the information of an admin.')->error();
         }
         else {
@@ -182,7 +182,7 @@ class UserController extends Controller
         if(!$user) {
             flash('Invalid user.')->error();
         }
-        else if ($user->rank->id == 1) {
+        else if ($user->rank->sort == 2) {
             flash('You cannot ban an admin.')->error();
         }
         else if($service->ban(['ban_reason' => $request->get('ban_reason')], $user, Auth::user())) {
@@ -217,7 +217,7 @@ class UserController extends Controller
         if(!$user) {
             flash('Invalid user.')->error();
         }
-        else if ($user->rank->id == 1) {
+        else if ($user->rank->sort == 2) {
             flash('You cannot unban an admin.')->error();
         }
         else if($service->unban($user, Auth::user())) {
