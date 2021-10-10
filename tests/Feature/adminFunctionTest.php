@@ -199,7 +199,7 @@ class adminFunctionTest extends TestCase
     }
 
     /******************************************************************************
-        PAGES
+        SITE PAGES
     *******************************************************************************/
 
     /**
@@ -225,6 +225,9 @@ class adminFunctionTest extends TestCase
      */
     public function test_canPostEditSitePage()
     {
+        // Ensure site pages are present to modify
+        $this->artisan('add-site-pages');
+
         // Make a temporary user
         $user = User::factory()->admin()->make();
         // Get the information for the 'about' page
