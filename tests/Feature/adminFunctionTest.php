@@ -177,11 +177,6 @@ class adminFunctionTest extends TestCase
 
         // Make sure the setting is default so as to consistently test
         $rank->update(['description' => 'A regular member of the site.']);
-        // Directly verify that the value is as expected before testing
-        $this->assertDatabaseHas('ranks', [
-            'name' => 'Member',
-            'description' => 'A regular member of the site.'
-        ]);
 
         // Try to post data
         $response = $this
@@ -235,11 +230,6 @@ class adminFunctionTest extends TestCase
 
         // Make sure the setting is default so as to consistently test
         $page->update(['text' => 'Info about your site goes here. This can be edited from the site\'s admin panel!']);
-        // Directly verify that the value is as expected before testing
-        $this->assertDatabaseHas('site_pages', [
-            'key' => 'about',
-            'text' => 'Info about your site goes here. This can be edited from the site\'s admin panel!'
-        ]);
 
         // Try to post data
         $response = $this
@@ -291,12 +281,6 @@ class adminFunctionTest extends TestCase
         // Make sure the setting is true so as to consistently test
         DB::table('site_settings')->where('key', 'is_registration_open')->update(['value' => 1]);
 
-        // Directly verify that the value is as expected before testing
-        $this->assertDatabaseHas('site_settings', [
-            'key' => 'is_registration_open',
-            'value' => 1
-        ]);
-
         // Try to post data
         $response = $this
             ->actingAs($user)
@@ -346,10 +330,6 @@ class adminFunctionTest extends TestCase
         if(File::exists(public_path('images/logo.png')))
             unlink('public/images/logo.png');
 
-        // Check that the file is now absent
-        $this->
-            assertFalse(File::exists(public_path('images/logo.png')));
-
         // Try to post data
         $response = $this
             ->actingAs($user)
@@ -382,9 +362,6 @@ class adminFunctionTest extends TestCase
         // Check that the file is absent, and if not, remove it
         if(File::exists(public_path('css/custom.css')))
             unlink('public/css/custom.css');
-
-        $this->
-            assertFalse(File::exists(public_path('css/custom.css')));
 
         // Try to post data
         $response = $this

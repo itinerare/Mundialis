@@ -12,9 +12,6 @@ use App\Models\User\User;
 
 class accessTest extends TestCase
 {
-    // This is called in the first test for simplicity,
-    // as regenerating the database for each set of tests is actively counterproductive,
-    // but we need to make sure the tables involved exist, etc.
     use RefreshDatabase;
 
     // These tests check that visitor/user access to different routes is as expected.

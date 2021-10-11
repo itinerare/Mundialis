@@ -9,7 +9,7 @@ use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\User\Rank;
 
-class adminUserFunctionTest extends TestCase
+class adminUserEditTest extends TestCase
 {
     // These tests center on user editing and ban handling
 
