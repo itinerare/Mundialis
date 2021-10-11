@@ -27,6 +27,9 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input)
     {
+        if(!Settings::get('is_registration_open'))
+            throw new \Exception('Registration is currently closed.');
+
         Validator::make($input, [
             'name' => ['required', 'string', 'min:3', 'max:25', 'alpha_dash', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
