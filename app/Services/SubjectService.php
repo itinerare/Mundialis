@@ -345,8 +345,8 @@ class SubjectService extends Service
     private function cascadeTemplateChanges($categories, $data)
     {
         // Recursively compare arrays
-        $data['changes']['added'] = $this->diff_recursive($data['data'], $data['old']);
-        $data['changes']['removed'] = $this->diff_recursive($data['old'], $data['data']);
+        $data['changes']['added'] = $this->diff_recursive((array)$data['data'], (array)$data['old']);
+        $data['changes']['removed'] = $this->diff_recursive((array)$data['old'], (array)$data['data']);
 
         // Perform operations on impacted categories
         foreach($categories as $key=>$category) {
