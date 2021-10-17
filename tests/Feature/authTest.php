@@ -131,6 +131,45 @@ class authTest extends TestCase
 
     /**
      * Test registration.
+     * Registration requires a valid, unused invitation code.
+     *
+     * @return void
+     */
+    public function test_cannotPostValidRegistrationWhenOpenWithUsedCode()
+    {
+        // Ensure site settings are present to modify
+        $this->artisan('add-site-settings');
+
+        // Set registration to open to test
+        DB::table('site_settings')->where('key', 'is_registration_open')->update(['value' => 1]);
+
+        $user = User::factory()->safeUsername()->make();
+
+        // Create a persistent admin to generate an invitation code
+        $admin = User::factory()->admin()->create();
+        // Create a code to use,
+        $code = (new InvitationService)->generateInvitation($admin);
+        // a recipient,
+        $recipient = User::factory()->create();
+        // and set the recipient's ID
+        $code->update(['recipient_id' => $recipient->id]);
+
+        $response = $this->post('register', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'agreement' => 1,
+            'code' => $code->code
+        ]);
+
+        $response->assertSessionHasErrors();
+
+        $this->assertGuest();
+    }
+
+    /**
+     * Test registration.
      * Ensure valid user (with unused invitation code) can be registered.
      *
      * @return void
