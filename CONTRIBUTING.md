@@ -30,6 +30,7 @@ If you want to start contributing to the project's code, please follow these gui
 - Before adding a new feature, ask about it in the [issue tracker](https://github.com/itinerare/Mundialis/issues) or the [support Discord](https://discord.gg/mVqUzgQXMd), or check if there is an existing issue to make sure the new functionality is desired. 
 - **Changes that will consist in more than 50 lines of code should be discussed the [support Discord](https://discord.gg/mVqUzgQXMd)**, so that you don't spend too much time implementing something that might not be accepted.
 - Pull requests that make many changes using an automated tool, like for spell fixing, styling, etc. will not be accepted. An exception would be if the changes have been discussed in the forum and someone has agreed to review **and test** the pull request.
+- It's recommended to run tests for at minimum the general area(s) you are modifying! While all tests are run by default on creation of a pull request, running tests can help catch issues. Note that if your changes require tests to be added and/or updated, you **must** do so. For more information on working with tests, see [here](https://github.com/itinerare/Mundialis/wiki/Running-Tests).
 - Be sure to include any instructions, such as running `php artisan migrate`, in your pull request!
 - If in doubt, provide more information, not less. It can sometimes be difficult to tell from code alone what the purpose of a change is, so you should explain as best you can.
 
