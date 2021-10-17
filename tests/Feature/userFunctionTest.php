@@ -23,7 +23,7 @@ class userFunctionTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Test profile editing
+     * Test profile editing.
      *
      * @return void
      */
@@ -46,7 +46,7 @@ class userFunctionTest extends TestCase
     }
 
     /**
-     * Test avatar editing
+     * Test avatar editing.
      *
      * @return void
      */
@@ -78,7 +78,7 @@ class userFunctionTest extends TestCase
     }
 
     /**
-     * Test email editing
+     * Test email editing.
      *
      * @return void
      */
@@ -104,7 +104,8 @@ class userFunctionTest extends TestCase
     }
 
     /**
-     * Test password editing
+     * Test password editing with a valid password.
+     * This should work.
      *
      * @return void
      */
@@ -127,7 +128,8 @@ class userFunctionTest extends TestCase
     }
 
     /**
-     * Test password editing
+     * Test password editing with an invalid password.
+     * This shouldn't work.
      *
      * @return void
      */
@@ -152,7 +154,7 @@ class userFunctionTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Test access.
+     * Test notifications access.
      *
      * @return void
      */
@@ -182,7 +184,7 @@ class userFunctionTest extends TestCase
     }
 
     /**
-     * Test clearing all notifs.
+     * Test clearing notifs of a set type.
      *
      * @return void
      */
@@ -201,7 +203,7 @@ class userFunctionTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Test access.
+     * Test watched pages access.
      *
      * @return void
      */

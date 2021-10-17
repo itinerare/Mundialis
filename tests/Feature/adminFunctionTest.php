@@ -28,7 +28,7 @@ class adminFunctionTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Test admin access.
+     * Test invitation code index access.
      *
      * @return void
      */
@@ -44,7 +44,7 @@ class adminFunctionTest extends TestCase
     }
 
     /**
-     * Test invitation creation
+     * Test invitation code creation.
      *
      * @return void
      */
@@ -66,7 +66,7 @@ class adminFunctionTest extends TestCase
     }
 
     /**
-     * Test invitation deletion
+     * Test invitation code deletion.
      *
      * @return void
      */
@@ -93,7 +93,7 @@ class adminFunctionTest extends TestCase
     }
 
     /**
-     * Test invitation deletion
+     * Ensure a used invitation code cannot be deleted.
      *
      * @return void
      */
@@ -131,7 +131,7 @@ class adminFunctionTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Test admin access.
+     * Test rank index access.
      *
      * @return void
      */
@@ -147,7 +147,7 @@ class adminFunctionTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Test rank edit access.
      *
      * @return void
      */
@@ -164,7 +164,7 @@ class adminFunctionTest extends TestCase
     }
 
     /**
-     * Test rank editing
+     * Test rank editing.
      *
      * @return void
      */
@@ -198,7 +198,7 @@ class adminFunctionTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Test admin access.
+     * Test site page index access.
      *
      * @return void
      */
@@ -214,7 +214,7 @@ class adminFunctionTest extends TestCase
     }
 
     /**
-     * Test site page editing
+     * Test site page editing.
      *
      * @return void
      */
@@ -250,7 +250,7 @@ class adminFunctionTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Test admin access.
+     * Test site settings access.
      *
      * @return void
      */
@@ -266,7 +266,7 @@ class adminFunctionTest extends TestCase
     }
 
     /**
-     * Test site setting editing
+     * Test site setting editing.
      *
      * @return void
      */
@@ -298,7 +298,7 @@ class adminFunctionTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Test admin access.
+     * Test site image index access.
      *
      * @return void
      */
@@ -314,7 +314,7 @@ class adminFunctionTest extends TestCase
     }
 
     /**
-     * Test site image editing
+     * Test site image uploading.
      *
      * @return void
      */
@@ -347,7 +347,7 @@ class adminFunctionTest extends TestCase
     }
 
     /**
-     * Test site image editing
+     * Test custom css uploading.
      *
      * @return void
      */

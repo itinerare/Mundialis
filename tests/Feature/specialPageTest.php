@@ -15,7 +15,7 @@ class specialPageTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Tests special page access.
+     * Tests all special pages access.
      *
      * @return void
      */
@@ -30,7 +30,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests untagged pages access.
      *
      * @return void
      */
@@ -45,7 +45,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests most tagged pages access.
      *
      * @return void
      */
@@ -60,7 +60,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests least revised pages access.
      *
      * @return void
      */
@@ -75,7 +75,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests most revised pages access.
      *
      * @return void
      */
@@ -90,7 +90,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests most linked pages access.
      *
      * @return void
      */
@@ -105,7 +105,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests recently edited pages access.
      *
      * @return void
      */
@@ -120,7 +120,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests recently edited images access.
      *
      * @return void
      */
@@ -135,7 +135,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests wanted pages access.
      *
      * @return void
      */
@@ -150,7 +150,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests protected pages access.
      *
      * @return void
      */
@@ -165,7 +165,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests WIP pages access.
      *
      * @return void
      */
@@ -180,7 +180,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests stub pages access.
      *
      * @return void
      */
@@ -195,7 +195,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests outdated pages access.
      *
      * @return void
      */
@@ -210,7 +210,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests pages needing cleanup access.
      *
      * @return void
      */
@@ -225,7 +225,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests unwatched pages access.
      *
      * @return void
      */
@@ -244,7 +244,7 @@ class specialPageTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Tests special page access.
+     * Tests all pages access.
      *
      * @return void
      */
@@ -259,7 +259,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests all tags access.
      *
      * @return void
      */
@@ -274,7 +274,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests all images access.
      *
      * @return void
      */
@@ -289,7 +289,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests deleted pages access.
      *
      * @return void
      */
@@ -304,7 +304,7 @@ class specialPageTest extends TestCase
     }
 
     /**
-     * Tests special page access.
+     * Tests deleted images access.
      *
      * @return void
      */
@@ -323,7 +323,7 @@ class specialPageTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Tests special page access.
+     * Tests user list access.
      *
      * @return void
      */
@@ -342,7 +342,7 @@ class specialPageTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Tests special page access.
+     * Tests random page access.
      *
      * @return void
      */

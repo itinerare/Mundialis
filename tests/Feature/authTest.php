@@ -24,7 +24,7 @@ class authTest extends TestCase
     *******************************************************************************/
 
     /**
-     * The registration form can be displayed.
+     * Test registration page access.
      * This should always return positive regardless of
      * whether registration is currently open or not.
      *
@@ -38,6 +38,7 @@ class authTest extends TestCase
     }
 
     /**
+     * Test registration.
      * A valid user cannot be registered when registration is closed.
      *
      * @return void
@@ -69,6 +70,7 @@ class authTest extends TestCase
     }
 
     /**
+     * Test registration.
      * Registration requires an invitation code.
      *
      * @return void
@@ -98,6 +100,7 @@ class authTest extends TestCase
     }
 
     /**
+     * Test registration.
      * Registration requires a valid invitation code.
      *
      * @return void
@@ -127,7 +130,8 @@ class authTest extends TestCase
     }
 
     /**
-     * A valid user can be registered.
+     * Test registration.
+     * Ensure valid user (with unused invitation code) can be registered.
      *
      * @return void
      */
@@ -160,7 +164,8 @@ class authTest extends TestCase
     }
 
     /**
-     * An invalid user is not registered.
+     * Test registration.
+     * Ensure an invalid user cannot be registered.
      *
      * @return void
      */
@@ -185,7 +190,7 @@ class authTest extends TestCase
     *******************************************************************************/
 
     /**
-     * The login form can be displayed.
+     * Test login form access.
      *
      * @return void
      */
@@ -197,7 +202,8 @@ class authTest extends TestCase
     }
 
     /**
-     * A valid user can be logged in.
+     * Test login as a valid user.
+     * This should work.
      *
      * @return void
      */
@@ -216,7 +222,8 @@ class authTest extends TestCase
     }
 
     /**
-     * An invalid user cannot be logged in.
+     * Test login as an invalid user.
+     * This shouldn't work.
      *
      * @return void
      */
@@ -235,7 +242,7 @@ class authTest extends TestCase
     }
 
     /**
-     * A logged in user can be logged out.
+     * Test user logout.
      *
      * @return void
      */
@@ -257,7 +264,7 @@ class authTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Displays the reset password request form.
+     * Test password reset access.
      *
      * @return void
      */
@@ -269,7 +276,8 @@ class authTest extends TestCase
     }
 
     /**
-     * Sends the password reset email when the user exists.
+     * Test password reset email with a valid user.
+     * This should work.
      *
      * @return void
      */
@@ -287,7 +295,8 @@ class authTest extends TestCase
     }
 
     /**
-     * Does not send a password reset email when the user does not exist.
+     * Test password reset email with an invalid user.
+     * This shouldn't work.
      *
      * @return void
      */
@@ -301,7 +310,7 @@ class authTest extends TestCase
     }
 
     /**
-     * Displays the form to reset a password.
+     * Test password reset form access.
      *
      * @return void
      */
@@ -317,7 +326,7 @@ class authTest extends TestCase
     }
 
     /**
-     * Allows a user to reset their password.
+     * Test password resetting.
      *
      * @return void
      */

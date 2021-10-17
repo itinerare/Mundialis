@@ -21,7 +21,7 @@ class subjectDataLanguageTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Test admin access.
+     * Test lexicon settings access.
      *
      * @return void
      */
@@ -36,7 +36,7 @@ class subjectDataLanguageTest extends TestCase
     }
 
     /**
-     * Test lexicon setting creation/editing
+     * Test lexicon setting creation.
      *
      * @return void
      */
@@ -64,7 +64,7 @@ class subjectDataLanguageTest extends TestCase
     }
 
     /**
-     * Test lexicon setting creation/editing
+     * Test lexicon setting editing.
      *
      * @return void
      */
@@ -103,7 +103,7 @@ class subjectDataLanguageTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Test lexicon categories access.
      *
      * @return void
      */
@@ -118,7 +118,7 @@ class subjectDataLanguageTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Test create lexicon category access.
      *
      * @return void
      */
@@ -133,7 +133,7 @@ class subjectDataLanguageTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Test edit lexicon category access.
      *
      * @return void
      */
@@ -149,9 +149,7 @@ class subjectDataLanguageTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing
-     * In practice this will usually be handled by a factory
-     * But it's important to also check that they can be created
+     * Test lexicon category creation.
      *
      * @return void
      */
@@ -182,9 +180,98 @@ class subjectDataLanguageTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing
-     * In practice this will usually be handled by a factory
-     * But it's important to also check that they can be created
+     * Test lexicon category editing.
+     *
+     * @return void
+     */
+    public function test_canPostEditLexiconCategory()
+    {
+        $category = LexiconCategory::factory()->create();
+
+        // Define some basic template data
+        $data = [
+            'name' => $this->faker->unique()->domainWord()
+        ];
+
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/language/lexicon-categories/edit/'.$category->id, $data);
+
+        // Directly verify that the appropriate change has occurred
+        $this->assertDatabaseHas('lexicon_categories', [
+            'id' => $category->id,
+            'name' => $data['name']
+        ]);
+    }
+
+    /**
+     * Test lexicon category creation with a parent.
+     *
+     * @return void
+     */
+    public function test_canPostCreateLexiconCategoryWithParent()
+    {
+        $parent = LexiconCategory::factory()->create();
+
+        // Define some basic template data
+        $data = [
+            'name' => $this->faker->unique()->domainWord(),
+            'parent_id' => $parent->id
+        ];
+
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/language/lexicon-categories/create', $data);
+
+        // Directly verify that the appropriate change has occurred
+        $this->assertDatabaseHas('lexicon_categories', [
+            'name' => $data['name'],
+            'parent_id' => $parent->id
+        ]);
+    }
+
+    /**
+     * Test lexicon category editing with a parent.
+     *
+     * @return void
+     */
+    public function test_canPostEditLexiconCategoryWithParent()
+    {
+        $category = LexiconCategory::factory()->create();
+        $parent = LexiconCategory::factory()->create();
+
+        // Define some basic template data
+        $data = [
+            'name' => $this->faker->unique()->domainWord(),
+            'parent_id' => $parent->id
+        ];
+
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/language/lexicon-categories/edit/'.$category->id, $data);
+
+        // Directly verify that the appropriate change has occurred
+        $this->assertDatabaseHas('lexicon_categories', [
+            'id' => $category->id,
+            'name' => $data['name'],
+            'parent_id' => $parent->id
+        ]);
+    }
+
+    /**
+     * Test lexicon category creation with some data.
      *
      * @return void
      */
@@ -228,98 +315,7 @@ class subjectDataLanguageTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing
-     *
-     * @return void
-     */
-    public function test_canPostEditLexiconCategory()
-    {
-        $category = LexiconCategory::factory()->create();
-
-        // Define some basic template data
-        $data = [
-            'name' => $this->faker->unique()->domainWord()
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/language/lexicon-categories/edit/'.$category->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_categories', [
-            'id' => $category->id,
-            'name' => $data['name']
-        ]);
-    }
-
-    /**
-     * Test subject category creation/editing with a parent
-     *
-     * @return void
-     */
-    public function test_canPostCreateLexiconCategoryWithParent()
-    {
-        $parent = LexiconCategory::factory()->create();
-
-        // Define some basic template data
-        $data = [
-            'name' => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/language/lexicon-categories/create', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_categories', [
-            'name' => $data['name'],
-            'parent_id' => $parent->id
-        ]);
-    }
-
-    /**
-     * Test subject category creation/editing with a parent
-     *
-     * @return void
-     */
-    public function test_canPostEditLexiconCategoryWithParent()
-    {
-        $category = LexiconCategory::factory()->create();
-        $parent = LexiconCategory::factory()->create();
-
-        // Define some basic template data
-        $data = [
-            'name' => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/language/lexicon-categories/edit/'.$category->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_categories', [
-            'id' => $category->id,
-            'name' => $data['name'],
-            'parent_id' => $parent->id
-        ]);
-    }
-
-    /**
-     * Test subject category creation/editing
+     * Test lexicon category editing with some data.
      *
      * @return void
      */
@@ -362,11 +358,11 @@ class subjectDataLanguageTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing
+     * Test lexicon category editing, removing data.
      *
      * @return void
      */
-    public function test_canPostEditLexiconCategoryWithoutData()
+    public function test_canPostEditLexiconCategoryRemovingData()
     {
         $category = LexiconCategory::factory()->testData()->create();
 
@@ -392,7 +388,7 @@ class subjectDataLanguageTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing
+     * Test lexicon category editing with extended data.
      *
      * @return void
      */
@@ -468,11 +464,11 @@ class subjectDataLanguageTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing
+     * Test lexicon category editing, removing extended data.
      *
      * @return void
      */
-    public function test_canPostEditLexiconCategoryWithoutExtendedData()
+    public function test_canPostEditLexiconCategoryRemovingExtendedData()
     {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');

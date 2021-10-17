@@ -18,7 +18,7 @@ class adminUserEditTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Test admin access.
+     * Test user index access.
      *
      * @return void
      */
@@ -34,7 +34,7 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Test user edit page access.
      *
      * @return void
      */
@@ -53,7 +53,8 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test user editing, admin > regular user
+     * Test user editing, admin > regular user.
+     * This should work.
      *
      * @return void
      */
@@ -83,7 +84,8 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test user editing, admin > editor
+     * Test user editing, admin > editor.
+     * This should work.
      *
      * @return void
      */
@@ -113,7 +115,8 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test user editing, admin > admin
+     * Test user editing, admin > admin.
+     * This should not work.
      *
      * @return void
      */
@@ -145,7 +148,7 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Test user updates access.
      *
      * @return void
      */
@@ -168,7 +171,7 @@ class adminUserEditTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Test admin access.
+     * Test ban user page access.
      *
      * @return void
      */
@@ -187,7 +190,7 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Test ban confirmation access.
      *
      * @return void
      */
@@ -206,7 +209,8 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test user banning, admin > regular user
+     * Test user banning, admin > regular user.
+     * This should work.
      *
      * @return void
      */
@@ -232,7 +236,8 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test user banning, admin > editor
+     * Test user banning, admin > editor.
+     * This should work.
      *
      * @return void
      */
@@ -258,7 +263,8 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test user banning, admin > admin
+     * Test user banning, admin > admin.
+     * This should not work.
      *
      * @return void
      */
@@ -283,7 +289,8 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test ban message editing, admin > regular user
+     * Test ban message editing, admin > regular user.
+     * This should work.
      *
      * @return void
      */
@@ -309,7 +316,8 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test ban message editing, admin > editor
+     * Test ban message editing, admin > editor.
+     * This should work.
      *
      * @return void
      */
@@ -335,7 +343,8 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test ban message editing, admin > admin
+     * Test ban message editing, admin > admin.
+     * This should not work.
      *
      * @return void
      */
@@ -361,7 +370,7 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Test unban user access.
      *
      * @return void
      */
@@ -380,7 +389,8 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test user unbanning, admin > regular user
+     * Test user unbanning, admin > regular user.
+     * This should work.
      *
      * @return void
      */
@@ -403,7 +413,8 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test user unbanning, admin > editor
+     * Test user unbanning, admin > editor.
+     * This should work.
      *
      * @return void
      */
@@ -426,7 +437,8 @@ class adminUserEditTest extends TestCase
     }
 
     /**
-     * Test user unbanning, admin > admin
+     * Test user unbanning, admin > admin.
+     * This shouldn't work.
      *
      * @return void
      */

@@ -15,10 +15,11 @@ class accessTest extends TestCase
     use RefreshDatabase;
 
     // These tests check that visitor/user access to different routes is as expected.
+    // In other words, they are a cursory check of middleware functionality.
 
     /**
      * Performs basic site setup/
-     * tests that it can be accessed at the most basic level
+     * tests that it can be accessed at the most basic level.
      *
      * @return void
      */
@@ -36,7 +37,7 @@ class accessTest extends TestCase
     }
 
     /**
-     * Test visitor access when the site is closed
+     * Test visitor access when the site is closed.
      *
      * @return void
      */
@@ -55,7 +56,7 @@ class accessTest extends TestCase
     }
 
     /**
-     * Test visitor access when the site is open
+     * Test visitor access when the site is open.
      *
      * @return void
      */
@@ -74,7 +75,7 @@ class accessTest extends TestCase
     }
 
     /**
-     * Test visitor access.
+     * Ensure visitor cannot access member-only routes.
      *
      * @return void
      */
@@ -86,7 +87,7 @@ class accessTest extends TestCase
     }
 
     /**
-     * Test write access.
+     * Ensure visitor cannot access editor routes.
      *
      * @return void
      */
@@ -98,7 +99,7 @@ class accessTest extends TestCase
     }
 
     /**
-     * Test visitor access.
+     * Ensure visitor cannot access admin routes.
      *
      * @return void
      */
@@ -110,7 +111,7 @@ class accessTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Ensure user can access member-only routes.
      *
      * @return void
      */
@@ -125,7 +126,7 @@ class accessTest extends TestCase
     }
 
     /**
-     * Test write access.
+     * Ensure user cannot access editor routes.
      *
      * @return void
      */
@@ -140,7 +141,7 @@ class accessTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Ensure user cannot access admin routes.
      *
      * @return void
      */
@@ -155,7 +156,7 @@ class accessTest extends TestCase
     }
 
     /**
-     * Test write access.
+     * Ensure editor can access editor routes.
      *
      * @return void
      */
@@ -170,7 +171,7 @@ class accessTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Ensure editor cannot access admin routes.
      *
      * @return void
      */
@@ -185,7 +186,7 @@ class accessTest extends TestCase
     }
 
     /**
-     * Test write access.
+     * Ensure admin can access editor routes.
      *
      * @return void
      */
@@ -200,7 +201,7 @@ class accessTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Ensure admin can access admin routes.
      *
      * @return void
      */

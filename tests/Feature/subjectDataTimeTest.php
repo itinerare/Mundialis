@@ -21,7 +21,7 @@ class subjectDataTimeTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Test admin access.
+     * Test time divisions access.
      *
      * @return void
      */
@@ -36,7 +36,7 @@ class subjectDataTimeTest extends TestCase
     }
 
     /**
-     * Test time division creation/editing
+     * Test time division creation.
      *
      * @return void
      */
@@ -66,7 +66,7 @@ class subjectDataTimeTest extends TestCase
     }
 
     /**
-     * Test time division creation/editing
+     * Test time division editing.
      *
      * @return void
      */
@@ -109,7 +109,7 @@ class subjectDataTimeTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Test time chronologies access.
      *
      * @return void
      */
@@ -124,7 +124,7 @@ class subjectDataTimeTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Test time chronology create access.
      *
      * @return void
      */
@@ -139,7 +139,7 @@ class subjectDataTimeTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Test time chronology edit access.
      *
      * @return void
      */
@@ -155,9 +155,7 @@ class subjectDataTimeTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing
-     * In practice this will usually be handled by a factory
-     * But it's important to also check that they can be created
+     * Test time chronology creation.
      *
      * @return void
      */
@@ -185,7 +183,7 @@ class subjectDataTimeTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing
+     * Test time chronology editing.
      *
      * @return void
      */
@@ -214,7 +212,7 @@ class subjectDataTimeTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing with a parent
+     * Test time chronology creation with a parent.
      *
      * @return void
      */
@@ -244,7 +242,7 @@ class subjectDataTimeTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing with a parent
+     * Test time chronology editing with a parent.
      *
      * @return void
      */

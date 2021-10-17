@@ -16,7 +16,7 @@ class subjectPageTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Test subject access.
+     * Test people access.
      *
      * @return void
      */
@@ -31,7 +31,7 @@ class subjectPageTest extends TestCase
     }
 
     /**
-     * Test subject access.
+     * Test places access.
      *
      * @return void
      */
@@ -46,7 +46,7 @@ class subjectPageTest extends TestCase
     }
 
     /**
-     * Test subject access.
+     * Test flora & fauna access.
      *
      * @return void
      */
@@ -61,7 +61,7 @@ class subjectPageTest extends TestCase
     }
 
     /**
-     * Test subject access.
+     * Test things access.
      *
      * @return void
      */
@@ -76,7 +76,7 @@ class subjectPageTest extends TestCase
     }
 
     /**
-     * Test subject access.
+     * Test concepts access.
      *
      * @return void
      */
@@ -91,7 +91,7 @@ class subjectPageTest extends TestCase
     }
 
     /**
-     * Test subject access.
+     * Test time & events access.
      *
      * @return void
      */
@@ -106,7 +106,7 @@ class subjectPageTest extends TestCase
     }
 
     /**
-     * Test subject access.
+     * Test language access.
      *
      * @return void
      */
@@ -121,7 +121,7 @@ class subjectPageTest extends TestCase
     }
 
     /**
-     * Test subject access.
+     * Test miscellaneous access.
      *
      * @return void
      */

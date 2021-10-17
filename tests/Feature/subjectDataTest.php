@@ -21,7 +21,7 @@ class subjectDataTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Test admin access.
+     * Test subject template access.
      *
      * @return void
      */
@@ -36,7 +36,7 @@ class subjectDataTest extends TestCase
     }
 
     /**
-     * Test subject template creation/editing
+     * Test subject template clearing.
      *
      * @return void
      */
@@ -61,7 +61,7 @@ class subjectDataTest extends TestCase
     }
 
     /**
-     * Test subject template creation/editing
+     * Test subject template creation/editing.
      *
      * @return void
      */
@@ -96,7 +96,7 @@ class subjectDataTest extends TestCase
     }
 
     /**
-     * Test subject template creation/editing
+     * Test subject template creation/editing and cascading.
      *
      * @return void
      */
@@ -156,7 +156,7 @@ class subjectDataTest extends TestCase
     *******************************************************************************/
 
     /**
-     * Test admin access.
+     * Test subject category create access.
      *
      * @return void
      */
@@ -171,7 +171,7 @@ class subjectDataTest extends TestCase
     }
 
     /**
-     * Test admin access.
+     * Test subject category edit access.
      *
      * @return void
      */
@@ -187,7 +187,7 @@ class subjectDataTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing
+     * Test subject category creation with minimal data.
      *
      * @return void
      */
@@ -215,7 +215,7 @@ class subjectDataTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing
+     * Test subject category editing with minimal data.
      *
      * @return void
      */
@@ -245,9 +245,7 @@ class subjectDataTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing
-     * In practice this will usually be handled by a factory
-     * But it's important to also check that they can be created
+     * Test subject category creation with basic data.
      *
      * @return void
      */
@@ -284,7 +282,7 @@ class subjectDataTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing
+     * Test subject category editing with basic data.
      *
      * @return void
      */
@@ -323,7 +321,7 @@ class subjectDataTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing
+     * Test subject category creating with template population.
      *
      * @return void
      */
@@ -369,7 +367,7 @@ class subjectDataTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing
+     * Test subject category editing with template population.
      *
      * @return void
      */
@@ -417,7 +415,7 @@ class subjectDataTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing with a parent
+     * Test subject category creation with a parent.
      *
      * @return void
      */
@@ -448,7 +446,7 @@ class subjectDataTest extends TestCase
     }
 
     /**
-     * Test subject category creation/editing with a parent
+     * Test subject category editing with a parent.
      *
      * @return void
      */
@@ -480,7 +478,7 @@ class subjectDataTest extends TestCase
     }
 
     /**
-     * Test subject template creation/editing
+     * Test subject template editing and cascading.
      *
      * @return void
      */
@@ -524,7 +522,7 @@ class subjectDataTest extends TestCase
     }
 
     /**
-     * Test subject template creation/editing
+     * Test subject template editing and cascading recursively.
      *
      * @return void
      */
