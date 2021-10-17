@@ -17,6 +17,130 @@ class subjectDataTest extends TestCase
     use withFaker;
 
     /******************************************************************************
+        SUBJECTS
+    *******************************************************************************/
+
+    /**
+     * Test people category index access.
+     *
+     * @return void
+     */
+    public function test_canGetPeopleData()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        $response = $this->actingAs($user)
+            ->get('/admin/data/people')
+            ->assertStatus(200);
+    }
+
+    /**
+     * Test places category index access.
+     *
+     * @return void
+     */
+    public function test_canGetPlacesData()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        $response = $this->actingAs($user)
+            ->get('/admin/data/places')
+            ->assertStatus(200);
+    }
+
+    /**
+     * Test flora & fauna category index access.
+     *
+     * @return void
+     */
+    public function test_canGetFloraAndFaunaData()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        $response = $this->actingAs($user)
+            ->get('/admin/data/species')
+            ->assertStatus(200);
+    }
+
+    /**
+     * Test things category index access.
+     *
+     * @return void
+     */
+    public function test_canGetThingsData()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        $response = $this->actingAs($user)
+            ->get('/admin/data/things')
+            ->assertStatus(200);
+    }
+
+    /**
+     * Test concepts category index access.
+     *
+     * @return void
+     */
+    public function test_canGetConceptsData()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        $response = $this->actingAs($user)
+            ->get('/admin/data/concepts')
+            ->assertStatus(200);
+    }
+
+    /**
+     * Test time & events category index access.
+     *
+     * @return void
+     */
+    public function test_canGetTimeData()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        $response = $this->actingAs($user)
+            ->get('/admin/data/time')
+            ->assertStatus(200);
+    }
+
+    /**
+     * Test language category index access.
+     *
+     * @return void
+     */
+    public function test_canGetLanguageData()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        $response = $this->actingAs($user)
+            ->get('/admin/data/language')
+            ->assertStatus(200);
+    }
+
+    /**
+     * Test miscellaneous category index access.
+     *
+     * @return void
+     */
+    public function test_canGetMiscellaneousData()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        $response = $this->actingAs($user)
+            ->get('/admin/data/misc')
+            ->assertStatus(200);
+    }
+
+    /******************************************************************************
         SUBJECT TEMPLATE EDITING
     *******************************************************************************/
 
