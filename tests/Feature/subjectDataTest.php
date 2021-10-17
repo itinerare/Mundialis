@@ -11,6 +11,7 @@ use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Subject\SubjectTemplate;
 use App\Models\Subject\SubjectCategory;
+use App\Models\Page\Page;
 
 class subjectDataTest extends TestCase
 {
@@ -317,7 +318,7 @@ class subjectDataTest extends TestCase
      */
     public function test_canPostCreateEmptySubjectCategory()
     {
-        // Define some basic template data
+        // Define some basic data
         $data = [
             'name' => $this->faker->unique()->domainWord()
         ];
@@ -347,7 +348,7 @@ class subjectDataTest extends TestCase
     {
         $category = SubjectCategory::factory()->testData()->create();
 
-        // Define some basic template data
+        // Define some basic data
         $data = [
             'name' => $this->faker->unique()->domainWord()
         ];
@@ -692,4 +693,100 @@ class subjectDataTest extends TestCase
         ]);
     }
 
+    /**
+     * Test subject category delete access.
+     *
+     * @return void
+     */
+    public function test_canGetDeleteSubjectCategory()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+        $category = SubjectCategory::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->get('/admin/data/categories/delete/'.$category->id)
+            ->assertStatus(200);
+    }
+
+    /**
+     * Test subject category deletion.
+     * This should work.
+     *
+     * @return void
+     */
+    public function test_canPostDeleteSubjectCategory()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Create a category to delete
+        $category = SubjectCategory::factory()->create();
+
+        // Count existing categories
+        $oldCount = SubjectCategory::all()->count();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/categories/delete/'.$category->id);
+
+        // Check that there are fewer categories than before
+        $this->assertTrue(SubjectCategory::all()->count() < $oldCount);
+    }
+
+    /**
+     * Test subject category deletion with a page.
+     * This shouldn't work.
+     *
+     * @return void
+     */
+    public function test_cannotPostDeleteSubjectCategoryWithPage()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Count existing categories
+        $oldCount = SubjectCategory::all()->count();
+        // Create a category to delete
+        $category = SubjectCategory::factory()->create();
+        // Create a page in the category
+        $page = Page::factory()->category($category->id)->create();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/categories/delete/'.$category->id);
+
+        // Check that there are the same number of categories or more
+        $this->assertTrue(SubjectCategory::all()->count() >= $oldCount);
+    }
+
+    /**
+     * Test subject category deletion with a sub-category.
+     * This shouldn't work.
+     *
+     * @return void
+     */
+    public function test_cannotPostDeleteSubjectCategoryWithSubcategory()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Count existing categories
+        $oldCount = SubjectCategory::all()->count();
+        // Create a category to delete
+        $category = SubjectCategory::factory()->create();
+        // Create a subcategory of the category, and set its parent ID
+        $subcategory = SubjectCategory::factory()->create();
+        $subcategory->update(['parent_id' => $category->id]);
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/categories/delete/'.$category->id);
+
+        // Check that there are the same number of categories or more
+        $this->assertTrue(SubjectCategory::all()->count() >= $oldCount);
+    }
 }

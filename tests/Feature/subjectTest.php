@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 use App\Models\User\User;
 
-class subjectPageTest extends TestCase
+class subjectTest extends TestCase
 {
 
     /******************************************************************************

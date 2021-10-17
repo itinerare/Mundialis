@@ -11,6 +11,7 @@ use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Subject\LexiconSetting;
 use App\Models\Subject\LexiconCategory;
+use App\Models\Lexicon\LexiconEntry;
 
 class subjectDataLanguageTest extends TestCase
 {
@@ -495,5 +496,102 @@ class subjectDataLanguageTest extends TestCase
             'name' => $data['name'],
             'data' => null
         ]);
+    }
+
+    /**
+     * Test lexicon category delete access.
+     *
+     * @return void
+     */
+    public function test_canGetDeleteLexiconCategory()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+        $category = LexiconCategory::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->get('/admin/data/language/lexicon-categories/delete/'.$category->id)
+            ->assertStatus(200);
+    }
+
+    /**
+     * Test lexicon category deletion.
+     * This should work.
+     *
+     * @return void
+     */
+    public function test_canPostDeleteLexiconCategory()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Create a category to delete
+        $category = LexiconCategory::factory()->create();
+
+        // Count existing categories
+        $oldCount = LexiconCategory::all()->count();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/language/lexicon-categories/delete/'.$category->id);
+
+        // Check that there are fewer categories than before
+        $this->assertTrue(LexiconCategory::all()->count() < $oldCount);
+    }
+
+    /**
+     * Test lexicon category deletion with a lexicon entry.
+     * This shouldn't work.
+     *
+     * @return void
+     */
+    public function test_cannotPostDeleteLexiconCategoryWithEntry()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Count existing categories
+        $oldCount = LexiconCategory::all()->count();
+        // Create a category to delete
+        $category = LexiconCategory::factory()->create();
+        // Create an entry in the category
+        $entry = LexiconEntry::factory()->category($category->id)->create();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/language/lexicon-categories/delete/'.$category->id);
+
+        // Check that there are the same number of categories or more
+        $this->assertTrue(LexiconCategory::all()->count() >= $oldCount);
+    }
+
+    /**
+     * Test lexicon category deletion with a sub-category.
+     * This shouldn't work.
+     *
+     * @return void
+     */
+    public function test_cannotPostDeleteLexiconCategoryWithSubcategory()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Count existing categories
+        $oldCount = LexiconCategory::all()->count();
+        // Create a category to delete
+        $category = LexiconCategory::factory()->create();
+        // Create a subcategory of the category, and set its parent ID
+        $subcategory = LexiconCategory::factory()->create();
+        $subcategory->update(['parent_id' => $category->id]);
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/language/lexicon-categories/delete/'.$category->id);
+
+        // Check that there are the same number of categories or more
+        $this->assertTrue(LexiconCategory::all()->count() >= $oldCount);
     }
 }

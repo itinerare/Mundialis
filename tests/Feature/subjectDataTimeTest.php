@@ -9,8 +9,10 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
 
 use App\Models\User\User;
+use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
 use App\Models\Subject\TimeChronology;
+use App\Models\Page\Page;
 
 class subjectDataTimeTest extends TestCase
 {
@@ -271,5 +273,104 @@ class subjectDataTimeTest extends TestCase
             'name' => $data['name'],
             'parent_id' => $parent->id
         ]);
+    }
+
+    /**
+     * Test chronology delete access.
+     *
+     * @return void
+     */
+    public function test_canGetDeleteTimeChronology()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+        $chronology = TimeChronology::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->get('/admin/data/time/chronology/delete/'.$chronology->id)
+            ->assertStatus(200);
+    }
+
+    /**
+     * Test chronology deletion.
+     * This should work.
+     *
+     * @return void
+     */
+    public function test_canPostDeleteTimeChronology()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Create a chronology to delete
+        $chronology = TimeChronology::factory()->create();
+
+        // Count existing chronologies
+        $oldCount = TimeChronology::all()->count();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/time/chronology/delete/'.$chronology->id);
+
+        // Check that there are fewer chronologies than before
+        $this->assertTrue(TimeChronology::all()->count() < $oldCount);
+    }
+
+    /**
+     * Test chronology deletion with a page.
+     * This shouldn't work.
+     *
+     * @return void
+     */
+    public function test_cannotPostDeleteTimeChronologyWithPage()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Count existing chronologies
+        $oldCount = TimeChronology::all()->count();
+        // Create a chronology to delete
+        $chronology = TimeChronology::factory()->create();
+        // Create a page with the chronology
+        $category = SubjectCategory::factory()->subject('time')->create();
+        $page = Page::factory()->category($category->id)->create();
+        $page->update(['parent_id' => $chronology->id]);
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/time/chronology/delete/'.$chronology->id);
+
+        // Check that there are the same number of chronologies or more
+        $this->assertTrue(TimeChronology::all()->count() >= $oldCount);
+    }
+
+    /**
+     * Test chronology deletion with a sub-category.
+     * This shouldn't work.
+     *
+     * @return void
+     */
+    public function test_cannotPostDeleteTimeChronologyWithSubchronology()
+    {
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Count existing chronologies
+        $oldCount = TimeChronology::all()->count();
+        // Create a chronology to delete
+        $chronology = TimeChronology::factory()->create();
+        // Create a subcategory of the chronology, and set its parent ID
+        $subchronology = TimeChronology::factory()->create();
+        $subchronology->update(['parent_id' => $chronology->id]);
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/time/chronology/delete/'.$chronology->id);
+
+        // Check that there are the same number of chronologies or more
+        $this->assertTrue(TimeChronology::all()->count() >= $oldCount);
     }
 }

@@ -2,10 +2,13 @@
 
 namespace App\Models\Page;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Model;
 
 class PageVersion extends Model
 {
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
