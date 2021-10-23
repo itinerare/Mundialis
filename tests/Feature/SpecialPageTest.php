@@ -10,6 +10,8 @@ use App\Models\User\User;
 
 class SpecialPageTest extends TestCase
 {
+    use RefreshDatabase;
+
     /******************************************************************************
         MAINTENANCE REPORTS
     *******************************************************************************/

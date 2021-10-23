@@ -14,22 +14,16 @@ class AccessTest extends TestCase
 {
     use RefreshDatabase;
 
-    // These tests check that visitor/user access to different routes is as expected.
-    // In other words, they are a cursory check of middleware functionality.
+    // These tests check that visitor/user access to different routes is as expected
+    // In other words, they are a cursory check of middleware functionality
 
     /**
-     * Performs basic site setup/
-     * tests that it can be accessed at the most basic level.
+     * Test most basic site access.
      *
      * @return void
      */
-    public function test_siteSetup()
+    public function test_canAccessSite()
     {
-        // First, perform basic site setup. We'll need this sooner or later.
-        $this->artisan('add-site-pages');
-        $this->artisan('add-lexicon-settings');
-        $this->artisan('copy-default-images');
-
         // Attempt to access the site on the most basic level
         $response = $this
             ->get('/')

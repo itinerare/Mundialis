@@ -10,6 +10,7 @@ use App\Models\User\User;
 
 class SubjectTest extends TestCase
 {
+    use RefreshDatabase;
 
     /******************************************************************************
         SUBJECTS

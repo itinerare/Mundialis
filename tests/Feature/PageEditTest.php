@@ -10,9 +10,9 @@ use App\Models\User\User;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Page\Page;
 
-class PageTest extends TestCase
+class PageEditTest extends TestCase
 {
-    use withFaker;
+    use RefreshDatabase, withFaker;
 
     /******************************************************************************
         PAGE CREATION AND EDITING

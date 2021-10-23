@@ -15,7 +15,7 @@ use App\Models\Page\Page;
 
 class SubjectDataTest extends TestCase
 {
-    use withFaker;
+    use RefreshDatabase, withFaker;
 
     /******************************************************************************
         SUBJECTS

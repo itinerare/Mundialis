@@ -16,7 +16,7 @@ use App\Models\Page\Page;
 
 class SubjectDataTimeTest extends TestCase
 {
-    use withFaker;
+    use RefreshDatabase, withFaker;
 
     /******************************************************************************
         TIME

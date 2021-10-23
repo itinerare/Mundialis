@@ -14,9 +14,7 @@ use App\Models\User\User;
 
 class UserFunctionTest extends TestCase
 {
-    use WithFaker;
-
-    // These tests center on general user operations, such as editing user settings
+    use RefreshDatabase, WithFaker;
 
     /******************************************************************************
         SETTINGS

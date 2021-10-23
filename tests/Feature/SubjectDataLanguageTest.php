@@ -15,7 +15,7 @@ use App\Models\Lexicon\LexiconEntry;
 
 class SubjectDataLanguageTest extends TestCase
 {
-    use withFaker;
+    use RefreshDatabase, withFaker;
 
     /******************************************************************************
         LANGUAGE
@@ -322,6 +322,9 @@ class SubjectDataLanguageTest extends TestCase
      */
     public function test_canPostEditLexiconCategoryWithData()
     {
+        // Ensure lexical classes are present to utilize
+        $this->artisan('add-lexicon-settings');
+
         $category = LexiconCategory::factory()->create();
         $class = LexiconSetting::all()->first();
 
