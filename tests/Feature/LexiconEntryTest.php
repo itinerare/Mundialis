@@ -11,6 +11,7 @@ use App\Models\User\User;
 use App\Models\Subject\LexiconSetting;
 use App\Models\Subject\LexiconCategory;
 use App\Models\Lexicon\LexiconEntry;
+use App\Models\Lexicon\LexiconEtymology;
 
 class LexiconEntryTest extends TestCase
 {
@@ -489,5 +490,118 @@ class LexiconEntryTest extends TestCase
             'word' => $data['word'],
             'data' => '{"Singular Nominative":"btest"}'
         ]);
+    }
+
+    /**
+     * Test lexicon entry deletion.
+     * This should work.
+     *
+     * @return void
+     */
+    public function test_canGetDeleteLexiconEntry()
+    {
+        // Make an entry to delete
+        $entry = LexiconEntry::factory()->create();
+
+        // Make a temporary editor
+        $user = User::factory()->editor()->make();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->get('/language/lexicon/delete/'.$entry->id);
+
+        $response->assertStatus(200);
+    }
+
+    /**
+     * Test lexicon entry deletion.
+     * This should work.
+     *
+     * @return void
+     */
+    public function test_canPostDeleteLexiconEntry()
+    {
+        // Make an entry to delete
+        $entry = LexiconEntry::factory()->create();
+
+        // Make a temporary editor
+        $user = User::factory()->editor()->make();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/language/lexicon/delete/'.$entry->id);
+
+        // Verify that the appropriate change has occurred
+        $this->assertDeleted($entry);
+    }
+
+    /**
+     * Test lexicon entry deletion with a child entry.
+     * This shouldn't work.
+     *
+     * @return void
+     */
+    public function test_cannotPostDeleteLexiconEntryWithChildEntry()
+    {
+        // Make a parent to attempt to delete
+        $parent = LexiconEntry::factory()->create();
+
+        // Make an entry to be the child
+        $entry = LexiconEntry::factory()->create();
+
+        // Create an etymology record
+        LexiconEtymology::create([
+            'entry_id' => $entry->id,
+            'parent_id' => $parent->id
+        ]);
+
+        // Make a temporary editor
+        $user = User::factory()->editor()->make();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/language/lexicon/delete/'.$parent->id);
+
+        // Directly verify that the appropriate change has occurred
+        $this->assertDatabaseHas('lexicon_entries', [
+            'id' => $parent->id,
+            'word' => $parent->word,
+        ]);
+    }
+
+    /**
+     * Test lexicon entry deletion with a parent entry.
+     * This should work.
+     *
+     * @return void
+     */
+    public function test_canPostDeleteLexiconEntryWithParentEntry()
+    {
+        // Make a parent to attempt to delete
+        $parent = LexiconEntry::factory()->create();
+
+        // Make an entry to be the child
+        $entry = LexiconEntry::factory()->create();
+
+        // Create an etymology record
+        $etymology = LexiconEtymology::create([
+            'entry_id' => $entry->id,
+            'parent_id' => $parent->id
+        ]);
+
+        // Make a temporary editor
+        $user = User::factory()->editor()->make();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/language/lexicon/delete/'.$entry->id);
+
+        // Verify that the appropriate change has occurred
+        $this->assertDeleted($etymology);
+        $this->assertDeleted($entry);
     }
 }
