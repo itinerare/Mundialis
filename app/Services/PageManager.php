@@ -106,7 +106,7 @@ class PageManager extends Service
 
             // Create version
             $version = $this->logPageVersion($page->id, $user->id, 'Page Created', isset($data['reason']) ? $data['reason'] : null, $data['version'], false);
-            if(!$version) throw Exception('An error occurred while saving page version.');
+            if(!$version) throw new \Exception('An error occurred while saving page version.');
 
             return $this->commitReturn($page);
         } catch(\Exception $e) {
@@ -167,7 +167,7 @@ class PageManager extends Service
 
             // Create version
             $version = $this->logPageVersion($page->id, $user->id, $versionType, isset($data['reason']) ? $data['reason'] : null, $data['version'], isset($data['is_minor']) ? $data['is_minor'] : false);
-            if(!$version) throw Exception('An error occurred while saving page version.');
+            if(!$version) throw new \Exception('An error occurred while saving page version.');
 
             // Update page
             $page->update($data);
@@ -253,7 +253,7 @@ class PageManager extends Service
 
             // Create a version logging the move
             $version = $this->logPageVersion($page->id, $user->id, 'Page Moved from '.$oldCategory->name.' to '.$category->name, $reason, $page->version->data, false);
-            if(!$version) throw Exception('An error occurred while saving page version.');
+            if(!$version) throw new \Exception('An error occurred while saving page version.');
 
             return $this->commitReturn($page);
         } catch(\Exception $e) {
@@ -287,7 +287,7 @@ class PageManager extends Service
 
             // Create a version logging the reset
             $version = $this->logPageVersion($page->id, $user->id, 'Page Reset to Ver. #'.$version->id, $reason, $version->data, false);
-            if(!$version) throw Exception('An error occurred while saving page version.');
+            if(!$version) throw new \Exception('An error occurred while saving page version.');
 
             return $this->commitReturn($page);
         } catch(\Exception $e) {
@@ -333,7 +333,7 @@ class PageManager extends Service
                 // and if so, force delete them
                 foreach($page->images()->withTrashed()->get() as $image)
                     if($image->pages->count() == 1) {
-                        if(!(new ImageManager)->deletePageImage($image, true)) throw new \Exception('An error occurred deleting an image.');
+                        if(!(new ImageManager)->deletePageImage($image, $user, null, true)) throw new \Exception('An error occurred deleting an image.');
                     }
 
                 // Detach any remaining images
@@ -369,7 +369,7 @@ class PageManager extends Service
 
                 // Create a version logging the deletion
                 $version = $this->logPageVersion($page->id, $user->id, 'Page Deleted', $reason, $page->version->data, false);
-                if(!$version) throw Exception('An error occurred while saving page version.');
+                if(!$version) throw new \Exception('An error occurred while saving page version.');
 
                 // Delete the page
                 $page->delete();
@@ -407,7 +407,7 @@ class PageManager extends Service
 
             // Finally, create a version logging the restoration
             $version = $this->logPageVersion($page->id, $user->id, 'Page Restored', $reason, $page->version->data, false);
-            if(!$version) throw Exception('An error occurred while saving page version.');
+            if(!$version) throw new \Exception('An error occurred while saving page version.');
 
             return $this->commitReturn($page);
         } catch(\Exception $e) {

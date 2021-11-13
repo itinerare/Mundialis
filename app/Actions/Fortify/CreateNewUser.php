@@ -2,8 +2,6 @@
 
 namespace App\Actions\Fortify;
 
-use Carbon\Carbon;
-
 use Settings;
 use App\Models\User\User;
 use App\Models\User\Rank;

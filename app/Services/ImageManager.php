@@ -186,7 +186,7 @@ class ImageManager extends Service
 
             // Then, create a version logging the restoration
             $version = $this->logImageVersion($image->id, $user->id, null, 'Image Restored', $reason, $image->version->data, false);
-            if(!$version) throw Exception('An error occurred while saving image version.');
+            if(!$version) throw new \Exception('An error occurred while saving image version.');
 
             return $this->commitReturn($image);
         } catch(\Exception $e) {
@@ -217,7 +217,7 @@ class ImageManager extends Service
                 // Delete version files
                 foreach($image->versions as $version)
                     if(isset($version->hash)) {
-                        unlink($version->imagePath . '/' . $imversionage->thumbnailFileName);
+                        unlink($version->imagePath . '/' . $version->thumbnailFileName);
                         unlink($version->imagePath . '/' . $version->imageFileName);
                     }
 
