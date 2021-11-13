@@ -401,9 +401,9 @@ class PageManager extends Service
             // Then, attempt to restore any images that were soft-deleted by virtue of only
             // being linked to the page when it was deleted
             foreach($page->images()->withTrashed()->whereNotNull('deleted_at')->get() as $image)
-            if($image->pages()->count() == 1) {
-                if(!(new ImageManager)->restorePageImage($image, $user, 'Page Restored')) throw new \Exception('An error occurred restoring an image.');
-            }
+                if($image->pages()->count() == 1) {
+                    if(!(new ImageManager)->restorePageImage($image, $user, 'Page Restored')) throw new \Exception('An error occurred restoring an image.');
+                }
 
             // Finally, create a version logging the restoration
             $version = $this->logPageVersion($page->id, $user->id, 'Page Restored', $reason, $page->version->data, false);
