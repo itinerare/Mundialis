@@ -288,7 +288,7 @@ class ImageManager extends Service
 
                 // Save thumbnail
                 if(isset($data['use_cropper'])) $this->cropThumbnail(Arr::only($data, ['x0','x1','y0','y1']), $image, $version);
-                elseif($this->handleImage($data['thumbnail'], $image->imageDirectory, $version->thumbnailFileName)) throw new \Exception('An error occurred while handling image file.');
+                elseif(!$this->handleImage($data['thumbnail'], $image->imageDirectory, $version->thumbnailFileName)) throw new \Exception('An error occurred while handling thumbnail file.');
 
                 // Trim transparent parts of image.
                 $processImage = Image::make($image->imagePath . '/' . $version->imageFileName)->trim('transparent');
