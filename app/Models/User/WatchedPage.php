@@ -3,9 +3,12 @@
 namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class WatchedPage extends Pivot
 {
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
