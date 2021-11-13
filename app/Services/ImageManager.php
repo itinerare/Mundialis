@@ -71,7 +71,7 @@ class ImageManager extends Service
             // Send a notification to users that have watched this page
             if($page->watchers->count()) {
                 foreach($page->watchers as $recipient) {
-                    if($recipient->id != Auth::user()->id) {
+                    if($recipient->id != $user->id) {
                         Notifications::create('WATCHED_PAGE_IMAGE_UPDATED', $recipient, [
                             'page_url' => $page->url,
                             'page_title' => $page->title,
@@ -150,7 +150,7 @@ class ImageManager extends Service
             // Send a notification to users that have watched this page
             if($page->watchers->count()) {
                 foreach($page->watchers as $recipient) {
-                    if($recipient->id != Auth::user()->id) {
+                    if($recipient->id != $user->id) {
                         Notifications::create('WATCHED_PAGE_IMAGE_UPDATED', $recipient, [
                             'page_url' => $page->url,
                             'page_title' => $page->title,

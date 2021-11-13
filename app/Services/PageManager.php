@@ -175,7 +175,7 @@ class PageManager extends Service
             // Send a notification to users that have watched this page
             if($page->watchers->count()) {
                 foreach($page->watchers as $recipient) {
-                    if($recipient->id != Auth::user()->id) {
+                    if($recipient->id != $user->id) {
                         Notifications::create('WATCHED_PAGE_UPDATED', $recipient, [
                             'page_url' => $page->url,
                             'page_title' => $page->title,
@@ -353,7 +353,7 @@ class PageManager extends Service
                 // Send a notification to users that have watched this page
                 if($page->watchers->count()) {
                     foreach($page->watchers as $recipient) {
-                        if($recipient->id != Auth::user()->id) {
+                        if($recipient->id != $user->id) {
                             Notifications::create('WATCHED_PAGE_DELETED', $recipient, [
                                 'page_title' => $page->title,
                                 'user_url' => $user->url,
