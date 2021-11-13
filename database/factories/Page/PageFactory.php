@@ -2,10 +2,12 @@
 
 namespace Database\Factories\Page;
 
-use App\Models\Page\Page;
+use Carbon\Carbon;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 use App\Models\Subject\SubjectCategory;
+use App\Models\Page\Page;
 
 class PageFactory extends Factory
 {
@@ -57,6 +59,20 @@ class PageFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'is_visible' => 0
+            ];
+        });
+    }
+
+    /**
+     * Generate a deleted page.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function deleted()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'deleted_at' => Carbon::now()
             ];
         });
     }

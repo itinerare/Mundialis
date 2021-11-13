@@ -2,6 +2,8 @@
 
 namespace Database\Factories\Page;
 
+use Carbon\Carbon;
+
 use App\Models\Page\PageVersion;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -106,6 +108,21 @@ class PageVersionFactory extends Factory
     }
 
     /**
+     * Generate a version for a page deletion.
+     *
+     * @param  string                  $reason
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function deleted()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'type' => 'Page Deleted'
+            ];
+        });
+    }
+
+    /**
      * Generate a page with some data to match category test data.
      *
      * @param  string                       $title
@@ -116,7 +133,7 @@ class PageVersionFactory extends Factory
      */
     public function testData($title = 'Test', $summary = null, $utilityTags = null, $pageTags = null)
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function (array $attributes) use($title, $summary, $utilityTags, $pageTags) {
             return [
                 'data' => '{"data":{"description":null,"test_category_field":"test field answer","parsed":{"description":null,"test_category_field":"test field answer"}},"title":"'.$title.'","is_visible":"1","summary":'.($summary ? '"'.$summary.'"' : null ).',"utility_tag":'.($utilityTags ? '"'.$utilityTags.'"' : null ).',"page_tag":'.($pageTags ? '"'.$pageTags.'"' : null ).'}'
             ];
