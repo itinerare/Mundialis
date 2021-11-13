@@ -14,10 +14,6 @@ class PageEditTest extends TestCase
 {
     use RefreshDatabase, withFaker;
 
-    /******************************************************************************
-        PAGE CREATION AND EDITING
-    *******************************************************************************/
-
     /**
      * Test page creation access.
      *

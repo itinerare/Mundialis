@@ -14,6 +14,7 @@ use App\Models\Page\PageImage;
 use App\Models\Page\PageImageVersion;
 use App\Models\Page\PageImageCreator;
 use App\Models\Page\PagePageImage;
+use Illuminate\Http\UploadedFile;
 
 class ImageManager extends Service
 {
@@ -217,8 +218,8 @@ class ImageManager extends Service
                 // Delete version files
                 foreach($image->versions as $version)
                     if(isset($version->hash)) {
-                        unlink($version->imagePath . '/' . $version->thumbnailFileName);
-                        unlink($version->imagePath . '/' . $version->imageFileName);
+                        unlink($image->imagePath . '/' . $version->thumbnailFileName);
+                        unlink($image->imagePath . '/' . $version->imageFileName);
                     }
 
                 // Delete the image and any relevant objects
@@ -578,6 +579,27 @@ class ImageManager extends Service
             $this->setError('error', $e->getMessage());
         }
         return false;
+    }
+
+    /**
+     * Generates and saves test images for page image test purposes.
+     * This is a workaround for normal image processing depending on Intervention.
+     *
+     * @param  \App\Models\Page\PageImage         $image
+     * @param  \App\Models\Page\PageImageVersion  $version
+     * @return bool
+     */
+    public function testImages($image, $version)
+    {
+        // Generate the fake files to save
+        $file['image'] = UploadedFile::fake()->image('test_image.png');
+        $file['thumbnail'] = UploadedFile::fake()->image('test_thumb.png');
+
+        // Save the files in line with usual image handling.
+        $this->handleImage($file['image'], $image->imagePath, $version->imageFileName);
+        $this->handleImage($file['thumbnail'], $image->imagePath, $version->thumbnailFileName);
+
+        return true;
     }
 
 }
