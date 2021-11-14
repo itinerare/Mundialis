@@ -3,7 +3,6 @@
 use App\Services\Service;
 
 use DB;
-use Auth;
 use File;
 use Image;
 use Carbon\Carbon;

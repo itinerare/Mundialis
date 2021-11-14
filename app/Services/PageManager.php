@@ -5,7 +5,6 @@ use App\Services\Service;
 use DB;
 use Config;
 use Notifications;
-use Auth;
 
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;

@@ -6,7 +6,7 @@ use DB;
 use Image;
 use Arr;
 use Config;
-use Auth;
+use Notifications;
 
 use App\Models\User\User;
 use App\Models\Page\Page;
@@ -93,6 +93,7 @@ class ImageManager extends Service
     /**
      * Updates an image.
      *
+     * @param  \App\Models\Page\Page          $page
      * @param  \App\Models\Page\PageImage     $image
      * @param  array                          $data
      * @param  \App\Models\User\User          $user
@@ -131,8 +132,7 @@ class ImageManager extends Service
                 }
             }
             // If an image is being marked invalid, it should not be able to be marked valid
-            // or made the page's active image, so this is dependent on the above not being
-            // the case
+            // or made the page's active image, so this is dependent on the above not being the case
             else {
                 // If image is being re-marked valid, update
                 if(!$image->pages()->where('pages.id', $page->id)->first()->pivot->is_valid && $data['is_valid'])
