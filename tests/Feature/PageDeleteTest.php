@@ -93,6 +93,8 @@ class PageDeleteTest extends TestCase
             'type' => 'Page Deleted',
             'reason' => $data['reason']
         ]);
+
+        $this->assertSoftDeleted($page);
     }
 
     /**
@@ -151,9 +153,8 @@ class PageDeleteTest extends TestCase
             ->post('/pages/'.$page->id.'/delete');
 
         // Verify that the appropriate change has occurred
-        // In this case, just checking the image is enough, as it should be
-        // soft-deleted alongside the page
         $this->assertSoftDeleted($image);
+        $this->assertSoftDeleted($page);
 
         // Delete the test images, to clean up
         unlink($image->imagePath . '/' . $imageVersion->thumbnailFileName);
@@ -203,6 +204,7 @@ class PageDeleteTest extends TestCase
 
         // And that the first image has been soft-deleted
         $this->assertSoftDeleted($image[1]);
+        $this->assertSoftDeleted($page[1]);
 
         // Delete the test images, to clean up
         for($i = 1; $i <= 2; $i++) {
@@ -314,7 +316,7 @@ class PageDeleteTest extends TestCase
      */
     public function test_canGetDeletedPage()
     {
-        // Make a temporary admin
+        // Make a persistent admin
         $user = User::factory()->admin()->create();
 
         // Make a deleted page & version
@@ -334,7 +336,7 @@ class PageDeleteTest extends TestCase
      */
     public function test_canGetRestorePage()
     {
-        // Make a temporary admin
+        // Make a persistent admin
         $user = User::factory()->admin()->create();
 
         // Make a deleted page & version
