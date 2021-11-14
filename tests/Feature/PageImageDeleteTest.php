@@ -77,6 +77,10 @@ class PageImageDeleteTest extends TestCase
 
         // Verify that the appropriate change has occurred
         $this->assertSoftDeleted($image);
+
+        // Delete the test images, to clean up
+        unlink($image->imagePath . '/' . $version->thumbnailFileName);
+        unlink($image->imagePath . '/' . $version->imageFileName);
     }
 
     /**
@@ -115,6 +119,10 @@ class PageImageDeleteTest extends TestCase
             'type' => 'Image Deleted',
             'reason' => $data['reason']
         ]);
+
+        // Delete the test images, to clean up
+        unlink($image->imagePath . '/' . $version->thumbnailFileName);
+        unlink($image->imagePath . '/' . $version->imageFileName);
     }
 
     /**
@@ -152,6 +160,10 @@ class PageImageDeleteTest extends TestCase
         ]);
 
         $this->assertSoftDeleted($image);
+
+        // Delete the test images, to clean up
+        unlink($image->imagePath . '/' . $version->thumbnailFileName);
+        unlink($image->imagePath . '/' . $version->imageFileName);
     }
 
     /**
@@ -178,6 +190,10 @@ class PageImageDeleteTest extends TestCase
             ->get('/admin/special/deleted-images/'.$image->id);
 
         $response->assertStatus(200);
+
+        // Delete the test images, to clean up
+        unlink($image->imagePath . '/' . $version->thumbnailFileName);
+        unlink($image->imagePath . '/' . $version->imageFileName);
     }
 
     /**
@@ -210,6 +226,10 @@ class PageImageDeleteTest extends TestCase
             'id' => $image->id,
             'deleted_at' => null,
         ]);
+
+        // Delete the test images, to clean up
+        unlink($image->imagePath . '/' . $version->thumbnailFileName);
+        unlink($image->imagePath . '/' . $version->imageFileName);
     }
 
     /**
@@ -253,6 +273,10 @@ class PageImageDeleteTest extends TestCase
             'id' => $image->id,
             'deleted_at' => null,
         ]);
+
+        // Delete the test images, to clean up
+        unlink($image->imagePath . '/' . $version->thumbnailFileName);
+        unlink($image->imagePath . '/' . $version->imageFileName);
     }
 
     /**
@@ -283,5 +307,9 @@ class PageImageDeleteTest extends TestCase
 
         // Verify that the appropriate change has occurred
         $this->assertSoftDeleted($image);
+
+        // Delete the test images, to clean up
+        unlink($image->imagePath . '/' . $version->thumbnailFileName);
+        unlink($image->imagePath . '/' . $version->imageFileName);
     }
 }
