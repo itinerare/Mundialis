@@ -3,6 +3,7 @@
 namespace Database\Factories\Page;
 
 use App\Models\Page\PageImage;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PageImageFactory extends Factory

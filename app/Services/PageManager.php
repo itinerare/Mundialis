@@ -331,10 +331,11 @@ class PageManager extends Service
 
                 // Check to see if any images are linked only to this page,
                 // and if so, force delete them
-                foreach($page->images()->withTrashed()->get() as $image)
-                    if($image->pages->count() == 1) {
+                foreach($page->images()->withTrashed()->get() as $image) {
+                    if($image->pages()->count() <= 1) {
                         if(!(new ImageManager)->deletePageImage($image, $user, null, true)) throw new \Exception('An error occurred deleting an image.');
                     }
+                }
 
                 // Detach any remaining images
                 $page->images()->detach();
