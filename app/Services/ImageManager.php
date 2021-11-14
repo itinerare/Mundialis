@@ -335,12 +335,13 @@ class ImageManager extends Service
 
             // Just attach creators
             foreach($data['creator_id'] as $key => $id) {
-                if($id || $data['creator_url'][$key])
+                if($id || isset($data['creator_url'][$key])) {
                     PageImageCreator::create([
                         'page_image_id' => $image->id,
                         'url' => $id ? null : $data['creator_url'][$key],
-                        'user_id' => $id
+                        'user_id' => $id ? $id : null,
                     ]);
+                }
             }
 
             // Check that pages with the specified id(s) exist on site
