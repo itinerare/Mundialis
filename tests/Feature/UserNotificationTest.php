@@ -214,6 +214,8 @@ class UserNotificationTest extends TestCase
         // Define some basic data
         $data = [
             'description' => $this->faker->unique()->domainWord(),
+            'creator_id' => [0 => $user->id],
+            'creator_url' => [0 => null],
         ];
 
         // Try to post data
