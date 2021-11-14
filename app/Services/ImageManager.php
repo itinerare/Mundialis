@@ -114,10 +114,8 @@ class ImageManager extends Service
             if(!isset($data['mark_active'])) $data['mark_active'] = 0;
 
             // Process data and handle image
-            if(isset($data['image'])) {
-                $image = $this->handlePageImage($data, $page, $user, $image);
-                if(!$image) throw new \Exception("An error occurred while trying to process image.");
-            }
+            $image = $this->handlePageImage($data, $page, $user, $image);
+            if(!$image) throw new \Exception("An error occurred while trying to process image.");
 
             // If image is being marked invalid, update
             if($image->pages()->where('pages.id', $page->id)->first()->pivot->is_valid && !$data['is_valid']) {
