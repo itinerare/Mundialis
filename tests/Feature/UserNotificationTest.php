@@ -9,8 +9,13 @@ use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Notification;
 use App\Models\Page\Page;
+use App\Models\Page\PageImage;
+use App\Models\Page\PageImageCreator;
+use App\Models\Page\PageImageVersion;
+use App\Models\Page\PagePageImage;
 use App\Models\Page\PageVersion;
 use App\Models\User\WatchedPage;
+use App\Services\ImageManager;
 
 class UserNotificationTest extends TestCase
 {
@@ -178,6 +183,53 @@ class UserNotificationTest extends TestCase
             'user_id' => $user->id,
             'notification_type_id' => 0,
         ]);
+    }
+
+    /**
+     * Test basic image editing.
+     *
+     * @return void
+     */
+    public function test_canSendPageImageUpdateNotification()
+    {
+        // Make a persistent user to receive the notification
+        $user = User::factory()->create();
+        // Make a persistent editor to make changes
+        $editor = User::factory()->editor()->create();
+
+        // Create a page to watch & attach the image to
+        $page = Page::factory()->create();
+        PageVersion::factory()->page($page->id)->user($editor->id)->create();
+
+        // Create a page watch record
+        WatchedPage::factory()->user($user->id)->page($page->id)->create();
+
+        // Create the image and associated records
+        $image = PageImage::factory()->create();
+        $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
+        PageImageCreator::factory()->image($image->id)->user($editor->id)->create();
+        PagePageImage::factory()->page($page->id)->image($image->id)->create();
+        (new ImageManager)->testImages($image, $version);
+
+        // Define some basic data
+        $data = [
+            'description' => $this->faker->unique()->domainWord(),
+        ];
+
+        // Try to post data
+        $response = $this
+            ->actingAs($editor)
+            ->post('/pages/'.$page->id.'/gallery/edit/'.$image->id, $data);
+
+        // Directly verify that the appropriate change has occurred
+        $this->assertDatabaseHas('notifications', [
+            'user_id' => $user->id,
+            'notification_type_id' => 1,
+        ]);
+
+        // Delete the test images, to clean up
+        unlink($image->imagePath . '/' . $version->thumbnailFileName);
+        unlink($image->imagePath . '/' . $version->imageFileName);
     }
 
     /**
