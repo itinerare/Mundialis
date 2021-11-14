@@ -13,7 +13,7 @@
 {!! Form::open(['url' => $image->id ? 'pages/'.$page->id.'/gallery/edit/'.$image->id : 'pages/'.$page->id.'/gallery/create', 'files' => true, 'id' => 'imageForm']) !!}
 
 <div class="form-group">
-    {!! Form::label('Character Image') !!} {!! add_help('This is the full masterlist image. Note that the image is not protected in any way, so take precautions to avoid art/design theft.') !!}
+    {!! Form::label('Image File'.($image->id ? ' (Optional)' : '')) !!} {!! add_help('Note that the image is not protected in any way, so take whatever precautions you desire.') !!}
     <div>{!! Form::file('image', ['id' => 'mainImage']) !!}</div>
 </div>
 
