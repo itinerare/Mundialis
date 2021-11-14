@@ -107,6 +107,9 @@ class ImageManager extends Service
             // Ensure user can edit the parent page
             if(!$user->canEdit($page)) throw new \Exception('You don\'t have permission to edit this page.');
 
+            if(!$page->images()->where('page_image_id', $image->id)->exists())
+                throw new \Exception('This image does not belong to this page.');
+
             // Process toggles
             if(!isset($data['is_valid'])) $data['is_valid'] = 0;
             if(!isset($data['is_visible'])) $data['is_visible'] = 0;
