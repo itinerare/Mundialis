@@ -339,6 +339,10 @@ class PageManager extends Service
                 // Detach any remaining images
                 $page->images()->detach();
 
+                // Delete the page's relationships if relevant
+                if($page->relationships->count())
+                    $page->relationships()->delete();
+
                 // Finally, force-delete the page
                 $page->forceDelete();
             }
