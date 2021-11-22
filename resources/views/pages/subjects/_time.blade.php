@@ -1,6 +1,8 @@
 <h2>
     Chronology
-    <a href="{{ url('time/timeline') }}" class="float-right btn btn-secondary ml-2">Timeline</a>
+    @if($showTimeline)
+        <a href="{{ url('time/timeline') }}" class="float-right btn btn-secondary ml-2">Timeline</a>
+    @endif
 </h2>
 
 <p>This is a list of all chronologies present on the site. Chronologies are used for organizing large spans of time and can contain both sub-chronologies and/or events.</p>
