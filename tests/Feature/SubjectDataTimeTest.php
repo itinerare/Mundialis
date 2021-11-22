@@ -74,27 +74,18 @@ class SubjectDataTimeTest extends TestCase
      */
     public function test_canPostEditTimeDivisions()
     {
-        // Define some basic template data
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        $division = TimeDivision::factory()->create();
+
+        // Define some basic data
         $data = [
+            'id' => [0 => $division->id],
             'name' => [0 => $this->faker->unique()->domainWord()],
             'abbreviation' => [0 => $this->faker->unique()->domainWord()],
             'unit' => [0 => mt_rand(1,100)]
         ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        $division = TimeDivision::create([
-            'name' => $data['name'][0],
-            'abbreviation' => $data['abbreviation'][0],
-            'unit' => $data['unit'][0],
-        ]);
-
-        // Define some more basic template data
-        $data['name'][1] = $this->faker->unique()->domainWord();
-        $data['abbreviation'][1] = $this->faker->unique()->domainWord();
-        $data['unit'][1] = mt_rand(1,100);
-        $data['id'][0] = $division->id;
 
         // Try to post data again
         $response = $this
