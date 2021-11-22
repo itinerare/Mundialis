@@ -13,6 +13,7 @@ use App\Models\Page\PageImage;
 use App\Models\Page\PageImageCreator;
 use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
+use App\Models\Page\PageRelationship;
 use App\Models\Page\PageVersion;
 use App\Services\ImageManager;
 
@@ -214,6 +215,42 @@ class PageDeleteTest extends TestCase
     }
 
     /**
+     * Test (soft) page deletion with a relation.
+     *
+     * @return void
+     */
+    public function test_canPostSoftDeletePageWithRelationship()
+    {
+        // Make a persistent editor
+        $user = User::factory()->editor()->create();
+
+        // Create a category in the "People" subject
+        $category = SubjectCategory::factory()->subject('people')->create();
+
+        // Create a couple pages to link
+        for($i = 1; $i <= 2; $i++) {
+            // Make a deleted page
+            $page[$i] = Page::factory()->category($category->id)->deleted()->create();
+            // As well as accompanying version
+            PageVersion::factory()->user($user->id)->page($page[$i]->id)->deleted()->create();
+        }
+
+        // Create a relationship for the two pages
+        $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/pages/'.$page[1]->id.'/delete');
+
+        // Verify that the appropriate change has occurred
+        $this->assertDatabaseHas('page_relationships', [
+            'id' => $relationship->id
+        ]);
+        $this->assertSoftDeleted($page[1]);
+    }
+
+    /**
      * Test (soft) page deletion with a child page.
      * This shouldn't work.
      *
@@ -307,6 +344,41 @@ class PageDeleteTest extends TestCase
         // Verify that the appropriate change has occurred
         // In this case, we check the image, as it should also be force-deleted
         $this->assertDeleted($image);
+    }
+
+    /**
+     * Test full page deletion with a relationship.
+     *
+     * @return void
+     */
+    public function test_canPostForceDeletePageWithRelationship()
+    {
+        // Make a persistent admin
+        $user = User::factory()->admin()->create();
+
+        // Create a category in the "People" subject
+        $category = SubjectCategory::factory()->subject('people')->create();
+
+        // Create a couple pages to link
+        for($i = 1; $i <= 2; $i++) {
+            // Make a deleted page
+            $page[$i] = Page::factory()->category($category->id)->deleted()->create();
+            // As well as accompanying version
+            PageVersion::factory()->user($user->id)->page($page[$i]->id)->deleted()->create();
+        }
+
+        // Create a relationship for the two pages
+        $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
+
+        // Try to post data; this time the category is deleted
+        // since deleting the category is the only way to force-delete pages
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/categories/delete/'.$category->id);
+
+        // Verify that the appropriate change has occurred
+        // In this case, we check the relationship, as it should also be deleted
+        $this->assertDeleted($relationship);
     }
 
     /**
