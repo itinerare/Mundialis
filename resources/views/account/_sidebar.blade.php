@@ -3,7 +3,7 @@
     <li class="sidebar-section">
         <div class="sidebar-section-header">Account & Settings</div>
         <div class="sidebar-item"><a href="{{ url('account/settings') }}" class="{{ set_active('account/settings') }}">Settings</a></div>
-        <div class="sidebar-item"><a href="{{ url('account/notifications') }}" class="{{ set_active('notifications') }}">Notifications</a></div>
+        <div class="sidebar-item"><a href="{{ url('notifications') }}" class="{{ set_active('notifications') }}">Notifications</a></div>
     </li>
     <li class="sidebar-section">
         <div class="sidebar-section-header">Watched Pages</div>

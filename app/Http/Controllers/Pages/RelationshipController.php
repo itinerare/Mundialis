@@ -156,7 +156,7 @@ class RelationshipController extends Controller
         if(!Auth::user()->canEdit($page)) abort (404);
         if(!$page) abort(404);
 
-        if($id && $service->updatePageRelationship($page, PageRelationship::find($id), $data, Auth::user())) {
+        if($id && $service->updatePageRelationship(PageRelationship::find($id), $data, Auth::user())) {
             flash('Relationship updated successfully.')->success();
         }
         else if (!$id && $relationship = $service->createPageRelationship($data, $page, Auth::user())) {

@@ -3,9 +3,12 @@
 namespace App\Models\Page;
 
 use App\Models\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PageImageVersion extends Model
 {
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *

@@ -96,7 +96,8 @@ class SubjectController extends Controller
             'entries' => $query->paginate(20)->appends($request->query()),
             'classOptions' => LexiconSetting::orderBy('sort', 'DESC')->pluck('name', 'name')
         ] : []) + ($subject['key'] == 'time' ? [
-            'timeCategories' => TimeChronology::whereNull('parent_id')->orderBy('sort', 'DESC')->paginate(20)->appends($request->query())
+            'timeCategories' => TimeChronology::whereNull('parent_id')->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
+            'showTimeline' => TimeDivision::dateEnabled()->count() ? 1 : 0,
         ] : []));
     }
 
@@ -214,6 +215,8 @@ class SubjectController extends Controller
      */
     public function getTimeTimeline()
     {
+        if(!TimeDivision::dateEnabled()->count()) abort(404);
+
         return view('pages.subjects.time_timeline', [
             'tags' => (new PageTag)->listTags(),
             'chronologies' => TimeChronology::whereNull('parent_id')->orderBy('sort', 'DESC')->get(),
@@ -400,6 +403,7 @@ class SubjectController extends Controller
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+            return redirect()->back();
         }
         return redirect()->to('language');
     }

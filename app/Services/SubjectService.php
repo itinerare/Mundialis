@@ -209,22 +209,27 @@ class SubjectService extends Service
      * Delete a category.
      *
      * @param  \App\Models\Subject\SubjectCategory  $category
+     * @param  \App\Models\User\User                $user
      * @return bool
      */
-    public function deleteCategory($category)
+    public function deleteCategory($category, $user)
     {
         DB::beginTransaction();
 
         try {
             // Check first if the category is currently in use
-            if(SubjectCategory::where('parent_id', $category->id)->exists()) throw new \Exception('A sub-category of this category exists. Please move or delete it first.');
-            if(Page::where('category_id', $category->id)->exists()) throw new \Exception("A page in this category exists. Please move or delete it first.");
+            if(SubjectCategory::where('parent_id', $category->id)->exists())
+                throw new \Exception('A sub-category of this category exists. Please move or delete it first.');
+            if(Page::where('category_id', $category->id)->exists())
+                throw new \Exception("A page in this category exists. Please move or delete it first.");
 
             // Permanently delete any remaining pages and associated data in the category,
             // as without the category/its data they will not be recoverable anyway
             if($category->pages()->withTrashed()->count()) {
-                foreach($category->pages as $page)
-                    (new PageManager)->deletePage($page, Auth::user(), true);
+                foreach($category->pages()->withTrashed()->get() as $page) {
+                    if(!(new PageManager)->deletePage($page, $user, null, true))
+                        throw new \Exception('Failed to force delete page.');
+                }
             }
             // Delete the categroy
             $category->delete();
@@ -345,8 +350,8 @@ class SubjectService extends Service
     private function cascadeTemplateChanges($categories, $data)
     {
         // Recursively compare arrays
-        $data['changes']['added'] = $this->diff_recursive($data['data'], $data['old']);
-        $data['changes']['removed'] = $this->diff_recursive($data['old'], $data['data']);
+        $data['changes']['added'] = $this->diff_recursive((array)$data['data'], (array)$data['old']);
+        $data['changes']['removed'] = $this->diff_recursive((array)$data['old'], (array)$data['data']);
 
         // Perform operations on impacted categories
         foreach($categories as $key=>$category) {
