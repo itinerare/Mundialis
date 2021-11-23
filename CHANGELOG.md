@@ -4,7 +4,7 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
-## [1.0.0](https://github.com/itinerare/Mundialis/compare/1.0.0-rc1...v1.0.0) (2021-11-23)
+## [1.0.0](https://github.com/itinerare/Mundialis/compare/1.0.0-rc1...1.0.0) (2021-11-23)
 ### Features
 
 * Add category summaries and images ([7398cb](https://github.com/itinerare/Mundialis/commit/7398cbc7fd5da1c486ac1ae40f4481e5bd4d8afb))
@@ -408,7 +408,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## [1.0.0-pre4](https://github.com/itinerare/Mundialis/compare/1.0.0-pre3...v1.0.0-pre4) (2021-10-10)
+## [1.0.0-pre4](https://github.com/itinerare/Mundialis/compare/1.0.0-pre3...1.0.0-pre4) (2021-10-10)
 ### Bug Fixes
 
 
@@ -521,7 +521,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## [1.0.0-pre1](https://github.com/itinerare/Mundialis/compare/8c3e2c6ef82213b81555484b5694b4ae87dba3c4...v1.0.0) (2021-08-07)
+## [1.0.0-pre1](https://github.com/itinerare/Mundialis/compare/8c3e2c6ef82213b81555484b5694b4ae87dba3c4...1.0.0-pre1) (2021-08-07)
 
 
 ### Features
