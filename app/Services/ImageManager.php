@@ -6,7 +6,7 @@ use DB;
 use Image;
 use Arr;
 use Config;
-use Auth;
+use Notifications;
 
 use App\Models\User\User;
 use App\Models\Page\Page;
@@ -14,6 +14,7 @@ use App\Models\Page\PageImage;
 use App\Models\Page\PageImageVersion;
 use App\Models\Page\PageImageCreator;
 use App\Models\Page\PagePageImage;
+use Illuminate\Http\UploadedFile;
 
 class ImageManager extends Service
 {
@@ -71,7 +72,7 @@ class ImageManager extends Service
             // Send a notification to users that have watched this page
             if($page->watchers->count()) {
                 foreach($page->watchers as $recipient) {
-                    if($recipient->id != Auth::user()->id) {
+                    if($recipient->id != $user->id) {
                         Notifications::create('WATCHED_PAGE_IMAGE_UPDATED', $recipient, [
                             'page_url' => $page->url,
                             'page_title' => $page->title,
@@ -92,6 +93,7 @@ class ImageManager extends Service
     /**
      * Updates an image.
      *
+     * @param  \App\Models\Page\Page          $page
      * @param  \App\Models\Page\PageImage     $image
      * @param  array                          $data
      * @param  \App\Models\User\User          $user
@@ -104,6 +106,9 @@ class ImageManager extends Service
         try {
             // Ensure user can edit the parent page
             if(!$user->canEdit($page)) throw new \Exception('You don\'t have permission to edit this page.');
+
+            if(!$page->images()->where('page_image_id', $image->id)->exists())
+                throw new \Exception('This image does not belong to this page.');
 
             // Process toggles
             if(!isset($data['is_valid'])) $data['is_valid'] = 0;
@@ -128,8 +133,7 @@ class ImageManager extends Service
                 }
             }
             // If an image is being marked invalid, it should not be able to be marked valid
-            // or made the page's active image, so this is dependent on the above not being
-            // the case
+            // or made the page's active image, so this is dependent on the above not being the case
             else {
                 // If image is being re-marked valid, update
                 if(!$image->pages()->where('pages.id', $page->id)->first()->pivot->is_valid && $data['is_valid'])
@@ -150,7 +154,7 @@ class ImageManager extends Service
             // Send a notification to users that have watched this page
             if($page->watchers->count()) {
                 foreach($page->watchers as $recipient) {
-                    if($recipient->id != Auth::user()->id) {
+                    if($recipient->id != $user->id) {
                         Notifications::create('WATCHED_PAGE_IMAGE_UPDATED', $recipient, [
                             'page_url' => $page->url,
                             'page_title' => $page->title,
@@ -186,7 +190,7 @@ class ImageManager extends Service
 
             // Then, create a version logging the restoration
             $version = $this->logImageVersion($image->id, $user->id, null, 'Image Restored', $reason, $image->version->data, false);
-            if(!$version) throw Exception('An error occurred while saving image version.');
+            if(!$version) throw new \Exception('An error occurred while saving image version.');
 
             return $this->commitReturn($image);
         } catch(\Exception $e) {
@@ -217,8 +221,8 @@ class ImageManager extends Service
                 // Delete version files
                 foreach($image->versions as $version)
                     if(isset($version->hash)) {
-                        unlink($version->imagePath . '/' . $imversionage->thumbnailFileName);
-                        unlink($version->imagePath . '/' . $version->imageFileName);
+                        unlink($image->imagePath . '/' . $version->thumbnailFileName);
+                        unlink($image->imagePath . '/' . $version->imageFileName);
                     }
 
                 // Delete the image and any relevant objects
@@ -288,7 +292,7 @@ class ImageManager extends Service
 
                 // Save thumbnail
                 if(isset($data['use_cropper'])) $this->cropThumbnail(Arr::only($data, ['x0','x1','y0','y1']), $image, $version);
-                elseif($this->handleImage($data['thumbnail'], $image->imageDirectory, $version->thumbnailFileName)) throw new \Exception('An error occurred while handling image file.');
+                elseif(!$this->handleImage($data['thumbnail'], $image->imageDirectory, $version->thumbnailFileName)) throw new \Exception('An error occurred while handling thumbnail file.');
 
                 // Trim transparent parts of image.
                 $processImage = Image::make($image->imagePath . '/' . $version->imageFileName)->trim('transparent');
@@ -334,12 +338,13 @@ class ImageManager extends Service
 
             // Just attach creators
             foreach($data['creator_id'] as $key => $id) {
-                if($id || $data['creator_url'][$key])
+                if($id || isset($data['creator_url'][$key])) {
                     PageImageCreator::create([
                         'page_image_id' => $image->id,
                         'url' => $id ? null : $data['creator_url'][$key],
-                        'user_id' => $id
+                        'user_id' => $id ? $id : null,
                     ]);
+                }
             }
 
             // Check that pages with the specified id(s) exist on site
@@ -578,6 +583,27 @@ class ImageManager extends Service
             $this->setError('error', $e->getMessage());
         }
         return false;
+    }
+
+    /**
+     * Generates and saves test images for page image test purposes.
+     * This is a workaround for normal image processing depending on Intervention.
+     *
+     * @param  \App\Models\Page\PageImage         $image
+     * @param  \App\Models\Page\PageImageVersion  $version
+     * @return bool
+     */
+    public function testImages($image, $version)
+    {
+        // Generate the fake files to save
+        $file['image'] = UploadedFile::fake()->image('test_image.png');
+        $file['thumbnail'] = UploadedFile::fake()->image('test_thumb.png');
+
+        // Save the files in line with usual image handling.
+        $this->handleImage($file['image'], $image->imagePath, $version->imageFileName);
+        $this->handleImage($file['thumbnail'], $image->imagePath, $version->thumbnailFileName);
+
+        return true;
     }
 
 }

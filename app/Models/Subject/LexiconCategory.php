@@ -2,10 +2,13 @@
 
 namespace App\Models\Subject;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Model;
 
 class LexiconCategory extends Model
 {
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *

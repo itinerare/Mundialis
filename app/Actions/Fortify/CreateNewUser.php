@@ -2,8 +2,6 @@
 
 namespace App\Actions\Fortify;
 
-use Carbon\Carbon;
-
 use Settings;
 use App\Models\User\User;
 use App\Models\User\Rank;
@@ -27,6 +25,9 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input)
     {
+        if(!Settings::get('is_registration_open'))
+            throw new \Exception('Registration is currently closed.');
+
         Validator::make($input, [
             'name' => ['required', 'string', 'min:3', 'max:25', 'alpha_dash', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -43,7 +44,7 @@ class CreateNewUser implements CreatesNewUsers
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
-            'rank_id' => 3,
+            'rank_id' => Rank::orderBy('sort', 'ASC')->first()->id,
         ]);
 
         if(!(new InvitationService)->useInvitation(InvitationCode::where('code', $input['code'])->whereNull('recipient_id')->first(), $user)) throw new \Exception('An error occurred while using the invitation code.');

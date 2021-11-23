@@ -1,0 +1,108 @@
+<?php
+
+namespace Tests\Feature;
+
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
+
+use App\Models\User\User;
+use App\Models\Page\Page;
+use App\Models\Page\PageVersion;
+use App\Models\User\WatchedPage;
+
+class PageWatchTest extends TestCase
+{
+    use RefreshDatabase;
+
+    /**
+     * Test watched pages access.
+     *
+     * @return void
+     */
+    public function test_canGetWatchedPages()
+    {
+        // Make a temporary user
+        $user = User::factory()->make();
+
+        $response = $this->actingAs($user)
+            ->get('/account/watched-pages')
+            ->assertStatus(200);
+    }
+
+    /**
+     * Test watched pages access with a watched page.
+     *
+     * @return void
+     */
+    public function test_canGetWatchedPagesWithPage()
+    {
+        // Make a persistent user
+        $user = User::factory()->create();
+
+        // Create a page to watch & version
+        $page = Page::factory()->create();
+        PageVersion::factory()->page($page->id)
+            ->user(User::factory()->editor()->create()->id)->create();
+
+        // Create a page watch record
+        WatchedPage::factory()->user($user->id)->page($page->id)->create();
+
+        $response = $this->actingAs($user)
+            ->get('/account/watched-pages')
+            ->assertStatus(200);
+    }
+
+    /**
+     * Test watching a page.
+     *
+     * @return void
+     */
+    public function test_canPostWatchPage()
+    {
+        // Make a persistent user
+        $user = User::factory()->create();
+
+        // Create a page to watch & version
+        $page = Page::factory()->create();
+        PageVersion::factory()->page($page->id)
+            ->user(User::factory()->editor()->create()->id)->create();
+
+        $response = $this->actingAs($user)
+            ->post('/account/watched-pages/'.$page->id);
+
+        // Directly verify that the appropriate change has occurred
+        $this->assertDatabaseHas('watched_pages', [
+            'user_id' => $user->id,
+            'page_id' => $page->id
+        ]);
+    }
+
+    /**
+     * Test unwatching a page.
+     *
+     * @return void
+     */
+    public function test_canPostUnwatchPage()
+    {
+        // Make a persistent user
+        $user = User::factory()->create();
+
+        // Create a page to watch & version
+        $page = Page::factory()->create();
+        PageVersion::factory()->page($page->id)
+            ->user(User::factory()->editor()->create()->id)->create();
+
+        // Create a page watch record to remove
+        WatchedPage::factory()->user($user->id)->page($page->id)->create();
+
+        $response = $this->actingAs($user)
+            ->post('/account/watched-pages/'.$page->id);
+
+        // Directly verify that the appropriate change has occurred
+        $this->assertDatabaseMissing('watched_pages', [
+            'user_id' => $user->id,
+            'page_id' => $page->id
+        ]);
+    }
+}

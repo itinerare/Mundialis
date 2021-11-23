@@ -4,6 +4,88 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.0.0](https://github.com/itinerare/Mundialis/compare/1.0.0-pre4...v1.0.0) (2021-11-23)
+### Features
+
+
+##### Tests
+
+* Add event/timeline tests ([68becc](https://github.com/itinerare/Mundialis/commit/68becc11b5ce38b2ecfbb2059306b9f9535d2d87))
+* Add initial access tests ([f197eb](https://github.com/itinerare/Mundialis/commit/f197eb63e6442e752d467b3313ec8e6cbb9cecc3))
+* Add page delete tests with images ([705a7e](https://github.com/itinerare/Mundialis/commit/705a7e30bae965781b44c0ab7ce68d7440729648))
+* Add page image delete tests ([50fd5d](https://github.com/itinerare/Mundialis/commit/50fd5dba60be0abf32edbcb867ce6573c6e26832))
+* Add page image update notif test ([d705e6](https://github.com/itinerare/Mundialis/commit/d705e6db6592ca64490ade37f4f0aa8303a95ea9))
+* Add page link tests, factory ([a9a874](https://github.com/itinerare/Mundialis/commit/a9a87408f864557bd93299811f3430405e345a42))
+* Add page watch tests ([8c7403](https://github.com/itinerare/Mundialis/commit/8c7403b94ac2842701afa28ba1f39aa9b9c7fe44))
+* Add subject category index tests ([e4eb5d](https://github.com/itinerare/Mundialis/commit/e4eb5d610c34f032f392a54d5e980ec8a17a4cda))
+* Add subject category view tests ([c58709](https://github.com/itinerare/Mundialis/commit/c58709213ae51334794608d06eea2e2e1c5d8983))
+* Add used invitation code auth test ([a4a0e6](https://github.com/itinerare/Mundialis/commit/a4a0e67b15267bfb01147bba219ea0fe94124c37))
+* Admin function tests ([60ec2e](https://github.com/itinerare/Mundialis/commit/60ec2e7c2098fe2f3fa0c035f0d74452c02363dc))
+* Auth and user function tests ([8534c1](https://github.com/itinerare/Mundialis/commit/8534c13c3f4cb022d47c5d4063eb461c6168e556))
+* Basic page delete/restore tests ([7e412a](https://github.com/itinerare/Mundialis/commit/7e412adb945cb8282ba02a96cfd782ea1704f54b))
+* Basic page tests ([3bcf27](https://github.com/itinerare/Mundialis/commit/3bcf279513dd8e88cd1125af36d62f6c59f23ebb))
+* Expand page image tests ([989088](https://github.com/itinerare/Mundialis/commit/9890886ee216a925ee912a0e8c6bc9c442b35ac1))
+* Expand user notification tests ([31397b](https://github.com/itinerare/Mundialis/commit/31397b603ee0555157c3aa4f246d4d7c57cfa8f5))
+* Expriment with using artisan test ([f4ba2f](https://github.com/itinerare/Mundialis/commit/f4ba2f2959fd23ab606feb5ebf907e463a262f3d))
+* Extend special page tests ([04598d](https://github.com/itinerare/Mundialis/commit/04598d505f954fe50ecd0db5abf56f5603bff29a))
+* File cleanup in image delete tests ([c02349](https://github.com/itinerare/Mundialis/commit/c0234960bae4415636165dcf69cf2dc2a3c7a79b))
+* Lexicon entry tests ([f70698](https://github.com/itinerare/Mundialis/commit/f70698dda4da267deb0d38952a42553842ed510c))
+* Page move tests ([790889](https://github.com/itinerare/Mundialis/commit/790889e2f8b92ddb95a010ab13fe9570a5d817b7))
+* Page protection tests, factory ([782117](https://github.com/itinerare/Mundialis/commit/782117f91add6d652b474eb71c7af5d03f328bc2))
+* Page relationship tests and factory ([92b3ed](https://github.com/itinerare/Mundialis/commit/92b3ed0caf26829ad8d391252f5b34de74525460))
+* Page view tests ([07d0a9](https://github.com/itinerare/Mundialis/commit/07d0a9b32f0d7a4cf31749a79d38ba21f0db4c7b))
+* Special and subject page tests ([5846f4](https://github.com/itinerare/Mundialis/commit/5846f48b753febb80925bc6ce0b7e61eefdb5edd))
+* Start of page image tests, factories ([a2d7d0](https://github.com/itinerare/Mundialis/commit/a2d7d05dc859f18737db0e08310810e2e90461dd))
+* Subject data tests ([7b77fb](https://github.com/itinerare/Mundialis/commit/7b77fbacbaa8302ceefd461cb16858bd629a5929))
+
+##### Users
+
+* Add user factory ([bd609f](https://github.com/itinerare/Mundialis/commit/bd609f120d1f624f5df1e7c78908d76b9aa461e6))
+
+### Bug Fixes
+
+* Error cascading some template changes ([898ddb](https://github.com/itinerare/Mundialis/commit/898ddb1cbe6ec43119707600cf69911ad08bf6ed))
+* Error deleting category with deleted pages ([8bfc78](https://github.com/itinerare/Mundialis/commit/8bfc78b686745ad050c11688a30a82eaec0b219c))
+* Misc tidying and fixing ([434e5b](https://github.com/itinerare/Mundialis/commit/434e5b79145c906d295f6ef231f0ce9aea13abb2))
+
+##### Language
+
+* More checking on entry deletion ([39e83f](https://github.com/itinerare/Mundialis/commit/39e83fa589c2c059a1c80edc5ca7dc00603c7608))
+
+##### Pages
+
+* Add check for image page attachment ([43c4e4](https://github.com/itinerare/Mundialis/commit/43c4e4dacc0a4875f4effb7761e5b6dcd31e12ac))
+* Better relationship creation checks ([b4f8d9](https://github.com/itinerare/Mundialis/commit/b4f8d96efcdf6b239f9086af5bec8ca4d9f84259))
+* DisplayName formatting ([9bbfe7](https://github.com/itinerare/Mundialis/commit/9bbfe7efcc21ce8a7d920615d7fe1df85424ccac))
+* DisplayName formatting error ([fbba2f](https://github.com/itinerare/Mundialis/commit/fbba2f178185a3e1d77d1ea5600c755b12cbee2f))
+* Error uploading custom image thumbnail ([faae12](https://github.com/itinerare/Mundialis/commit/faae127be0d22a56a7fd7844280593c1ba20c5eb))
+* Image create/edit verbiage, processing ([e82058](https://github.com/itinerare/Mundialis/commit/e82058618c807037afbe48e3fb630d08bfbab3ec))
+* Issue setting image creator url ([8f5d34](https://github.com/itinerare/Mundialis/commit/8f5d347a77023c2ae6fe87041f7055f0d7d75c11))
+* Minor whitespace adjustment to service ([020d75](https://github.com/itinerare/Mundialis/commit/020d754f58eb70d9f17f24a796ee35111604e4e4))
+* Page image update notif not being sent ([621c30](https://github.com/itinerare/Mundialis/commit/621c301762442b8450db361f748bac74ca1a2988))
+* Parsed link inconsistent w displayName ([8fc3b3](https://github.com/itinerare/Mundialis/commit/8fc3b3968a64b0d6d1a8440ed67d0ed8c59a42ce))
+* Relationships not force deleted w page ([f5323d](https://github.com/itinerare/Mundialis/commit/f5323d12ddba580b82be43e2b7d868b4aa8b3d5a))
+* Timeline errors if no date divisions ([df67bd](https://github.com/itinerare/Mundialis/commit/df67bd5d7f68cedcc1673ff963c0caaff5d2405d))
+* Undo overzealous change ([89e352](https://github.com/itinerare/Mundialis/commit/89e352ee0fccfc53d9829484a51efc0722ab2593))
+
+##### Tests
+
+* Add failsafe site page generation ([c3e5e7](https://github.com/itinerare/Mundialis/commit/c3e5e7491225e271b4b0d99a580680d53a934dce))
+* Error running tests on fresh DB ([4658d0](https://github.com/itinerare/Mundialis/commit/4658d0556021bdff7bb8a099300eea7333276f45))
+* Image update notif test error ([6581ce](https://github.com/itinerare/Mundialis/commit/6581ce59ebd0fea894a9b2d6ef18949b56143286))
+
+##### Users
+
+* 2FA confirm/disable functions absent ([2e1e89](https://github.com/itinerare/Mundialis/commit/2e1e89283bce4490227996d91b208f61d506402c))
+* Add check for closed reg when creating ([fd2b25](https://github.com/itinerare/Mundialis/commit/fd2b2502927a4d383979b464139775fffc7949ab))
+* Error banning user ([696001](https://github.com/itinerare/Mundialis/commit/6960011f2e699f74698b30815c98ad1d6889e78f))
+* Error clearing notifications of type 0 ([49ded1](https://github.com/itinerare/Mundialis/commit/49ded1d10314a705967f86821724c0c67cfb1bf7))
+* Error unbanning user ([c45f25](https://github.com/itinerare/Mundialis/commit/c45f25c9ac8e8daa979b123a49b28fb74273e563))
+* Further improved rank checks/fetching ([205f48](https://github.com/itinerare/Mundialis/commit/205f4872a1a34065c9579e987b6599f65f5f9fee))
+* Incorrect account sidebar link ([1a56a1](https://github.com/itinerare/Mundialis/commit/1a56a16398aa4ea61027488804acd54107d0a460))
+
+---
+
 ## [1.0.0-pre4](https://github.com/itinerare/Mundialis/compare/1.0.0-pre3...v1.0.0-pre4) (2021-10-10)
 ### Bug Fixes
 

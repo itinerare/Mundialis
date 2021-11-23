@@ -4,11 +4,14 @@ namespace App\Models\Subject;
 
 use Config;
 use App\Models\Subject\SubjectTemplate;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Models\Model;
 
 class SubjectCategory extends Model
 {
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *

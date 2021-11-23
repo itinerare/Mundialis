@@ -190,7 +190,7 @@ class SubjectController extends Controller
     {
         $category = SubjectCategory::find($id);
         $subject = $category->subject;
-        if($id && $service->deleteCategory($category)) {
+        if($id && $service->deleteCategory($category, Auth::user())) {
             flash('Category deleted successfully.')->success();
         }
         else {

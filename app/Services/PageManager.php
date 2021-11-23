@@ -5,7 +5,6 @@ use App\Services\Service;
 use DB;
 use Config;
 use Notifications;
-use Auth;
 
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
@@ -106,7 +105,7 @@ class PageManager extends Service
 
             // Create version
             $version = $this->logPageVersion($page->id, $user->id, 'Page Created', isset($data['reason']) ? $data['reason'] : null, $data['version'], false);
-            if(!$version) throw Exception('An error occurred while saving page version.');
+            if(!$version) throw new \Exception('An error occurred while saving page version.');
 
             return $this->commitReturn($page);
         } catch(\Exception $e) {
@@ -167,7 +166,7 @@ class PageManager extends Service
 
             // Create version
             $version = $this->logPageVersion($page->id, $user->id, $versionType, isset($data['reason']) ? $data['reason'] : null, $data['version'], isset($data['is_minor']) ? $data['is_minor'] : false);
-            if(!$version) throw Exception('An error occurred while saving page version.');
+            if(!$version) throw new \Exception('An error occurred while saving page version.');
 
             // Update page
             $page->update($data);
@@ -175,7 +174,7 @@ class PageManager extends Service
             // Send a notification to users that have watched this page
             if($page->watchers->count()) {
                 foreach($page->watchers as $recipient) {
-                    if($recipient->id != Auth::user()->id) {
+                    if($recipient->id != $user->id) {
                         Notifications::create('WATCHED_PAGE_UPDATED', $recipient, [
                             'page_url' => $page->url,
                             'page_title' => $page->title,
@@ -253,7 +252,7 @@ class PageManager extends Service
 
             // Create a version logging the move
             $version = $this->logPageVersion($page->id, $user->id, 'Page Moved from '.$oldCategory->name.' to '.$category->name, $reason, $page->version->data, false);
-            if(!$version) throw Exception('An error occurred while saving page version.');
+            if(!$version) throw new \Exception('An error occurred while saving page version.');
 
             return $this->commitReturn($page);
         } catch(\Exception $e) {
@@ -287,7 +286,7 @@ class PageManager extends Service
 
             // Create a version logging the reset
             $version = $this->logPageVersion($page->id, $user->id, 'Page Reset to Ver. #'.$version->id, $reason, $version->data, false);
-            if(!$version) throw Exception('An error occurred while saving page version.');
+            if(!$version) throw new \Exception('An error occurred while saving page version.');
 
             return $this->commitReturn($page);
         } catch(\Exception $e) {
@@ -331,13 +330,18 @@ class PageManager extends Service
 
                 // Check to see if any images are linked only to this page,
                 // and if so, force delete them
-                foreach($page->images()->withTrashed()->get() as $image)
-                    if($image->pages->count() == 1) {
-                        if(!(new ImageManager)->deletePageImage($image, true)) throw new \Exception('An error occurred deleting an image.');
+                foreach($page->images()->withTrashed()->get() as $image) {
+                    if($image->pages()->count() <= 1) {
+                        if(!(new ImageManager)->deletePageImage($image, $user, null, true)) throw new \Exception('An error occurred deleting an image.');
                     }
+                }
 
                 // Detach any remaining images
                 $page->images()->detach();
+
+                // Delete the page's relationships if relevant
+                if($page->relationships->count())
+                    $page->relationships()->delete();
 
                 // Finally, force-delete the page
                 $page->forceDelete();
@@ -353,7 +357,7 @@ class PageManager extends Service
                 // Send a notification to users that have watched this page
                 if($page->watchers->count()) {
                     foreach($page->watchers as $recipient) {
-                        if($recipient->id != Auth::user()->id) {
+                        if($recipient->id != $user->id) {
                             Notifications::create('WATCHED_PAGE_DELETED', $recipient, [
                                 'page_title' => $page->title,
                                 'user_url' => $user->url,
@@ -369,7 +373,7 @@ class PageManager extends Service
 
                 // Create a version logging the deletion
                 $version = $this->logPageVersion($page->id, $user->id, 'Page Deleted', $reason, $page->version->data, false);
-                if(!$version) throw Exception('An error occurred while saving page version.');
+                if(!$version) throw new \Exception('An error occurred while saving page version.');
 
                 // Delete the page
                 $page->delete();
@@ -401,13 +405,13 @@ class PageManager extends Service
             // Then, attempt to restore any images that were soft-deleted by virtue of only
             // being linked to the page when it was deleted
             foreach($page->images()->withTrashed()->whereNotNull('deleted_at')->get() as $image)
-            if($image->pages()->count() == 1) {
-                if(!(new ImageManager)->restorePageImage($image, $user, 'Page Restored')) throw new \Exception('An error occurred restoring an image.');
-            }
+                if($image->pages()->count() == 1) {
+                    if(!(new ImageManager)->restorePageImage($image, $user, 'Page Restored')) throw new \Exception('An error occurred restoring an image.');
+                }
 
             // Finally, create a version logging the restoration
             $version = $this->logPageVersion($page->id, $user->id, 'Page Restored', $reason, $page->version->data, false);
-            if(!$version) throw Exception('An error occurred while saving page version.');
+            if(!$version) throw new \Exception('An error occurred while saving page version.');
 
             return $this->commitReturn($page);
         } catch(\Exception $e) {

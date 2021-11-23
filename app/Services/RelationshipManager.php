@@ -35,9 +35,14 @@ class RelationshipManager extends Service
         DB::beginTransaction();
 
         try {
+            // Ensure that both pages exist
+            $pageOne = $page;
+            $pageTwo = Page::where('id', $data['page_two_id'])->first();
+            if(!$pageOne || !$pageTwo) throw new \Exception('One or both selected pages are invalid.');
+
             // Ensure user can edit the parent page, and that it's of the appropriate subject
-            if(!$user->canEdit(Page::find('page_one_id')) || !$user->canEdit(Page::find('page_two_id'))) throw new \Exception('You don\'t have permission to edit one or more of these pages.');
-            if($page->category->subject['key'] != 'people') throw new \Exception('Relationships can\'t be created between pages in this subject.');
+            if(!$user->canEdit($pageOne) || !$user->canEdit($pageTwo)) throw new \Exception('You don\'t have permission to edit one or both of these pages.');
+            if($pageOne->category->subject['key'] != 'people' || $pageTwo->category->subject['key'] != 'people') throw new \Exception('Relationships can\'t be created between pages in this subject.');
 
             // Create relationship
             $relationship = PageRelationship::create($data);
@@ -57,7 +62,7 @@ class RelationshipManager extends Service
      * @param  \App\Models\User\User              $user
      * @return \App\Models\Page\Page|bool
      */
-    public function updatePageRelationship($page, $relationship, $data, $user)
+    public function updatePageRelationship($relationship, $data, $user)
     {
         DB::beginTransaction();
 

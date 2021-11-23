@@ -3,6 +3,7 @@
 namespace App\Models\Page;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Request;
 use Config;
 
@@ -13,7 +14,7 @@ use App\Models\Model;
 
 class Page extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -323,7 +324,7 @@ class Page extends Model
         }
         // Otherwise, return the link as usual
         return
-            '<a href="'.$this->url.'" class=text-primary page-link"'.($this->summary ? ' data-toggle="tooltip" title="'.$this->summary.'"' : '').'>'.$this->displayTitle.'</a>'.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
+            '<a href="'.$this->url.'" class="text-primary"'.($this->summary ? ' data-toggle="tooltip" title="'.$this->summary.'"' : '').'>'.$this->displayTitle.'</a>'.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
     }
 
     /**

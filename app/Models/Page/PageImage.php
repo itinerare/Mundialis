@@ -3,12 +3,13 @@
 namespace App\Models\Page;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Models\Model;
 
 class PageImage extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     /**
      * The attributes that are mass assignable.

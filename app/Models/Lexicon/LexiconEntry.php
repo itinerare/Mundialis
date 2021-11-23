@@ -3,9 +3,12 @@
 namespace App\Models\Lexicon;
 
 use App\Models\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LexiconEntry extends Model
 {
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *

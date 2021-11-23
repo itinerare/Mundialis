@@ -142,6 +142,11 @@ class LexiconManager extends Service
         DB::beginTransaction();
 
         try {
+            if(LexiconEtymology::where('parent_id', $entry->id)->exists()) throw new \Exception('This entry has child words. Please remove them before deleting this entry.');
+
+            // Delete any etymologies associated with the entry
+            $entry->etymologies()->delete();
+
             // Delete the entry
             $entry->delete();
 
