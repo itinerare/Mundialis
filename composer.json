@@ -2,20 +2,36 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^7.4",
+        "doctrine/dbal": "2.2",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "intervention/image": "^2.5",
+        "laracasts/flash": "^3.2",
+        "laravel/fortify": "^1.7",
         "laravel/framework": "^8.40",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "illuminate/database": "^5.6|^6.0|^7.0|^8.0",
+        "illuminate/http": "^5.6|^6.0|^7.0|^8.0",
+        "illuminate/pagination": "^5.6|^6.0|^7.0|^8.0",
+        "illuminate/queue": "^5.6|^6.0|^7.0|^8.0",
+        "illuminate/routing": "^5.6|^6.0|^7.0|^8.0",
+        "illuminate/support": "^5.6|^6.0|^7.0|^8.0",
+        "laravel/helpers": "^1.4",
+        "laravelcollective/html": "^6.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
+        "marcocesarato/php-conventional-changelog": "^1.10",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
         "phpunit/phpunit": "^9.3.3"
@@ -25,7 +41,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/Helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -55,5 +74,6 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "version": "1.0.0"
 }
