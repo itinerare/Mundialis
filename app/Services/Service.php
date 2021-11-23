@@ -301,7 +301,7 @@ abstract class Service {
                                     $item = preg_replace('/\[\['.$regexMatch.'\]\]/', $page->displayName, $item);
                                 }
                                 elseif($i == 2) {
-                                    $item = preg_replace('/\[\['.$regexMatch.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.$page->url.'" class="text-primary page-link"'.($page->summary ? ' data-toggle="tooltip" title="'.$page->summary.'"' : '').'>'.$matches[$i][$i2].'</a>', $item);
+                                    $item = preg_replace('/\[\['.$regexMatch.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.$page->url.'" class="text-primary"'.($page->summary ? ' data-toggle="tooltip" title="'.$page->summary.'"' : '').'>'.$matches[$i][$i2].'</a>', $item);
                                 }
                                 // And make a note that the page is being linked to
                                 $data['links'][] = [
