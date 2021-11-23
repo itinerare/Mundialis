@@ -324,7 +324,7 @@ class Page extends Model
         }
         // Otherwise, return the link as usual
         return
-            '<a href="'.$this->url.'" class=text-primary page-link"'.($this->summary ? ' data-toggle="tooltip" title="'.$this->summary.'"' : '').'>'.$this->displayTitle.'</a>'.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
+            '<a href="'.$this->url.'" class="text-primary page-link"'.($this->summary ? ' data-toggle="tooltip" title="'.$this->summary.'"' : '').'>'.$this->displayTitle.'</a>'.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
     }
 
     /**
