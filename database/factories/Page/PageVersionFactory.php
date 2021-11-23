@@ -136,7 +136,7 @@ class PageVersionFactory extends Factory
     {
         return $this->state(function (array $attributes) use($title, $summary, $utilityTags, $pageTags, $division) {
             return [
-                'data' => '{"data":{"description":null,"test_category_field":"test field answer",'.($division ? '"date":{"start":{"'.$division.'":"'.mt_rand(1,50).'"},"end":{"'.$division.'":"'.mt_rand(50,100).'"}},' : '').'"parsed":{"description":null,'.($division ? '"date":{"start":{"'.$division.'":"'.mt_rand(1,50).'"},"end":{"'.$division.'":"'.mt_rand(50,100).'"}},' : '').'"test_category_field":"test field answer"}},"title":"'.$title.'","is_visible":"1","summary":'.($summary ? '"'.$summary.'"' : null ).',"utility_tag":'.($utilityTags ? '"'.$utilityTags.'"' : null ).',"page_tag":'.($pageTags ? '"'.$pageTags.'"' : null ).'}'
+                'data' => '{"data":{"description":null,"test_category_field":"test field answer",'.($division ? '"date":{"start":{"'.$division.'":"'.mt_rand(1,50).'"},"end":{"'.$division.'":"'.mt_rand(50,100).'"}},' : '').'"parsed":{"description":null,'.($division ? '"date":{"start":{"'.$division.'":"'.mt_rand(1,50).'"},"end":{"'.$division.'":"'.mt_rand(50,100).'"}},' : '').'"test_category_field":"test field answer"}},"title":"'.$title.'","is_visible":"1","summary":'.($summary ? '"'.$summary.'"' : null ).',"utility_tag":'.($utilityTags ? '"['.$utilityTags.']"' : null ).',"page_tag":'.($pageTags ? '"['.$pageTags.']"' : null ).'}'
             ];
         });
     }
