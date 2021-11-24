@@ -285,7 +285,7 @@ class SubjectService extends Service
         // Format and record infobox fields if present
         if(isset($data['infobox_key'])) foreach($data['infobox_key'] as $key=>$fieldKey) {
             if(isset($data['infobox_choices'][$key]))
-                $data['infobox_choices'][$key] = explode(',', $data['field_choices'][$key]);
+                $data['infobox_choices'][$key] = explode(',', $data['infobox_choices'][$key]);
 
             $data['data']['infobox'][$fieldKey] = [
                 'label' => $data['infobox_label'][$key],
