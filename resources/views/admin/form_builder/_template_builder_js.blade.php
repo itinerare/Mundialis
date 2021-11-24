@@ -1,7 +1,7 @@
 <script>
     $(document).ready(function() {
         $('#infoboxList .infobox-list-entry').each(function(index) {
-            attachFieldTypeListener($(this));
+            attachFieldTypeListener($(this).find('.form-field-type'));
         });
 
         $('#add-infobox').on('click', function(e) {
