@@ -8,7 +8,13 @@
     @if(($field['type'] == 'choice' || $field['type'] == 'multiple') && isset($field['choices']))
         @foreach($field['choices'] as $value=>$choice)
             <div class="choice-wrapper">
-                <input class="form-check-input ml-0 pr-4" name="{{ $field['type'] == 'multiple' ? $key.'[]' : $key }}" id="{{ $field['type'] == 'multiple' ? $key.'[]' : $key.'_'.$value }}" type="{{ $field['type'] == 'multiple' ? 'checkbox' : 'radio' }}" value="{{ $field['type'] == 'multiple' ? (isset($page->data[$key]) && $page->data[$key] != null ? $page->data[$key] : $value) : (isset($page->data[$key.'_'.$value]) && $page->data[$key.'_'.$value] != null ? $page->data[$key.'_'.$value] : $value) }}">
+                <input class="form-check-input ml-0 pr-4"
+                    name="{{ $field['type'] == 'multiple' ? $key.'['.$value.']' : $key }}"
+                    id="{{ $field['type'] == 'multiple' ? $key.'['.$value.']' : $key.'_'.$value }}"
+                    type="{{ $field['type'] == 'multiple' ? 'checkbox' : 'radio' }}"
+                    value="1"
+                    {{ $field['type'] == 'multiple' ? (isset($page->data[$key][$value]) && $page->data[$key][$value] ? 'checked="checked"' : '') : (isset($page->data[$key.'_'.$value]) && $page->data[$key.'_'.$value] ? 'checked="checked"' : '') }}
+                >
                 <label for="{{ $key }}[]" class="label-class ml-3">{{ $choice }}</label>
             </div>
         @endforeach

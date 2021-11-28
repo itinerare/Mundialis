@@ -47,7 +47,7 @@ return [
     | Do not change this value!
     |
     */
-    'version' => '1.0.0',
+    'version' => '1.1.0',
 
     /*
     |--------------------------------------------------------------------------
@@ -82,4 +82,21 @@ return [
     |
     */
     'image_thumbnail_automation' => 0,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Enable Backups
+    |--------------------------------------------------------------------------
+    |
+    | This feature will create a daily backup automatically. Requires a cron job
+    | to be set up as well!
+    | Note that it's recommended to configure config/backup.php as desired as well,
+    | especially to adjust the location backups are saved to (by default, they are
+    | saved locally). Note that even if this is disabled, backups can still be ran
+    | manually using the backup:run command.
+    |
+    | Simply change to "1" to enable, or keep at "0" to disable.
+    |
+    */
+    'enable_backups' => 0,
 ];

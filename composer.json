@@ -9,23 +9,25 @@
     "license": "MIT",
     "require": {
         "php": "^7.4",
+        "benjamincrozat/laravel-dropbox-driver": "^3.0",
         "doctrine/dbal": "2.2",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "intervention/image": "^2.5",
-        "laracasts/flash": "^3.2",
-        "laravel/fortify": "^1.7",
-        "laravel/framework": "^8.40",
-        "laravel/tinker": "^2.5",
         "illuminate/database": "^5.6|^6.0|^7.0|^8.0",
         "illuminate/http": "^5.6|^6.0|^7.0|^8.0",
         "illuminate/pagination": "^5.6|^6.0|^7.0|^8.0",
         "illuminate/queue": "^5.6|^6.0|^7.0|^8.0",
         "illuminate/routing": "^5.6|^6.0|^7.0|^8.0",
         "illuminate/support": "^5.6|^6.0|^7.0|^8.0",
+        "intervention/image": "^2.5",
+        "laracasts/flash": "^3.2",
+        "laravel/fortify": "^1.7",
+        "laravel/framework": "^8.40",
         "laravel/helpers": "^1.4",
-        "laravelcollective/html": "^6.0"
+        "laravel/tinker": "^2.5",
+        "laravelcollective/html": "^6.0",
+        "spatie/laravel-backup": "^6.16"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -75,5 +77,5 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "version": "1.0.0"
+    "version": "1.1.0"
 }
