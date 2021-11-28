@@ -4,6 +4,26 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.1.0](https://github.com/itinerare/Mundialis/compare/1.0.0...1.1.0) (2021-11-28)
+### Features
+
+
+##### Backups
+
+* Set up backups ([20cffd](https://github.com/itinerare/Mundialis/commit/20cffd3d9acad1c3aba99c02a6ab92efe3d021f8))
+
+### Bug Fixes
+
+* Cannot create choose (x) infobox fields; fixes #24 ([866dc1](https://github.com/itinerare/Mundialis/commit/866dc102bcccecec7dffbc3f60b7def2cbda395d))
+* Existing infobox field type JS issue ([2a49d8](https://github.com/itinerare/Mundialis/commit/2a49d870ada7d2213544b0d8faceaf5f1aa69e1c))
+
+##### Pages
+
+* Error viewing pages after adding field ([7f62c4](https://github.com/itinerare/Mundialis/commit/7f62c488073b31e0491f020922c4350822d8aa03))
+* Multiple choice errors; fixes #28 ([04d143](https://github.com/itinerare/Mundialis/commit/04d14371e84e5cce2c9fe85de4fdfd6f3b2bb09c))
+
+---
+
 ## [1.0.0](https://github.com/itinerare/Mundialis/compare/1.0.0-rc1...1.0.0) (2021-11-23)
 ### Features
 
