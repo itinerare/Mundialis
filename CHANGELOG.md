@@ -4,6 +4,16 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.1.1](https://github.com/itinerare/Mundialis/compare/1.1.0...v1.1.1) (2021-12-05)
+### Bug Fixes
+
+
+##### Backups
+
+* Config cleanup; fixes #33 ([82679d](https://github.com/itinerare/Mundialis/commit/82679d60b991fba4607af5ca16f8ffd3f08490e7))
+
+---
+
 ## [1.1.0](https://github.com/itinerare/Mundialis/compare/1.0.0...1.1.0) (2021-11-28)
 ### Features
 
