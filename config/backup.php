@@ -118,7 +118,7 @@ return [
              * Change to or add 'dropbox' to enable dropbox storage.
              */
             'disks' => [
-                'dropbox'
+                'local'
             ],
         ],
 
@@ -186,43 +186,7 @@ return [
     'monitor_backups' => [
         [
             'name' => env('APP_NAME', 'laravel-backup'),
-            'disks' => ['dropbox'],
-            'health_checks' => [
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 25000,
-            ],
-        ],
-
-        [
-            'name' => 'Archaves',
-            'disks' => ['dropbox'],
-            'health_checks' => [
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 25000,
-            ],
-        ],
-
-        [
-            'name' => 'Mothcats',
-            'disks' => ['dropbox'],
-            'health_checks' => [
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 25000,
-            ],
-        ],
-
-        [
-            'name' => 'Faeloras',
-            'disks' => ['dropbox'],
-            'health_checks' => [
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 25000,
-            ],
-        ],
-
-        [
-            'name' => 'Foxponds',
-            'disks' => ['dropbox'],
+            'disks' => ['local'],
             'health_checks' => [
                 \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,
                 \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 25000,
