@@ -14,7 +14,7 @@ use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
 use App\Services\ImageManager;
 
-class PageImageTest extends TestCase
+class PageImageViewTest extends TestCase
 {
     use RefreshDatabase;
 
