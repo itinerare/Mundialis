@@ -38,7 +38,7 @@
             <div class="col-md">
                 <div class="form-group">
                     {!! Form::label('Field Value (Optional)') !!}
-                    {!! Form::text('field_value[]', isset($field['value']) ? $field['value'] : null, ['class' => 'form-control', 'placeholder' => 'Default value for the field']) !!}
+                    {!! Form::text('infobox_value[]', isset($field['value']) ? $field['value'] : null, ['class' => 'form-control', 'placeholder' => 'Default value for the field']) !!}
                 </div>
             </div>
             <div class="col-md-12">
