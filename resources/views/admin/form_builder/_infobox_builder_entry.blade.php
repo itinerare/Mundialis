@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md">
                 <div class="form-group">
-                    {!! Form::label('Field Key') !!} {!! add_help('Internal key. Can\'t be duplicated within one form, or duplicate instances will overwrite each other. <strong>Changing this will break any existing commissions\' form responses if they use this form.') !!}
+                    {!! Form::label('Field Key') !!} {!! add_help('Internal key. Can\'t be duplicated within one form, or duplicate instances will overwrite each other. <strong>Changing this will break any existing pages if they use this template.</strong>') !!}
                     {!! Form::text('infobox_key[]', $key, ['class' => 'form-control', 'placeholder' => 'Internal key. Can\'t be duplicated']) !!}
                 </div>
             </div>
