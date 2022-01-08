@@ -18,11 +18,11 @@
                                 @if($field['type'] == 'checkbox')
                                     {!! isset($data[$key]) ? ($data[$key] ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i>') : '' !!}
                                 @elseif(($field['type'] == 'multiple' || $field['type'] == 'choice') && isset($field['choices']))
-                                    @if($field['type'] == 'multiple' && isset($data['key']))
+                                    @if($field['type'] == 'multiple' && isset($data[$key]))
                                         @foreach($data[$key] as $choiceKey=>$answer)
                                             {{ isset($field['choices'][$choiceKey]) ? $field['choices'][$choiceKey] : $answer }}{{ !$loop->last ? ',' : '' }}
                                         @endforeach
-                                    @else
+                                    @elseif($field['type'] == 'choice')
                                         {{ isset($data[$key]) ? $field['choices'][$data[$key]] : '-' }}
                                     @endif
                                 @elseif($field['type'] != 'checkbox')
