@@ -12,8 +12,8 @@
                     name="{{ $field['type'] == 'multiple' ? $key.'['.$value.']' : $key }}"
                     id="{{ $field['type'] == 'multiple' ? $key.'['.$value.']' : $key.'_'.$value }}"
                     type="{{ $field['type'] == 'multiple' ? 'checkbox' : 'radio' }}"
-                    value="1"
-                    {{ $field['type'] == 'multiple' ? (isset($page->data[$key][$value]) && $page->data[$key][$value] ? 'checked="checked"' : '') : (isset($page->data[$key.'_'.$value]) && $page->data[$key.'_'.$value] ? 'checked="checked"' : '') }}
+                    value="{{ $field['type'] == 'choice' ? $value : 1 }}"
+                    {{ $field['type'] == 'multiple' ? (isset($page->data[$key][$value]) && $page->data[$key][$value] ? 'checked="checked"' : '') : (isset($page->data[$key]) && $page->data[$key] == $value ? 'checked="checked"' : '') }}
                 >
                 <label for="{{ $key }}[]" class="label-class ml-3">{{ $choice }}</label>
             </div>
