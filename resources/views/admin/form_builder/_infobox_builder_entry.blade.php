@@ -21,11 +21,17 @@
                     {!! Form::text('infobox_label[]', $field['label'], ['class' => 'form-control', 'placeholder' => 'Label shown on the commission form']) !!}
                 </div>
             </div>
-            <div class="chooseOptions col-md-12">
-                <div class="choiceOptions {{ $field['type'] == 'choice' || $field['type'] == 'multiple' ? '' : 'hide' }}">
+            <div class="chooseOptions col-md-6">
+                <div class="choiceOptions {{ $field['type'] == 'choice' || $field['type'] == 'multiple' ? 'show' : 'hide' }}">
                     <div class="form-group">
-                        {!! Form::label('Field Options') !!} {!! add_help('Enter options, separated by commas. <strong>Changing this will break any existing commissions\' form responses if they use this form.') !!}
+                        {!! Form::label('Field Options') !!} {!! add_help('Enter options, separated by commas. <strong>Changing this will break and/or change any existing pages if they use this template.</strong>') !!}
                         {!! Form::text('infobox_choices[]', isset($field['choices']) ? implode(',', $field['choices']) : null, ['class' => 'form-control', 'placeholder' => 'Enter options, separated by commas']) !!}
+                    </div>
+                </div>
+                <div class="valueOptions {{ $field['type'] == 'choice' || $field['type'] == 'multiple' ? 'hide' : 'show' }}">
+                    <div class="form-group">
+                        {!! Form::label('Field Value (Optional)') !!}
+                        {!! Form::text('infobox_value[]', isset($field['value']) ? $field['value'] : null, ['class' => 'form-control', 'placeholder' => 'Default value for the field']) !!}
                     </div>
                 </div>
             </div>
@@ -33,12 +39,6 @@
                 <div class="form-group">
                     {!! Form::label('Field Rules (Optional)') !!} (See rules <a href="https://laravel.com/docs/8.x/validation#available-validation-rules">here</a>)
                     {!! Form::text('infobox_rules[]', isset($field['rules']) ? $field['rules'] : null, ['class' => 'form-control', 'placeholder' => 'Any custom validation rules']) !!}
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="form-group">
-                    {!! Form::label('Field Value (Optional)') !!}
-                    {!! Form::text('infobox_value[]', isset($field['value']) ? $field['value'] : null, ['class' => 'form-control', 'placeholder' => 'Default value for the field']) !!}
                 </div>
             </div>
             <div class="col-md-12">
