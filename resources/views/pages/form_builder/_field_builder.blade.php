@@ -21,16 +21,16 @@
     @elseif($field['type'] != 'checkbox')
         @switch($field['type'])
             @case('text')
-                {!! Form::text($key, isset($page->data[$key]) ? $page->data[$key] : null, ['class' => 'form-control']) !!}
+                {!! Form::text($key, isset($page->data[$key]) ? $page->data[$key] : $field['value'], ['class' => 'form-control']) !!}
             @break
             @case('textarea')
-                {!! Form::textarea($key, isset($page->data[$key]) ? $page->data[$key] : null, ['class' => 'form-control wysiwyg']) !!}
+                {!! Form::textarea($key, isset($page->data[$key]) ? $page->data[$key] : $field['value'], ['class' => 'form-control wysiwyg']) !!}
             @break
             @case('number')
-                {!! Form::number($key, isset($page->data[$key]) ? $page->data[$key] : null, ['class' => 'form-control']) !!}
+                {!! Form::number($key, isset($page->data[$key]) ? $page->data[$key] : $field['value'], ['class' => 'form-control']) !!}
             @break
             @default
-                <input class="form-control" name="{{ $key }}" type="{{ $field['type'] }}" id="{{ $key }}" value="{{ isset($page->data[$key]) ? $page->data[$key] : null }}">
+                <input class="form-control" name="{{ $key }}" type="{{ $field['type'] }}" id="{{ $key }}" value="{{ isset($page->data[$key]) ? $page->data[$key] : $field['value'] }}">
         @endswitch
     @endif
 </div>
