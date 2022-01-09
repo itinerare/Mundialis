@@ -82,6 +82,76 @@ class SubjectDataFieldTest extends TestCase
     }
 
     /**
+     * Test subject template editing with an infobox text field with a default value.
+     *
+     * @return void
+     */
+    public function test_canPostEditTemplateWithInfoboxTextFieldWithValue()
+    {
+        // Define some basic template data
+        $data = [
+            'section_key' => [0 => $this->faker->unique()->domainWord()],
+            'section_name' => [0 => $this->faker->unique()->domainWord()],
+            'infobox_key' => [0 => $this->faker->unique()->domainWord()],
+            'infobox_type' => [0 => 'text'],
+            'infobox_label' => [0 => $this->faker->unique()->domainWord()],
+            'infobox_rules' => [0 => null],
+            'infobox_choices' => [0 => null],
+            'infobox_value' => [0 => $this->faker->unique()->domainWord()],
+            'infobox_help' => [0 => null]
+        ];
+
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/misc/edit', $data);
+
+        // Directly verify that the appropriate change has occurred
+        $this->assertDatabaseHas('subject_templates', [
+            'subject' => 'misc',
+            'data' => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"text","rules":null,"choices":null,"value":"'.$data['infobox_value'][0].'","help":null}}}'
+        ]);
+    }
+
+    /**
+     * Test subject template editing with an infobox text field with a tooltip.
+     *
+     * @return void
+     */
+    public function test_canPostEditTemplateWithInfoboxTextFieldWithHelp()
+    {
+        // Define some basic template data
+        $data = [
+            'section_key' => [0 => $this->faker->unique()->domainWord()],
+            'section_name' => [0 => $this->faker->unique()->domainWord()],
+            'infobox_key' => [0 => $this->faker->unique()->domainWord()],
+            'infobox_type' => [0 => 'text'],
+            'infobox_label' => [0 => $this->faker->unique()->domainWord()],
+            'infobox_rules' => [0 => null],
+            'infobox_choices' => [0 => null],
+            'infobox_value' => [0 => null],
+            'infobox_help' => [0 => $this->faker->unique()->domainWord()]
+        ];
+
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/misc/edit', $data);
+
+        // Directly verify that the appropriate change has occurred
+        $this->assertDatabaseHas('subject_templates', [
+            'subject' => 'misc',
+            'data' => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"text","rules":null,"choices":null,"value":null,"help":"'.$data['infobox_help'][0].'"}}}'
+        ]);
+    }
+
+    /**
      * Test subject template editing with an infobox number field.
      *
      * @return void
@@ -298,6 +368,80 @@ class SubjectDataFieldTest extends TestCase
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
             'data' => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"text","rules":"required","choices":null,"value":null,"help":null,"is_subsection":0}}}}'
+        ]);
+    }
+
+    /**
+     * Test subject template editing with a text field with a default value.
+     *
+     * @return void
+     */
+    public function test_canPostEditTemplateWithTextFieldWithValue()
+    {
+        // Define some basic template data
+        $data = [
+            'section_key' => [0 => 'test_section'],
+            'section_name' => [0 => $this->faker->unique()->domainWord()],
+            'field_key' => [0 => $this->faker->unique()->domainWord()],
+            'field_type' => [0 => 'text'],
+            'field_label' => [0 => $this->faker->unique()->domainWord()],
+            'field_rules' => [0 => null],
+            'field_choices' => [0 => null],
+            'field_value' => [0 => $this->faker->unique()->domainWord()],
+            'field_help' => [0 => null],
+            'field_section' => [0 => 'test_section'],
+            'field_is_subsection' => [0 => 0],
+        ];
+
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/misc/edit', $data);
+
+        // Directly verify that the appropriate change has occurred
+        $this->assertDatabaseHas('subject_templates', [
+            'subject' => 'misc',
+            'data' => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"text","rules":null,"choices":null,"value":"'.$data['field_value'][0].'","help":null,"is_subsection":0}}}}'
+        ]);
+    }
+
+    /**
+     * Test subject template editing with a text field with a tooltip.
+     *
+     * @return void
+     */
+    public function test_canPostEditTemplateWithTextFieldWithHelp()
+    {
+        // Define some basic template data
+        $data = [
+            'section_key' => [0 => 'test_section'],
+            'section_name' => [0 => $this->faker->unique()->domainWord()],
+            'field_key' => [0 => $this->faker->unique()->domainWord()],
+            'field_type' => [0 => 'text'],
+            'field_label' => [0 => $this->faker->unique()->domainWord()],
+            'field_rules' => [0 => null],
+            'field_choices' => [0 => null],
+            'field_value' => [0 => null],
+            'field_help' => [0 => $this->faker->unique()->domainWord()],
+            'field_section' => [0 => 'test_section'],
+            'field_is_subsection' => [0 => 0],
+        ];
+
+        // Make a temporary admin
+        $user = User::factory()->admin()->make();
+
+        // Try to post data
+        $response = $this
+            ->actingAs($user)
+            ->post('/admin/data/misc/edit', $data);
+
+        // Directly verify that the appropriate change has occurred
+        $this->assertDatabaseHas('subject_templates', [
+            'subject' => 'misc',
+            'data' => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"text","rules":null,"choices":null,"value":null,"help":"'.$data['field_help'][0].'","is_subsection":0}}}}'
         ]);
     }
 
