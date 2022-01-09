@@ -4,6 +4,38 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.2.0](https://github.com/itinerare/Mundialis/compare/v1.1.1...v1.2.0) (2022-01-09)
+### Features
+
+
+##### Tests
+
+* Add template field tests; closes #25 ([cd0272](https://github.com/itinerare/Mundialis/commit/cd027294e14220e1620a5f3800baf7a1f22c86bf))
+* Extend template field tests ([312183](https://github.com/itinerare/Mundialis/commit/3121830ed3ee2588c32f378888e3fdadb6e88aaf))
+* Infobox page edit field tests ([f75ad9](https://github.com/itinerare/Mundialis/commit/f75ad9c8524bd804e0abd3c6925ac75497f57c2c))
+* Page body edit field tests ([241ee1](https://github.com/itinerare/Mundialis/commit/241ee1f1e8c621d58695e4d03699cfd24214e85b))
+* Page view field tests ([d3efb7](https://github.com/itinerare/Mundialis/commit/d3efb75049e57cf60dc9a5716f266bead16e520d))
+
+### Bug Fixes
+
+* Error editing infobox field default value ([e4b61e](https://github.com/itinerare/Mundialis/commit/e4b61ea033cd6a7ebe9e7acca0d27fc4113687bb))
+* Make default value/choices exclusive for fields ([b769b5](https://github.com/itinerare/Mundialis/commit/b769b57c7c7fa7f9e11db0c9848a2c6361f4f3c0))
+* Template builder entry verbiage ([2186bb](https://github.com/itinerare/Mundialis/commit/2186bbc3b60097d7508430931fc5e7b79fc5e136))
+
+##### Pages
+
+* Choice/mult display error in infobox ([563fa4](https://github.com/itinerare/Mundialis/commit/563fa4207f236fada18e87ef86c61f334304af73))
+* Fix using default value ([b9e22c](https://github.com/itinerare/Mundialis/commit/b9e22ce26ec11acb0d23fa8b34595b529eca866d))
+* Radio buttons don't re-fill properly ([77660d](https://github.com/itinerare/Mundialis/commit/77660d63c6c32ce037efcec6bf513da5107d9b10))
+* View error with certain field types ([dd5831](https://github.com/itinerare/Mundialis/commit/dd5831e40ddecb84eac9cba8be7e62aa0d055ee2))
+
+##### Tests
+
+* Test class name issue ([4f4cfe](https://github.com/itinerare/Mundialis/commit/4f4cfe733a75ca2f9bd0e84112a1326ca394e98f))
+
+
+---
+
 ## [1.1.1](https://github.com/itinerare/Mundialis/compare/1.1.0...v1.1.1) (2021-12-05)
 ### Bug Fixes
 
