@@ -70,7 +70,7 @@
                 $length = 0;
                 if(isset($page->category->template['fields'][$sectionKey])) {
                     foreach($page->category->template['fields'][$sectionKey] as $fieldKey=>$field) {
-                        if(isset($data[$fieldKey]) && $field['type'] != 'checkbox') {
+                        if(isset($data[$fieldKey]) && ($field['type'] != 'checkbox' && $field['type'] != 'choice' && $field['type'] != 'multiple')) {
                             $length = $length += strlen($data[$fieldKey]);
                         }
                     }
@@ -83,7 +83,9 @@
                 <div class="collapse {{ $length < 3000 ? 'show' : '' }}" id="collapse-{{ $sectionKey }}">
                     @if(isset($page->category->template['fields'][$sectionKey]))
                         @foreach($page->category->template['fields'][$sectionKey] as $fieldKey=>$field)
+                            {!! $field['type'] != 'textarea' ? '<p>' : '' !!}
                             @include('pages.content_builder._body_builder', ['key' => $fieldKey, 'field' => $field])
+                            {!! $field['type'] != 'textarea' ? '</p>' : '' !!}
                         @endforeach
                     @endif
                 </div>
