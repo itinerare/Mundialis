@@ -12,8 +12,8 @@
                     name="{{ $field['type'] == 'multiple' ? $key.'['.$value.']' : $key }}"
                     id="{{ $field['type'] == 'multiple' ? $key.'['.$value.']' : $key.'_'.$value }}"
                     type="{{ $field['type'] == 'multiple' ? 'checkbox' : 'radio' }}"
-                    value="1"
-                    {{ $field['type'] == 'multiple' ? (isset($page->data[$key][$value]) && $page->data[$key][$value] ? 'checked="checked"' : '') : (isset($page->data[$key.'_'.$value]) && $page->data[$key.'_'.$value] ? 'checked="checked"' : '') }}
+                    value="{{ $field['type'] == 'choice' ? $value : 1 }}"
+                    {{ $field['type'] == 'multiple' ? (isset($page->data[$key][$value]) && $page->data[$key][$value] ? 'checked="checked"' : '') : (isset($page->data[$key]) && $page->data[$key] == $value ? 'checked="checked"' : '') }}
                 >
                 <label for="{{ $key }}[]" class="label-class ml-3">{{ $choice }}</label>
             </div>
@@ -21,16 +21,16 @@
     @elseif($field['type'] != 'checkbox')
         @switch($field['type'])
             @case('text')
-                {!! Form::text($key, isset($page->data[$key]) ? $page->data[$key] : null, ['class' => 'form-control']) !!}
+                {!! Form::text($key, isset($page->data[$key]) ? $page->data[$key] : $field['value'], ['class' => 'form-control']) !!}
             @break
             @case('textarea')
-                {!! Form::textarea($key, isset($page->data[$key]) ? $page->data[$key] : null, ['class' => 'form-control wysiwyg']) !!}
+                {!! Form::textarea($key, isset($page->data[$key]) ? $page->data[$key] : $field['value'], ['class' => 'form-control wysiwyg']) !!}
             @break
             @case('number')
-                {!! Form::number($key, isset($page->data[$key]) ? $page->data[$key] : null, ['class' => 'form-control']) !!}
+                {!! Form::number($key, isset($page->data[$key]) ? $page->data[$key] : $field['value'], ['class' => 'form-control']) !!}
             @break
             @default
-                <input class="form-control" name="{{ $key }}" type="{{ $field['type'] }}" id="{{ $key }}" value="{{ isset($page->data[$key]) ? $page->data[$key] : null }}">
+                <input class="form-control" name="{{ $key }}" type="{{ $field['type'] }}" id="{{ $key }}" value="{{ isset($page->data[$key]) ? $page->data[$key] : $field['value'] }}">
         @endswitch
     @endif
 </div>

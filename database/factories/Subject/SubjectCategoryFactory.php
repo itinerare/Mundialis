@@ -55,4 +55,42 @@ class SubjectCategoryFactory extends Factory
             ];
         });
     }
+
+    /**
+     * Generate a category with just a specific infobox field.
+     *
+     * @param  string                    $key
+     * @param  string                    $type
+     * @param  string                    $rules
+     * @param  string                    $choices
+     * @param  string                    $value
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function infoboxField($key = 'test', $label = 'Test', $type = 'text', $rules = null, $choices = null, $value = null)
+    {
+        return $this->state(function (array $attributes) use ($key, $label, $type, $rules, $choices, $value) {
+            return [
+                'data' => '{"infobox":{"'.$key.'":{"label":"'.$label.'","type":"'.$type.'","rules":'.($rules ? '"'.$rules.'"' : 'null').',"choices":'.($choices ? $choices : 'null').',"value":'.($value ? '"'.$value.'"' : 'null').',"help":null}}}'
+            ];
+        });
+    }
+
+    /**
+     * Generate a category with just a specific body field.
+     *
+     * @param  string                    $key
+     * @param  string                    $type
+     * @param  string                    $rules
+     * @param  string                    $choices
+     * @param  string                    $value
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function bodyField($key = 'test', $label = 'Test', $type = 'text', $rules = null, $choices = null, $value = null)
+    {
+        return $this->state(function (array $attributes) use ($key, $label, $type, $rules, $choices, $value) {
+            return [
+                'data' => '{"sections":{"section":{"name":"Test Section"}},"fields":{"section":{"'.$key.'":{"label":"'.$label.'","type":"'.$type.'","rules":'.($rules ? '"'.$rules.'"' : 'null').',"choices":'.($choices ? $choices : 'null').',"value":'.($value ? '"'.$value.'"' : 'null').',"help":null,"is_subsection":"0"}}}}'
+            ];
+        });
+    }
 }

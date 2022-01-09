@@ -20,11 +20,17 @@
                     {!! Form::text('field_label[]', null, ['class' => 'form-control', 'placeholder' => 'Label shown on the editing form and as header if enabled']) !!}
                 </div>
             </div>
-            <div class="chooseOptions col-md-12">
+            <div class="chooseOptions col-md-6">
                 <div class="choiceOptions hide">
                     <div class="form-group">
                         {!! Form::label('Field Options') !!}
                         {!! Form::text('field_choices[]', null, ['class' => 'form-control', 'placeholder' => 'Enter options, separated by commas']) !!}
+                    </div>
+                </div>
+                <div class="valueOptions show">
+                    <div class="form-group">
+                        {!! Form::label('Field Value (Optional)') !!}
+                        {!! Form::text('field_value[]', null, ['class' => 'form-control', 'placeholder' => 'Default value for the field']) !!}
                     </div>
                 </div>
             </div>
@@ -32,12 +38,6 @@
                 <div class="form-group">
                     {!! Form::label('Field Rules (Optional)') !!} (See rules <a href="https://laravel.com/docs/8.x/validation#available-validation-rules">here</a>)
                     {!! Form::text('field_rules[]', null, ['class' => 'form-control', 'placeholder' => 'Any custom validation rules']) !!}
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="form-group">
-                    {!! Form::label('Field Value (Optional)') !!}
-                    {!! Form::text('field_value[]', null, ['class' => 'form-control', 'placeholder' => 'Default value for the field']) !!}
                 </div>
             </div>
             <div class="col-md-12">
