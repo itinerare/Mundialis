@@ -102,6 +102,14 @@
                 if (val == 'choice' || val == 'multiple'){
                     $cell.children('.choiceOptions').addClass('show');
                     $cell.children('.choiceOptions').removeClass('hide');
+                    $cell.children('.valueOptions').removeClass('show');
+                    $cell.children('.valueOptions').addClass('hide');
+                }
+                else {
+                    $cell.children('.choiceOptions').addClass('hide');
+                    $cell.children('.choiceOptions').removeClass('show');
+                    $cell.children('.valueOptions').removeClass('hide');
+                    $cell.children('.valueOptions').addClass('show');
                 }
             });
         }
