@@ -75,4 +75,4 @@ Thank you for considering contributing to Mundialis! Please see the [Contributio
 If you are interested in providing optional/plugin-type functionality for Mundialis, please contact me first and foremost; while I am open to developing plugin support and would rather do so before any are made, I will not be doing so until there is concrete interest in it.
 
 ## Contact
-If you have any questions, please contact me via email at [queries@itinerare.net](emailto:queries@itinerare.net).
+If you have any questions, please contact me via email at [mundialis@itinerare.net](emailto:mundialis@itinerare.net).
