@@ -356,12 +356,12 @@ class Page extends Model
      */
     public function personAge($birth, $current)
     {
-        if(isset($birth['date'][
+        if((isset($birth['date']) && isset($birth['date'][
             str_replace(' ', '_', strtolower(TimeDivision::dateEnabled()->orderBy('sort', 'DESC')->first()->name))
-            ]) &&
-        isset($current['date'][
+            ])) &&
+        (isset($current['date']) && isset($current['date'][
             str_replace(' ', '_', strtolower(TimeDivision::dateEnabled()->orderBy('sort', 'DESC')->first()->name))
-            ]) &&
+            ])) &&
         (isset($birth['chronology']) && isset($current['chronology']) &&
         ($birth['chronology'] == $current['chronology']))) {
             // Cycle through both birth and current dates,
