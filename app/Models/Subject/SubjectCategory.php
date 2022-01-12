@@ -203,7 +203,7 @@ class SubjectCategory extends Model
         }
         // If no data is found and the subject's template is set,
         // return the subject's template data
-        else if(isset($this->subjectTemplate->data) && $this->subjectTemplate->data) return $this->subjectTemplate->data;
+        if(isset($this->subjectTemplate->data) && $this->subjectTemplate->data) return $this->subjectTemplate->data;
         // Failing that return an empty array so the form builder doesn't error
         else return [];
     }
