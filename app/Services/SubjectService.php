@@ -160,7 +160,6 @@ class SubjectService extends Service
                 $image = $data['image'];
                 unset($data['image']);
             }
-            else $data['has_image'] = 0;
 
             // Collect and record template information
             $data = $this->processTemplateData($data);
