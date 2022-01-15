@@ -9,6 +9,8 @@ use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Page\Page;
 use App\Models\Page\PageVersion;
+use App\Models\Subject\SubjectCategory;
+use App\Services\PageManager;
 
 class PageViewTest extends TestCase
 {
@@ -27,7 +29,7 @@ class PageViewTest extends TestCase
         // Create a page to view & version
         $page = Page::factory()->create();
         PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id);
+            ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs($user)
             ->get('/pages/'.$page->id.'.'.$page->slug);
@@ -48,7 +50,7 @@ class PageViewTest extends TestCase
         // Create a page to view & version
         $page = Page::factory()->create();
         PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id);
+            ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs($user)
             ->get('/pages/'.$page->id.'/history');
@@ -69,7 +71,7 @@ class PageViewTest extends TestCase
         // Create a page to view & version
         $page = Page::factory()->create();
         PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id);
+            ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs($user)
             ->get('/pages/'.$page->id.'/gallery');
@@ -90,7 +92,7 @@ class PageViewTest extends TestCase
         // Create a page to view & version
         $page = Page::factory()->create();
         PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id);
+            ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs($user)
             ->get('/pages/'.$page->id.'/links-here');
