@@ -57,4 +57,16 @@
 @section('scripts')
 @parent
     @include('pages.images._info_popup_js', ['gallery' => false])
+
+    <script>
+        // Taken from https://css-tricks.com/swapping-out-text-five-different-ways/
+        $(document).ready(function() {
+            $(".section-collapse").on("click", function() {
+                var el = $(this);
+                el.text() == el.data("text-swap")
+                    ? el.text(el.data("text-original"))
+                    : el.text(el.data("text-swap"));
+            });
+        });
+    </script>
 @endsection

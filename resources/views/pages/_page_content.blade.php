@@ -67,7 +67,7 @@
         @if(isset($page->category->template['sections']))
             @foreach($page->category->template['sections'] as $sectionKey=>$section)
             @php
-                $length = 0;
+                $length = 0; if(isset($text)) unset($text);
                 if(isset($page->category->template['fields'][$sectionKey])) {
                     foreach($page->category->template['fields'][$sectionKey] as $fieldKey=>$field) {
                         if(isset($data[$fieldKey]) && ($field['type'] != 'checkbox' && $field['type'] != 'choice' && $field['type'] != 'multiple')) {
@@ -75,10 +75,17 @@
                         }
                     }
                 }
+
+                if($length < 3000) {
+                    $text['original'] = 'Hide'; $text['swap'] = 'Show';
+                }
+                else {
+                    $text['original'] = 'Show'; $text['swap'] = 'Hide';
+                }
             @endphp
                 <h2 id="section-{{ $sectionKey }}">
                     {{ $section['name'] }}
-                    <a class="small collapse-toggle collapsed" href="#collapse-{{ $sectionKey }}" data-toggle="collapse">Show</a></h3>
+                    <a class="small collapse-toggle collapsed section-collapse" href="#collapse-{{ $sectionKey }}" data-toggle="collapse" data-text-swap="{{ $text['swap'] }}" data-text-original="{{ $text['original'] }}">{{ $text['original'] }}</a></h3>
                 </h2>
                 <div class="collapse {{ $length < 3000 ? 'show' : '' }}" id="collapse-{{ $sectionKey }}">
                     @if(isset($page->category->template['fields'][$sectionKey]))
