@@ -570,41 +570,45 @@ class SubjectService extends Service
         DB::beginTransaction();
 
         try {
-            // Process each entered division
-            foreach($data['name'] as $key=>$name) {
-                // More specific validation
-                foreach($data['name'] as $subKey=>$subName) if($subName == $name && $subKey != $key) throw new \Exception("The name has already been taken.");
+            if(isset($data['name'])) {
+                // Process each entered division
+                foreach($data['name'] as $key=>$name) {
+                    // More specific validation
+                    foreach($data['name'] as $subKey=>$subName) if($subName == $name && $subKey != $key) throw new \Exception("The name has already been taken.");
 
-                if(isset($data['id'][$key])) $setting = LexiconSetting::find($data['id'][$key]);
-                else $setting = null;
+                    if(isset($data['id'][$key])) $setting = LexiconSetting::find($data['id'][$key]);
+                    else $setting = null;
 
-                // Assemble data
-                $data[$key] = [
-                    'name' => $data['name'][$key],
-                    'abbreviation' => isset($data['abbreviation'][$key]) ? $data['abbreviation'][$key] : null,
-                ];
+                    // Assemble data
+                    $data[$key] = [
+                        'name' => $data['name'][$key],
+                        'abbreviation' => isset($data['abbreviation'][$key]) ? $data['abbreviation'][$key] : null,
+                    ];
 
-                // Create or update division data
-                if(!$setting)
-                    $settings[] = LexiconSetting::create($data[$key]);
-                else {
-                    $setting->update($data[$key]);
-                    $settings[] = $setting;
+                    // Create or update division data
+                    if(!$setting)
+                        $settings[] = LexiconSetting::create($data[$key]);
+                    else {
+                        $setting->update($data[$key]);
+                        $settings[] = $setting;
+                    }
                 }
-            }
 
-            // Process sort information
-            if(isset($data['sort'])) {
-                // explode the sort array and reverse it since the order is inverted
-                $sort = array_reverse(explode(',', $data['sort']));
+                // Process sort information
+                if(isset($data['sort'])) {
+                    // explode the sort array and reverse it since the order is inverted
+                    $sort = array_reverse(explode(',', $data['sort']));
 
-                foreach($sort as $key => $s) {
-                    LexiconSetting::where('id', $s)->update(['sort' => $key]);
+                    foreach($sort as $key => $s) {
+                        LexiconSetting::where('id', $s)->update(['sort' => $key]);
+                    }
                 }
-            }
 
-            // Remove divisions not present in the form data
-            LexiconSetting::whereNotIn('name', $data['name'])->delete();
+                // Remove divisions not present in the form data
+                LexiconSetting::whereNotIn('name', $data['name'])->delete();
+            }
+            else
+                LexiconSetting::query()->delete();
 
             return $this->commitReturn($settings);
         } catch(\Exception $e) {
