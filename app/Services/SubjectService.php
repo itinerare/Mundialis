@@ -410,28 +410,30 @@ class SubjectService extends Service
         DB::beginTransaction();
 
         try {
-            // Process each entered division
-            if(isset($data['name'])) foreach($data['name'] as $key=>$name) {
-                // More specific validation
-                foreach($data['name'] as $subKey=>$subName) if($subName == $name && $subKey != $key) throw new \Exception("The name has already been taken.");
+            if(isset($data['name'])) {
+                // Process each entered division
+                foreach($data['name'] as $key=>$name) {
+                    // More specific validation
+                    foreach($data['name'] as $subKey=>$subName) if($subName == $name && $subKey != $key) throw new \Exception("The name has already been taken.");
 
-                if(isset($data['id'][$key])) $division = TimeDivision::find($data['id'][$key]);
-                else $division = null;
+                    if(isset($data['id'][$key])) $division = TimeDivision::find($data['id'][$key]);
+                    else $division = null;
 
-                // Assemble data
-                $data[$key] = [
-                    'name' => $data['name'][$key],
-                    'abbreviation' => isset($data['abbreviation'][$key]) ? $data['abbreviation'][$key] : null,
-                    'unit' => isset($data['unit'][$key]) ? $data['unit'][$key] : null,
-                    'use_for_dates' => $division && (isset($data['use_for_dates'][$division->id]) && $data['use_for_dates'][$division->id]) ? 1 : 0
-                ];
+                    // Assemble data
+                    $data[$key] = [
+                        'name' => $data['name'][$key],
+                        'abbreviation' => isset($data['abbreviation'][$key]) ? $data['abbreviation'][$key] : null,
+                        'unit' => isset($data['unit'][$key]) ? $data['unit'][$key] : null,
+                        'use_for_dates' => $division && (isset($data['use_for_dates'][$division->id]) && $data['use_for_dates'][$division->id]) ? 1 : 0
+                    ];
 
-                // Create or update division data
-                if(!$division)
-                    $divisions[] = TimeDivision::create($data[$key]);
-                else {
-                    $division->update($data[$key]);
-                    $divisions[] = $division;
+                    // Create or update division data
+                    if(!$division)
+                        $divisions[] = TimeDivision::create($data[$key]);
+                    else {
+                        $division->update($data[$key]);
+                        $divisions[] = $division;
+                    }
                 }
 
                 // Process sort information
