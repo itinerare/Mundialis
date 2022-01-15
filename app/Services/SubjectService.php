@@ -411,7 +411,7 @@ class SubjectService extends Service
 
         try {
             // Process each entered division
-            foreach($data['name'] as $key=>$name) {
+            if(isset($data['name'])) foreach($data['name'] as $key=>$name) {
                 // More specific validation
                 foreach($data['name'] as $subKey=>$subName) if($subName == $name && $subKey != $key) throw new \Exception("The name has already been taken.");
 
@@ -433,22 +433,24 @@ class SubjectService extends Service
                     $division->update($data[$key]);
                     $divisions[] = $division;
                 }
-            }
 
-            // Process sort information
-            if(isset($data['sort'])) {
-                // explode the sort array and reverse it since the order is inverted
-                $sort = array_reverse(explode(',', $data['sort']));
+                // Process sort information
+                if(isset($data['sort'])) {
+                    // explode the sort array and reverse it since the order is inverted
+                    $sort = array_reverse(explode(',', $data['sort']));
 
-                foreach($sort as $key => $s) {
-                    TimeDivision::where('id', $s)->update(['sort' => $key]);
+                    foreach($sort as $key => $s) {
+                        TimeDivision::where('id', $s)->update(['sort' => $key]);
+                    }
                 }
+
+                // Remove divisions not present in the form data
+                TimeDivision::whereNotIn('name', $data['name'])->delete();
             }
+            else
+                TimeDivision::query()->delete();
 
-            // Remove divisions not present in the form data
-            TimeDivision::whereNotIn('name', $data['name'])->delete();
-
-            return $this->commitReturn($divisions);
+            return $this->commitReturn(true);
         } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
