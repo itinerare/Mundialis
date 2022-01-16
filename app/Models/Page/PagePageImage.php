@@ -15,7 +15,7 @@ class PagePageImage extends Pivot
      * @var array
      */
     protected $fillable = [
-        'page_id', 'page_image_id', 'is_valid'
+        'page_id', 'page_image_id', 'is_valid',
     ];
 
     /**
@@ -38,5 +38,4 @@ class PagePageImage extends Pivot
      * @var string
      */
     public $timestamps = false;
-
 }

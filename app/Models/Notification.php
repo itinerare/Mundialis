@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Config;
-use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Notification extends Model
@@ -16,7 +15,7 @@ class Notification extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'notification_type_id', 'is_unread', 'data'
+        'user_id', 'notification_type_id', 'is_unread', 'data',
     ];
 
     /**
@@ -32,7 +31,6 @@ class Notification extends Model
      * @var string
      */
     public $timestamps = true;
-
 
     /**********************************************************************************************
 
@@ -80,8 +78,8 @@ class Notification extends Model
 
         // Replace any variables in data...
         $data = $this->data;
-        if($data && count($data)) {
-            foreach($data as $key => $value) {
+        if ($data && count($data)) {
+            foreach ($data as $key => $value) {
                 $message = str_replace('{'.$key.'}', $value, $message);
             }
         }
@@ -96,7 +94,7 @@ class Notification extends Model
      */
     public static function getNotificationId($type)
     {
-        return constant('self::'. $type);
+        return constant('self::'.$type);
     }
 
     /**********************************************************************************************
@@ -105,7 +103,7 @@ class Notification extends Model
 
     **********************************************************************************************/
 
-    const WATCHED_PAGE_UPDATED        = 0;
-    const WATCHED_PAGE_IMAGE_UPDATED  = 1;
-    const WATCHED_PAGE_DELETED        = 2;
+    const WATCHED_PAGE_UPDATED = 0;
+    const WATCHED_PAGE_IMAGE_UPDATED = 1;
+    const WATCHED_PAGE_DELETED = 2;
 }

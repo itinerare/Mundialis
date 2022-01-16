@@ -2,17 +2,17 @@
 
 namespace Tests\Feature;
 
+use App\Models\Page\Page;
+use App\Models\Page\PageProtection;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-use App\Models\User\User;
-use App\Models\Page\Page;
-use App\Models\Page\PageProtection;
-
 class PageProtectTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test page protection access.
@@ -47,7 +47,7 @@ class PageProtectTest extends TestCase
 
         $data = [
             'is_protected' => 1,
-            'reason' => null
+            'reason'       => null,
         ];
 
         // Try to post
@@ -57,9 +57,9 @@ class PageProtectTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_protections', [
-            'page_id' => $page->id,
-            'user_id' => $user->id,
-            'is_protected' => 1
+            'page_id'      => $page->id,
+            'user_id'      => $user->id,
+            'is_protected' => 1,
         ]);
     }
 
@@ -78,7 +78,7 @@ class PageProtectTest extends TestCase
 
         $data = [
             'is_protected' => 1,
-            'reason' => $this->faker->unique()->domainWord()
+            'reason'       => $this->faker->unique()->domainWord(),
         ];
 
         // Try to post
@@ -88,10 +88,10 @@ class PageProtectTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_protections', [
-            'page_id' => $page->id,
-            'user_id' => $user->id,
+            'page_id'      => $page->id,
+            'user_id'      => $user->id,
             'is_protected' => 1,
-            'reason' => $data['reason']
+            'reason'       => $data['reason'],
         ]);
     }
 
@@ -113,7 +113,7 @@ class PageProtectTest extends TestCase
 
         $data = [
             'is_protected' => 0,
-            'reason' => null
+            'reason'       => null,
         ];
 
         // Try to post
@@ -123,9 +123,9 @@ class PageProtectTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_protections', [
-            'page_id' => $page->id,
-            'user_id' => $user->id,
-            'is_protected' => 0
+            'page_id'      => $page->id,
+            'user_id'      => $user->id,
+            'is_protected' => 0,
         ]);
     }
 
@@ -147,7 +147,7 @@ class PageProtectTest extends TestCase
 
         $data = [
             'is_protected' => 0,
-            'reason' => $this->faker->unique()->domainWord()
+            'reason'       => $this->faker->unique()->domainWord(),
         ];
 
         // Try to post
@@ -157,10 +157,10 @@ class PageProtectTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_protections', [
-            'page_id' => $page->id,
-            'user_id' => $user->id,
+            'page_id'      => $page->id,
+            'user_id'      => $user->id,
             'is_protected' => 0,
-            'reason' => $data['reason']
+            'reason'       => $data['reason'],
         ]);
     }
 }

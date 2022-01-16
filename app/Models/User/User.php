@@ -2,16 +2,16 @@
 
 namespace App\Models\User;
 
+use App\Models\Model;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-use App\Models\Model;
-
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -20,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $fillable = [
         'name', 'email', 'password', 'rank_id', 'profile_text', 'avatar',
-        'is_banned', 'ban_reason', 'banned_at'
+        'is_banned', 'ban_reason', 'banned_at',
     ];
 
     /**
@@ -92,8 +92,12 @@ class User extends Authenticatable implements MustVerifyEmail
     public function watched()
     {
         return $this->hasManyThrough(
-            'App\Models\Page\Page', 'App\Models\User\WatchedPage',
-            'user_id', 'id', 'id', 'page_id'
+            'App\Models\Page\Page',
+            'App\Models\User\WatchedPage',
+            'user_id',
+            'id',
+            'id',
+            'page_id'
         );
     }
 
@@ -110,7 +114,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getIsAdminAttribute()
     {
-        if($this->is_banned) return false;
+        if ($this->is_banned) {
+            return false;
+        }
+
         return $this->rank->isAdmin;
     }
 
@@ -121,7 +128,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getCanWriteAttribute()
     {
-        if($this->is_banned) return false;
+        if ($this->is_banned) {
+            return false;
+        }
+
         return $this->rank->canWrite;
     }
 
@@ -152,17 +162,17 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDisplayNameAttribute()
     {
-        return ($this->is_banned ? '<strike>' : '') . '<a href="'.$this->url.'" class="display-user">'.$this->name.'</a>' . ($this->is_banned ? '</strike>' : '');
+        return ($this->is_banned ? '<strike>' : '').'<a href="'.$this->url.'" class="display-user">'.$this->name.'</a>'.($this->is_banned ? '</strike>' : '');
     }
 
     /**
-     * Displays the user's avatar
+     * Displays the user's avatar.
      *
      * @return string
      */
     public function getAvatar()
     {
-        return ($this->avatar);
+        return $this->avatar;
     }
 
     /**********************************************************************************************
@@ -174,20 +184,26 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Check if a user can edit a specific page.
      *
-     * @param  \App\Models\Page\Page     $page
+     * @param \App\Models\Page\Page $page
+     *
      * @return bool
      */
     public function canEdit($page)
     {
         // Admins can always edit pages, so just return true
-        if($this->isAdmin) return true;
+        if ($this->isAdmin) {
+            return true;
+        }
         // Normally, users with write permissions will be able to edit,
         // but if a page is protected, they cannot
-        if($this->canWrite) {
-            if($page->protection) {
-                if($page->protection->is_protected) return false;
+        if ($this->canWrite) {
+            if ($page->protection) {
+                if ($page->protection->is_protected) {
+                    return false;
+                }
+            } else {
+                return true;
             }
-            else return true;
         }
 
         return false;
