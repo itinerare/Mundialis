@@ -4,6 +4,52 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.3.0](https://github.com/itinerare/Mundialis/compare/v1.2.0...v1.3.0) (2022-01-16)
+### Features
+
+
+##### Lang
+
+* Switch lexicon settings to input groups; closes #26 ([0e3720](https://github.com/itinerare/Mundialis/commit/0e37208604b64cbcd2a85c5d1f4e09654cc86654))
+
+##### Tests
+
+* Add subject-specific page view tests; closes #45 ([47797d](https://github.com/itinerare/Mundialis/commit/47797dde1e90e03c8886da611caa7e21a15dd384))
+
+##### Time
+
+* Switch divisions to input groups ([dc16b1](https://github.com/itinerare/Mundialis/commit/dc16b16bf6b7f29f5f03b78b6c09d64166fa5014))
+
+### Bug Fixes
+
+* Editing subject category unsets has_image ([5fafe2](https://github.com/itinerare/Mundialis/commit/5fafe2183795787928e3aadf89e79dcdef6d6ac6))
+
+##### Lang
+
+* Error removing all lexicon settings ([12c7fb](https://github.com/itinerare/Mundialis/commit/12c7fb356797d11a531ed05e2c25529fc7444711))
+
+##### Pages
+
+* Change section show/hide w/ state; fixes #29 ([6fcbaf](https://github.com/itinerare/Mundialis/commit/6fcbaf93bca72ca12911ab35a0d83c7e371b5fa2))
+* Error falling back to subject template ([67d63f](https://github.com/itinerare/Mundialis/commit/67d63f3d9dece1bdc565d07d6b7d4703808171f3))
+* Template fetch error w nested categories ([bdf0c1](https://github.com/itinerare/Mundialis/commit/bdf0c125c7dd31ca28da5780d82a473d3bee9812))
+
+##### People
+
+* Error displaying birth/death w/o date ([cde3cb](https://github.com/itinerare/Mundialis/commit/cde3cb6f3b847d2bc01c8d31d7054ccd31e159a7))
+
+##### Tests
+
+* Actually create page vers in view test ([98a338](https://github.com/itinerare/Mundialis/commit/98a33825d8fdb22ff53f6d803a71f0717d83d062))
+
+##### Time
+
+* Better fix for removing all divisions ([f00479](https://github.com/itinerare/Mundialis/commit/f004791086a90e31a63d2a668b9fdd9b0a8f09df))
+* Error removing all time divisions ([75a2ac](https://github.com/itinerare/Mundialis/commit/75a2aca440434af79488543e254a4e8c7087d2e2))
+
+
+---
+
 ## [1.2.0](https://github.com/itinerare/Mundialis/compare/v1.1.1...v1.2.0) (2022-01-09)
 ### Features
 

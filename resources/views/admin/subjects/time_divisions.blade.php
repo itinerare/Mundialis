@@ -14,44 +14,39 @@
 
 <p>These are the divisions of time that will be used for your site and when creating and editing events. Feel free to be as narrow or as broad in focus as suits your project. Setting these is semi-optional; if you do not specify any divisions of time, you will be able to specify only the year for any events. Once created, divisions can be sorted; they should be sorted from largest to smallest. If divisions are set, they will be displayed along with other basic information on your project's timeframe and events. It's recommended to have the largest division of time correspond to a year at most.</p>
 
+<p>Divisions of time have the following properties, in order:</p>
+<ul>
+    <li>Name</li>
+    <li>Abbreviation (Optional), e.g. "min" for minute</li>
+    <li>Unit (Optional), the amount of the division that are in the next largest, e.g. 24 for hours</li>
+    <li>Use for Dates, which controls whether or not the division is used when entering dates</li>
+</ul>
+
 {!! Form::open(['url' => 'admin/data/time/divisions']) !!}
 
-<table class="table table-sm division-table">
-    <thead>
-        <tr>
-            <th width="30%">Name {!! add_help('The division\'s name.') !!}</th>
-            <th width="25%">Abbreviation (Optional) {!! add_help('e.g. \'min\' for minute.') !!}</th>
-            <th>Unit (Optional) {!! add_help('The amount of the division that are in the next up, e.g. 24 for hours.') !!}</th>
-            <th>Use for Dates {!! add_help('Whether or not the division should be used when entering dates.') !!}</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody id="sortable" class="sortable division-list">
-        @if(count($divisions))
-            @foreach($divisions as $division)
-                <tr class="sort-item" data-id="{{ $division->id }}">
-                    <td class="d-flex">
-                        <a class="fas fa-arrows-alt-v handle mr-3" href="#"></a>
-                        {!! Form::hidden('id[]', $division->id, ['class' => 'form-control']) !!}
-                        {!! Form::text('name[]', $division->name, ['class' => 'form-control']) !!}
-                    </td>
-                    <td>
-                        {!! Form::text('abbreviation[]', $division->abbreviation, ['class' => 'form-control']) !!}
-                    </td>
-                    <td>
-                        {!! Form::number('unit[]', $division->unit, ['class' => 'form-control']) !!}
-                    </td>
-                    <td>
-                        {!! Form::checkbox('use_for_dates['.$division->id.']', 1, $division->use_for_dates, ['class' => 'form-control']) !!}
-                    </td>
-                    <td>
-                        <a href="#" class="float-right remove-division btn btn-danger mb-2">×</a>
-                    </td>
-                </tr>
-            @endforeach
-        @endif
-    </tbody>
-</table>
+<div id="sortable" class="sortable division-list">
+    @if(count($divisions))
+        @foreach($divisions as $division)
+            <div class="input-group sort-item mb-3" data-id="{{ $division->id }}">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <a class="fas fa-arrows-alt-v handle" href="#"></a>
+                    </span>
+                </div>
+                {!! Form::hidden('id[]', $division->id, ['class' => 'form-control']) !!}
+                {!! Form::text('name[]', $division->name, ['class' => 'form-control', 'aria-label' => 'Division Name', 'placeholder' => 'Name']) !!}
+                {!! Form::text('abbreviation[]', $division->abbreviation, ['class' => 'form-control', 'aria-label' => 'Division Abbreviation', 'placeholder' => 'Abbreviation']) !!}
+                {!! Form::number('unit[]', $division->unit, ['class' => 'form-control', 'aria-label' => 'Division Unit', 'placeholder' => 'Unit']) !!}
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        {!! Form::checkbox('use_for_dates['.$division->id.']', 1, $division->use_for_dates, ['aria-label' => 'Use for Dates', 'data-toggle' => 'tooltip', 'title' => 'Use for Dates']) !!}
+                    </div>
+                    <button href="#" class="btn remove-division btn btn-danger" type="button" id="button-addon2">x</button>
+                </div>
+            </div>
+        @endforeach
+    @endif
+</div>
 
 <div class="text-right">
     <a href="#" class="btn btn-outline-primary btn-sm add-division">Add Division</a>
@@ -68,24 +63,14 @@
 {!! Form::close() !!}
 
 <div class="hide mb-2">
-    <table>
-        <tr class="division-row sort-item">
-            <td>
-                {!! Form::text('name[]', null, ['class' => 'form-control']) !!}
-            </td>
-            <td>
-                {!! Form::text('abbreviation[]', null, ['class' => 'form-control']) !!}
-            </td>
-            <td>
-                {!! Form::number('unit[]', null, ['class' => 'form-control']) !!}
-            </td>
-            <td>
-            </td>
-            <td>
-                <a href="#" class="float-right remove-division btn btn-danger mb-2">×</a>
-            </td>
-        </tr>
-    </table>
+    <div class="division-row input-group sort-item mb-3">
+        {!! Form::text('name[]', null, ['class' => 'form-control', 'aria-label' => 'Division Name', 'placeholder' => 'Name']) !!}
+        {!! Form::text('abbreviation[]', null, ['class' => 'form-control', 'aria-label' => 'Abbreviation', 'placeholder' => 'Abbreviation']) !!}
+        {!! Form::number('unit[]', null, ['class' => 'form-control', 'aria-label' => 'Division Unit', 'placeholder' => 'Unit']) !!}
+        <div class="input-group-append">
+            <button href="#" class="btn remove-division btn btn-danger" type="button" id="button-addon2">x</button>
+        </div>
+    </div>
 </div>
 
 @endsection

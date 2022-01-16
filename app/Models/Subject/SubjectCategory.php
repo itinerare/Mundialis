@@ -196,24 +196,28 @@ class SubjectCategory extends Model
     {
         // Check to see if this category's data is set,
         if(isset($this->data) && $this->data) return $this->data;
+
         // Else recursively check parents for data and return if data is found
-        else if($this->parent) {
+        if($this->parent) {
             $template = $this->fetchTemplateRecursive($this->parent);
             if(isset($template) && $template) return $template;
         }
+
         // If no data is found and the subject's template is set,
         // return the subject's template data
-        else if(isset($this->subjectTemplate->data) && $this->subjectTemplate->data) return $this->subjectTemplate->data;
+        if(isset($this->subjectTemplate->data) && $this->subjectTemplate->data)
+            return $this->subjectTemplate->data;
+
         // Failing that return an empty array so the form builder doesn't error
         else return [];
     }
     private function fetchTemplateRecursive($parent)
     {
-        if(isset($parent->data)) $template = $parent->data;
-        elseif($parent->parent) $template = $this->fetchTemplateRecursive($parent);
+        if(isset($parent->data) && $parent->data) return $parent->data;
+        if(isset($parent->parent_id) && $parent->parent)
+            return $this->fetchTemplateRecursive($parent->parent);
 
-        if(isset($template)) return $template;
-        else return null;
+        return null;
     }
 
     /**
