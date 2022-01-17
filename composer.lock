@@ -6973,16 +6973,16 @@
         },
         {
             "name": "laravel/sail",
-            "version": "v1.9.0",
+            "version": "v1.12.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sail.git",
-                "reference": "3e1aa8679b10ae9210eebfbc2ee5f3600f356702"
+                "reference": "c60773f04f093bd1d2f3b99ff9e5a1aa5b05b8b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sail/zipball/3e1aa8679b10ae9210eebfbc2ee5f3600f356702",
-                "reference": "3e1aa8679b10ae9210eebfbc2ee5f3600f356702",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/c60773f04f093bd1d2f3b99ff9e5a1aa5b05b8b6",
+                "reference": "c60773f04f093bd1d2f3b99ff9e5a1aa5b05b8b6",
                 "shasum": ""
             },
             "require": {
@@ -7029,7 +7029,7 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "time": "2021-08-03T18:51:44+00:00"
+            "time": "2021-12-16T14:58:08+00:00"
         },
         {
             "name": "marcocesarato/php-conventional-changelog",
