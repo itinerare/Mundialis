@@ -2,8 +2,8 @@
 
 namespace App\Models\Subject;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LexiconCategory extends Model
 {
@@ -101,7 +101,7 @@ class LexiconCategory extends Model
      */
     public function getUrlAttribute()
     {
-        return url('language/lexicon/' . $this->id);
+        return url('language/lexicon/'.$this->id);
     }
 
     /**
@@ -111,7 +111,7 @@ class LexiconCategory extends Model
      */
     public function getDisplayNameAttribute()
     {
-        return '<a href="' . $this->url . '">' . $this->name . '</a>';
+        return '<a href="'.$this->url.'">'.$this->name.'</a>';
     }
 
     /**********************************************************************************************
@@ -124,7 +124,8 @@ class LexiconCategory extends Model
      * Assembles an array of all possible combinations of properties/dimensions
      * for a given lexical class.
      *
-     * @param  int    $class
+     * @param int $class
+     *
      * @return array
      */
     public function classCombinations($class, $i = 0)
@@ -160,7 +161,8 @@ class LexiconCategory extends Model
      * Assembles an array of all possible combinations of several arrays.
      * Taken from https://stackoverflow.com/questions/8567082/how-to-generate-in-php-all-combinations-of-items-in-multiple-arrays.
      *
-     * @param  array    $arrays
+     * @param array $arrays
+     *
      * @return array
      */
     private function combinations($arrays, $i = 0)

@@ -2,8 +2,8 @@
 
 namespace App\Models\Page;
 
-use Config;
 use App\Models\Model;
+use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PageRelationship extends Model
@@ -26,10 +26,10 @@ class PageRelationship extends Model
         'page_one_id' => 'required',
         'page_two_id' => 'required',
 
-        'type_one' => 'required',
+        'type_one'      => 'required',
         'type_one_info' => 'required_if:type_one,custom,romantic_custom',
 
-        'type_two' => 'required',
+        'type_two'      => 'required',
         'type_two_info' => 'required_if:type_two,custom,romantic_custom',
     ];
 
@@ -93,7 +93,7 @@ class PageRelationship extends Model
         }
 
         // Get relevant config file
-        $config = Config::get('mundialis.' . $this->pageOne->category->subject['key'] . '_relationships');
+        $config = Config::get('mundialis.'.$this->pageOne->category->subject['key'].'_relationships');
 
         // Cycle through its groups
         foreach ($config as $group) {
@@ -119,7 +119,7 @@ class PageRelationship extends Model
         }
 
         // Get relevant config file
-        $config = Config::get('mundialis.' . $this->pageTwo->category->subject['key'] . '_relationships');
+        $config = Config::get('mundialis.'.$this->pageTwo->category->subject['key'].'_relationships');
 
         // Cycle through its groups
         foreach ($config as $group) {

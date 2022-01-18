@@ -2,11 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User\User;
-use App\Models\Subject\SubjectCategory;
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
 use App\Models\Page\PageImageCreator;
@@ -14,11 +9,17 @@ use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
 use App\Models\Page\PageRelationship;
 use App\Models\Page\PageVersion;
+use App\Models\Subject\SubjectCategory;
+use App\Models\User\User;
 use App\Services\ImageManager;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
 class PageDeleteTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test page deletion access.
@@ -34,7 +35,7 @@ class PageDeleteTest extends TestCase
         $page = Page::factory()->create();
 
         $response = $this->actingAs($user)
-            ->get('/pages/' . $page->id . '/delete');
+            ->get('/pages/'.$page->id.'/delete');
 
         $response->assertStatus(200);
     }
@@ -57,7 +58,7 @@ class PageDeleteTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/' . $page->id . '/delete');
+            ->post('/pages/'.$page->id.'/delete');
 
         // Verify that the appropriate change has occurred
         $this->assertSoftDeleted($page);
@@ -85,13 +86,13 @@ class PageDeleteTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/' . $page->id . '/delete', $data);
+            ->post('/pages/'.$page->id.'/delete', $data);
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'type' => 'Page Deleted',
-            'reason' => $data['reason'],
+            'type'    => 'Page Deleted',
+            'reason'  => $data['reason'],
         ]);
 
         $this->assertSoftDeleted($page);
@@ -116,7 +117,7 @@ class PageDeleteTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/' . $page->id . '/delete');
+            ->post('/pages/'.$page->id.'/delete');
 
         // Verify that the appropriate change has occurred
         // Ordinarily this would check for the presence of the test data
@@ -145,20 +146,20 @@ class PageDeleteTest extends TestCase
         $imageVersion = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $imageVersion);
+        (new ImageManager())->testImages($image, $imageVersion);
 
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/' . $page->id . '/delete');
+            ->post('/pages/'.$page->id.'/delete');
 
         // Verify that the appropriate change has occurred
         $this->assertSoftDeleted($image);
         $this->assertSoftDeleted($page);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $imageVersion->thumbnailFileName);
-        unlink($image->imagePath . '/' . $imageVersion->imageFileName);
+        unlink($image->imagePath.'/'.$imageVersion->thumbnailFileName);
+        unlink($image->imagePath.'/'.$imageVersion->imageFileName);
     }
 
     /**
@@ -184,7 +185,7 @@ class PageDeleteTest extends TestCase
             $imageVersion[$i] = PageImageVersion::factory()->image($image[$i]->id)->user($user->id)->create();
             PageImageCreator::factory()->image($image[$i]->id)->user($user->id)->create();
             PagePageImage::factory()->page($page[1]->id)->image($image[$i]->id)->create();
-            (new ImageManager)->testImages($image[$i], $imageVersion[$i]);
+            (new ImageManager())->testImages($image[$i], $imageVersion[$i]);
         }
 
         // Attach one of the images to page 2 as well
@@ -193,12 +194,12 @@ class PageDeleteTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/' . $page[1]->id . '/delete');
+            ->post('/pages/'.$page[1]->id.'/delete');
 
         // Verify that the appropriate change has occurred
         // In this case, this means checking that the second image is not deleted
         $this->assertDatabaseHas('page_images', [
-            'id' => $image[2]->id,
+            'id'         => $image[2]->id,
             'deleted_at' => null,
         ]);
 
@@ -208,8 +209,8 @@ class PageDeleteTest extends TestCase
 
         // Delete the test images, to clean up
         for ($i = 1; $i <= 2; $i++) {
-            unlink($image[$i]->imagePath . '/' . $imageVersion[$i]->thumbnailFileName);
-            unlink($image[$i]->imagePath . '/' . $imageVersion[$i]->imageFileName);
+            unlink($image[$i]->imagePath.'/'.$imageVersion[$i]->thumbnailFileName);
+            unlink($image[$i]->imagePath.'/'.$imageVersion[$i]->imageFileName);
         }
     }
 
@@ -240,7 +241,7 @@ class PageDeleteTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/' . $page[1]->id . '/delete');
+            ->post('/pages/'.$page[1]->id.'/delete');
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_relationships', [
@@ -273,11 +274,11 @@ class PageDeleteTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/' . $page->id . '/delete');
+            ->post('/pages/'.$page->id.'/delete');
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
-            'id' => $page->id,
+            'id'         => $page->id,
             'deleted_at' => null,
         ]);
     }
@@ -304,7 +305,7 @@ class PageDeleteTest extends TestCase
         // since deleting the category is the only way to force-delete pages
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/categories/delete/' . $category->id);
+            ->post('/admin/data/categories/delete/'.$category->id);
 
         // Verify that the appropriate change has occurred
         $this->assertDeleted($page);
@@ -332,13 +333,13 @@ class PageDeleteTest extends TestCase
         $imageVersion = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $imageVersion);
+        (new ImageManager())->testImages($image, $imageVersion);
 
         // Try to post data; this time the category is deleted
         // since deleting the category is the only way to force-delete pages
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/categories/delete/' . $category->id);
+            ->post('/admin/data/categories/delete/'.$category->id);
 
         // Verify that the appropriate change has occurred
         // In this case, we check the image, as it should also be force-deleted
@@ -373,7 +374,7 @@ class PageDeleteTest extends TestCase
         // since deleting the category is the only way to force-delete pages
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/categories/delete/' . $category->id);
+            ->post('/admin/data/categories/delete/'.$category->id);
 
         // Verify that the appropriate change has occurred
         // In this case, we check the relationship, as it should also be deleted
@@ -395,7 +396,7 @@ class PageDeleteTest extends TestCase
         PageVersion::factory()->page($page->id)->user($user->id)->deleted()->create();
 
         $response = $this->actingAs($user)
-            ->get('/admin/special/deleted-pages/' . $page->id);
+            ->get('/admin/special/deleted-pages/'.$page->id);
 
         $response->assertStatus(200);
     }
@@ -415,7 +416,7 @@ class PageDeleteTest extends TestCase
         PageVersion::factory()->page($page->id)->user($user->id)->deleted()->create();
 
         $response = $this->actingAs($user)
-            ->get('/admin/special/deleted-pages/' . $page->id . '/restore');
+            ->get('/admin/special/deleted-pages/'.$page->id.'/restore');
 
         $response->assertStatus(200);
     }
@@ -437,11 +438,11 @@ class PageDeleteTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/special/deleted-pages/' . $page->id . '/restore');
+            ->post('/admin/special/deleted-pages/'.$page->id.'/restore');
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
-            'id' => $page->id,
+            'id'         => $page->id,
             'deleted_at' => null,
         ]);
     }
@@ -468,17 +469,17 @@ class PageDeleteTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/special/deleted-pages/' . $page->id . '/restore', $data);
+            ->post('/admin/special/deleted-pages/'.$page->id.'/restore', $data);
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'type' => 'Page Restored',
-            'reason' => $data['reason'],
+            'type'    => 'Page Restored',
+            'reason'  => $data['reason'],
         ]);
 
         $this->assertDatabaseHas('pages', [
-            'id' => $page->id,
+            'id'         => $page->id,
             'deleted_at' => null,
         ]);
     }
@@ -502,16 +503,16 @@ class PageDeleteTest extends TestCase
         $imageVersion = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $imageVersion);
+        (new ImageManager())->testImages($image, $imageVersion);
 
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/special/deleted-pages/' . $page->id . '/restore');
+            ->post('/admin/special/deleted-pages/'.$page->id.'/restore');
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_images', [
-            'id' => $image->id,
+            'id'         => $image->id,
             'deleted_at' => null,
         ]);
     }

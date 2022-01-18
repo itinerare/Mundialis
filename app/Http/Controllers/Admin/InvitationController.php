@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Auth;
+use App\Http\Controllers\Controller;
 use App\Models\User\InvitationCode;
 use App\Services\InvitationService;
-use App\Http\Controllers\Controller;
+use Auth;
 
 class InvitationController extends Controller
 {
@@ -24,7 +24,8 @@ class InvitationController extends Controller
     /**
      * Generates a new invitation key.
      *
-     * @param  App\Services\InvitationService  $service
+     * @param App\Services\InvitationService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postGenerateKey(InvitationService $service)
@@ -43,8 +44,9 @@ class InvitationController extends Controller
     /**
      * Generates a new invitation key.
      *
-     * @param  App\Services\InvitationService  $service
-     * @param  int                             $id
+     * @param App\Services\InvitationService $service
+     * @param int                            $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeleteKey(InvitationService $service, $id)

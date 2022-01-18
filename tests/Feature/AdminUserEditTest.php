@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\User\User;
 use App\Models\User\Rank;
+use App\Models\User\User;
+use Tests\TestCase;
 
 class AdminUserEditTest extends TestCase
 {
@@ -45,7 +45,7 @@ class AdminUserEditTest extends TestCase
 
         // Attempt page access
         $response = $this->actingAs($user)
-            ->get('/admin/users/' . $subject->name . '/edit')
+            ->get('/admin/users/'.$subject->name.'/edit')
             ->assertStatus(200);
     }
 
@@ -68,14 +68,14 @@ class AdminUserEditTest extends TestCase
         // By default this user is the lowest rank (member),
         // so try changing them to an editor
         $response = $this->actingAs($user)
-            ->post('/admin/users/' . $subject->name . '/basic', [
-                'name' => $subject->name,
+            ->post('/admin/users/'.$subject->name.'/basic', [
+                'name'    => $subject->name,
                 'rank_id' => $rank->id,
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
+            'name'    => $subject->name,
             'rank_id' => $rank->id,
         ]);
     }
@@ -99,14 +99,14 @@ class AdminUserEditTest extends TestCase
         // By default this user is the lowest rank (member),
         // so try changing them to an editor
         $response = $this->actingAs($user)
-            ->post('/admin/users/' . $subject->name . '/basic', [
-                'name' => $subject->name,
+            ->post('/admin/users/'.$subject->name.'/basic', [
+                'name'    => $subject->name,
                 'rank_id' => $rank->id,
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
+            'name'    => $subject->name,
             'rank_id' => $rank->id,
         ]);
     }
@@ -132,14 +132,14 @@ class AdminUserEditTest extends TestCase
         // By default this user is the lowest rank (member),
         // so try changing them to an editor
         $response = $this->actingAs($user)
-            ->post('/admin/users/' . $subject->name . '/basic', [
-                'name' => $subject->name,
+            ->post('/admin/users/'.$subject->name.'/basic', [
+                'name'    => $subject->name,
                 'rank_id' => $rank->id,
             ]);
 
         // Directly verify that nothing has changed
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
+            'name'    => $subject->name,
             'rank_id' => $oldRank,
         ]);
     }
@@ -159,7 +159,7 @@ class AdminUserEditTest extends TestCase
 
         // Attempt page access
         $response = $this->actingAs($user)
-            ->get('/admin/users/' . $subject->name . '/updates')
+            ->get('/admin/users/'.$subject->name.'/updates')
             ->assertStatus(200);
     }
 
@@ -182,7 +182,7 @@ class AdminUserEditTest extends TestCase
 
         // Attempt page access
         $response = $this->actingAs($user)
-            ->get('/admin/users/' . $subject->name . '/ban')
+            ->get('/admin/users/'.$subject->name.'/ban')
             ->assertStatus(200);
     }
 
@@ -201,7 +201,7 @@ class AdminUserEditTest extends TestCase
 
         // Attempt page access
         $response = $this->actingAs($user)
-            ->get('/admin/users/' . $subject->name . '/ban-confirm')
+            ->get('/admin/users/'.$subject->name.'/ban-confirm')
             ->assertStatus(200);
     }
 
@@ -220,14 +220,14 @@ class AdminUserEditTest extends TestCase
 
         // Try to post data
         $response = $this->actingAs($user)
-            ->post('/admin/users/' . $subject->name . '/ban', [
+            ->post('/admin/users/'.$subject->name.'/ban', [
                 'ban_reason' => 'Ban test',
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'is_banned' => 1,
+            'name'       => $subject->name,
+            'is_banned'  => 1,
             'ban_reason' => 'Ban test',
         ]);
     }
@@ -247,14 +247,14 @@ class AdminUserEditTest extends TestCase
 
         // Try to post data
         $response = $this->actingAs($user)
-            ->post('/admin/users/' . $subject->name . '/ban', [
+            ->post('/admin/users/'.$subject->name.'/ban', [
                 'ban_reason' => 'Ban test',
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'is_banned' => 1,
+            'name'       => $subject->name,
+            'is_banned'  => 1,
             'ban_reason' => 'Ban test',
         ]);
     }
@@ -274,13 +274,13 @@ class AdminUserEditTest extends TestCase
 
         // Try to post data
         $response = $this->actingAs($user)
-            ->post('/admin/users/' . $subject->name . '/ban', [
+            ->post('/admin/users/'.$subject->name.'/ban', [
                 'ban_reason' => 'Ban test',
             ]);
 
         // Directly verify that nothing has changed
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
+            'name'      => $subject->name,
             'is_banned' => 0,
         ]);
     }
@@ -300,14 +300,14 @@ class AdminUserEditTest extends TestCase
 
         // Try to post data
         $response = $this->actingAs($user)
-            ->post('/admin/users/' . $subject->name . '/ban', [
+            ->post('/admin/users/'.$subject->name.'/ban', [
                 'ban_reason' => 'Ban message edit test',
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'is_banned' => 1,
+            'name'       => $subject->name,
+            'is_banned'  => 1,
             'ban_reason' => 'Ban message edit test',
         ]);
     }
@@ -327,14 +327,14 @@ class AdminUserEditTest extends TestCase
 
         // Try to post data
         $response = $this->actingAs($user)
-            ->post('/admin/users/' . $subject->name . '/ban', [
+            ->post('/admin/users/'.$subject->name.'/ban', [
                 'ban_reason' => 'Ban message edit test',
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'is_banned' => 1,
+            'name'       => $subject->name,
+            'is_banned'  => 1,
             'ban_reason' => 'Ban message edit test',
         ]);
     }
@@ -354,14 +354,14 @@ class AdminUserEditTest extends TestCase
 
         // Try to post data
         $response = $this->actingAs($user)
-            ->post('/admin/users/' . $subject->name . '/ban', [
+            ->post('/admin/users/'.$subject->name.'/ban', [
                 'ban_reason' => 'Ban message edit test',
             ]);
 
         // Directly verify that nothing has changed
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'is_banned' => 1,
+            'name'       => $subject->name,
+            'is_banned'  => 1,
             'ban_reason' => 'Generated as banned',
         ]);
     }
@@ -381,7 +381,7 @@ class AdminUserEditTest extends TestCase
 
         // Attempt page access
         $response = $this->actingAs($user)
-            ->get('/admin/users/' . $subject->name . '/unban-confirm')
+            ->get('/admin/users/'.$subject->name.'/unban-confirm')
             ->assertStatus(200);
     }
 
@@ -400,11 +400,11 @@ class AdminUserEditTest extends TestCase
 
         // Try to post data
         $response = $this->actingAs($user)
-            ->post('/admin/users/' . $subject->name . '/unban');
+            ->post('/admin/users/'.$subject->name.'/unban');
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
+            'name'      => $subject->name,
             'is_banned' => 0,
         ]);
     }
@@ -424,11 +424,11 @@ class AdminUserEditTest extends TestCase
 
         // Try to post data
         $response = $this->actingAs($user)
-            ->post('/admin/users/' . $subject->name . '/unban');
+            ->post('/admin/users/'.$subject->name.'/unban');
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
+            'name'      => $subject->name,
             'is_banned' => 0,
         ]);
     }
@@ -448,11 +448,11 @@ class AdminUserEditTest extends TestCase
 
         // Try to post data
         $response = $this->actingAs($user)
-            ->post('/admin/users/' . $subject->name . '/unban');
+            ->post('/admin/users/'.$subject->name.'/unban');
 
         // Directly verify that nothing has changed
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
+            'name'      => $subject->name,
             'is_banned' => 1,
         ]);
     }

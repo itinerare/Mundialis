@@ -18,7 +18,8 @@ class FileManager extends Service
     /**
      * Creates a directory.
      *
-     * @param  string  $dir
+     * @param string $dir
+     *
      * @return bool
      */
     public function createDirectory($dir)
@@ -41,7 +42,8 @@ class FileManager extends Service
     /**
      * Deletes a directory if it exists and doesn't contain files.
      *
-     * @param  string  $dir
+     * @param string $dir
+     *
      * @return bool
      */
     public function deleteDirectory($dir)
@@ -65,25 +67,26 @@ class FileManager extends Service
     /**
      * Renames a directory.
      *
-     * @param  string  $dir
-     * @param  string  $oldName
-     * @param  string  $newName
+     * @param string $dir
+     * @param string $oldName
+     * @param string $newName
+     *
      * @return bool
      */
     public function renameDirectory($dir, $oldName, $newName)
     {
-        if (!file_exists($dir . '/' . $oldName)) {
+        if (!file_exists($dir.'/'.$oldName)) {
             $this->setError('error', 'Directory does not exist.');
 
             return false;
         }
-        $files = array_diff(scandir($dir . '/' . $oldName), ['.', '..']);
+        $files = array_diff(scandir($dir.'/'.$oldName), ['.', '..']);
         if (count($files)) {
             $this->setError('error', 'Cannot delete a folder that contains files.');
 
             return false;
         }
-        rename($dir . '/' . $oldName, $dir . '/' . $newName);
+        rename($dir.'/'.$oldName, $dir.'/'.$newName);
 
         return true;
     }
@@ -91,20 +94,21 @@ class FileManager extends Service
     /**
      * Uploads a file.
      *
-     * @param  array   $file
-     * @param  string  $dir
-     * @param  string  $name
-     * @param  bool    $isFileManager
+     * @param array  $file
+     * @param string $dir
+     * @param string $name
+     * @param bool   $isFileManager
+     *
      * @return bool
      */
     public function uploadFile($file, $dir, $name, $isFileManager = true)
     {
-        $directory = public_path() . ($isFileManager ? '/files' . ($dir ? '/' . $dir : '') : '/images');
+        $directory = public_path().($isFileManager ? '/files'.($dir ? '/'.$dir : '') : '/images');
         if (!file_exists($directory)) {
             $this->setError('error', 'Folder does not exist.');
         }
-        File::move($file, $directory . '/' . $name);
-        chmod($directory . '/' . $name, 0755);
+        File::move($file, $directory.'/'.$name);
+        chmod($directory.'/'.$name, 0755);
 
         return true;
     }
@@ -112,13 +116,14 @@ class FileManager extends Service
     /**
      * Uploads a custom CSS file.
      *
-     * @param  array  $file
+     * @param array $file
+     *
      * @return bool
      */
     public function uploadCss($file)
     {
-        File::move($file, public_path() . '/css/custom.css');
-        chmod(public_path() . '/css/custom.css', 0755);
+        File::move($file, public_path().'/css/custom.css');
+        chmod(public_path().'/css/custom.css', 0755);
 
         return true;
     }
@@ -126,7 +131,8 @@ class FileManager extends Service
     /**
      * Deletes a file.
      *
-     * @param  string  $path
+     * @param string $path
+     *
      * @return bool
      */
     public function deleteFile($path)
@@ -144,14 +150,15 @@ class FileManager extends Service
     /**
      * Moves a file.
      *
-     * @param  string  $oldDir
-     * @param  string  $newDir
-     * @param  string  $name
+     * @param string $oldDir
+     * @param string $newDir
+     * @param string $name
+     *
      * @return bool
      */
     public function moveFile($oldDir, $newDir, $name)
     {
-        if (!file_exists($oldDir . '/' . $name)) {
+        if (!file_exists($oldDir.'/'.$name)) {
             $this->setError('error', 'File does not exist.');
 
             return false;
@@ -160,7 +167,7 @@ class FileManager extends Service
 
             return false;
         }
-        rename($oldDir . '/' . $name, $newDir . '/' . $name);
+        rename($oldDir.'/'.$name, $newDir.'/'.$name);
 
         return true;
     }
@@ -168,19 +175,20 @@ class FileManager extends Service
     /**
      * Renames a file.
      *
-     * @param  string  $dir
-     * @param  string  $oldName
-     * @param  string  $newName
+     * @param string $dir
+     * @param string $oldName
+     * @param string $newName
+     *
      * @return bool
      */
     public function renameFile($dir, $oldName, $newName)
     {
-        if (!file_exists($dir . '/' . $oldName)) {
+        if (!file_exists($dir.'/'.$oldName)) {
             $this->setError('error', 'File does not exist.');
 
             return false;
         }
-        rename($dir . '/' . $oldName, $dir . '/' . $newName);
+        rename($dir.'/'.$oldName, $dir.'/'.$newName);
 
         return true;
     }

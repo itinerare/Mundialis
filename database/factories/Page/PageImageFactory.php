@@ -25,7 +25,7 @@ class PageImageFactory extends Factory
         return [
             //
             'description' => null,
-            'is_visible' => 1,
+            'is_visible'  => 1,
         ];
     }
 

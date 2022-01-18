@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use DB;
-use App\Models\Subject\SubjectTemplate;
-use App\Models\Subject\SubjectCategory;
-use App\Models\Subject\TimeDivision;
-use App\Models\Subject\TimeChronology;
-use App\Models\Subject\LexiconSetting;
-use App\Models\Subject\LexiconCategory;
 use App\Models\Page\Page;
+use App\Models\Subject\LexiconCategory;
+use App\Models\Subject\LexiconSetting;
+use App\Models\Subject\SubjectCategory;
+use App\Models\Subject\SubjectTemplate;
+use App\Models\Subject\TimeChronology;
+use App\Models\Subject\TimeDivision;
+use DB;
 
 class SubjectService extends Service
 {
@@ -25,9 +25,10 @@ class SubjectService extends Service
     /**
      * Updates a subject template.
      *
-     * @param  string                        $subject
-     * @param  array                         $data
-     * @param  \App\Models\User\User         $user
+     * @param string                $subject
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\SubjectTemplate
      */
     public function editTemplate($subject, $data, $user)
@@ -80,9 +81,10 @@ class SubjectService extends Service
     /**
      * Creates a category.
      *
-     * @param  array                         $data
-     * @param  \App\Models\User\User         $user
-     * @param  string                        $subject
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     * @param string                $subject
+     *
      * @return bool|\App\Models\Subject\SubjectCategory
      */
     public function createCategory($data, $user, $subject)
@@ -140,9 +142,10 @@ class SubjectService extends Service
     /**
      * Updates a category.
      *
-     * @param  \App\Models\Subject\SubjectCategory  $category
-     * @param  array                                $data
-     * @param  \App\Models\User\User                $user
+     * @param \App\Models\Subject\SubjectCategory $category
+     * @param array                               $data
+     * @param \App\Models\User\User               $user
+     *
      * @return \App\Models\Subject\SubjectCategory|bool
      */
     public function updateCategory($category, $data, $user)
@@ -224,8 +227,9 @@ class SubjectService extends Service
     /**
      * Delete a category.
      *
-     * @param  \App\Models\Subject\SubjectCategory  $category
-     * @param  \App\Models\User\User                $user
+     * @param \App\Models\Subject\SubjectCategory $category
+     * @param \App\Models\User\User               $user
+     *
      * @return bool
      */
     public function deleteCategory($category, $user)
@@ -245,7 +249,7 @@ class SubjectService extends Service
             // as without the category/its data they will not be recoverable anyway
             if ($category->pages()->withTrashed()->count()) {
                 foreach ($category->pages()->withTrashed()->get() as $page) {
-                    if (!(new PageManager)->deletePage($page, $user, null, true)) {
+                    if (!(new PageManager())->deletePage($page, $user, null, true)) {
                         throw new \Exception('Failed to force delete page.');
                     }
                 }
@@ -264,8 +268,9 @@ class SubjectService extends Service
     /**
      * Sorts category order.
      *
-     * @param  array   $data
-     * @param  string  $subject
+     * @param array  $data
+     * @param string $subject
+     *
      * @return bool
      */
     public function sortCategory($data, $subject)
@@ -295,8 +300,9 @@ class SubjectService extends Service
     /**
      * Updates time divisions.
      *
-     * @param  array                         $data
-     * @param  \App\Models\User\User         $user
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\TimeDivision
      */
     public function editTimeDivisions($data, $user)
@@ -322,9 +328,9 @@ class SubjectService extends Service
 
                     // Assemble data
                     $data[$key] = [
-                        'name' => $data['name'][$key],
-                        'abbreviation' => isset($data['abbreviation'][$key]) ? $data['abbreviation'][$key] : null,
-                        'unit' => isset($data['unit'][$key]) ? $data['unit'][$key] : null,
+                        'name'          => $data['name'][$key],
+                        'abbreviation'  => isset($data['abbreviation'][$key]) ? $data['abbreviation'][$key] : null,
+                        'unit'          => isset($data['unit'][$key]) ? $data['unit'][$key] : null,
                         'use_for_dates' => $division && (isset($data['use_for_dates'][$division->id]) && $data['use_for_dates'][$division->id]) ? 1 : 0,
                     ];
 
@@ -364,8 +370,9 @@ class SubjectService extends Service
     /**
      * Creates a chronology.
      *
-     * @param  array                         $data
-     * @param  \App\Models\User\User         $user
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\TimeChronology
      */
     public function createChronology($data, $user)
@@ -387,9 +394,10 @@ class SubjectService extends Service
     /**
      * Updates a chronology.
      *
-     * @param  \App\Models\Subject\TimeChronology    $chronology
-     * @param  array                                 $data
-     * @param  \App\Models\User\User                 $user
+     * @param \App\Models\Subject\TimeChronology $chronology
+     * @param array                              $data
+     * @param \App\Models\User\User              $user
+     *
      * @return \App\Models\Subject\TimeChronology|bool
      */
     public function updateChronology($chronology, $data, $user)
@@ -416,7 +424,8 @@ class SubjectService extends Service
     /**
      * Delete a chronology.
      *
-     * @param  \App\Models\Subject\TimeChronology  $chronology
+     * @param \App\Models\Subject\TimeChronology $chronology
+     *
      * @return bool
      */
     public function deleteChronology($chronology)
@@ -443,7 +452,8 @@ class SubjectService extends Service
     /**
      * Sorts chronology order.
      *
-     * @param  array   $data
+     * @param array $data
+     *
      * @return bool
      */
     public function sortChronology($data)
@@ -473,8 +483,9 @@ class SubjectService extends Service
     /**
      * Updates lexicon settings.
      *
-     * @param  array                         $data
-     * @param  \App\Models\User\User         $user
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\LexiconSetting
      */
     public function editLexiconSettings($data, $user)
@@ -500,7 +511,7 @@ class SubjectService extends Service
 
                     // Assemble data
                     $data[$key] = [
-                        'name' => $data['name'][$key],
+                        'name'         => $data['name'][$key],
                         'abbreviation' => isset($data['abbreviation'][$key]) ? $data['abbreviation'][$key] : null,
                     ];
 
@@ -540,8 +551,9 @@ class SubjectService extends Service
     /**
      * Creates a lexicon category.
      *
-     * @param  array                         $data
-     * @param  \App\Models\User\User         $user
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\LexiconCategory
      */
     public function createLexiconCategory($data, $user)
@@ -573,9 +585,10 @@ class SubjectService extends Service
     /**
      * Updates a lexicon category.
      *
-     * @param  \App\Models\Subject\LexiconCategory  $category
-     * @param  array                                $data
-     * @param  \App\Models\User\User                $user
+     * @param \App\Models\Subject\LexiconCategory $category
+     * @param array                               $data
+     * @param \App\Models\User\User               $user
+     *
      * @return \App\Models\Subject\LexiconCategory|bool
      */
     public function updateLexiconCategory($category, $data, $user)
@@ -617,7 +630,8 @@ class SubjectService extends Service
     /**
      * Deletes a lexicon category.
      *
-     * @param  \App\Models\Subject\LexiconCategory  $category
+     * @param \App\Models\Subject\LexiconCategory $category
+     *
      * @return bool
      */
     public function deleteLexiconCategory($category)
@@ -644,7 +658,8 @@ class SubjectService extends Service
     /**
      * Sorts lexicon category order.
      *
-     * @param  array   $data
+     * @param array $data
+     *
      * @return bool
      */
     public function sortLexiconCategory($data)
@@ -670,7 +685,8 @@ class SubjectService extends Service
     /**
      * Processes template information.
      *
-     * @param  array              $data
+     * @param array $data
+     *
      * @return array
      */
     private function processTemplateData($data)
@@ -679,8 +695,8 @@ class SubjectService extends Service
         if (isset($data['section_key'])) {
             foreach ($data['section_key'] as $key=>$section) {
                 $data['data']['sections'][strtolower($section)] = [
-                'name' => $data['section_name'][$key],
-            ];
+                    'name' => $data['section_name'][$key],
+                ];
             }
         }
 
@@ -692,13 +708,13 @@ class SubjectService extends Service
                 }
 
                 $data['data']['infobox'][$fieldKey] = [
-                'label' => $data['infobox_label'][$key],
-                'type' => $data['infobox_type'][$key],
-                'rules' => isset($data['infobox_rules'][$key]) ? $data['infobox_rules'][$key] : null,
-                'choices' => isset($data['infobox_choices'][$key]) ? $data['infobox_choices'][$key] : null,
-                'value' => isset($data['infobox_value'][$key]) ? $data['infobox_value'][$key] : null,
-                'help' => isset($data['infobox_help'][$key]) ? $data['infobox_help'][$key] : null,
-            ];
+                    'label'   => $data['infobox_label'][$key],
+                    'type'    => $data['infobox_type'][$key],
+                    'rules'   => isset($data['infobox_rules'][$key]) ? $data['infobox_rules'][$key] : null,
+                    'choices' => isset($data['infobox_choices'][$key]) ? $data['infobox_choices'][$key] : null,
+                    'value'   => isset($data['infobox_value'][$key]) ? $data['infobox_value'][$key] : null,
+                    'help'    => isset($data['infobox_help'][$key]) ? $data['infobox_help'][$key] : null,
+                ];
             }
         }
 
@@ -710,14 +726,14 @@ class SubjectService extends Service
                 }
 
                 $data['data']['fields'][$data['field_section'][$key]][$fieldKey] = [
-                'label' => $data['field_label'][$key],
-                'type' => $data['field_type'][$key],
-                'rules' => isset($data['field_rules'][$key]) ? $data['field_rules'][$key] : null,
-                'choices' => isset($data['field_choices'][$key]) ? $data['field_choices'][$key] : null,
-                'value' => isset($data['field_value'][$key]) ? $data['field_value'][$key] : null,
-                'help' => isset($data['field_help'][$key]) ? $data['field_help'][$key] : null,
-                'is_subsection' => $data['field_is_subsection'][$key],
-            ];
+                    'label'         => $data['field_label'][$key],
+                    'type'          => $data['field_type'][$key],
+                    'rules'         => isset($data['field_rules'][$key]) ? $data['field_rules'][$key] : null,
+                    'choices'       => isset($data['field_choices'][$key]) ? $data['field_choices'][$key] : null,
+                    'value'         => isset($data['field_value'][$key]) ? $data['field_value'][$key] : null,
+                    'help'          => isset($data['field_help'][$key]) ? $data['field_help'][$key] : null,
+                    'is_subsection' => $data['field_is_subsection'][$key],
+                ];
             }
         }
 
@@ -727,8 +743,9 @@ class SubjectService extends Service
     /**
      * Cascades template changes.
      *
-     * @param Illuminate\Database\Eloquent\Collection    $categories
-     * @param  array                                     $data
+     * @param Illuminate\Database\Eloquent\Collection $categories
+     * @param array                                   $data
+     *
      * @return array
      */
     private function cascadeTemplateChangesRecursively($categories, $data)
@@ -751,8 +768,9 @@ class SubjectService extends Service
     /**
      * Cascades template changes.
      *
-     * @param Illuminate\Database\Eloquent\Collection    $categories
-     * @param  array                                     $data
+     * @param Illuminate\Database\Eloquent\Collection $categories
+     * @param array                                   $data
+     *
      * @return array
      */
     private function cascadeTemplateChanges($categories, $data)
@@ -810,8 +828,9 @@ class SubjectService extends Service
     /**
      * Processes lexicon category data for storage.
      *
-     * @param  array                                     $data
-     * @param  App\Models\Subject\LexiconCategory        $category
+     * @param array                              $data
+     * @param App\Models\Subject\LexiconCategory $category
+     *
      * @return array
      */
     private function processLexiconData($data, $category = null)
@@ -821,10 +840,10 @@ class SubjectService extends Service
             foreach ($data['property_name'] as $key=>$property) {
                 $propertyKey[$key] = str_replace(' ', '_', strtolower($property));
                 $data['data'][$data['property_class'][$key]]['properties'][$propertyKey[$key]] = [
-                'name' => $property,
-                'non_dimensional' => isset($data['property_dimensions'][$key]) ? 0 : 1,
-                'dimensions' => isset($data['property_dimensions'][$key]) ? explode(',', $data['property_dimensions'][$key]) : null,
-            ];
+                    'name'            => $property,
+                    'non_dimensional' => isset($data['property_dimensions'][$key]) ? 0 : 1,
+                    'dimensions'      => isset($data['property_dimensions'][$key]) ? explode(',', $data['property_dimensions'][$key]) : null,
+                ];
             }
         }
 
@@ -845,29 +864,29 @@ class SubjectService extends Service
                             // Since there are many possible values that could throw an error,
                             // go out of the way to specify exactly which field has thrown it
                             if (!isset($data['declension_regex'][$class->id][$key])) {
-                                throw new \Exception($class->name . ' ' . $combinations[$class->id][$key] . ' regex pattern missing! You must specify at least one pattern to replace.');
+                                throw new \Exception($class->name.' '.$combinations[$class->id][$key].' regex pattern missing! You must specify at least one pattern to replace.');
                             }
                             if (!isset($data['declension_replacement'][$class->id][$key])) {
-                                throw new \Exception($class->name . ' ' . $combinations[$class->id][$key] . ' replacement missing! You must specify at least one string to use for replacement.');
+                                throw new \Exception($class->name.' '.$combinations[$class->id][$key].' replacement missing! You must specify at least one string to use for replacement.');
                             }
 
                             // Assemble data itself, including exploding the selectize outputs
                             // as it's easiest to perform final checks on arrays
                             $data['data'][$class->id]['conjugation'][$key] = [
-                            'criteria' => explode(';', $criteria),
-                            'regex' => explode(';', $data['declension_regex'][$class->id][$key]),
-                            'replacement' => explode(';', $data['declension_replacement'][$class->id][$key]),
-                        ];
+                                'criteria'    => explode(';', $criteria),
+                                'regex'       => explode(';', $data['declension_regex'][$class->id][$key]),
+                                'replacement' => explode(';', $data['declension_replacement'][$class->id][$key]),
+                            ];
 
                             // Perform final check to see that criteria and replacements are 1:1
                             if (count($data['data'][$class->id]['conjugation'][$key]['criteria']) != count($data['data'][$class->id]['conjugation'][$key]['replacement'])) {
-                                throw new \Exception($class->name . ' ' . $combinations[$class->id][$key] . ' has a different number of criteria and replacements! There must be the same number of each.');
+                                throw new \Exception($class->name.' '.$combinations[$class->id][$key].' has a different number of criteria and replacements! There must be the same number of each.');
                             }
                             // Regex must either be only one or 1:1. This is a little janky,
                             // but the likelihood of people caring about it significantly is low,
                             // and if so it can be reworked later
                             if (count($data['data'][$class->id]['conjugation'][$key]['regex']) > 1 && count($data['data'][$class->id]['conjugation'][$key]['criteria']) != count($data['data'][$class->id]['conjugation'][$key]['regex'])) {
-                                throw new \Exception($class->name . ' ' . $combinations[$class->id][$key] . ' has a different number of critera and regex patterns! There must either be only one regex pattern for replacement, or the same number as criteria and replacements.');
+                                throw new \Exception($class->name.' '.$combinations[$class->id][$key].' has a different number of critera and regex patterns! There must either be only one regex pattern for replacement, or the same number as criteria and replacements.');
                             }
                         }
                     }

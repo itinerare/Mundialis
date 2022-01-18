@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\User\User;
 use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\User\User;
 
 class AdminSiteSettingsTest extends TestCase
 {
@@ -54,7 +54,7 @@ class AdminSiteSettingsTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('site_settings', [
-            'key' => 'is_registration_open',
+            'key'   => 'is_registration_open',
             'value' => 0,
         ]);
     }

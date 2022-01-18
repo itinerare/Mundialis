@@ -10,8 +10,9 @@ class CheckRead
     /**
      * Redirect visitors to the homepage if site is private.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)

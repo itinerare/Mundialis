@@ -2,12 +2,12 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App;
-use Carbon\Carbon;
-use App\Services\UserService;
-use App\Models\User\User;
 use App\Models\User\Rank;
+use App\Models\User\User;
+use App\Services\UserService;
+use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class SetupAdminUser extends Command
 {
@@ -44,7 +44,7 @@ class SetupAdminUser extends Command
     {
         $this->info('********************');
         $this->info('* ADMIN USER SETUP *');
-        $this->info('********************' . "\n");
+        $this->info('********************'."\n");
 
         // First things first, check if user ranks exist...
         if (!Rank::count()) {
@@ -54,21 +54,21 @@ class SetupAdminUser extends Command
             // only for individuals or small groups/granular permissions are not
             // necessary.
             $adminRank = Rank::create([
-                'name' => 'Admin',
+                'name'        => 'Admin',
                 'description' => 'The site admin. Has the ability to view/edit any data on the site.',
-                'sort' => 2,
+                'sort'        => 2,
             ]);
 
             Rank::create([
-                'name' => 'Editor',
+                'name'        => 'Editor',
                 'description' => 'A member of the site with write permissions.',
-                'sort' => 1,
+                'sort'        => 1,
             ]);
 
             Rank::create([
-                'name' => 'Member',
+                'name'        => 'Member',
                 'description' => 'A regular member of the site.',
-                'sort' => 0,
+                'sort'        => 0,
             ]);
 
             $this->line('User ranks not found. User ranks created.');
@@ -86,16 +86,16 @@ class SetupAdminUser extends Command
             $email = $this->ask('Email Address');
             $password = $this->secret('Password (hidden)');
 
-            $this->line("\nUsername: " . $name);
-            $this->line('Email: ' . $email);
+            $this->line("\nUsername: ".$name);
+            $this->line('Email: '.$email);
             $confirm = $this->confirm('Proceed to create account with this information?');
 
             if ($confirm) {
-                $service = new UserService;
+                $service = new UserService();
                 $user = $service->createUser([
-                    'name' => $name,
-                    'email' => $email,
-                    'rank_id' => $adminRank->id,
+                    'name'     => $name,
+                    'email'    => $email,
+                    'rank_id'  => $adminRank->id,
                     'password' => $password,
                 ]);
 
@@ -121,17 +121,17 @@ class SetupAdminUser extends Command
             }
         } else {
             // Change the admin email/password.
-            $this->line('Admin account [' . $user->name . '] already exists.');
+            $this->line('Admin account ['.$user->name.'] already exists.');
             if ($this->confirm('Reset email address and password for this account?')) {
                 $email = $this->ask('Email Address');
                 $password = $this->secret('Password (hidden)');
 
-                $this->line("\nEmail: " . $email);
+                $this->line("\nEmail: ".$email);
                 if ($this->confirm('Proceed to change email address and password?')) {
-                    $service = new UserService;
+                    $service = new UserService();
                     $service->updateUser([
-                        'id' => $user->id,
-                        'email' => $email,
+                        'id'       => $user->id,
+                        'email'    => $email,
                         'password' => $password,
                     ]);
 

@@ -2,15 +2,15 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use App\Models\User\User;
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
 use App\Models\Page\PageImageCreator;
 use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
+use App\Models\User\User;
 use App\Services\ImageManager;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class PageImageViewTest extends TestCase
 {
@@ -36,16 +36,16 @@ class PageImageViewTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
-            ->get('pages/get-image/' . $page->id . '/' . $image->id);
+            ->get('pages/get-image/'.$page->id.'/'.$image->id);
 
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -69,16 +69,16 @@ class PageImageViewTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
-            ->get('pages/get-image/' . $page->id . '/' . $image->id);
+            ->get('pages/get-image/'.$page->id.'/'.$image->id);
 
         $response->assertStatus(404);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -99,16 +99,16 @@ class PageImageViewTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($editor->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($editor)
-            ->get('pages/get-image/' . $page->id . '/' . $image->id);
+            ->get('pages/get-image/'.$page->id.'/'.$image->id);
 
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -131,16 +131,16 @@ class PageImageViewTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
-            ->get('/pages/' . $page->id . '/gallery/' . $image->id);
+            ->get('/pages/'.$page->id.'/gallery/'.$image->id);
 
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -164,16 +164,16 @@ class PageImageViewTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
-            ->get('/pages/' . $page->id . '/gallery/' . $image->id);
+            ->get('/pages/'.$page->id.'/gallery/'.$image->id);
 
         $response->assertStatus(404);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -194,15 +194,15 @@ class PageImageViewTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($editor->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($editor)
-            ->get('/pages/' . $page->id . '/gallery/' . $image->id);
+            ->get('/pages/'.$page->id.'/gallery/'.$image->id);
 
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 }

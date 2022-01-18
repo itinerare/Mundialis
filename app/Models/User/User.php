@@ -2,15 +2,16 @@
 
 namespace App\Models\User;
 
+use App\Models\Model;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Model;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -141,7 +142,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getUrlAttribute()
     {
-        return url('user/' . $this->name);
+        return url('user/'.$this->name);
     }
 
     /**
@@ -151,7 +152,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getAdminUrlAttribute()
     {
-        return url('admin/users/' . $this->name . '/edit');
+        return url('admin/users/'.$this->name.'/edit');
     }
 
     /**
@@ -161,7 +162,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDisplayNameAttribute()
     {
-        return ($this->is_banned ? '<strike>' : '') . '<a href="' . $this->url . '" class="display-user">' . $this->name . '</a>' . ($this->is_banned ? '</strike>' : '');
+        return ($this->is_banned ? '<strike>' : '').'<a href="'.$this->url.'" class="display-user">'.$this->name.'</a>'.($this->is_banned ? '</strike>' : '');
     }
 
     /**
@@ -183,7 +184,8 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Check if a user can edit a specific page.
      *
-     * @param  \App\Models\Page\Page     $page
+     * @param \App\Models\Page\Page $page
+     *
      * @return bool
      */
     public function canEdit($page)

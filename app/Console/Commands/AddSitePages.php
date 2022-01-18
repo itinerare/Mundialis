@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use DB;
 use Carbon\Carbon;
+use DB;
+use Illuminate\Console\Command;
 
 class AddSitePages extends Command
 {
@@ -42,7 +42,7 @@ class AddSitePages extends Command
         //
         $this->info('******************');
         $this->info('* ADD SITE PAGES *');
-        $this->info('******************' . "\n");
+        $this->info('******************'."\n");
 
         $this->line("Adding site pages...existing entries will be skipped.\n");
 
@@ -57,26 +57,26 @@ class AddSitePages extends Command
      * Add a site page.
      *
      *
-     * @param  string  $key
-     * @param  string  $title
-     * @param  string  $text
+     * @param string $key
+     * @param string $title
+     * @param string $text
      */
     private function addSitePage($key, $title, $text)
     {
         if (!DB::table('site_pages')->where('key', $key)->exists()) {
             DB::table('site_pages')->insert([
                 [
-                    'key' => $key,
-                    'title' => $title,
-                    'text' => $text,
+                    'key'        => $key,
+                    'title'      => $title,
+                    'text'       => $text,
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ],
 
             ]);
-            $this->info('Added:   ' . $title);
+            $this->info('Added:   '.$title);
         } else {
-            $this->line('Skipped: ' . $title);
+            $this->line('Skipped: '.$title);
         }
     }
 }

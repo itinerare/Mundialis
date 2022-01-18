@@ -31,7 +31,8 @@ class NotificationFactory extends Factory
      * Generate a notification for a specific user.
      * This is essentially required.
      *
-     * @param  int                      $user
+     * @param int $user
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function user($user)
@@ -46,8 +47,9 @@ class NotificationFactory extends Factory
     /**
      * Generate a watched page update notification.
      *
-     * @param  \App\Models\Page\Page               $page
-     * @param  \App\Models\User\User               $user
+     * @param \App\Models\Page\Page $page
+     * @param \App\Models\User\User $user
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function watchedPageUpdated($page = null, $user = null)
@@ -55,10 +57,10 @@ class NotificationFactory extends Factory
         return $this->state(function (array $attributes) use ($page, $user) {
             return [
                 'notification_type_id' => 0,
-                'data' => json_encode([
-                    'page_url' => 'pages/' . ($page ? $page->id : '1') . '.' . ($page ? $page->title : $this->faker->unique()->domainWord()),
+                'data'                 => json_encode([
+                    'page_url'  => 'pages/'.($page ? $page->id : '1').'.'.($page ? $page->title : $this->faker->unique()->domainWord()),
                     'page_tile' => $page ? $page->title : $this->faker->unique()->domainWord(),
-                    'user_url' => 'user/' . ($user ? $user->name : $this->faker->unique()->domainWord()),
+                    'user_url'  => 'user/'.($user ? $user->name : $this->faker->unique()->domainWord()),
                     'user_name' => $user ? $user->name : $this->faker->unique()->domainWord(),
                 ]),
             ];
@@ -68,8 +70,9 @@ class NotificationFactory extends Factory
     /**
      * Generate a watched page image update notification.
      *
-     * @param  \App\Models\Page\Page               $page
-     * @param  \App\Models\User\User               $user
+     * @param \App\Models\Page\Page $page
+     * @param \App\Models\User\User $user
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function watchedPageImageUpdated($page = null, $user = null)
@@ -77,10 +80,10 @@ class NotificationFactory extends Factory
         return $this->state(function (array $attributes) use ($page, $user) {
             return [
                 'notification_type_id' => 1,
-                'data' => json_encode([
-                    'page_url' => 'pages/' . ($page ? $page->id : '1') . '.' . ($page ? $page->title : $this->faker->unique()->domainWord()),
+                'data'                 => json_encode([
+                    'page_url'  => 'pages/'.($page ? $page->id : '1').'.'.($page ? $page->title : $this->faker->unique()->domainWord()),
                     'page_tile' => $page ? $page->title : $this->faker->unique()->domainWord(),
-                    'user_url' => 'user/' . ($user ? $user->name : $this->faker->unique()->domainWord()),
+                    'user_url'  => 'user/'.($user ? $user->name : $this->faker->unique()->domainWord()),
                     'user_name' => $user ? $user->name : $this->faker->unique()->domainWord(),
                 ]),
             ];
@@ -90,8 +93,9 @@ class NotificationFactory extends Factory
     /**
      * Generate a watched page delete notification.
      *
-     * @param  \App\Models\Page\Page               $page
-     * @param  \App\Models\User\User               $user
+     * @param \App\Models\Page\Page $page
+     * @param \App\Models\User\User $user
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function watchedPageDeleted($page = null, $user = null)
@@ -99,9 +103,9 @@ class NotificationFactory extends Factory
         return $this->state(function (array $attributes) use ($page, $user) {
             return [
                 'notification_type_id' => 2,
-                'data' => json_encode([
+                'data'                 => json_encode([
                     'page_tile' => $page ? $page->title : $this->faker->unique()->domainWord(),
-                    'user_url' => 'user/' . ($user ? $user->name : $this->faker->unique()->domainWord()),
+                    'user_url'  => 'user/'.($user ? $user->name : $this->faker->unique()->domainWord()),
                     'user_name' => $user ? $user->name : $this->faker->unique()->domainWord(),
                 ]),
             ];

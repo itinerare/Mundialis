@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\FileManager;
 use Config;
-use Settings;
 use DB;
+use Illuminate\Http\Request;
+use Settings;
 
 class AdminController extends Controller
 {
@@ -49,8 +49,9 @@ class AdminController extends Controller
     /**
      * Edits a setting.
      *
-     * @param  \Illuminate\Http\Request       $request
-     * @param  string                         $key
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $key
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postEditSetting(Request $request, $key)
@@ -86,8 +87,9 @@ class AdminController extends Controller
     /**
      * Uploads a site image file.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FileManager  $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\FileManager $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postUploadImage(Request $request, FileManager $service)
@@ -95,7 +97,7 @@ class AdminController extends Controller
         $request->validate(['file' => 'required|file']);
         $file = $request->file('file');
         $key = $request->get('key');
-        $filename = Config::get('mundialis.image_files.' . $key)['filename'];
+        $filename = Config::get('mundialis.image_files.'.$key)['filename'];
 
         if ($service->uploadFile($file, null, $filename, false)) {
             flash('Image uploaded successfully.')->success();
@@ -111,8 +113,9 @@ class AdminController extends Controller
     /**
      * Uploads a custom site CSS file.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FileManager  $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\FileManager $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postUploadCss(Request $request, FileManager $service)

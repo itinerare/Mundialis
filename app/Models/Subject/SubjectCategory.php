@@ -2,9 +2,9 @@
 
 namespace App\Models\Subject;
 
+use App\Models\Model;
 use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Model;
 
 class SubjectCategory extends Model
 {
@@ -23,7 +23,7 @@ class SubjectCategory extends Model
      * @var array
      */
     public static $createRules = [
-        'name' => 'required|unique:subject_categories',
+        'name'  => 'required|unique:subject_categories',
         'image' => 'mimes:png',
     ];
 
@@ -33,7 +33,7 @@ class SubjectCategory extends Model
      * @var array
      */
     public static $updateRules = [
-        'name' => 'required',
+        'name'  => 'required',
         'image' => 'mimes:png',
     ];
 
@@ -110,7 +110,7 @@ class SubjectCategory extends Model
      */
     public function getUrlAttribute()
     {
-        return url($this->attributes['subject'] . '/categories/' . $this->id);
+        return url($this->attributes['subject'].'/categories/'.$this->id);
     }
 
     /**
@@ -120,7 +120,7 @@ class SubjectCategory extends Model
      */
     public function getDisplayNameAttribute()
     {
-        return '<a href="' . $this->url . '">' . $this->name . '</a>';
+        return '<a href="'.$this->url.'">'.$this->name.'</a>';
     }
 
     /**
@@ -140,7 +140,7 @@ class SubjectCategory extends Model
      */
     public function getImageFileNameAttribute()
     {
-        return $this->id . '-image.png';
+        return $this->id.'-image.png';
     }
 
     /**
@@ -164,7 +164,7 @@ class SubjectCategory extends Model
             return null;
         }
 
-        return asset($this->imageDirectory . '/' . $this->imageFileName);
+        return asset($this->imageDirectory.'/'.$this->imageFileName);
     }
 
     /**
@@ -175,7 +175,7 @@ class SubjectCategory extends Model
     public function getSubjectAttribute()
     {
         // Fetch config information for the recorded subject
-        $subject = Config::get('mundialis.subjects.' . $this->attributes['subject']);
+        $subject = Config::get('mundialis.subjects.'.$this->attributes['subject']);
         // Then add its key to the array
         $subject['key'] = $this->attributes['subject'];
 

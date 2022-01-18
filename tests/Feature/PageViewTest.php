@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use App\Models\User\User;
 use App\Models\Page\Page;
 use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
+use App\Models\User\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class PageViewTest extends TestCase
 {
@@ -29,7 +29,7 @@ class PageViewTest extends TestCase
             ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs($user)
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -50,7 +50,7 @@ class PageViewTest extends TestCase
             ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs($user)
-            ->get('/pages/' . $page->id . '/history');
+            ->get('/pages/'.$page->id.'/history');
 
         $response->assertStatus(200);
     }
@@ -71,7 +71,7 @@ class PageViewTest extends TestCase
             ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs($user)
-            ->get('/pages/' . $page->id . '/gallery');
+            ->get('/pages/'.$page->id.'/gallery');
 
         $response->assertStatus(200);
     }
@@ -92,7 +92,7 @@ class PageViewTest extends TestCase
             ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs($user)
-            ->get('/pages/' . $page->id . '/links-here');
+            ->get('/pages/'.$page->id.'/links-here');
 
         $response->assertStatus(200);
     }
@@ -114,7 +114,7 @@ class PageViewTest extends TestCase
             ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -136,7 +136,7 @@ class PageViewTest extends TestCase
             ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -158,7 +158,7 @@ class PageViewTest extends TestCase
             ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -180,7 +180,7 @@ class PageViewTest extends TestCase
             ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -202,7 +202,7 @@ class PageViewTest extends TestCase
             ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -224,7 +224,7 @@ class PageViewTest extends TestCase
             ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -246,7 +246,7 @@ class PageViewTest extends TestCase
             ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }

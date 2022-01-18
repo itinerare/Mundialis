@@ -31,7 +31,8 @@ class WatchedPageFactory extends Factory
      * Generate a watch for a specific page.
      * This is essentially required.
      *
-     * @param  int                      $page
+     * @param int $page
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function page($page)
@@ -47,7 +48,8 @@ class WatchedPageFactory extends Factory
      * Generate a watch by a specific user.
      * This is essentially required.
      *
-     * @param  int                      $user
+     * @param int $user
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function user($user)

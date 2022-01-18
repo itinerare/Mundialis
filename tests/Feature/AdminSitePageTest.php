@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use App\Models\SitePage;
 use App\Models\User\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AdminSitePageTest extends TestCase
 {
@@ -52,13 +52,13 @@ class AdminSitePageTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/pages/edit/' . $page->id, [
+            ->post('/admin/pages/edit/'.$page->id, [
                 'text' => 'TEST SUCCESS',
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('site_pages', [
-            'key' => 'about',
+            'key'  => 'about',
             'text' => 'TEST SUCCESS',
         ]);
     }

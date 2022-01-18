@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use DB;
 use App\Models\User\InvitationCode;
+use DB;
 
 class InvitationService extends Service
 {
@@ -19,7 +19,8 @@ class InvitationService extends Service
     /**
      * Generates an invitation code, saving the user who generated it.
      *
-     * @param  \App\Models\User\User $user
+     * @param \App\Models\User\User $user
+     *
      * @return \App\Models\Invitation|bool
      */
     public function generateInvitation($user)
@@ -28,7 +29,7 @@ class InvitationService extends Service
 
         try {
             $invitation = InvitationCode::create([
-                'code' => $this->generateCode(),
+                'code'    => $this->generateCode(),
                 'user_id' => $user->id,
             ]);
 
@@ -43,7 +44,8 @@ class InvitationService extends Service
     /**
      * Marks an invitation code as used, saving the user who used it.
      *
-     * @param  \App\Models\User\User $user
+     * @param \App\Models\User\User $user
+     *
      * @return \App\Models\Invitation|bool
      */
     public function useInvitation($invitation, $user)
@@ -70,7 +72,8 @@ class InvitationService extends Service
     /**
      * Deletes an unused invitation code.
      *
-     * @param  \App\Models\Invitation $invitation
+     * @param \App\Models\Invitation $invitation
+     *
      * @return bool
      */
     public function deleteInvitation($invitation)

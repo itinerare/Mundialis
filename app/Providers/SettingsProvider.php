@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\ServiceProvider;
 
 class SettingsProvider extends ServiceProvider
 {
@@ -26,7 +26,7 @@ class SettingsProvider extends ServiceProvider
     {
         //
         App::bind('settings', function () {
-            return new \App\Helpers\Settings;
+            return new \App\Helpers\Settings();
         });
     }
 }

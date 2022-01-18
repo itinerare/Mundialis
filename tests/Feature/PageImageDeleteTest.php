@@ -2,8 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
 use App\Models\Page\PageImageCreator;
@@ -11,11 +9,14 @@ use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
 use App\Models\User\User;
 use App\Services\ImageManager;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class PageImageDeleteTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test image deletion access.
@@ -35,16 +36,16 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
-            ->get('/pages/' . $page->id . '/gallery/delete/' . $image->id);
+            ->get('/pages/'.$page->id.'/gallery/delete/'.$image->id);
 
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -65,19 +66,19 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/' . $page->id . '/gallery/delete/' . $image->id);
+            ->post('/pages/'.$page->id.'/gallery/delete/'.$image->id);
 
         // Verify that the appropriate change has occurred
         $this->assertSoftDeleted($image);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -103,23 +104,23 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/' . $page->id . '/gallery/delete/' . $image->id, $data);
+            ->post('/pages/'.$page->id.'/gallery/delete/'.$image->id, $data);
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_image_versions', [
             'page_image_id' => $page->id,
-            'type' => 'Image Deleted',
-            'reason' => $data['reason'],
+            'type'          => 'Image Deleted',
+            'reason'        => $data['reason'],
         ]);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -140,7 +141,7 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Set the page's active image
         $page->update(['image_id' => $image->id]);
@@ -148,19 +149,19 @@ class PageImageDeleteTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/' . $page->id . '/gallery/delete/' . $image->id);
+            ->post('/pages/'.$page->id.'/gallery/delete/'.$image->id);
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
-            'id' => $page->id,
+            'id'       => $page->id,
             'image_id' => null,
         ]);
 
         $this->assertSoftDeleted($image);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -181,16 +182,16 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
-            ->get('/admin/special/deleted-images/' . $image->id);
+            ->get('/admin/special/deleted-images/'.$image->id);
 
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -211,22 +212,22 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/special/deleted-images/' . $image->id . '/restore');
+            ->post('/admin/special/deleted-images/'.$image->id.'/restore');
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_images', [
-            'id' => $image->id,
+            'id'         => $image->id,
             'deleted_at' => null,
         ]);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -252,28 +253,28 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/special/deleted-images/' . $image->id . '/restore', $data);
+            ->post('/admin/special/deleted-images/'.$image->id.'/restore', $data);
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_image_versions', [
             'page_image_id' => $image->id,
-            'type' => 'Image Restored',
-            'reason' => $data['reason'],
+            'type'          => 'Image Restored',
+            'reason'        => $data['reason'],
         ]);
 
         $this->assertDatabaseHas('page_images', [
-            'id' => $image->id,
+            'id'         => $image->id,
             'deleted_at' => null,
         ]);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -295,18 +296,18 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/special/deleted-images/' . $image->id . '/restore');
+            ->post('/admin/special/deleted-images/'.$image->id.'/restore');
 
         // Verify that the appropriate change has occurred
         $this->assertSoftDeleted($image);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 }

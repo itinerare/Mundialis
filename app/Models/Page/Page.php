@@ -2,16 +2,17 @@
 
 namespace App\Models\Page;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Config;
+use App\Models\Model;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
-use App\Models\Model;
+use Config;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Page extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     /**
      * Whether the model contains timestamps to be saved and updated.
@@ -184,8 +185,8 @@ class Page extends Model
     /**
      * Scope a query to only include visible pages.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  \App\Models\User\User                  $user
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \App\Models\User\User                 $user
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -201,8 +202,8 @@ class Page extends Model
     /**
      * Scope a query to only include pages of a given subject.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  string                                 $subject
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string                                $subject
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -217,8 +218,8 @@ class Page extends Model
     /**
      * Scope a query to only include pages with a given title.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  string                                 $title
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string                                $title
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -302,7 +303,7 @@ class Page extends Model
      */
     public function getUrlAttribute()
     {
-        return url('pages/' . $this->id . '.' . $this->slug);
+        return url('pages/'.$this->id.'.'.$this->slug);
     }
 
     /**
@@ -318,11 +319,11 @@ class Page extends Model
 
             // Check if there is more than one page within this subject with this title
             if ($titlePages->whereIn('category_id', SubjectCategory::where('subject', $this->category->subject['key'])->pluck('id')->toArray())->count() > 1) {
-                return $this->title . ' (' . $this->category->subject['term'] . '/' . $this->category->name . ')';
+                return $this->title.' ('.$this->category->subject['term'].'/'.$this->category->name.')';
             }
 
             // Otherwise just note the subject
-            return $this->title . ' (' . $this->category->subject['term'] . ')';
+            return $this->title.' ('.$this->category->subject['term'].')';
         }
 
         return $this->title;
@@ -337,11 +338,11 @@ class Page extends Model
     {
         // Check to see if this page is currently being viewed/the link would be redundant
         if (url()->current() == $this->url) {
-            return $this->displayTitle . (!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
+            return $this->displayTitle.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
         }
         // Otherwise, return the link as usual
         return
-            '<a href="' . $this->url . '" class="text-primary"' . ($this->summary ? ' data-toggle="tooltip" title="' . $this->summary . '"' : '') . '>' . $this->displayTitle . '</a>' . (!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
+            '<a href="'.$this->url.'" class="text-primary"'.($this->summary ? ' data-toggle="tooltip" title="'.$this->summary.'"' : '').'>'.$this->displayTitle.'</a>'.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
     }
 
     /**
@@ -368,8 +369,9 @@ class Page extends Model
     /**
      * Attempt to calculate the age of a person by comparing two time arrays.
      *
-     * @param  array     $birth
-     * @param  array     $current
+     * @param array $birth
+     * @param array $current
+     *
      * @return string
      */
     public function personAge($birth, $current)
@@ -421,7 +423,8 @@ class Page extends Model
     /**
      * Gather a person's family from extant relationships.
      *
-     * @param  string    $type
+     * @param string $type
+     *
      * @return array
      */
     public function personRelations($type = null)
@@ -435,7 +438,7 @@ class Page extends Model
                 break;
             case 'children':
                 $familyTypes = [
-                    'familial_child' => 'Child',
+                    'familial_child'   => 'Child',
                     'familial_adopted' => 'Child (Adopted)',
                 ];
                 break;
@@ -464,17 +467,17 @@ class Page extends Model
         foreach ($family as $familyMember) {
             if ($familyMember->page_one_id == $this->id) {
                 $familyMembers[] = [
-                    'link' => $familyMember,
-                    'type' => $familyMember->type_two,
+                    'link'        => $familyMember,
+                    'type'        => $familyMember->type_two,
                     'displayType' => $familyMember->displayTypeTwo,
-                    'page' => $familyMember->pageTwo,
+                    'page'        => $familyMember->pageTwo,
                 ];
             } elseif ($familyMember->page_two_id == $this->id) {
                 $familyMembers[] = [
-                    'link' => $familyMember,
-                    'type' => $familyMember->type_one,
+                    'link'        => $familyMember,
+                    'type'        => $familyMember->type_one,
                     'displayType' => $familyMember->displayTypeOne,
-                    'page' => $familyMember->pageOne,
+                    'page'        => $familyMember->pageOne,
                 ];
             }
         }
@@ -491,9 +494,10 @@ class Page extends Model
     /**
      * Organize events in chronological order.
      *
-     * @param  \App\Models\User\User    $user
-     * @param  int                      $chronology
-     * @param  array                    $tags
+     * @param \App\Models\User\User $user
+     * @param int                   $chronology
+     * @param array                 $tags
+     *
      * @return \Illuminate\Support\Collection
      */
     public function timeOrderedEvents($user = null, $chronology = null, $tags = null)
@@ -538,9 +542,10 @@ class Page extends Model
     /**
      * Help organize events recursively.
      *
-     * @param  \Illuminate\Support\Collection  $group
-     * @param  array                           $divisionNames
-     * @param  int                             $i
+     * @param \Illuminate\Support\Collection $group
+     * @param array                          $divisionNames
+     * @param int                            $i
+     *
      * @return \Illuminate\Support\Collection
      */
     public function timeGroupEvents($group, $divisionNames, $i = 0)

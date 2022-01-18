@@ -30,7 +30,8 @@ class PageImageCreatorFactory extends Factory
      * Generate a creator for a specific image.
      * This is essentially required.
      *
-     * @param  int                      $image
+     * @param int $image
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function image($image)
@@ -46,7 +47,8 @@ class PageImageCreatorFactory extends Factory
      * Generate a creator record for a specific user.
      * This is semi-required.
      *
-     * @param  int                      $user
+     * @param int $user
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function user($user)
@@ -62,7 +64,8 @@ class PageImageCreatorFactory extends Factory
      * Generate a creator record for a specific url.
      * This is semi-required.
      *
-     * @param  int                      $url
+     * @param int $url
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function url($url)

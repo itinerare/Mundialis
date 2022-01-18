@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Auth;
-use Illuminate\Http\Request;
-use App\Models\User\User;
+use App\Http\Controllers\Controller;
 use App\Models\User\Rank;
+use App\Models\User\User;
 use App\Models\User\UserUpdateLog;
 use App\Services\UserService;
-use App\Http\Controllers\Controller;
+use Auth;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -24,7 +24,7 @@ class UserController extends Controller
 
         if ($request->get('name')) {
             $query->where(function ($query) use ($request) {
-                $query->where('users.name', 'LIKE', '%' . $request->get('name') . '%')->orWhere('users.alias', 'LIKE', '%' . $request->get('name') . '%');
+                $query->where('users.name', 'LIKE', '%'.$request->get('name').'%')->orWhere('users.alias', 'LIKE', '%'.$request->get('name').'%');
             });
         }
         if ($request->get('rank_id')) {
@@ -79,7 +79,7 @@ class UserController extends Controller
         }
 
         return view('admin.users.user', [
-            'user' => $user,
+            'user'  => $user,
             'ranks' => Rank::orderBy('ranks.sort')->pluck('name', 'id')->toArray(),
         ]);
     }

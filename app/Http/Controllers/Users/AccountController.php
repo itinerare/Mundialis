@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\Users;
 
-use Auth;
-use App\Models\User\User;
-use App\Models\Subject\SubjectCategory;
+use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use App\Models\Page\Page;
 use App\Models\Page\PageTag;
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use App\Models\Notification;
-use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
-use Laravel\Fortify\RecoveryCode;
+use App\Models\Subject\SubjectCategory;
+use App\Models\User\User;
+use App\Services\UserService;
+use Auth;
 use BaconQrCode\Renderer\Color\Rgb;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\Fill;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
-use App\Services\UserService;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
+use Laravel\Fortify\RecoveryCode;
 
 class AccountController extends Controller
 {
@@ -59,7 +59,8 @@ class AccountController extends Controller
     /**
      * Edits the user's profile.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postProfile(Request $request)
@@ -75,7 +76,8 @@ class AccountController extends Controller
     /**
      * Edits the user's avatar.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postAvatar(Request $request, UserService $service)
@@ -94,8 +96,9 @@ class AccountController extends Controller
     /**
      * Changes the user's password.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\UserService  $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\UserService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postPassword(Request $request, UserService $service)
@@ -118,8 +121,9 @@ class AccountController extends Controller
     /**
      * Changes the user's email address and sends a verification email.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\UserService  $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\UserService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postEmail(Request $request, UserService $service)
@@ -141,8 +145,9 @@ class AccountController extends Controller
     /**
      * Enables the user's two factor auth.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\UserService  $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\UserService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postEnableTwoFactor(Request $request, UserService $service)
@@ -175,13 +180,13 @@ class AccountController extends Controller
         $qrCode = (new Writer(
             new ImageRenderer(
                 new RendererStyle(192, 0, null, null, Fill::uniformColor(new Rgb(255, 255, 255), new Rgb(45, 55, 72))),
-                new SvgImageBackEnd
+                new SvgImageBackEnd()
             )
         ))->writeString($qrUrl);
         $qrCode = trim(substr($qrCode, strpos($qrCode, "\n") + 1));
 
         return view('auth.confirm_two_factor', [
-            'qrCode' => $qrCode,
+            'qrCode'        => $qrCode,
             'recoveryCodes' => json_decode(decrypt($request->session()->get('two_factor_recovery_codes'))),
         ]);
     }
@@ -189,8 +194,9 @@ class AccountController extends Controller
     /**
      * Confirms and fully enables the user's two factor auth.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\UserService  $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\UserService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postConfirmTwoFactor(Request $request, UserService $service)
@@ -213,8 +219,9 @@ class AccountController extends Controller
     /**
      * Confirms and disables the user's two factor auth.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\UserService  $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\UserService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDisableTwoFactor(Request $request, UserService $service)
@@ -236,7 +243,8 @@ class AccountController extends Controller
     /**
      * Shows the watched pages page.
      *
-     * @param  \Illuminate\Http\Request        $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getWatchedPages(Request $request)
@@ -246,7 +254,7 @@ class AccountController extends Controller
 
         if ($request->get('title')) {
             $query->where(function ($query) use ($request) {
-                $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
+                $query->where('pages.title', 'LIKE', '%'.$request->get('title').'%');
             });
         }
         if ($request->get('category_id')) {
@@ -278,17 +286,18 @@ class AccountController extends Controller
         }
 
         return view('account.watched_pages', [
-            'pages' => $query->paginate(20)->appends($request->query()),
+            'pages'           => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
-            'tags' => (new PageTag)->listTags(),
+            'tags'            => (new PageTag())->listTags(),
         ]);
     }
 
     /**
      * Watches/unwatches a page.
      *
-     * @param  \Illuminate\Http\Request        $request
-     * @param  App\Services\UserService        $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\UserService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postWatchPage(Request $request, UserService $service, $id)

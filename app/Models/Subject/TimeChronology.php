@@ -2,8 +2,8 @@
 
 namespace App\Models\Subject;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TimeChronology extends Model
 {
@@ -22,7 +22,7 @@ class TimeChronology extends Model
      * @var array
      */
     public static $createRules = [
-        'name' => 'required|unique:time_chronology',
+        'name'         => 'required|unique:time_chronology',
         'abbreviation' => 'nullable|unique:time_chronology',
     ];
 
@@ -95,10 +95,10 @@ class TimeChronology extends Model
     public function getDisplayNameAttribute()
     {
         if (isset($this->abbreviation)) {
-            return '<a href="' . $this->url . '"><abbr data-toggle="tooltip" title="' . $this->name . '">' . $this->abbreviation . '</abbr></a>';
+            return '<a href="'.$this->url.'"><abbr data-toggle="tooltip" title="'.$this->name.'">'.$this->abbreviation.'</abbr></a>';
         }
 
-        return '<a href="' . $this->url . '">' . $this->name . '</a>';
+        return '<a href="'.$this->url.'">'.$this->name.'</a>';
     }
 
     /**
@@ -108,7 +108,7 @@ class TimeChronology extends Model
      */
     public function getDisplayNameFullAttribute()
     {
-        return '<a href="' . $this->url . '">' . $this->name . '</a>';
+        return '<a href="'.$this->url.'">'.$this->name.'</a>';
     }
 
     /**
@@ -118,6 +118,6 @@ class TimeChronology extends Model
      */
     public function getUrlAttribute()
     {
-        return url('time/chronologies/' . $this->id);
+        return url('time/chronologies/'.$this->id);
     }
 }

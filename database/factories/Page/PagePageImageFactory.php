@@ -31,7 +31,8 @@ class PagePageImageFactory extends Factory
      * Generate a page-image link for a specific page.
      * This is essentially required.
      *
-     * @param  int                      $page
+     * @param int $page
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function page($page)
@@ -47,7 +48,8 @@ class PagePageImageFactory extends Factory
      * Generate a page-image link for a specific image.
      * This is essentially required.
      *
-     * @param  int                      $image
+     * @param int $image
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function image($image)

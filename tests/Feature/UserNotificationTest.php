@@ -2,10 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User\User;
 use App\Models\Notification;
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
@@ -13,12 +9,17 @@ use App\Models\Page\PageImageCreator;
 use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
 use App\Models\Page\PageVersion;
+use App\Models\User\User;
 use App\Models\User\WatchedPage;
 use App\Services\ImageManager;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
 class UserNotificationTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test notifications access.
@@ -169,17 +170,17 @@ class UserNotificationTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
+            'title'   => $this->faker->unique()->domainWord(),
             'summary' => null,
         ];
 
         // Edit the page; this should send a notification to the user
         $response = $this->actingAs($editor)
-            ->post('/pages/' . $page->id . '/edit', $data);
+            ->post('/pages/'.$page->id.'/edit', $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('notifications', [
-            'user_id' => $user->id,
+            'user_id'              => $user->id,
             'notification_type_id' => 0,
         ]);
     }
@@ -208,29 +209,29 @@ class UserNotificationTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($editor->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Define some basic data
         $data = [
             'description' => $this->faker->unique()->domainWord(),
-            'creator_id' => [0 => $user->id],
+            'creator_id'  => [0 => $user->id],
             'creator_url' => [0 => null],
         ];
 
         // Try to post data
         $response = $this
             ->actingAs($editor)
-            ->post('/pages/' . $page->id . '/gallery/edit/' . $image->id, $data);
+            ->post('/pages/'.$page->id.'/gallery/edit/'.$image->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('notifications', [
-            'user_id' => $user->id,
+            'user_id'              => $user->id,
             'notification_type_id' => 1,
         ]);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -254,11 +255,11 @@ class UserNotificationTest extends TestCase
 
         // Edit the page; this should send a notification to the user
         $response = $this->actingAs($editor)
-            ->post('/pages/' . $page->id . '/delete');
+            ->post('/pages/'.$page->id.'/delete');
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('notifications', [
-            'user_id' => $user->id,
+            'user_id'              => $user->id,
             'notification_type_id' => 2,
         ]);
     }

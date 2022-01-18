@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Auth;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\User\Rank;
 use App\Services\RankService;
-use App\Http\Controllers\Controller;
+use Auth;
+use Illuminate\Http\Request;
 
 class RankController extends Controller
 {

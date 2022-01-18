@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\User\User;
 use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\User\User;
 
 class AccessTest extends TestCase
 {

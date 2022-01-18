@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Admin\Data;
 
-use Config;
-use Auth;
-use App\Models\Subject\SubjectTemplate;
-use App\Models\Subject\SubjectCategory;
-use App\Models\Subject\TimeDivision;
-use App\Models\Subject\TimeChronology;
-use App\Models\Subject\LexiconSetting;
-use App\Models\Subject\LexiconCategory;
-use App\Services\SubjectService;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Subject\LexiconCategory;
+use App\Models\Subject\LexiconSetting;
+use App\Models\Subject\SubjectCategory;
+use App\Models\Subject\SubjectTemplate;
+use App\Models\Subject\TimeChronology;
+use App\Models\Subject\TimeDivision;
+use App\Services\SubjectService;
+use Auth;
+use Config;
+use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {
@@ -32,17 +32,18 @@ class SubjectController extends Controller
     /**
      * Shows the project index.
      *
-     * @param string     $subject
+     * @param string $subject
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getSubjectIndex($subject)
     {
         $subjectKey = $subject;
-        $subject = Config::get('mundialis.subjects.' . $subject);
+        $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
         return view('admin.subjects.subject', [
-            'subject' => $subject,
+            'subject'    => $subject,
             'categories' => SubjectCategory::where('subject', $subject['key'])->orderBy('sort', 'DESC')->get(),
         ]);
     }
@@ -50,30 +51,32 @@ class SubjectController extends Controller
     /**
      * Shows the subject template editing page.
      *
-     * @param string     $subject
+     * @param string $subject
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditTemplate($subject)
     {
         $subjectKey = $subject;
-        $subject = Config::get('mundialis.subjects.' . $subject);
+        $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
         $template = SubjectTemplate::where('subject', $subject['key'])->first();
 
         return view('admin.subjects.template', [
-            'subject' => $subject,
-            'template' => $template ? $template : new SubjectTemplate,
+            'subject'  => $subject,
+            'template' => $template ? $template : new SubjectTemplate(),
         ]);
     }
 
     /**
      * Edits subject template data.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\SubjectService  $service
-     * @param string                        $subject
-     * @param  int|null                     $id
+     * @param \Illuminate\Http\Request    $request
+     * @param App\Services\SubjectService $service
+     * @param string                      $subject
+     * @param int|null                    $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postEditTemplate(Request $request, SubjectService $service, $subject, $id = null)
@@ -99,18 +102,19 @@ class SubjectController extends Controller
     /**
      * Shows the create category page.
      *
-     * @param string     $subject
+     * @param string $subject
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreateCategory($subject)
     {
         $subjectKey = $subject;
-        $subject = Config::get('mundialis.subjects.' . $subject);
+        $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
         return view('admin.subjects.create_edit_category', [
-            'subject' => $subject,
-            'category' => new SubjectCategory,
+            'subject'         => $subject,
+            'category'        => new SubjectCategory(),
             'categoryOptions' => SubjectCategory::where('subject', $subject['key'])->pluck('name', 'id')->toArray(),
         ]);
     }
@@ -118,7 +122,8 @@ class SubjectController extends Controller
     /**
      * Shows the edit category page.
      *
-     * @param  int       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditCategory($id)
@@ -131,8 +136,8 @@ class SubjectController extends Controller
         $subject = $category->subject;
 
         return view('admin.subjects.create_edit_category', [
-            'subject' => $subject,
-            'category' => $category,
+            'subject'         => $subject,
+            'category'        => $category,
             'categoryOptions' => SubjectCategory::where('subject', $subject['key'])->where('id', '!=', $category->id)->pluck('name', 'id')->toArray(),
         ]);
     }
@@ -140,9 +145,10 @@ class SubjectController extends Controller
     /**
      * Creates or edits a category.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\SubjectService  $service
-     * @param string|int                    $subject
+     * @param \Illuminate\Http\Request    $request
+     * @param App\Services\SubjectService $service
+     * @param string|int                  $subject
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postCreateEditCategory(Request $request, SubjectService $service, $subject)
@@ -159,7 +165,7 @@ class SubjectController extends Controller
         } elseif (!is_numeric($subject) && $category = $service->createCategory($data, Auth::user(), $subject)) {
             flash('Category created successfully.')->success();
 
-            return redirect()->to('admin/data/categories/edit/' . $category->id);
+            return redirect()->to('admin/data/categories/edit/'.$category->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -172,7 +178,8 @@ class SubjectController extends Controller
     /**
      * Gets the category deletion modal.
      *
-     * @param  int       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeleteCategory($id)
@@ -187,9 +194,10 @@ class SubjectController extends Controller
     /**
      * Deletes a category.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\SubjectService  $service
-     * @param  int                          $id
+     * @param \Illuminate\Http\Request    $request
+     * @param App\Services\SubjectService $service
+     * @param int                         $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeleteCategory(Request $request, SubjectService $service, $id)
@@ -206,15 +214,16 @@ class SubjectController extends Controller
             return redirect()->back();
         }
 
-        return redirect()->to('admin/data/' . $subject['key']);
+        return redirect()->to('admin/data/'.$subject['key']);
     }
 
     /**
      * Sorts categories.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\SubjectService  $service
-     * @param string                        $subject
+     * @param \Illuminate\Http\Request    $request
+     * @param App\Services\SubjectService $service
+     * @param string                      $subject
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortCategory(Request $request, SubjectService $service, $subject)
@@ -249,8 +258,9 @@ class SubjectController extends Controller
     /**
      * Edits time divisions.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\SubjectService  $service
+     * @param \Illuminate\Http\Request    $request
+     * @param App\Services\SubjectService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postEditDivisions(Request $request, SubjectService $service)
@@ -291,7 +301,7 @@ class SubjectController extends Controller
     public function getCreateChronology()
     {
         return view('admin.subjects.create_edit_chronology', [
-            'chronology' => new TimeChronology,
+            'chronology'        => new TimeChronology(),
             'chronologyOptions' => TimeChronology::pluck('name', 'id')->toArray(),
         ]);
     }
@@ -299,7 +309,8 @@ class SubjectController extends Controller
     /**
      * Shows the edit chronology page.
      *
-     * @param  int       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditChronology($id)
@@ -310,7 +321,7 @@ class SubjectController extends Controller
         }
 
         return view('admin.subjects.create_edit_chronology', [
-            'chronology' => $chronology,
+            'chronology'        => $chronology,
             'chronologyOptions' => TimeChronology::where('id', '!=', $chronology->id)->pluck('name', 'id')->toArray(),
         ]);
     }
@@ -318,9 +329,10 @@ class SubjectController extends Controller
     /**
      * Creates or edits a chronology.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\SubjectService  $service
-     * @param  int|null                     $id
+     * @param \Illuminate\Http\Request    $request
+     * @param App\Services\SubjectService $service
+     * @param int|null                    $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postCreateEditChronology(Request $request, SubjectService $service, $id = null)
@@ -334,7 +346,7 @@ class SubjectController extends Controller
         } elseif (!$id && $chronology = $service->createChronology($data, Auth::user())) {
             flash('Chronology created successfully.')->success();
 
-            return redirect()->to('admin/data/time/chronology/edit/' . $chronology->id);
+            return redirect()->to('admin/data/time/chronology/edit/'.$chronology->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -347,7 +359,8 @@ class SubjectController extends Controller
     /**
      * Gets the chronology deletion modal.
      *
-     * @param  int       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeleteChronology($id)
@@ -362,9 +375,10 @@ class SubjectController extends Controller
     /**
      * Deletes a chronology.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\SubjectService  $service
-     * @param  int                          $id
+     * @param \Illuminate\Http\Request    $request
+     * @param App\Services\SubjectService $service
+     * @param int                         $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeleteChronology(Request $request, SubjectService $service, $id)
@@ -383,8 +397,9 @@ class SubjectController extends Controller
     /**
      * Sorts chronologies.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\SubjectService  $service
+     * @param \Illuminate\Http\Request    $request
+     * @param App\Services\SubjectService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortChronology(Request $request, SubjectService $service)
@@ -419,8 +434,9 @@ class SubjectController extends Controller
     /**
      * Edits lexicon settings.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\SubjectService  $service
+     * @param \Illuminate\Http\Request    $request
+     * @param App\Services\SubjectService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postEditLexiconSettings(Request $request, SubjectService $service)
@@ -461,16 +477,17 @@ class SubjectController extends Controller
     public function getCreateLexiconCategory()
     {
         return view('admin.subjects.create_edit_lang_category', [
-            'category' => new LexiconCategory,
+            'category'        => new LexiconCategory(),
             'categoryOptions' => LexiconCategory::pluck('name', 'id')->toArray(),
-            'classes' => LexiconSetting::all(),
+            'classes'         => LexiconSetting::all(),
         ]);
     }
 
     /**
      * Shows the edit lexicon category page.
      *
-     * @param  int       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditLexiconCategory($id)
@@ -481,18 +498,19 @@ class SubjectController extends Controller
         }
 
         return view('admin.subjects.create_edit_lang_category', [
-            'category' => $category,
+            'category'        => $category,
             'categoryOptions' => LexiconCategory::where('id', '!=', $category->id)->pluck('name', 'id')->toArray(),
-            'classes' => LexiconSetting::all(),
+            'classes'         => LexiconSetting::all(),
         ]);
     }
 
     /**
      * Creates or edits a lexicon category.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\SubjectService  $service
-     * @param  int|null                     $id
+     * @param \Illuminate\Http\Request    $request
+     * @param App\Services\SubjectService $service
+     * @param int|null                    $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postCreateEditLexiconCategory(Request $request, SubjectService $service, $id = null)
@@ -509,7 +527,7 @@ class SubjectController extends Controller
         } elseif (!$id && $category = $service->createLexiconCategory($data, Auth::user())) {
             flash('Category created successfully.')->success();
 
-            return redirect()->to('admin/data/language/lexicon-categories/edit/' . $category->id);
+            return redirect()->to('admin/data/language/lexicon-categories/edit/'.$category->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -522,7 +540,8 @@ class SubjectController extends Controller
     /**
      * Gets the lexicon category deletion modal.
      *
-     * @param  int       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeleteLexiconCategory($id)
@@ -537,9 +556,10 @@ class SubjectController extends Controller
     /**
      * Deletes a lexicon category.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\SubjectService  $service
-     * @param  int                          $id
+     * @param \Illuminate\Http\Request    $request
+     * @param App\Services\SubjectService $service
+     * @param int                         $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeleteLexiconCategory(Request $request, SubjectService $service, $id)
@@ -558,8 +578,9 @@ class SubjectController extends Controller
     /**
      * Sorts lexicon categories.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\SubjectService  $service
+     * @param \Illuminate\Http\Request    $request
+     * @param App\Services\SubjectService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortLexiconCategory(Request $request, SubjectService $service)

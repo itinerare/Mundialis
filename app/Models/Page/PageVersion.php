@@ -2,8 +2,8 @@
 
 namespace App\Models\Page;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PageVersion extends Model
 {
@@ -107,6 +107,6 @@ class PageVersion extends Model
             $difference = $this->length;
         }
 
-        return 'Length: ' . $this->length . ($difference != 0 ? ' <span class="text-' . ($difference > 0 ? 'success' : 'danger') . '">(' . ($difference > 0 ? '+' : '') . $difference . ')</span>' : null);
+        return 'Length: '.$this->length.($difference != 0 ? ' <span class="text-'.($difference > 0 ? 'success' : 'danger').'">('.($difference > 0 ? '+' : '').$difference.')</span>' : null);
     }
 }

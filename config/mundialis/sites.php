@@ -13,65 +13,65 @@ return [
     */
 
     'deviantart' => [
-        'full_name' => 'deviantART',
+        'full_name'    => 'deviantART',
         'display_name' => 'dA',
-        'regex' => '/deviantart\.com\/([A-Za-z0-9_-]+)/',
-        'link' => 'deviantart.com',
+        'regex'        => '/deviantart\.com\/([A-Za-z0-9_-]+)/',
+        'link'         => 'deviantart.com',
     ],
 
     'twitter' => [
-        'full_name' => 'Twitter',
+        'full_name'    => 'Twitter',
         'display_name' => 'twitter',
-        'regex' => '/twitter\.com\/([A-Za-z0-9_-]+)/',
-        'link' => 'twitter.com',
+        'regex'        => '/twitter\.com\/([A-Za-z0-9_-]+)/',
+        'link'         => 'twitter.com',
     ],
 
     'instagram' => [
-        'full_name' => 'Instagram',
+        'full_name'    => 'Instagram',
         'display_name' => 'ig',
-        'regex' => '/instagram\.com\/([A-Za-z0-9_-]+)/',
-        'link' => 'instagram.com',
+        'regex'        => '/instagram\.com\/([A-Za-z0-9_-]+)/',
+        'link'         => 'instagram.com',
     ],
 
     'tumblr' => [
-        'full_name' => 'Tumblr',
+        'full_name'    => 'Tumblr',
         'display_name' => 'tumblr',
-        'regex' => '/([A-Za-z0-9_-]+)\.tumblr\.com/',
-        'link' => 'tumblr.com',
+        'regex'        => '/([A-Za-z0-9_-]+)\.tumblr\.com/',
+        'link'         => 'tumblr.com',
     ],
 
     'imgur' => [
-        'full_name' => 'Imgur',
+        'full_name'    => 'Imgur',
         'display_name' => 'imgur',
-        'regex' => '/imgur\.com\/user\/([A-Za-z0-9_-]+)/',
-        'link' => 'imgur.com/user/',
+        'regex'        => '/imgur\.com\/user\/([A-Za-z0-9_-]+)/',
+        'link'         => 'imgur.com/user/',
     ],
 
     'twitch' => [
-        'full_name' => 'Twitch.tv',
+        'full_name'    => 'Twitch.tv',
         'display_name' => 'twitch',
-        'regex' => '/twitch\.tv\/([A-Za-z0-9_-]+)/',
-        'link' => 'twitch.tv',
+        'regex'        => '/twitch\.tv\/([A-Za-z0-9_-]+)/',
+        'link'         => 'twitch.tv',
     ],
 
     'toyhouse' => [
-        'full_name' => 'Toyhou.se',
+        'full_name'    => 'Toyhou.se',
         'display_name' => 'TH',
-        'regex' => '/toyhou\.se\/([A-Za-z0-9_-]+)/',
-        'link' => 'toyhou.se',
+        'regex'        => '/toyhou\.se\/([A-Za-z0-9_-]+)/',
+        'link'         => 'toyhou.se',
     ],
 
     'artstation' => [
-        'full_name' => 'Artstation',
+        'full_name'    => 'Artstation',
         'display_name' => 'artstation',
-        'regex' => '/artstation\.com\/([A-Za-z0-9_-]+)/',
-        'link' => 'artstation.com',
+        'regex'        => '/artstation\.com\/([A-Za-z0-9_-]+)/',
+        'link'         => 'artstation.com',
     ],
 
     'picarto' => [
-        'full_name' => 'Picarto',
+        'full_name'    => 'Picarto',
         'display_name' => 'picarto',
-        'regex' => '/picarto\.tv\/([A-Za-z0-9_-]+)/',
-        'link' => 'picarto.tv',
+        'regex'        => '/picarto\.tv\/([A-Za-z0-9_-]+)/',
+        'link'         => 'picarto.tv',
     ],
 ];

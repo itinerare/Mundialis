@@ -3,8 +3,8 @@
 namespace Database\Factories\Lexicon;
 
 use App\Models\Lexicon\LexiconEntry;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Subject\LexiconSetting;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LexiconEntryFactory extends Factory
 {
@@ -26,14 +26,14 @@ class LexiconEntryFactory extends Factory
             $class = LexiconSetting::all()->first();
         } else {
             $class = LexiconSetting::create([
-                'name' => $this->faker->unique()->domainWord(),
+                'name'         => $this->faker->unique()->domainWord(),
                 'abbreviation' => $this->faker->unique()->domainWord(),
             ]);
         }
 
         return [
-            'word' => $this->faker->unique()->domainWord(),
-            'class' => $class->name,
+            'word'    => $this->faker->unique()->domainWord(),
+            'class'   => $class->name,
             'meaning' => $this->faker->unique()->domainWord(),
         ];
     }
@@ -41,7 +41,8 @@ class LexiconEntryFactory extends Factory
     /**
      * Generate an entry in a specific category.
      *
-     * @param  int                      $category
+     * @param int $category
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function category($category)
@@ -62,7 +63,7 @@ class LexiconEntryFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'data' => '{"Singular Nominative":"' . $this->faker->unique()->domainWord() . '","Singular Accusative":null,"Singular Dative":null,"Plural Nominative":null,"Plural Accusative":null,"Plural Dative":null}',
+                'data' => '{"Singular Nominative":"'.$this->faker->unique()->domainWord().'","Singular Accusative":null,"Singular Dative":null,"Plural Nominative":null,"Plural Accusative":null,"Plural Dative":null}',
             ];
         });
     }

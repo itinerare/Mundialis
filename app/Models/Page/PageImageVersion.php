@@ -83,7 +83,7 @@ class PageImageVersion extends Model
      */
     public function getImageFileNameAttribute()
     {
-        return $this->image->id . '_' . $this->id . '_' . $this->hash . '.' . $this->extension;
+        return $this->image->id.'_'.$this->id.'_'.$this->hash.'.'.$this->extension;
     }
 
     /**
@@ -97,7 +97,7 @@ class PageImageVersion extends Model
             return null;
         }
 
-        return asset($this->image->imageDirectory . '/' . $this->imageFileName);
+        return asset($this->image->imageDirectory.'/'.$this->imageFileName);
     }
 
     /**
@@ -107,7 +107,7 @@ class PageImageVersion extends Model
      */
     public function getThumbnailFileNameAttribute()
     {
-        return $this->image->id . '_' . $this->id . '_' . $this->hash . '_th.' . $this->extension;
+        return $this->image->id.'_'.$this->id.'_'.$this->hash.'_th.'.$this->extension;
     }
 
     /**
@@ -121,6 +121,6 @@ class PageImageVersion extends Model
             return null;
         }
 
-        return asset($this->image->imageDirectory . '/' . $this->thumbnailFileName);
+        return asset($this->image->imageDirectory.'/'.$this->thumbnailFileName);
     }
 }

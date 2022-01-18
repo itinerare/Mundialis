@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\User\InvitationCode;
+use App\Models\User\User;
+use App\Services\InvitationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\User\User;
-use App\Models\User\InvitationCode;
-use App\Services\InvitationService;
 
 class AdminInvitationTest extends TestCase
 {
@@ -70,12 +70,12 @@ class AdminInvitationTest extends TestCase
         $code =
             InvitationCode::where('recipient_id', null)->first() ?
             InvitationCode::where('recipient_id', null)->first() :
-            (new InvitationService)->generateInvitation($user);
+            (new InvitationService())->generateInvitation($user);
 
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/invitations/delete/' . $code->id);
+            ->post('/admin/invitations/delete/'.$code->id);
 
         // Check that there are fewer invitation codes than before
         $this->assertTrue(InvitationCode::all()->count() <= $oldCount);
@@ -97,7 +97,7 @@ class AdminInvitationTest extends TestCase
         $code =
             InvitationCode::where('recipient_id', '!=', null)->first() ?
             InvitationCode::where('recipient_id', '!=', null)->first() :
-            (new InvitationService)->generateInvitation($user);
+            (new InvitationService())->generateInvitation($user);
 
         // If necessary, simulate a "used" code
         if ($code->recipient_id == null) {
@@ -109,7 +109,7 @@ class AdminInvitationTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/invitations/delete/' . $code->id);
+            ->post('/admin/invitations/delete/'.$code->id);
 
         // Check that there are the same number of invitation codes or greater
         $this->assertTrue(InvitationCode::all()->count() >= $oldCount);

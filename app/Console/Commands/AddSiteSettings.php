@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use DB;
+use Illuminate\Console\Command;
 
 class AddSiteSettings extends Command
 {
@@ -40,7 +40,7 @@ class AddSiteSettings extends Command
     {
         $this->info('*********************');
         $this->info('* ADD SITE SETTINGS *');
-        $this->info('*********************' . "\n");
+        $this->info('*********************'."\n");
 
         $this->line("Adding site settings...existing entries will be skipped.\n");
 
@@ -55,9 +55,9 @@ class AddSiteSettings extends Command
      * Add a site setting.
      *
      *
-     * @param  string  $key
-     * @param  int     $value
-     * @param  string  $description
+     * @param string $key
+     * @param int    $value
+     * @param string $description
      */
     private function addSiteSetting($key, $value, $description)
     {
@@ -69,9 +69,9 @@ class AddSiteSettings extends Command
                     'description' => $description,
                 ],
             ]);
-            $this->info('Added:   ' . $key . ' / Default: ' . $value);
+            $this->info('Added:   '.$key.' / Default: '.$value);
         } else {
-            $this->line('Skipped: ' . $key);
+            $this->line('Skipped: '.$key);
         }
     }
 }

@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use App\Models\User\User;
 use App\Models\Page\Page;
 use App\Models\Page\PageVersion;
+use App\Models\User\User;
 use App\Models\User\WatchedPage;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class PageWatchTest extends TestCase
 {
@@ -67,7 +67,7 @@ class PageWatchTest extends TestCase
             ->user(User::factory()->editor()->create()->id)->create();
 
         $response = $this->actingAs($user)
-            ->post('/account/watched-pages/' . $page->id);
+            ->post('/account/watched-pages/'.$page->id);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('watched_pages', [
@@ -95,7 +95,7 @@ class PageWatchTest extends TestCase
         WatchedPage::factory()->user($user->id)->page($page->id)->create();
 
         $response = $this->actingAs($user)
-            ->post('/account/watched-pages/' . $page->id);
+            ->post('/account/watched-pages/'.$page->id);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseMissing('watched_pages', [

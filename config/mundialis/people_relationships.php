@@ -27,13 +27,13 @@ return [
     ],
 
     'Familial' => [
-        'familial_parent' => 'Parent',
-        'familial_child' => 'Child',
+        'familial_parent'  => 'Parent',
+        'familial_child'   => 'Child',
         'familial_sibling' => 'Sibling',
         // These are mostly here in the interest of accurate tracking for potential
         // family tree rendering
         'familial_adoptive' => 'Parent (Adoptive)',
-        'familial_adopted' => 'Child (Adopted)',
+        'familial_adopted'  => 'Child (Adopted)',
     ],
 
     'Romantic' => [
@@ -50,11 +50,11 @@ return [
     'Platonic' => [
         'platonic_partner' => 'Partner (platonic)',
         // -- Types after this point can be safely removed if desired --------------------
-        'platonic_bff' => 'Close Friend',
-        'platonic_friend' => 'Friend',
+        'platonic_bff'            => 'Close Friend',
+        'platonic_friend'         => 'Friend',
         'platonic_circumstantial' => 'Friend (Circumstantial)',
-        'platonic_mentor' => 'Mentor',
-        'platonic_mentee' => 'Mentee',
+        'platonic_mentor'         => 'Mentor',
+        'platonic_mentee'         => 'Mentee',
     ],
 
     'Enmity' => [

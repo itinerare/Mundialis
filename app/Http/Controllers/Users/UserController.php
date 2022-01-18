@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Users;
 
-use Illuminate\Http\Request;
-use Auth;
-use Route;
-use App\Models\User\User;
-use App\Models\Page\PageVersion;
-use App\Models\Page\PageImageVersion;
 use App\Http\Controllers\Controller;
+use App\Models\Page\PageImageVersion;
+use App\Models\Page\PageVersion;
+use App\Models\User\User;
+use Auth;
+use Illuminate\Http\Request;
+use Route;
 
 class UserController extends Controller
 {
@@ -38,7 +38,8 @@ class UserController extends Controller
     /**
      * Shows a user's profile.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUser($name)
@@ -66,8 +67,8 @@ class UserController extends Controller
         });
 
         return view('user.profile', [
-            'user' => $this->user,
-            'pageVersions' => $pageVersions->take(15),
+            'user'          => $this->user,
+            'pageVersions'  => $pageVersions->take(15),
             'imageVersions' => $imageVersions->take(5),
         ]);
     }
@@ -75,8 +76,9 @@ class UserController extends Controller
     /**
      * Shows a user's page revisions.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string                    $name
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $name
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUserPageRevisions(Request $request, $name)
@@ -93,7 +95,7 @@ class UserController extends Controller
         });
 
         return view('user.page_revisions', [
-            'user' => $this->user,
+            'user'     => $this->user,
             'versions' => $query->paginate(20)->appends($request->query()),
         ]);
     }
@@ -101,8 +103,9 @@ class UserController extends Controller
     /**
      * Shows a user's image revisions.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string                    $name
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $name
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUserImageRevisions(Request $request, $name)
@@ -119,7 +122,7 @@ class UserController extends Controller
         });
 
         return view('user.image_revisions', [
-            'user' => $this->user,
+            'user'     => $this->user,
             'versions' => $query->paginate(15)->appends($request->query()),
         ]);
     }

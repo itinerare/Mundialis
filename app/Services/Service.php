@@ -3,11 +3,11 @@
 namespace App\Services;
 
 use App;
+use App\Models\Page\Page;
 use Auth;
 use DB;
 use File;
 use Illuminate\Support\MessageBag;
-use App\Models\Page\Page;
 
 abstract class Service
 {
@@ -22,6 +22,7 @@ abstract class Service
 
     /**
      * Errors.
+     *
      * @var Illuminate\Support\MessageBag
      */
     protected $errors = null;
@@ -40,6 +41,7 @@ abstract class Service
 
     /**
      * Return if an error exists.
+     *
      * @return bool
      */
     public function hasErrors()
@@ -49,6 +51,7 @@ abstract class Service
 
     /**
      * Return if an error exists.
+     *
      * @return bool
      */
     public function hasError($key)
@@ -58,6 +61,7 @@ abstract class Service
 
     /**
      * Return errors.
+     *
      * @return Illuminate\Support\MessageBag
      */
     public function errors()
@@ -67,6 +71,7 @@ abstract class Service
 
     /**
      * Return errors.
+     *
      * @return array
      */
     public function getAllErrors()
@@ -76,6 +81,7 @@ abstract class Service
 
     /**
      * Return error by key.
+     *
      * @return Illuminate\Support\MessageBag
      */
     public function getError($key)
@@ -85,6 +91,7 @@ abstract class Service
 
     /**
      * Empty the errors MessageBag.
+     *
      * @return void
      */
     public function resetErrors()
@@ -149,15 +156,16 @@ abstract class Service
 
     public function deleteImage($dir, $name)
     {
-        unlink($dir . '/' . $name);
+        unlink($dir.'/'.$name);
     }
 
     /**
      * Recursively compares two arrays.
      * Taken from https://gist.github.com/jondlm/7709e54f84a3f1e1b67b.
      *
-     * @param  array            $array1
-     * @param  array            $array2
+     * @param array $array1
+     * @param array $array2
+     *
      * @return array
      */
     public function diff_recursive($array1, $array2)
@@ -186,7 +194,8 @@ abstract class Service
      * Parses inputted data for wiki-style links, and returns
      * formatted data.
      *
-     * @param  array            $data
+     * @param array $data
+     *
      * @return array
      */
     public function parse_wiki_links($data)
@@ -217,9 +226,9 @@ abstract class Service
                             // If there is a page, simply substitute out the text for a proper link
                             if ($page) {
                                 if ($i == 1) {
-                                    $item = preg_replace('/\[\[' . $regexMatch . '\]\]/', $page->displayName, $item);
+                                    $item = preg_replace('/\[\['.$regexMatch.'\]\]/', $page->displayName, $item);
                                 } elseif ($i == 2) {
-                                    $item = preg_replace('/\[\[' . $regexMatch . '\|' . $matches[$i][$i2] . '\]\]/', '<a href="' . $page->url . '" class="text-primary"' . ($page->summary ? ' data-toggle="tooltip" title="' . $page->summary . '"' : '') . '>' . $matches[$i][$i2] . '</a>', $item);
+                                    $item = preg_replace('/\[\['.$regexMatch.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.$page->url.'" class="text-primary"'.($page->summary ? ' data-toggle="tooltip" title="'.$page->summary.'"' : '').'>'.$matches[$i][$i2].'</a>', $item);
                                 }
                                 // And make a note that the page is being linked to
                                 $data['links'][] = [
@@ -227,9 +236,9 @@ abstract class Service
                                 ];
                             } else {
                                 if ($i == 1) {
-                                    $item = preg_replace('/\[\[' . $regexMatch . '\]\]/', '<a href="' . url('special/create-wanted/' . str_replace(' ', '_', $match)) . '" class="text-danger">' . $match . '</a>', $item);
+                                    $item = preg_replace('/\[\['.$regexMatch.'\]\]/', '<a href="'.url('special/create-wanted/'.str_replace(' ', '_', $match)).'" class="text-danger">'.$match.'</a>', $item);
                                 } elseif ($i == 2) {
-                                    $item = preg_replace('/\[\[' . $regexMatch . '\|' . $matches[$i][$i2] . '\]\]/', '<a href="' . url('special/create-wanted/' . str_replace(' ', '_', $match)) . '" class="text-danger">' . $matches[$i][$i2] . '</a>', $item);
+                                    $item = preg_replace('/\[\['.$regexMatch.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.url('special/create-wanted/'.str_replace(' ', '_', $match)).'" class="text-danger">'.$matches[$i][$i2].'</a>', $item);
                                 }
 
                                 // If there's no page yet, log a placeholder link
@@ -260,7 +269,9 @@ abstract class Service
 
     /**
      * Calls a service method and injects the required dependencies.
+     *
      * @param string $methodName
+     *
      * @return mixed
      */
     protected function callMethod($methodName)
@@ -272,8 +283,10 @@ abstract class Service
 
     /**
      * Add an error to the MessageBag.
+     *
      * @param string $key
      * @param string $value
+     *
      * @return void
      */
     protected function setError($key, $value)
@@ -283,7 +296,9 @@ abstract class Service
 
     /**
      * Add multiple errors to the message bag.
+     *
      * @param Illuminate\Support\MessageBag $errors
+     *
      * @return void
      */
     protected function setErrors($errors)
@@ -293,7 +308,9 @@ abstract class Service
 
     /**
      * Commits the current DB transaction and returns a value.
+     *
      * @param mixed $return
+     *
      * @return mixed $return
      */
     protected function commitReturn($return = true)
@@ -305,7 +322,9 @@ abstract class Service
 
     /**
      * Rolls back the current DB transaction and returns a value.
+     *
      * @param mixed $return
+     *
      * @return mixed $return
      */
     protected function rollbackReturn($return = false)
@@ -317,8 +336,10 @@ abstract class Service
 
     /**
      * Returns the current field if it is numeric, otherwise searches for a field if it is an array or object.
-     * @param mixed $data
+     *
+     * @param mixed  $data
      * @param string $field
+     *
      * @return mixed
      */
     protected function getNumeric($data, $field = 'id')
@@ -338,9 +359,9 @@ abstract class Service
     private function moveImage($dir, $name, $oldName, $copy = false)
     {
         if ($copy) {
-            File::copy($dir . '/' . $oldName, $dir . '/' . $name);
+            File::copy($dir.'/'.$oldName, $dir.'/'.$name);
         } else {
-            File::move($dir . '/' . $oldName, $dir . '/' . $name);
+            File::move($dir.'/'.$oldName, $dir.'/'.$name);
         }
 
         return true;
@@ -359,11 +380,11 @@ abstract class Service
             chmod($dir, 0755);
         }
         if ($copy) {
-            File::copy($image, $dir . '/' . $name);
+            File::copy($image, $dir.'/'.$name);
         } else {
-            File::move($image, $dir . '/' . $name);
+            File::move($image, $dir.'/'.$name);
         }
-        chmod($dir . '/' . $name, 0755);
+        chmod($dir.'/'.$name, 0755);
 
         return true;
     }

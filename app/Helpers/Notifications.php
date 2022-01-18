@@ -2,8 +2,8 @@
 
 namespace App\Helpers;
 
-use DB;
 use App\Models\Notification;
+use DB;
 
 class Notifications
 {
@@ -19,9 +19,10 @@ class Notifications
     /**
      * Creates a new notification.
      *
-     * @param  string                 $type
-     * @param  \App\Models\User\User  $user
-     * @param  array                  $data
+     * @param string                $type
+     * @param \App\Models\User\User $user
+     * @param array                 $data
+     *
      * @return bool
      */
     public function create($type, $user, $data)

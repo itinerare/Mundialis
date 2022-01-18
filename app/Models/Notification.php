@@ -79,7 +79,7 @@ class Notification extends Model
      */
     public function getMessageAttribute()
     {
-        $notification = Config::get('mundialis.notifications.' . $this->notification_type_id);
+        $notification = Config::get('mundialis.notifications.'.$this->notification_type_id);
 
         $message = $notification['message'];
 
@@ -90,7 +90,7 @@ class Notification extends Model
         $data = $this->data;
         if ($data && count($data)) {
             foreach ($data as $key => $value) {
-                $message = str_replace('{' . $key . '}', $value, $message);
+                $message = str_replace('{'.$key.'}', $value, $message);
             }
         }
 
@@ -104,6 +104,6 @@ class Notification extends Model
      */
     public static function getNotificationId($type)
     {
-        return constant('self::' . $type);
+        return constant('self::'.$type);
     }
 }

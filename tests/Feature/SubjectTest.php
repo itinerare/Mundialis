@@ -5,9 +5,9 @@ namespace Tests\Feature;
 use App\Models\Subject\LexiconCategory;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeChronology;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\User\User;
 
 class SubjectTest extends TestCase
 {
@@ -132,7 +132,7 @@ class SubjectTest extends TestCase
         $chronology = TimeChronology::factory()->create();
 
         $response = $this->actingAs($user)
-            ->get('/time/chronologies/' . $chronology->id);
+            ->get('/time/chronologies/'.$chronology->id);
 
         $response->assertStatus(200);
     }
@@ -153,7 +153,7 @@ class SubjectTest extends TestCase
         $chronology[2]->update(['parent_id', $chronology[1]->id]);
 
         $response = $this->actingAs($user)
-            ->get('/time/chronologies/' . $chronology[1]->id);
+            ->get('/time/chronologies/'.$chronology[1]->id);
 
         $response->assertStatus(200);
     }
@@ -202,7 +202,7 @@ class SubjectTest extends TestCase
         $category = LexiconCategory::factory()->create();
 
         $response = $this->actingAs($user)
-            ->get('/language/lexicon/' . $category->id);
+            ->get('/language/lexicon/'.$category->id);
 
         $response->assertStatus(200);
     }
@@ -223,7 +223,7 @@ class SubjectTest extends TestCase
         $category[2]->update(['parent_id', $category[1]->id]);
 
         $response = $this->actingAs($user)
-            ->get('/language/lexicon/' . $category[1]->id);
+            ->get('/language/lexicon/'.$category[1]->id);
 
         $response->assertStatus(200);
     }
@@ -272,7 +272,7 @@ class SubjectTest extends TestCase
         $category = SubjectCategory::factory()->create();
 
         $response = $this->actingAs($user)
-            ->get('/misc/categories/' . $category->id);
+            ->get('/misc/categories/'.$category->id);
 
         $response->assertStatus(200);
     }
@@ -293,7 +293,7 @@ class SubjectTest extends TestCase
         $category[2]->update(['parent_id', $category[1]->id]);
 
         $response = $this->actingAs($user)
-            ->get('/misc/categories/' . $category[1]->id);
+            ->get('/misc/categories/'.$category[1]->id);
 
         $response->assertStatus(200);
     }

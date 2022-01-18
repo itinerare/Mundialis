@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\User\User;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Auth\Notifications\ResetPassword;
 use Tests\TestCase;
-use App\Models\User\User;
 
 class AuthPasswordResetTest extends TestCase
 {
@@ -77,7 +77,7 @@ class AuthPasswordResetTest extends TestCase
 
         $token = Password::createToken($user);
 
-        $response = $this->get('reset-password/' . $token);
+        $response = $this->get('reset-password/'.$token);
 
         $response->assertStatus(200);
     }
@@ -94,9 +94,9 @@ class AuthPasswordResetTest extends TestCase
         $token = Password::createToken($user);
 
         $response = $this->post('reset-password', [
-            'token' => $token,
-            'email' => $user->email,
-            'password' => 'password',
+            'token'                 => $token,
+            'email'                 => $user->email,
+            'password'              => 'password',
             'password_confirmation' => 'password',
         ]);
 

@@ -12,7 +12,7 @@ class Rank extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|between:3,100',
+        'name'        => 'required|between:3,100',
         'description' => 'nullable',
     ];
 

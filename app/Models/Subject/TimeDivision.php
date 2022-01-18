@@ -50,7 +50,7 @@ class TimeDivision extends Model
     /**
      * Scope a query to only include date-enabled divisions.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -73,7 +73,7 @@ class TimeDivision extends Model
     public function getDisplayNameAttribute()
     {
         if (isset($this->abbreviation)) {
-            return '<abbr data-toggle="tooltip" title="' . $this->name . '">' . $this->abbreviation . '.</abbr>';
+            return '<abbr data-toggle="tooltip" title="'.$this->name.'">'.$this->abbreviation.'.</abbr>';
         }
 
         return $this->name;
@@ -95,12 +95,12 @@ class TimeDivision extends Model
         $fields = [];
         foreach ($this->dateEnabled()->orderBy('sort')->get() as $division) {
             $fields[str_replace(' ', '_', strtolower($division->name))] = [
-                'label' => $division->name,
-                'type' => 'number',
-                'rules' => null,
+                'label'   => $division->name,
+                'type'    => 'number',
+                'rules'   => null,
                 'choices' => null,
-                'value' => null,
-                'help' => null,
+                'value'   => null,
+                'help'    => null,
             ];
         }
 
@@ -110,7 +110,8 @@ class TimeDivision extends Model
     /**
      * Return a formatted datestring using date-enabled divisions.
      *
-     * @param  array    $data
+     * @param array $data
+     *
      * @return string
      */
     public function formatTimeDate($data)
@@ -118,7 +119,7 @@ class TimeDivision extends Model
         // Cycle through date-enabled divisions and add a formatted string to the array
         foreach ($this->dateEnabled()->orderBy('sort')->get() as $division) {
             if (isset($data[str_replace(' ', '_', strtolower($division->name))])) {
-                $date[] = $division->displayName . ' ' . $data[str_replace(' ', '_', strtolower($division->name))];
+                $date[] = $division->displayName.' '.$data[str_replace(' ', '_', strtolower($division->name))];
             }
         }
 

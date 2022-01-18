@@ -12,7 +12,8 @@ use Tests\TestCase;
 
 class PageViewFieldTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test page access with an infobox text field.
@@ -23,7 +24,7 @@ class PageViewFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -34,18 +35,18 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => $this->faker->unique()->domainWord(),
         ];
 
         // Create page version and update with field data
         $version = PageVersion::factory()->page($page->id)
             ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"' . $fieldData['key'] . '":"' . $data[$fieldData['key']] . '","parsed":{"description":null,"' . $fieldData['key'] . '":"' . $data[$fieldData['key']] . '"}},"title":"' . $data['title'] . '","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
+        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -59,7 +60,7 @@ class PageViewFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -70,18 +71,18 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => mt_rand(1, 100),
         ];
 
         // Create page version and update with field data
         $version = PageVersion::factory()->page($page->id)
             ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"' . $fieldData['key'] . '":' . $data[$fieldData['key']] . ',"parsed":{"description":null,"' . $fieldData['key'] . '":' . $data[$fieldData['key']] . '}},"title":"' . $data['title'] . '","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
+        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -95,8 +96,8 @@ class PageViewFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -107,7 +108,7 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
+            'title'   => $this->faker->unique()->domainWord(),
             'summary' => null,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
@@ -116,10 +117,10 @@ class PageViewFieldTest extends TestCase
         // Create page version and update with field data
         $version = PageVersion::factory()->page($page->id)
             ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"' . $fieldData['key'] . '":"' . $data[$fieldData['key']] . '","parsed":{"description":null,"' . $fieldData['key'] . '":"' . $data[$fieldData['key']] . '"}},"title":"' . $data['title'] . '","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
+        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -133,8 +134,8 @@ class PageViewFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -145,7 +146,7 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
+            'title'   => $this->faker->unique()->domainWord(),
             'summary' => null,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
@@ -154,10 +155,10 @@ class PageViewFieldTest extends TestCase
         // Create page version and update with field data
         $version = PageVersion::factory()->page($page->id)
             ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"' . $fieldData['key'] . '":"' . $data[$fieldData['key']] . '","parsed":{"description":null,"' . $fieldData['key'] . '":"' . $data[$fieldData['key']] . '"}},"title":"' . $data['title'] . '","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
+        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -171,8 +172,8 @@ class PageViewFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -183,8 +184,8 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => [
                 0 => (string) mt_rand(0, 1),
                 1 => (string) mt_rand(0, 1),
@@ -194,10 +195,10 @@ class PageViewFieldTest extends TestCase
         // Create page version and update with field data
         $version = PageVersion::factory()->page($page->id)
             ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"' . $fieldData['key'] . '":["' . $data[$fieldData['key']][0] . '","' . $data[$fieldData['key']][1] . '"],"parsed":{"description":null,"' . $fieldData['key'] . '":["' . $data[$fieldData['key']][0] . '","' . $data[$fieldData['key']][1] . '"]}},"title":"' . $data['title'] . '","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
+        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"],"parsed":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"]}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -211,7 +212,7 @@ class PageViewFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -222,18 +223,18 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => $this->faker->unique()->domainWord(),
         ];
 
         // Create page version and update with field data
         $version = PageVersion::factory()->page($page->id)
             ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"' . $fieldData['key'] . '":"' . $data[$fieldData['key']] . '","parsed":{"description":null,"' . $fieldData['key'] . '":"' . $data[$fieldData['key']] . '"}},"title":"' . $data['title'] . '","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
+        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -247,7 +248,7 @@ class PageViewFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -258,18 +259,18 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => mt_rand(1, 100),
         ];
 
         // Create page version and update with field data
         $version = PageVersion::factory()->page($page->id)
             ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"' . $fieldData['key'] . '":' . $data[$fieldData['key']] . ',"parsed":{"description":null,"' . $fieldData['key'] . '":' . $data[$fieldData['key']] . '}},"title":"' . $data['title'] . '","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
+        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -283,8 +284,8 @@ class PageViewFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -295,7 +296,7 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
+            'title'   => $this->faker->unique()->domainWord(),
             'summary' => null,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
@@ -304,10 +305,10 @@ class PageViewFieldTest extends TestCase
         // Create page version and update with field data
         $version = PageVersion::factory()->page($page->id)
             ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"' . $fieldData['key'] . '":"' . $data[$fieldData['key']] . '","parsed":{"description":null,"' . $fieldData['key'] . '":"' . $data[$fieldData['key']] . '"}},"title":"' . $data['title'] . '","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
+        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -321,8 +322,8 @@ class PageViewFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -333,7 +334,7 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
+            'title'   => $this->faker->unique()->domainWord(),
             'summary' => null,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
@@ -342,10 +343,10 @@ class PageViewFieldTest extends TestCase
         // Create page version and update with field data
         $version = PageVersion::factory()->page($page->id)
             ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"' . $fieldData['key'] . '":"' . $data[$fieldData['key']] . '","parsed":{"description":null,"' . $fieldData['key'] . '":"' . $data[$fieldData['key']] . '"}},"title":"' . $data['title'] . '","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
+        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }
@@ -359,8 +360,8 @@ class PageViewFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -371,8 +372,8 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => [
                 0 => (string) mt_rand(0, 1),
                 1 => (string) mt_rand(0, 1),
@@ -382,10 +383,10 @@ class PageViewFieldTest extends TestCase
         // Create page version and update with field data
         $version = PageVersion::factory()->page($page->id)
             ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"' . $fieldData['key'] . '":["' . $data[$fieldData['key']][0] . '","' . $data[$fieldData['key']][1] . '"],"parsed":{"description":null,"' . $fieldData['key'] . '":["' . $data[$fieldData['key']][0] . '","' . $data[$fieldData['key']][1] . '"]}},"title":"' . $data['title'] . '","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
+        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"],"parsed":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"]}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
 
         $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/' . $page->id . '.' . $page->slug);
+            ->get('/pages/'.$page->id.'.'.$page->slug);
 
         $response->assertStatus(200);
     }

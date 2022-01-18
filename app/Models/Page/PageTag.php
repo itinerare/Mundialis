@@ -2,8 +2,8 @@
 
 namespace App\Models\Page;
 
-use Config;
 use App\Models\Model;
+use Config;
 
 class PageTag extends Model
 {
@@ -52,7 +52,7 @@ class PageTag extends Model
     /**
      * Scope a query to only include page tags.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -64,7 +64,7 @@ class PageTag extends Model
     /**
      * Scope a query to only include utility tags.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -76,8 +76,8 @@ class PageTag extends Model
     /**
      * Scope a query to include all forms of a tag.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  string                                 $tag
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string                                $tag
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -87,10 +87,10 @@ class PageTag extends Model
             $i = 0;
             foreach (Config::get('mundialis.page_tags') as $prefix) {
                 if ($i == 0) {
-                    $query->where('tag', $tag)->orWhere('tag', $prefix['prefix'] . $tag);
+                    $query->where('tag', $tag)->orWhere('tag', $prefix['prefix'].$tag);
                 }
                 if ($i > 0) {
-                    $query->orWhere('tag', $prefix['prefix'] . $tag);
+                    $query->orWhere('tag', $prefix['prefix'].$tag);
                 }
                 $i++;
             }
@@ -100,7 +100,7 @@ class PageTag extends Model
     /**
      * Scope a query to only include prefixed tags.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -179,7 +179,7 @@ class PageTag extends Model
      */
     public function getUrlAttribute()
     {
-        return url('pages/tags/' . str_replace(' ', '_', $this->baseTag));
+        return url('pages/tags/'.str_replace(' ', '_', $this->baseTag));
     }
 
     /**
@@ -189,7 +189,7 @@ class PageTag extends Model
      */
     public function getDisplayNameAttribute()
     {
-        return '<a href="' . $this->url . '">' . $this->tag . '</a>';
+        return '<a href="'.$this->url.'">'.$this->tag.'</a>';
     }
 
     /**
@@ -199,7 +199,7 @@ class PageTag extends Model
      */
     public function getDisplayNameBaseAttribute()
     {
-        return '<a href="' . $this->url . '">' . $this->baseTag . '</a>';
+        return '<a href="'.$this->url.'">'.$this->baseTag.'</a>';
     }
 
     /**
@@ -290,19 +290,20 @@ class PageTag extends Model
      * Gets navbox information, namely: the hub tag,
      * and all context pages.
      *
-     * @param  \App\Models\User\User         $user
+     * @param \App\Models\User\User $user
+     *
      * @return array
      */
     public function navboxInfo($user = null)
     {
         $info = [];
         // Check for/get hub tag
-        if ($this->tagSearch('Hub:' . $this->baseTag)->first() && $this->tagSearch('Hub:' . $this->baseTag)->first()->page) {
-            $info['hub'] = $this->tagSearch('Hub:' . $this->baseTag)->first();
+        if ($this->tagSearch('Hub:'.$this->baseTag)->first() && $this->tagSearch('Hub:'.$this->baseTag)->first()->page) {
+            $info['hub'] = $this->tagSearch('Hub:'.$this->baseTag)->first();
         }
         // Check for/get context tags
-        if ($this->tagSearch('Context:' . $this->baseTag)->count()) {
-            $info['context'] = $this->tagSearch('Context:' . $this->baseTag)->get();
+        if ($this->tagSearch('Context:'.$this->baseTag)->count()) {
+            $info['context'] = $this->tagSearch('Context:'.$this->baseTag)->get();
         }
 
         // Fetch context pages and group by subject

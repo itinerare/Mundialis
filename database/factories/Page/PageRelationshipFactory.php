@@ -32,7 +32,8 @@ class PageRelationshipFactory extends Factory
      * Generate a relationship for a specific page.
      * This is essentially required.
      *
-     * @param  int                      $page
+     * @param int $page
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function pageOne($page)
@@ -48,7 +49,8 @@ class PageRelationshipFactory extends Factory
      * Generate a relationship for a specific page.
      * This is essentially required.
      *
-     * @param  int                      $page
+     * @param int $page
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function pageTwo($page)
