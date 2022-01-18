@@ -19,7 +19,7 @@
     <li>Name</li>
     <li>Abbreviation (Optional), e.g. "min" for minute</li>
     <li>Unit (Optional), the amount of the division that are in the next largest, e.g. 24 for hours</li>
-    <li>Use for Dates, which controls whether or not the division is used when entering dates</li>
+    <li>Use for Dates, which controls whether or not the division is used when entering dates; only available for time divisions that have already been created</li>
 </ul>
 
 {!! Form::open(['url' => 'admin/data/time/divisions']) !!}
