@@ -66,10 +66,10 @@
             "@php artisan key:generate --ansi"
         ],
         "sniff": [
-            "./vendor/bin/php-cs-fixer fix . -vvv --dry-run --show-progress=dots"
+            "./vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots"
         ],
         "lint": [
-            "./vendor/bin/php-cs-fixer fix . -vvv --show-progress=dots"
+            "./vendor/bin/php-cs-fixer fix -vvv --show-progress=dots"
         ]
     },
     "extra": {

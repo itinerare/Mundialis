@@ -51,7 +51,6 @@ $rules = [
             'extra',
             'throw',
             'use',
-            'use_trait',
         ]
     ],
     'no_blank_lines_after_class_opening' => true,
@@ -117,15 +116,15 @@ $rules = [
     'simplified_null_return' => false,
     'single_blank_line_at_eof' => true,
     'single_blank_line_before_namespace' => true,
-    'single_class_element_per_statement' => true,
+    'single_class_element_per_statement' => ['elements' => ['property']],
     'single_import_per_statement' => true,
     'single_line_after_imports' => true,
     'single_line_comment_style' => [
         'comment_types' => ['hash']
     ],
-    'single_space_after_construct' => ['abstract', 'as', 'attribute', 'break', 'case', 'catch', 'class', 'clone', 'comment', 'const', 'const_import', 'continue', 'do', 'echo', 'else', 'elseif', 'enum', 'extends', 'final', 'finally', 'for', 'foreach', 'function', 'function_import', 'global', 'goto', 'implements', 'include', 'include_once', 'instanceof', 'insteadof', 'interface', 'match', 'named_argument', 'namespace', 'new', 'open_tag_with_echo', 'php_doc', 'php_open', 'print', 'private', 'protected', 'public', 'readonly', 'require', 'require_once', 'return', 'static', 'switch', 'throw', 'trait', 'try', 'use', 'use_lambda', 'use_trait', 'var', 'while', 'yield', 'yield_from'],
     'single_quote' => true,
     'space_after_semicolon' => true,
+    'single_trait_insert_per_statement' => false,
     'standardize_not_equals' => true,
     'switch_case_semicolon_to_colon' => true,
     'switch_case_space' => true,
@@ -139,7 +138,6 @@ $rules = [
     'whitespace_after_comma_in_array' => true,
     'no_unused_imports' => true,
 ];
-
 
 $finder = Finder::create()
     ->in([
