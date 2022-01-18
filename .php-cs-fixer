@@ -4,6 +4,7 @@ use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
 $rules = [
+    // '@PSR12' => true,
     'array_syntax' => ['syntax' => 'short'],
     'binary_operator_spaces' => [
         'default' => 'single_space',
@@ -84,9 +85,20 @@ $rules = [
     'normalize_index_brace' => true,
     'not_operator_with_successor_space' => false,
     'object_operator_without_whitespace' => true,
-    'ordered_imports' => ['sort_algorithm' => 'alpha'],
+    'ordered_imports' => [
+        'imports_order' => [
+            'class',
+            'function',
+            'const'
+        ],
+        'sort_algorithm' => 'none'
+    ],
+    'ordered_class_elements' => true,
+    'ordered_traits' => true,
     'phpdoc_indent' => true,
     'general_phpdoc_tag_rename' => true,
+    'phpdoc_order_by_value' => true,
+    'phpdoc_order' => true,
     'phpdoc_inline_tag_normalizer' => true,
     'phpdoc_tag_type' => true,
     'phpdoc_no_access' => true,
@@ -111,6 +123,7 @@ $rules = [
     'single_line_comment_style' => [
         'comment_types' => ['hash']
     ],
+    'single_space_after_construct' => ['abstract', 'as', 'attribute', 'break', 'case', 'catch', 'class', 'clone', 'comment', 'const', 'const_import', 'continue', 'do', 'echo', 'else', 'elseif', 'enum', 'extends', 'final', 'finally', 'for', 'foreach', 'function', 'function_import', 'global', 'goto', 'implements', 'include', 'include_once', 'instanceof', 'insteadof', 'interface', 'match', 'named_argument', 'namespace', 'new', 'open_tag_with_echo', 'php_doc', 'php_open', 'print', 'private', 'protected', 'public', 'readonly', 'require', 'require_once', 'return', 'static', 'switch', 'throw', 'trait', 'try', 'use', 'use_lambda', 'use_trait', 'var', 'while', 'yield', 'yield_from'],
     'single_quote' => true,
     'space_after_semicolon' => true,
     'standardize_not_equals' => true,
