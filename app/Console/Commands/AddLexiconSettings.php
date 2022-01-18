@@ -32,29 +32,6 @@ class AddLexiconSettings extends Command
     }
 
     /**
-     * Add a site page.
-     *
-     *
-     * @param  string  $key
-     * @param  string  $title
-     * @param  string  $text
-     */
-    private function addLexiconSetting($name, $abbreviation = null, $sort) {
-        if(!DB::table('lexicon_settings')->where('name', $name)->exists()) {
-            DB::table('lexicon_settings')->insert([
-                [
-                    'name' => $name,
-                    'abbreviation' => $abbreviation ? $abbreviation : null,
-                    'sort' => $sort,
-                ]
-
-            ]);
-            $this->info("Added:   ".$name);
-        }
-        else $this->line("Skipped: ".$name);
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
@@ -64,7 +41,7 @@ class AddLexiconSettings extends Command
         //
         $this->info('************************');
         $this->info('* ADD LEXICON SETTINGS *');
-        $this->info('************************'."\n");
+        $this->info('************************' . "\n");
 
         $this->line("Adding lexicon settings...existing entries will be skipped.\n");
 
@@ -78,5 +55,30 @@ class AddLexiconSettings extends Command
         $this->addLexiconSetting('Interjection', 'intj', 2);
         $this->addLexiconSetting('Numeral', 'num', 1);
         $this->addLexiconSetting('Article', 'art', 0);
+    }
+
+    /**
+     * Add a site page.
+     *
+     *
+     * @param  string  $key
+     * @param  string  $title
+     * @param  string  $text
+     */
+    private function addLexiconSetting($name, $abbreviation, $sort)
+    {
+        if (!DB::table('lexicon_settings')->where('name', $name)->exists()) {
+            DB::table('lexicon_settings')->insert([
+                [
+                    'name' => $name,
+                    'abbreviation' => $abbreviation ? $abbreviation : null,
+                    'sort' => $sort,
+                ],
+
+            ]);
+            $this->info('Added:   ' . $name);
+        } else {
+            $this->line('Skipped: ' . $name);
+        }
     }
 }

@@ -3,9 +3,7 @@
 namespace Database\Factories\Page;
 
 use Carbon\Carbon;
-
 use Illuminate\Database\Eloquent\Factories\Factory;
-
 use App\Models\Subject\SubjectCategory;
 use App\Models\Page\Page;
 
@@ -28,9 +26,9 @@ class PageFactory extends Factory
         $category = SubjectCategory::factory()->create();
 
         return [
-            'title' => $this->faker->unique()->domainWord().$this->faker->unique()->domainWord(),
+            'title' => $this->faker->unique()->domainWord() . $this->faker->unique()->domainWord(),
             'category_id' => $category->id,
-            'is_visible' => 1
+            'is_visible' => 1,
         ];
     }
 
@@ -44,7 +42,7 @@ class PageFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($category) {
             return [
-                'category_id' => $category
+                'category_id' => $category,
             ];
         });
     }
@@ -58,7 +56,7 @@ class PageFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'is_visible' => 0
+                'is_visible' => 0,
             ];
         });
     }
@@ -72,7 +70,7 @@ class PageFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'deleted_at' => Carbon::now()
+                'deleted_at' => Carbon::now(),
             ];
         });
     }

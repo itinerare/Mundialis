@@ -4,7 +4,6 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-
 use Config;
 
 class Kernel extends ConsoleKernel
@@ -26,7 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        if(Config::get('mundialis.settings.enable_backups')) {
+        if (Config::get('mundialis.settings.enable_backups')) {
             $schedule->command('backup:clean')
             ->daily()->at('01:30');
             $schedule->command('backup:run')
@@ -43,7 +42,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

@@ -3,28 +3,21 @@
 namespace App\Models;
 
 use Config;
-use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Notification extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'user_id', 'notification_type_id', 'is_unread', 'data'
-    ];
+    /**********************************************************************************************
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'notifications';
+        CONSTANTS
+
+    **********************************************************************************************/
+
+    const WATCHED_PAGE_UPDATED = 0;
+    const WATCHED_PAGE_IMAGE_UPDATED = 1;
+    const WATCHED_PAGE_DELETED = 2;
 
     /**
      * Whether the model contains timestamps to be saved and updated.
@@ -33,6 +26,21 @@ class Notification extends Model
      */
     public $timestamps = true;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'user_id', 'notification_type_id', 'is_unread', 'data',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'notifications';
 
     /**********************************************************************************************
 
@@ -71,7 +79,7 @@ class Notification extends Model
      */
     public function getMessageAttribute()
     {
-        $notification = Config::get('mundialis.notifications.'.$this->notification_type_id);
+        $notification = Config::get('mundialis.notifications.' . $this->notification_type_id);
 
         $message = $notification['message'];
 
@@ -80,9 +88,9 @@ class Notification extends Model
 
         // Replace any variables in data...
         $data = $this->data;
-        if($data && count($data)) {
-            foreach($data as $key => $value) {
-                $message = str_replace('{'.$key.'}', $value, $message);
+        if ($data && count($data)) {
+            foreach ($data as $key => $value) {
+                $message = str_replace('{' . $key . '}', $value, $message);
             }
         }
 
@@ -96,16 +104,6 @@ class Notification extends Model
      */
     public static function getNotificationId($type)
     {
-        return constant('self::'. $type);
+        return constant('self::' . $type);
     }
-
-    /**********************************************************************************************
-
-        CONSTANTS
-
-    **********************************************************************************************/
-
-    const WATCHED_PAGE_UPDATED        = 0;
-    const WATCHED_PAGE_IMAGE_UPDATED  = 1;
-    const WATCHED_PAGE_DELETED        = 2;
 }

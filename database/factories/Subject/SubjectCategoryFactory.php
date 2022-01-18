@@ -23,7 +23,7 @@ class SubjectCategoryFactory extends Factory
     {
         return [
             'subject' => 'misc',
-            'name' => $this->faker->unique()->domainWord().$this->faker->unique()->domainWord()
+            'name' => $this->faker->unique()->domainWord() . $this->faker->unique()->domainWord(),
         ];
     }
 
@@ -37,7 +37,7 @@ class SubjectCategoryFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($subject) {
             return [
-                'subject' => $subject
+                'subject' => $subject,
             ];
         });
     }
@@ -51,7 +51,7 @@ class SubjectCategoryFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+                'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
             ];
         });
     }
@@ -70,7 +70,7 @@ class SubjectCategoryFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($key, $label, $type, $rules, $choices, $value) {
             return [
-                'data' => '{"infobox":{"'.$key.'":{"label":"'.$label.'","type":"'.$type.'","rules":'.($rules ? '"'.$rules.'"' : 'null').',"choices":'.($choices ? $choices : 'null').',"value":'.($value ? '"'.$value.'"' : 'null').',"help":null}}}'
+                'data' => '{"infobox":{"' . $key . '":{"label":"' . $label . '","type":"' . $type . '","rules":' . ($rules ? '"' . $rules . '"' : 'null') . ',"choices":' . ($choices ? $choices : 'null') . ',"value":' . ($value ? '"' . $value . '"' : 'null') . ',"help":null}}}',
             ];
         });
     }
@@ -89,7 +89,7 @@ class SubjectCategoryFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($key, $label, $type, $rules, $choices, $value) {
             return [
-                'data' => '{"sections":{"section":{"name":"Test Section"}},"fields":{"section":{"'.$key.'":{"label":"'.$label.'","type":"'.$type.'","rules":'.($rules ? '"'.$rules.'"' : 'null').',"choices":'.($choices ? $choices : 'null').',"value":'.($value ? '"'.$value.'"' : 'null').',"help":null,"is_subsection":"0"}}}}'
+                'data' => '{"sections":{"section":{"name":"Test Section"}},"fields":{"section":{"' . $key . '":{"label":"' . $label . '","type":"' . $type . '","rules":' . ($rules ? '"' . $rules . '"' : 'null') . ',"choices":' . ($choices ? $choices : 'null') . ',"value":' . ($value ? '"' . $value . '"' : 'null') . ',"help":null,"is_subsection":"0"}}}}',
             ];
         });
     }

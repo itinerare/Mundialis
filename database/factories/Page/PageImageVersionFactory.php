@@ -45,7 +45,7 @@ class PageImageVersionFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($image) {
             return [
-                'page_image_id' => $image
+                'page_image_id' => $image,
             ];
         });
     }
@@ -61,7 +61,7 @@ class PageImageVersionFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($user) {
             return [
-                'user_id' => $user
+                'user_id' => $user,
             ];
         });
     }
@@ -76,7 +76,7 @@ class PageImageVersionFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($type) {
             return [
-                'type' => $type
+                'type' => $type,
             ];
         });
     }
@@ -91,7 +91,7 @@ class PageImageVersionFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($reason) {
             return [
-                'reason' => $reason
+                'reason' => $reason,
             ];
         });
     }
@@ -105,7 +105,7 @@ class PageImageVersionFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'is_minor' => 1
+                'is_minor' => 1,
             ];
         });
     }
@@ -120,7 +120,7 @@ class PageImageVersionFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'type' => 'Image Deleted'
+                'type' => 'Image Deleted',
             ];
         });
     }
@@ -134,11 +134,11 @@ class PageImageVersionFactory extends Factory
      * @param  string                      $pages
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function testData($isVisible = 1, $description = null, $creators = "1", $pages = "1")
+    public function testData($isVisible = 1, $description = null, $creators = '1', $pages = '1')
     {
-        return $this->state(function (array $attributes) use($isVisible, $description, $creators, $pages) {
+        return $this->state(function (array $attributes) use ($isVisible, $description, $creators, $pages) {
             return [
-                'data' => '{"is_visible":"'.$isVisible.'","description":'.($description ? '"'.$description.'"' : null).',"creators":['.$creators.'],"pages":['.$pages.']}'
+                'data' => '{"is_visible":"' . $isVisible . '","description":' . ($description ? '"' . $description . '"' : null) . ',"creators":[' . $creators . '],"pages":[' . $pages . ']}',
             ];
         });
     }

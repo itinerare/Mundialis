@@ -39,7 +39,7 @@ class PageRelationshipFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($page) {
             return [
-                'page_one_id' => $page
+                'page_one_id' => $page,
             ];
         });
     }
@@ -55,7 +55,7 @@ class PageRelationshipFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($page) {
             return [
-                'page_two_id' => $page
+                'page_two_id' => $page,
             ];
         });
     }

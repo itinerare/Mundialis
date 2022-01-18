@@ -25,7 +25,7 @@ class UserFactory extends Factory
     public function definition()
     {
         // First things first, check if user ranks exist...
-        if(!Rank::count()) {
+        if (!Rank::count()) {
             // Create ranks if not already present.
             // A light-weight rank system is used here since the site is intended
             // only for individuals or small groups/granular permissions are not
@@ -33,19 +33,19 @@ class UserFactory extends Factory
             $adminRank = Rank::create([
                 'name' => 'Admin',
                 'description' => 'The site admin. Has the ability to view/edit any data on the site.',
-                'sort' => 2
+                'sort' => 2,
             ]);
 
             Rank::create([
                 'name' => 'Editor',
                 'description' => 'A member of the site with write permissions.',
-                'sort' => 1
+                'sort' => 1,
             ]);
 
             Rank::create([
                 'name' => 'Member',
                 'description' => 'A regular member of the site.',
-                'sort' => 0
+                'sort' => 0,
             ]);
         }
 
@@ -68,7 +68,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'name' => $this->faker->unique()->domainWord()
+                'name' => $this->faker->unique()->domainWord(),
             ];
         });
     }
@@ -82,7 +82,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'password' => Hash::make('simple_password')
+                'password' => Hash::make('simple_password'),
             ];
         });
     }
@@ -98,7 +98,7 @@ class UserFactory extends Factory
             return [
                 'is_banned' => 1,
                 'ban_reason' => 'Generated as banned',
-                'banned_at' => now()
+                'banned_at' => now(),
             ];
         });
     }

@@ -10,6 +10,13 @@ class PageImageVersion extends Model
     use HasFactory;
 
     /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = true;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -17,7 +24,7 @@ class PageImageVersion extends Model
     protected $fillable = [
         'page_image_id', 'user_id', 'hash', 'extension',
         'use_cropper', 'x0', 'x1', 'y0', 'y1',
-        'type', 'reason', 'is_minor', 'data'
+        'type', 'reason', 'is_minor', 'data',
     ];
 
     /**
@@ -26,13 +33,6 @@ class PageImageVersion extends Model
      * @var string
      */
     protected $table = 'page_image_versions';
-
-    /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = true;
 
     /**********************************************************************************************
 
@@ -69,7 +69,10 @@ class PageImageVersion extends Model
      */
     public function getDataAttribute()
     {
-        if(!isset($this->attributes['data'])) return null;
+        if (!isset($this->attributes['data'])) {
+            return null;
+        }
+
         return json_decode($this->attributes['data'], true);
     }
 
@@ -80,7 +83,7 @@ class PageImageVersion extends Model
      */
     public function getImageFileNameAttribute()
     {
-        return $this->image->id . '_' . $this->id . '_'.$this->hash.'.'.$this->extension;
+        return $this->image->id . '_' . $this->id . '_' . $this->hash . '.' . $this->extension;
     }
 
     /**
@@ -90,7 +93,10 @@ class PageImageVersion extends Model
      */
     public function getImageUrlAttribute()
     {
-        if(!isset($this->hash)) return null;
+        if (!isset($this->hash)) {
+            return null;
+        }
+
         return asset($this->image->imageDirectory . '/' . $this->imageFileName);
     }
 
@@ -101,7 +107,7 @@ class PageImageVersion extends Model
      */
     public function getThumbnailFileNameAttribute()
     {
-        return $this->image->id . '_' . $this->id . '_'.$this->hash.'_th.'.$this->extension;
+        return $this->image->id . '_' . $this->id . '_' . $this->hash . '_th.' . $this->extension;
     }
 
     /**
@@ -111,8 +117,10 @@ class PageImageVersion extends Model
      */
     public function getThumbnailUrlAttribute()
     {
-        if(!isset($this->hash)) return null;
+        if (!isset($this->hash)) {
+            return null;
+        }
+
         return asset($this->image->imageDirectory . '/' . $this->thumbnailFileName);
     }
-
 }

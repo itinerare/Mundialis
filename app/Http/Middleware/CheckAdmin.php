@@ -17,6 +17,7 @@ class CheckAdmin
     {
         if (!$request->user()->isAdmin) {
             flash('You do not have the permission to access this page.')->error();
+
             return redirect('/');
         }
 

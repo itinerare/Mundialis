@@ -37,7 +37,7 @@ class PageImageCreatorFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($image) {
             return [
-                'page_image_id' => $image
+                'page_image_id' => $image,
             ];
         });
     }
@@ -53,7 +53,7 @@ class PageImageCreatorFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($user) {
             return [
-                'user_id' => $user
+                'user_id' => $user,
             ];
         });
     }
@@ -69,7 +69,7 @@ class PageImageCreatorFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($url) {
             return [
-                'url' => $url
+                'url' => $url,
             ];
         });
     }

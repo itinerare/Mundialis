@@ -23,7 +23,7 @@ return [
     // Custom-entered relationships won't be used for anything special,
     // but can be entered in per-person on the fly
     'Custom' => [
-        'custom' => 'Custom'
+        'custom' => 'Custom',
     ],
 
     'Familial' => [
@@ -33,7 +33,7 @@ return [
         // These are mostly here in the interest of accurate tracking for potential
         // family tree rendering
         'familial_adoptive' => 'Parent (Adoptive)',
-        'familial_adopted' => 'Child (Adopted)'
+        'familial_adopted' => 'Child (Adopted)',
     ],
 
     'Romantic' => [
@@ -44,7 +44,7 @@ return [
         'romantic_partner' => 'Partner (romantic)',
         // Likewise this is a catch-all for [involved, legally]
         'romantic_spouse' => 'Spouse',
-        'romantic_custom' => 'Custom'
+        'romantic_custom' => 'Custom',
     ],
 
     'Platonic' => [
@@ -54,10 +54,10 @@ return [
         'platonic_friend' => 'Friend',
         'platonic_circumstantial' => 'Friend (Circumstantial)',
         'platonic_mentor' => 'Mentor',
-        'platonic_mentee' => 'Mentee'
+        'platonic_mentee' => 'Mentee',
     ],
 
     'Enmity' => [
-        'enmity_enemy' => 'Enemy'
+        'enmity_enemy' => 'Enemy',
     ],
 ];

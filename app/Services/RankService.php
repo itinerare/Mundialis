@@ -1,10 +1,8 @@
-<?php namespace App\Services;
+<?php
 
-use App\Services\Service;
+namespace App\Services;
 
 use DB;
-use Config;
-
 use App\Models\User\User;
 use App\Models\User\Rank;
 
@@ -33,15 +31,17 @@ class RankService extends Service
 
         try {
             // More specific validation
-            if(Rank::where('name', $data['name'])->where('id', '!=', $rank->id)->exists()) throw new \Exception("A rank with the given name already exists.");
+            if (Rank::where('name', $data['name'])->where('id', '!=', $rank->id)->exists()) {
+                throw new \Exception('A rank with the given name already exists.');
+            }
 
             $rank->update($data);
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
-
 }

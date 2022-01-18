@@ -39,7 +39,7 @@ class PageProtectionFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($page) {
             return [
-                'page_id' => $page
+                'page_id' => $page,
             ];
         });
     }
@@ -55,7 +55,7 @@ class PageProtectionFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($user) {
             return [
-                'user_id' => $user
+                'user_id' => $user,
             ];
         });
     }
@@ -70,7 +70,7 @@ class PageProtectionFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'is_protected' => 0
+                'is_protected' => 0,
             ];
         });
     }

@@ -33,8 +33,8 @@ class PageTimeTest extends TestCase
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
             'category_id' => $category->id,
-            'date_start_'.strtolower($division->name) => mt_rand(1,50),
-            'date_end_'.strtolower($division->name) => mt_rand(50,100),
+            'date_start_' . strtolower($division->name) => mt_rand(1, 50),
+            'date_end_' . strtolower($division->name) => mt_rand(50, 100),
         ];
 
         // Make a persistent editor
@@ -50,7 +50,7 @@ class PageTimeTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"date":{"start":{"'.strtolower($division->name).'":'.$data['date_start_'.strtolower($division->name)].'},"end":{"'.strtolower($division->name).'":'.$data['date_end_'.strtolower($division->name)].'}},"parsed":{"description":null,"date":{"start":{"'.strtolower($division->name).'":'.$data['date_start_'.strtolower($division->name)].'},"end":{"'.strtolower($division->name).'":'.$data['date_end_'.strtolower($division->name)].'}}}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data' => '{"data":{"description":null,"date":{"start":{"' . strtolower($division->name) . '":' . $data['date_start_' . strtolower($division->name)] . '},"end":{"' . strtolower($division->name) . '":' . $data['date_end_' . strtolower($division->name)] . '}},"parsed":{"description":null,"date":{"start":{"' . strtolower($division->name) . '":' . $data['date_start_' . strtolower($division->name)] . '},"end":{"' . strtolower($division->name) . '":' . $data['date_end_' . strtolower($division->name)] . '}}}},"title":"' . $data['title'] . '","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -75,8 +75,8 @@ class PageTimeTest extends TestCase
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
             'category_id' => $category->id,
-            'date_start_'.strtolower($division->name) => mt_rand(1,50),
-            'date_end_'.strtolower($division->name) => mt_rand(50,100),
+            'date_start_' . strtolower($division->name) => mt_rand(1, 50),
+            'date_end_' . strtolower($division->name) => mt_rand(50, 100),
         ];
 
         // Make a persistent editor
@@ -85,12 +85,12 @@ class PageTimeTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/edit', $data);
+            ->post('/pages/' . $page->id . '/edit', $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"date":{"start":{"'.strtolower($division->name).'":'.$data['date_start_'.strtolower($division->name)].'},"end":{"'.strtolower($division->name).'":'.$data['date_end_'.strtolower($division->name)].'}},"parsed":{"description":null,"date":{"start":{"'.strtolower($division->name).'":'.$data['date_start_'.strtolower($division->name)].'},"end":{"'.strtolower($division->name).'":'.$data['date_end_'.strtolower($division->name)].'}}}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data' => '{"data":{"description":null,"date":{"start":{"' . strtolower($division->name) . '":' . $data['date_start_' . strtolower($division->name)] . '},"end":{"' . strtolower($division->name) . '":' . $data['date_end_' . strtolower($division->name)] . '}},"parsed":{"description":null,"date":{"start":{"' . strtolower($division->name) . '":' . $data['date_start_' . strtolower($division->name)] . '},"end":{"' . strtolower($division->name) . '":' . $data['date_end_' . strtolower($division->name)] . '}}}},"title":"' . $data['title'] . '","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 

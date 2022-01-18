@@ -2,15 +2,10 @@
 
 namespace Tests\Feature;
 
-use DB;
-
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
 use App\Models\User\User;
 use App\Models\User\InvitationCode;
-
 use App\Services\InvitationService;
 
 class AdminInvitationTest extends TestCase
@@ -80,7 +75,7 @@ class AdminInvitationTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/invitations/delete/'.$code->id);
+            ->post('/admin/invitations/delete/' . $code->id);
 
         // Check that there are fewer invitation codes than before
         $this->assertTrue(InvitationCode::all()->count() <= $oldCount);
@@ -105,7 +100,7 @@ class AdminInvitationTest extends TestCase
             (new InvitationService)->generateInvitation($user);
 
         // If necessary, simulate a "used" code
-        if($code->recipient_id == null) {
+        if ($code->recipient_id == null) {
             // Create a persistent user and mark them as the code's recipient
             $recipient = User::factory()->create();
             $code->update(['recipient_id' => $recipient->id]);
@@ -114,7 +109,7 @@ class AdminInvitationTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/invitations/delete/'.$code->id);
+            ->post('/admin/invitations/delete/' . $code->id);
 
         // Check that there are the same number of invitation codes or greater
         $this->assertTrue(InvitationCode::all()->count() >= $oldCount);

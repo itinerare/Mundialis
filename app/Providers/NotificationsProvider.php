@@ -25,8 +25,7 @@ class NotificationsProvider extends ServiceProvider
     public function boot()
     {
         //
-        App::bind('notifications', function()
-        {
+        App::bind('notifications', function () {
             return new \App\Helpers\Notifications;
         });
     }

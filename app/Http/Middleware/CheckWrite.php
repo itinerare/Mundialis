@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Settings;
 
 class CheckWrite
 {
@@ -18,6 +17,7 @@ class CheckWrite
     {
         if (!$request->user()->canWrite) {
             flash('You do not have the permission to access this page.')->error();
+
             return redirect('/');
         }
 

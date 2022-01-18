@@ -21,12 +21,12 @@ return [
     'hub' => [
         'prefix' => 'Hub:',
         'regex' => 'Hub:([A-Za-z0-9_-_\s]+)',
-        'regex_alt' => '/\Hub:([A-Za-z0-9_-_\s]+)/'
+        'regex_alt' => '/\Hub:([A-Za-z0-9_-_\s]+)/',
     ],
 
     'context' => [
         'prefix' => 'Context:',
         'regex' => 'Context:([A-Za-z0-9_-_\s]+)',
-        'regex_alt' => '/\Context:([A-Za-z0-9_-_\s]+)/'
+        'regex_alt' => '/\Context:([A-Za-z0-9_-_\s]+)/',
     ],
 ];

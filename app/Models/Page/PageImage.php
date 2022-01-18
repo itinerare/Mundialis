@@ -4,28 +4,11 @@ namespace App\Models\Page;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 use App\Models\Model;
 
 class PageImage extends Model
 {
-    use SoftDeletes, HasFactory;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'description', 'is_visible'
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'page_images';
+    use HasFactory, SoftDeletes;
 
     /**
      * Whether the model contains timestamps to be saved and updated.
@@ -53,6 +36,22 @@ class PageImage extends Model
         'creator_url.*' => 'nullable|url',
         'image' => 'nullable|mimes:jpeg,gif,png|max:20000',
     ];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'description', 'is_visible',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'page_images';
 
     /**********************************************************************************************
 
@@ -100,7 +99,10 @@ class PageImage extends Model
      */
     public function scopeVisible($query, $user = null)
     {
-        if($user && $user->canWrite) return $query;
+        if ($user && $user->canWrite) {
+            return $query;
+        }
+
         return $query->where('is_visible', 1);
     }
 
@@ -137,7 +139,7 @@ class PageImage extends Model
      */
     public function getImageDirectoryAttribute()
     {
-        return 'images/pages/'.floor($this->id / 1000);
+        return 'images/pages/' . floor($this->id / 1000);
     }
 
     /**
@@ -179,5 +181,4 @@ class PageImage extends Model
     {
         return $this->imageVersion->thumbnailUrl;
     }
-
 }

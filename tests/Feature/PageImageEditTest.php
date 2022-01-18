@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
 use App\Models\User\User;
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
@@ -32,7 +31,7 @@ class PageImageEditTest extends TestCase
         $page = Page::factory()->create();
 
         $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/gallery/create');
+            ->get('/pages/' . $page->id . '/gallery/create');
 
         $response->assertStatus(200);
     }
@@ -57,7 +56,7 @@ class PageImageEditTest extends TestCase
         (new ImageManager)->testImages($image, $version);
 
         $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/gallery/edit/'.$image->id);
+            ->get('/pages/' . $page->id . '/gallery/edit/' . $image->id);
 
         $response->assertStatus(200);
 
@@ -95,12 +94,12 @@ class PageImageEditTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/gallery/edit/'.$image->id, $data);
+            ->post('/pages/' . $page->id . '/gallery/edit/' . $image->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_images', [
             'id' => $image->id,
-            'description' => $data['description']
+            'description' => $data['description'],
         ]);
 
         // Delete the test images, to clean up
@@ -138,12 +137,12 @@ class PageImageEditTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/gallery/edit/'.$image->id, $data);
+            ->post('/pages/' . $page->id . '/gallery/edit/' . $image->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_images', [
             'id' => $image->id,
-            'is_visible' => 0
+            'is_visible' => 0,
         ]);
 
         // Delete the test images, to clean up
@@ -181,13 +180,13 @@ class PageImageEditTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/gallery/edit/'.$image->id, $data);
+            ->post('/pages/' . $page->id . '/gallery/edit/' . $image->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_page_image', [
             'page_id' => $page->id,
             'page_image_id' => $image->id,
-            'is_valid' => 0
+            'is_valid' => 0,
         ]);
 
         // Delete the test images, to clean up
@@ -226,7 +225,7 @@ class PageImageEditTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/gallery/edit/'.$image->id, $data);
+            ->post('/pages/' . $page->id . '/gallery/edit/' . $image->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
@@ -275,7 +274,7 @@ class PageImageEditTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/gallery/edit/'.$image->id, $data);
+            ->post('/pages/' . $page->id . '/gallery/edit/' . $image->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_image_creators', [
@@ -324,13 +323,13 @@ class PageImageEditTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/gallery/edit/'.$image->id, $data);
+            ->post('/pages/' . $page->id . '/gallery/edit/' . $image->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_image_creators', [
             'page_image_id' => $image->id,
             'user_id' => null,
-            'url' => $page->url
+            'url' => $page->url,
         ]);
 
         // Delete the test images, to clean up
@@ -376,7 +375,7 @@ class PageImageEditTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/gallery/edit/'.$image->id, $data);
+            ->post('/pages/' . $page->id . '/gallery/edit/' . $image->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_image_creators', [
@@ -432,20 +431,20 @@ class PageImageEditTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/gallery/edit/'.$image->id, $data);
+            ->post('/pages/' . $page->id . '/gallery/edit/' . $image->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_image_creators', [
             'page_image_id' => $image->id,
             'user_id' => null,
-            'url' => $page->url
+            'url' => $page->url,
         ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_image_creators', [
             'page_image_id' => $image->id,
             'user_id' => null,
-            'url' => $image->imageUrl
+            'url' => $image->imageUrl,
         ]);
 
         // Delete the test images, to clean up
@@ -491,13 +490,13 @@ class PageImageEditTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/gallery/edit/'.$image->id, $data);
+            ->post('/pages/' . $page->id . '/gallery/edit/' . $image->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_image_creators', [
             'page_image_id' => $image->id,
             'user_id' => null,
-            'url' => $page->url
+            'url' => $page->url,
         ]);
 
         // Directly verify that the appropriate change has occurred
@@ -521,8 +520,9 @@ class PageImageEditTest extends TestCase
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->create();
+        }
 
         // Create the image and associated records
         $image = PageImage::factory()->create();
@@ -542,7 +542,7 @@ class PageImageEditTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/gallery/edit/'.$image->id, $data);
+            ->post('/pages/' . $page[1]->id . '/gallery/edit/' . $image->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_page_image', [
@@ -565,15 +565,17 @@ class PageImageEditTest extends TestCase
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->create();
+        }
 
         // Create the image and associated records
         $image = PageImage::factory()->create();
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             PagePageImage::factory()->page($page[$i]->id)->image($image->id)->create();
+        }
         (new ImageManager)->testImages($image, $version);
 
         // Define some basic data
@@ -587,7 +589,7 @@ class PageImageEditTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page[2]->id.'/gallery/edit/'.$image->id, $data);
+            ->post('/pages/' . $page[2]->id . '/gallery/edit/' . $image->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_page_image', [
@@ -615,15 +617,17 @@ class PageImageEditTest extends TestCase
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->create();
+        }
 
         // Create the image and associated records
         $image = PageImage::factory()->create();
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             PagePageImage::factory()->page($page[$i]->id)->image($image->id)->create();
+        }
         (new ImageManager)->testImages($image, $version);
 
         // Define some basic data
@@ -636,7 +640,7 @@ class PageImageEditTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page[2]->id.'/gallery/edit/'.$image->id, $data);
+            ->post('/pages/' . $page[2]->id . '/gallery/edit/' . $image->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseMissing('page_page_image', [
@@ -659,15 +663,17 @@ class PageImageEditTest extends TestCase
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->create();
+        }
 
         // Create the image and associated records
         $image = PageImage::factory()->create();
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             PagePageImage::factory()->page($page[$i]->id)->image($image->id)->create();
+        }
         (new ImageManager)->testImages($image, $version);
 
         // Set the page-to-be-detached's active image
@@ -683,7 +689,7 @@ class PageImageEditTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page[2]->id.'/gallery/edit/'.$image->id, $data);
+            ->post('/pages/' . $page[2]->id . '/gallery/edit/' . $image->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
@@ -726,13 +732,13 @@ class PageImageEditTest extends TestCase
             'description' => $this->faker->unique()->domainWord(),
             'is_valid' => 1,
             'is_visible' => 1,
-            'mark_active' => 0
+            'mark_active' => 0,
         ];
 
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/gallery/create', $data);
+            ->post('/pages/' . $page->id . '/gallery/create', $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_images', [

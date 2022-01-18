@@ -2,12 +2,9 @@
 
 namespace Tests\Feature;
 
-use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
-
 use App\Models\User\User;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
@@ -48,7 +45,7 @@ class SubjectDataTimeTest extends TestCase
         $data = [
             'name' => [0 => $this->faker->unique()->domainWord()],
             'abbreviation' => [0 => $this->faker->unique()->domainWord()],
-            'unit' => [0 => mt_rand(1,100)]
+            'unit' => [0 => mt_rand(1, 100)],
         ];
 
         // Make a temporary admin
@@ -63,7 +60,7 @@ class SubjectDataTimeTest extends TestCase
         $this->assertDatabaseHas('time_divisions', [
             'name' => $data['name'][0],
             'abbreviation' => $data['abbreviation'][0],
-            'unit' => $data['unit'][0]
+            'unit' => $data['unit'][0],
         ]);
     }
 
@@ -84,7 +81,7 @@ class SubjectDataTimeTest extends TestCase
             'id' => [0 => $division->id],
             'name' => [0 => $this->faker->unique()->domainWord()],
             'abbreviation' => [0 => $this->faker->unique()->domainWord()],
-            'unit' => [0 => mt_rand(1,100)]
+            'unit' => [0 => mt_rand(1, 100)],
         ];
 
         // Try to post data again
@@ -97,7 +94,7 @@ class SubjectDataTimeTest extends TestCase
             'name' => $data['name'][0],
             'abbreviation' => $data['abbreviation'][0],
             'unit' => $data['unit'][0],
-            'id' => $division->id
+            'id' => $division->id,
         ]);
     }
 
@@ -143,7 +140,7 @@ class SubjectDataTimeTest extends TestCase
         $chronology = TimeChronology::factory()->create();
 
         $response = $this->actingAs($user)
-            ->get('/admin/data/time/chronology/edit/'.$chronology->id)
+            ->get('/admin/data/time/chronology/edit/' . $chronology->id)
             ->assertStatus(200);
     }
 
@@ -157,7 +154,7 @@ class SubjectDataTimeTest extends TestCase
         // Define some basic template data
         $data = [
             'name' => $this->faker->unique()->domainWord(),
-            'description' => $this->faker->unique()->domainWord()
+            'description' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a temporary admin
@@ -171,7 +168,7 @@ class SubjectDataTimeTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('time_chronology', [
             'name' => $data['name'],
-            'description' => $data['description']
+            'description' => $data['description'],
         ]);
     }
 
@@ -186,7 +183,7 @@ class SubjectDataTimeTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord()
+            'name' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a temporary admin
@@ -195,12 +192,12 @@ class SubjectDataTimeTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/time/chronology/edit/'.$chronology->id, $data);
+            ->post('/admin/data/time/chronology/edit/' . $chronology->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('time_chronology', [
             'id' => $chronology->id,
-            'name' => $data['name']
+            'name' => $data['name'],
         ]);
     }
 
@@ -216,7 +213,7 @@ class SubjectDataTimeTest extends TestCase
         // Define some basic template data
         $data = [
             'name' => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id
+            'parent_id' => $parent->id,
         ];
 
         // Make a temporary admin
@@ -230,7 +227,7 @@ class SubjectDataTimeTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('time_chronology', [
             'name' => $data['name'],
-            'parent_id' => $parent->id
+            'parent_id' => $parent->id,
         ]);
     }
 
@@ -247,7 +244,7 @@ class SubjectDataTimeTest extends TestCase
         // Define some basic template data
         $data = [
             'name' => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id
+            'parent_id' => $parent->id,
         ];
 
         // Make a temporary admin
@@ -256,13 +253,13 @@ class SubjectDataTimeTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/time/chronology/edit/'.$chronology->id, $data);
+            ->post('/admin/data/time/chronology/edit/' . $chronology->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('time_chronology', [
             'id' => $chronology->id,
             'name' => $data['name'],
-            'parent_id' => $parent->id
+            'parent_id' => $parent->id,
         ]);
     }
 
@@ -278,7 +275,7 @@ class SubjectDataTimeTest extends TestCase
         $chronology = TimeChronology::factory()->create();
 
         $response = $this->actingAs($user)
-            ->get('/admin/data/time/chronology/delete/'.$chronology->id)
+            ->get('/admin/data/time/chronology/delete/' . $chronology->id)
             ->assertStatus(200);
     }
 
@@ -302,7 +299,7 @@ class SubjectDataTimeTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/time/chronology/delete/'.$chronology->id);
+            ->post('/admin/data/time/chronology/delete/' . $chronology->id);
 
         // Check that there are fewer chronologies than before
         $this->assertTrue(TimeChronology::all()->count() < $oldCount);
@@ -331,7 +328,7 @@ class SubjectDataTimeTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/time/chronology/delete/'.$chronology->id);
+            ->post('/admin/data/time/chronology/delete/' . $chronology->id);
 
         // Check that there are the same number of chronologies or more
         $this->assertTrue(TimeChronology::all()->count() >= $oldCount);
@@ -359,7 +356,7 @@ class SubjectDataTimeTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/time/chronology/delete/'.$chronology->id);
+            ->post('/admin/data/time/chronology/delete/' . $chronology->id);
 
         // Check that there are the same number of chronologies or more
         $this->assertTrue(TimeChronology::all()->count() >= $oldCount);

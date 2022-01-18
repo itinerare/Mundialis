@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use Auth;
-
 use App\Models\SitePage;
 use App\Services\SitePageService;
-
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -29,7 +27,7 @@ class PageController extends Controller
     public function getIndex()
     {
         return view('admin.pages.index', [
-            'pages' => SitePage::orderBy('key')->paginate(20)
+            'pages' => SitePage::orderBy('key')->paginate(20),
         ]);
     }
 
@@ -42,9 +40,12 @@ class PageController extends Controller
     public function getEditPage($id)
     {
         $page = SitePage::find($id);
-        if(!$page) abort(404);
+        if (!$page) {
+            abort(404);
+        }
+
         return view('admin.pages.edit_page', [
-            'page' => $page
+            'page' => $page,
         ]);
     }
 
@@ -60,10 +61,14 @@ class PageController extends Controller
     {
         $data = $request->only(['text']);
 
-        if($service->updatePage(SitePage::find($id), $data, Auth::user())) flash('Page updated successfully.')->success();
-        else foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        if ($service->updatePage(SitePage::find($id), $data, Auth::user())) {
+            flash('Page updated successfully.')->success();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
 
         return redirect()->back();
     }
-
 }

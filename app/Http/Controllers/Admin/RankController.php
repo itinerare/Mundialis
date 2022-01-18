@@ -6,7 +6,6 @@ use Auth;
 use Illuminate\Http\Request;
 use App\Models\User\Rank;
 use App\Services\RankService;
-
 use App\Http\Controllers\Controller;
 
 class RankController extends Controller
@@ -19,7 +18,7 @@ class RankController extends Controller
     public function getIndex()
     {
         return view('admin.users.ranks', [
-            'ranks' => Rank::orderBy('sort', 'DESC')->get()
+            'ranks' => Rank::orderBy('sort', 'DESC')->get(),
         ]);
     }
 
@@ -31,8 +30,9 @@ class RankController extends Controller
     public function getEditRank($id)
     {
         $rank = Rank::find($id);
+
         return view('admin.users._edit_rank', [
-            'rank' => $rank
+            'rank' => $rank,
         ]);
     }
 
@@ -41,13 +41,14 @@ class RankController extends Controller
         $request->validate(Rank::$rules);
         $data = $request->only(['name', 'description']);
 
-        if($service->updateRank(Rank::find($id), $data, Auth::user())) {
+        if ($service->updateRank(Rank::find($id), $data, Auth::user())) {
             flash('Rank updated successfully.')->success();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
+
         return redirect()->back();
     }
-
 }

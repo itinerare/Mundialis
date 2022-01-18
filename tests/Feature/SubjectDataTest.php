@@ -5,11 +5,8 @@ namespace Tests\Feature;
 use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
-
 use App\Models\User\User;
-use App\Models\Subject\SubjectTemplate;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Page\Page;
 
@@ -181,7 +178,7 @@ class SubjectDataTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => null
+            'data' => null,
         ]);
     }
 
@@ -202,7 +199,7 @@ class SubjectDataTest extends TestCase
             'infobox_rules' => [0 => null],
             'infobox_choices' => [0 => null],
             'infobox_value' => [0 => null],
-            'infobox_help' => [0 => null]
+            'infobox_help' => [0 => null],
         ];
 
         // Make a temporary admin
@@ -216,7 +213,7 @@ class SubjectDataTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -248,18 +245,17 @@ class SubjectDataTest extends TestCase
         $user = User::factory()->admin()->make();
 
         // First, ensure the template exists and has empty data
-        if(DB::table('subject_templates')->where('subject', 'concepts')->first()) {
+        if (DB::table('subject_templates')->where('subject', 'concepts')->first()) {
             DB::table('subject_templates')->where('subject', 'concepts')->update(
                 [
-                    'data' => null
+                    'data' => null,
                 ]
             );
-        }
-        else {
+        } else {
             DB::table('subject_templates')->insert([
                 [
                     'subject' => 'concepts',
-                    'data' => null
+                    'data' => null,
                 ],
             ]);
         }
@@ -272,7 +268,7 @@ class SubjectDataTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
             'id' => $category->id,
-            'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -307,7 +303,7 @@ class SubjectDataTest extends TestCase
         $category = SubjectCategory::factory()->create();
 
         $response = $this->actingAs($user)
-            ->get('/admin/data/categories/edit/'.$category->id)
+            ->get('/admin/data/categories/edit/' . $category->id)
             ->assertStatus(200);
     }
 
@@ -320,7 +316,7 @@ class SubjectDataTest extends TestCase
     {
         // Define some basic data
         $data = [
-            'name' => $this->faker->unique()->domainWord()
+            'name' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a temporary admin
@@ -335,7 +331,7 @@ class SubjectDataTest extends TestCase
         $this->assertDatabaseHas('subject_categories', [
             'subject' => 'misc',
             'name' => $data['name'],
-            'data' => null
+            'data' => null,
         ]);
     }
 
@@ -350,7 +346,7 @@ class SubjectDataTest extends TestCase
 
         // Define some basic data
         $data = [
-            'name' => $this->faker->unique()->domainWord()
+            'name' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a temporary admin
@@ -359,13 +355,13 @@ class SubjectDataTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/categories/edit/'.$category->id, $data);
+            ->post('/admin/data/categories/edit/' . $category->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
             'id' => $category->id,
             'name' => $data['name'],
-            'data' => null
+            'data' => null,
         ]);
     }
 
@@ -387,7 +383,7 @@ class SubjectDataTest extends TestCase
             'infobox_rules' => [0 => null],
             'infobox_choices' => [0 => null],
             'infobox_value' => [0 => null],
-            'infobox_help' => [0 => null]
+            'infobox_help' => [0 => null],
         ];
 
         // Make a temporary admin
@@ -402,7 +398,7 @@ class SubjectDataTest extends TestCase
         $this->assertDatabaseHas('subject_categories', [
             'subject' => 'misc',
             'name' => $data['name'],
-            'data' => '{"sections":{"test_category_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'data' => '{"sections":{"test_category_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -426,7 +422,7 @@ class SubjectDataTest extends TestCase
             'infobox_rules' => [0 => null],
             'infobox_choices' => [0 => null],
             'infobox_value' => [0 => null],
-            'infobox_help' => [0 => null]
+            'infobox_help' => [0 => null],
         ];
 
         // Make a temporary admin
@@ -435,13 +431,13 @@ class SubjectDataTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/categories/edit/'.$category->id, $data);
+            ->post('/admin/data/categories/edit/' . $category->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
             'id' => $category->id,
             'name' => $data['name'],
-            'data' => '{"sections":{"test_category_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'data' => '{"sections":{"test_category_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -453,18 +449,17 @@ class SubjectDataTest extends TestCase
     public function test_canPostCreateSubjectCategoryWithPopulatedTemplate()
     {
         // Ensure 'things' has specific template data to use
-        if(DB::table('subject_templates')->where('subject', 'things')->first()) {
+        if (DB::table('subject_templates')->where('subject', 'things')->first()) {
             DB::table('subject_templates')->where('subject', 'things')->update(
                 [
-                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
                 ]
             );
-        }
-        else {
+        } else {
             DB::table('subject_templates')->insert([
                 [
                     'subject' => 'things',
-                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
                 ],
             ]);
         }
@@ -472,7 +467,7 @@ class SubjectDataTest extends TestCase
         // Define some basic template data
         $data = [
             'name' => $this->faker->unique()->domainWord(),
-            'populate_template' => 1
+            'populate_template' => 1,
         ];
 
         // Make a temporary admin
@@ -487,7 +482,7 @@ class SubjectDataTest extends TestCase
         $this->assertDatabaseHas('subject_categories', [
             'subject' => 'things',
             'name' => $data['name'],
-            'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -499,18 +494,17 @@ class SubjectDataTest extends TestCase
     public function test_canPostEditSubjectCategoryWithPopulatedTemplate()
     {
         // Ensure 'things' has specific template data to use
-        if(DB::table('subject_templates')->where('subject', 'things')->first()) {
+        if (DB::table('subject_templates')->where('subject', 'things')->first()) {
             DB::table('subject_templates')->where('subject', 'things')->update(
                 [
-                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
                 ]
             );
-        }
-        else {
+        } else {
             DB::table('subject_templates')->insert([
                 [
                     'subject' => 'things',
-                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
                 ],
             ]);
         }
@@ -518,7 +512,7 @@ class SubjectDataTest extends TestCase
         // Define some basic template data
         $data = [
             'name' => $this->faker->unique()->domainWord(),
-            'populate_template' => 1
+            'populate_template' => 1,
         ];
 
         // Make a temporary admin
@@ -529,13 +523,13 @@ class SubjectDataTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/categories/edit/'.$category->id, $data);
+            ->post('/admin/data/categories/edit/' . $category->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
             'id' => $category->id,
             'name' => $data['name'],
-            'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -551,7 +545,7 @@ class SubjectDataTest extends TestCase
         // Define some basic template data
         $data = [
             'name' => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id
+            'parent_id' => $parent->id,
         ];
 
         // Make a temporary admin
@@ -566,7 +560,7 @@ class SubjectDataTest extends TestCase
         $this->assertDatabaseHas('subject_categories', [
             'subject' => 'places',
             'name' => $data['name'],
-            'parent_id' => $parent->id
+            'parent_id' => $parent->id,
         ]);
     }
 
@@ -583,7 +577,7 @@ class SubjectDataTest extends TestCase
         // Define some basic template data
         $data = [
             'name' => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id
+            'parent_id' => $parent->id,
         ];
 
         // Make a temporary admin
@@ -592,13 +586,13 @@ class SubjectDataTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/categories/edit/'.$category->id, $data);
+            ->post('/admin/data/categories/edit/' . $category->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
             'id' => $category->id,
             'name' => $data['name'],
-            'parent_id' => $parent->id
+            'parent_id' => $parent->id,
         ]);
     }
 
@@ -637,12 +631,12 @@ class SubjectDataTest extends TestCase
         // Then attempt to edit the cascading category
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/categories/edit/'.$category->id, $data);
+            ->post('/admin/data/categories/edit/' . $category->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
             'id' => $recipient->id,
-            'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -678,18 +672,18 @@ class SubjectDataTest extends TestCase
             'infobox_value' => [0 => null],
             'infobox_help' => [0 => null],
             'cascade_template' => 1,
-            'cascade_recursively' => 1
+            'cascade_recursively' => 1,
         ];
 
         // Then attempt to edit the cascading category
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/categories/edit/'.$category->id, $data);
+            ->post('/admin/data/categories/edit/' . $category->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
             'id' => $grandchild->id,
-            'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -705,7 +699,7 @@ class SubjectDataTest extends TestCase
         $category = SubjectCategory::factory()->create();
 
         $response = $this->actingAs($user)
-            ->get('/admin/data/categories/delete/'.$category->id)
+            ->get('/admin/data/categories/delete/' . $category->id)
             ->assertStatus(200);
     }
 
@@ -729,7 +723,7 @@ class SubjectDataTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/categories/delete/'.$category->id);
+            ->post('/admin/data/categories/delete/' . $category->id);
 
         // Check that there are fewer categories than before
         $this->assertTrue(SubjectCategory::all()->count() < $oldCount);
@@ -756,7 +750,7 @@ class SubjectDataTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/categories/delete/'.$category->id);
+            ->post('/admin/data/categories/delete/' . $category->id);
 
         // Check that there are the same number of categories or more
         $this->assertTrue(SubjectCategory::all()->count() >= $oldCount);
@@ -784,7 +778,7 @@ class SubjectDataTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/data/categories/delete/'.$category->id);
+            ->post('/admin/data/categories/delete/' . $category->id);
 
         // Check that there are the same number of categories or more
         $this->assertTrue(SubjectCategory::all()->count() >= $oldCount);

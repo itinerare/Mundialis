@@ -5,11 +5,9 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
 use App\Models\User\User;
 use App\Models\Page\Page;
 use App\Models\Page\PageRelationship;
-use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
 
 class PageRelationshipTest extends TestCase
@@ -33,7 +31,7 @@ class PageRelationshipTest extends TestCase
         $page = Page::factory()->category($category->id)->create();
 
         $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/relationships');
+            ->get('/pages/' . $page->id . '/relationships');
 
         $response->assertStatus(200);
     }
@@ -52,14 +50,15 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
 
         $response = $this->actingAs($user)
-            ->get('/pages/'.$page[1]->id.'/relationships');
+            ->get('/pages/' . $page[1]->id . '/relationships');
 
         $response->assertStatus(200);
     }
@@ -81,7 +80,7 @@ class PageRelationshipTest extends TestCase
         $page = Page::factory()->category($category->id)->create();
 
         $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/relationships/create');
+            ->get('/pages/' . $page->id . '/relationships/create');
 
         $response->assertStatus(200);
     }
@@ -100,14 +99,15 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
 
         $response = $this->actingAs($user)
-            ->get('/pages/'.$page[1]->id.'/relationships/edit/'.$relationship->id);
+            ->get('/pages/' . $page[1]->id . '/relationships/edit/' . $relationship->id);
 
         $response->assertStatus(200);
     }
@@ -126,8 +126,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Define some basic data
         $data = [
@@ -140,7 +141,7 @@ class PageRelationshipTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/create', $data);
+            ->post('/pages/' . $page[1]->id . '/relationships/create', $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_relationships', [
@@ -165,8 +166,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
@@ -182,7 +184,7 @@ class PageRelationshipTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/edit/'.$relationship->id, $data);
+            ->post('/pages/' . $page[1]->id . '/relationships/edit/' . $relationship->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_relationships', [
@@ -207,8 +209,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Define some basic data
         $data = [
@@ -223,7 +226,7 @@ class PageRelationshipTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/create', $data);
+            ->post('/pages/' . $page[1]->id . '/relationships/create', $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_relationships', [
@@ -250,8 +253,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
@@ -269,7 +273,7 @@ class PageRelationshipTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/edit/'.$relationship->id, $data);
+            ->post('/pages/' . $page[1]->id . '/relationships/edit/' . $relationship->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_relationships', [
@@ -296,8 +300,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Define some basic data
         $data = [
@@ -312,7 +317,7 @@ class PageRelationshipTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/create', $data);
+            ->post('/pages/' . $page[1]->id . '/relationships/create', $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_relationships', [
@@ -339,8 +344,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
@@ -358,7 +364,7 @@ class PageRelationshipTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/edit/'.$relationship->id, $data);
+            ->post('/pages/' . $page[1]->id . '/relationships/edit/' . $relationship->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_relationships', [
@@ -385,8 +391,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Define some basic data
         $data = [
@@ -401,7 +408,7 @@ class PageRelationshipTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/create', $data);
+            ->post('/pages/' . $page[1]->id . '/relationships/create', $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_relationships', [
@@ -428,8 +435,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
@@ -447,7 +455,7 @@ class PageRelationshipTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/edit/'.$relationship->id, $data);
+            ->post('/pages/' . $page[1]->id . '/relationships/edit/' . $relationship->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_relationships', [
@@ -475,8 +483,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Define some basic data
         $data = [
@@ -489,7 +498,7 @@ class PageRelationshipTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/create', $data);
+            ->post('/pages/' . $page[1]->id . '/relationships/create', $data);
 
         // Directly verify that no change has occurred
         $this->assertDatabaseMissing('page_relationships', [
@@ -515,8 +524,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
@@ -532,7 +542,7 @@ class PageRelationshipTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/edit/'.$relationship->id, $data);
+            ->post('/pages/' . $page[1]->id . '/relationships/edit/' . $relationship->id, $data);
 
         // Directly verify that no change has occurred
         $this->assertDatabaseHas('page_relationships', [
@@ -561,14 +571,15 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
 
         $response = $this->actingAs($user)
-            ->get('/pages/'.$page[1]->id.'/relationships/delete/'.$relationship->id);
+            ->get('/pages/' . $page[1]->id . '/relationships/delete/' . $relationship->id);
 
         $response->assertStatus(200);
     }
@@ -587,8 +598,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
@@ -596,7 +608,7 @@ class PageRelationshipTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/delete/'.$relationship->id);
+            ->post('/pages/' . $page[1]->id . '/relationships/delete/' . $relationship->id);
 
         // Verify that the appropriate change has occurred
         $this->assertDeleted($relationship);
@@ -620,14 +632,15 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a familial relationship for the two pages
         PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
 
         $response = $this->actingAs($user)
-            ->get('/pages/'.$page[1]->id.'/relationships/tree');
+            ->get('/pages/' . $page[1]->id . '/relationships/tree');
 
         $response->assertStatus(200);
     }
@@ -650,7 +663,7 @@ class PageRelationshipTest extends TestCase
         $page = Page::factory()->category($category->id)->create();
 
         $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/relationships/tree');
+            ->get('/pages/' . $page->id . '/relationships/tree');
 
         $response->assertStatus(404);
     }
@@ -670,14 +683,15 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a non-familial relationship for the two pages
         PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
 
         $response = $this->actingAs($user)
-            ->get('/pages/'.$page[1]->id.'/relationships/tree');
+            ->get('/pages/' . $page[1]->id . '/relationships/tree');
 
         $response->assertStatus(404);
     }

@@ -1,10 +1,8 @@
-<?php namespace App\Services;
+<?php
 
-use App\Services\Service;
+namespace App\Services;
 
 use DB;
-
-use App\Models\SitePage;
 
 class SitePageService extends Service
 {
@@ -34,10 +32,10 @@ class SitePageService extends Service
             $page->update($data);
 
             return $this->commitReturn($page);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
-
 }

@@ -3,18 +3,23 @@
 namespace App\Models\Page;
 
 use Config;
-
 use App\Models\Model;
 
 class PageTag extends Model
 {
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = false;
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'page_id', 'type', 'tag'
+        'page_id', 'type', 'tag',
     ];
 
     /**
@@ -23,13 +28,6 @@ class PageTag extends Model
      * @var string
      */
     protected $table = 'page_tags';
-
-    /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = false;
 
     /**********************************************************************************************
 
@@ -85,11 +83,15 @@ class PageTag extends Model
      */
     public function scopeTagSearch($query, $tag)
     {
-        return $query->where(function($query) use ($tag) {
+        return $query->where(function ($query) use ($tag) {
             $i = 0;
-            foreach(Config::get('mundialis.page_tags') as $prefix) {
-                if($i == 0) $query->where('tag', $tag)->orWhere('tag', $prefix['prefix'].$tag);
-                if($i > 0) $query->orWhere('tag', $prefix['prefix'].$tag);
+            foreach (Config::get('mundialis.page_tags') as $prefix) {
+                if ($i == 0) {
+                    $query->where('tag', $tag)->orWhere('tag', $prefix['prefix'] . $tag);
+                }
+                if ($i > 0) {
+                    $query->orWhere('tag', $prefix['prefix'] . $tag);
+                }
                 $i++;
             }
         });
@@ -104,11 +106,15 @@ class PageTag extends Model
      */
     public function scopePrefixedTags($query)
     {
-        return $query->where(function($query) {
+        return $query->where(function ($query) {
             $i = 0;
-            foreach(Config::get('mundialis.page_tags') as $prefix) {
-                if($i == 0) $query->where('tag', 'regexp', $prefix['regex']);
-                if($i > 0) $query->orWhere('tag', 'regexp', $prefix['regex']);
+            foreach (Config::get('mundialis.page_tags') as $prefix) {
+                if ($i == 0) {
+                    $query->where('tag', 'regexp', $prefix['regex']);
+                }
+                if ($i > 0) {
+                    $query->orWhere('tag', 'regexp', $prefix['regex']);
+                }
                 $i++;
             }
         });
@@ -129,14 +135,18 @@ class PageTag extends Model
     {
         // Check the tag name against prefixes
         $matches = [];
-        foreach(Config::get('mundialis.page_tags') as $prefix) {
-            if($matches == []) preg_match($prefix['regex_alt'], $this->tag, $matches);
+        foreach (Config::get('mundialis.page_tags') as $prefix) {
+            if ($matches == []) {
+                preg_match($prefix['regex_alt'], $this->tag, $matches);
+            }
         }
 
         // If the tag has a prefix, return the prefix
-        if($matches != [])
+        if ($matches != []) {
             return $matches[0];
-        else return null;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -148,14 +158,18 @@ class PageTag extends Model
     {
         // Check the tag name against prefixes
         $matches = [];
-        foreach(Config::get('mundialis.page_tags') as $prefix) {
-            if($matches == []) preg_match($prefix['regex_alt'], $this->tag, $matches);
+        foreach (Config::get('mundialis.page_tags') as $prefix) {
+            if ($matches == []) {
+                preg_match($prefix['regex_alt'], $this->tag, $matches);
+            }
         }
 
         // If the tag has a prefix, return the unprefixed tag
-        if($matches != [])
+        if ($matches != []) {
             return $matches[1];
-        else return $this->tag;
+        } else {
+            return $this->tag;
+        }
     }
 
     /**
@@ -165,7 +179,7 @@ class PageTag extends Model
      */
     public function getUrlAttribute()
     {
-        return url('pages/tags/'.str_replace(' ', '_', $this->baseTag));
+        return url('pages/tags/' . str_replace(' ', '_', $this->baseTag));
     }
 
     /**
@@ -175,7 +189,7 @@ class PageTag extends Model
      */
     public function getDisplayNameAttribute()
     {
-        return '<a href="'.$this->url.'">'.$this->tag.'</a>';
+        return '<a href="' . $this->url . '">' . $this->tag . '</a>';
     }
 
     /**
@@ -185,7 +199,7 @@ class PageTag extends Model
      */
     public function getDisplayNameBaseAttribute()
     {
-        return '<a href="'.$this->url.'">'.$this->baseTag.'</a>';
+        return '<a href="' . $this->url . '">' . $this->baseTag . '</a>';
     }
 
     /**
@@ -196,10 +210,15 @@ class PageTag extends Model
     public function getHasNavboxAttribute()
     {
         // If the tag itself has a prefix, this is true by default
-        if($this->prefix) return true;
+        if ($this->prefix) {
+            return true;
+        }
         // Else check if there are prefixed tags for this tag
-        elseif($this->tagSearch($this->tag)->prefixedTags()->count()) return true;
-        else return false;
+        elseif ($this->tagSearch($this->tag)->prefixedTags()->count()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -210,10 +229,16 @@ class PageTag extends Model
     public function getHasTimelineAttribute()
     {
         $timePages = $this->page->subject('time')->whereIn('id', $this->tagSearch($this->baseTag)->tag()->pluck('page_id')->toArray())->get()->filter(function ($page) {
-            if(isset($page->parent_id) || isset($page->data['date']['start'])) return true;
+            if (isset($page->parent_id) || isset($page->data['date']['start'])) {
+                return true;
+            }
+
             return false;
         });
-        if($timePages->count()) return true;
+        if ($timePages->count()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -236,11 +261,11 @@ class PageTag extends Model
         $filter = $this->tag()->prefixedTags();
 
         // Cycle through them, fetching the tags themselves
-        foreach($filter->get() as $tag) {
+        foreach ($filter->get() as $tag) {
             $matches = [];
-            foreach(Config::get('mundialis.page_tags') as $prefix) {
+            foreach (Config::get('mundialis.page_tags') as $prefix) {
                 preg_match($prefix['regex_alt'], $tag, $matches);
-                if($matches != []) {
+                if ($matches != []) {
                     $tags[] = $matches[1];
                     $matches = [];
                 }
@@ -250,8 +275,12 @@ class PageTag extends Model
         $returnTags = $this->tag()->whereNotIn('tag', $filter->pluck('tag')->toArray())->pluck('tag', 'tag')->unique()->toArray();
 
         // Check to see if the tags exist already, and if not, add to the list
-        if(isset($tags) && count($tags)) foreach($tags as $tag) {
-            if(!$this->where('tag', $tag)->exists()) $returnTags[$tag] = $tag;
+        if (isset($tags) && count($tags)) {
+            foreach ($tags as $tag) {
+                if (!$this->where('tag', $tag)->exists()) {
+                    $returnTags[$tag] = $tag;
+                }
+            }
         }
 
         return $returnTags;
@@ -268,20 +297,31 @@ class PageTag extends Model
     {
         $info = [];
         // Check for/get hub tag
-        if($this->tagSearch('Hub:'.$this->baseTag)->first() && $this->tagSearch('Hub:'.$this->baseTag)->first()->page) $info['hub'] = $this->tagSearch('Hub:'.$this->baseTag)->first();
+        if ($this->tagSearch('Hub:' . $this->baseTag)->first() && $this->tagSearch('Hub:' . $this->baseTag)->first()->page) {
+            $info['hub'] = $this->tagSearch('Hub:' . $this->baseTag)->first();
+        }
         // Check for/get context tags
-        if($this->tagSearch('Context:'.$this->baseTag)->count()) $info['context'] = $this->tagSearch('Context:'.$this->baseTag)->get();
-
-        // Fetch context pages and group by subject
-        if(isset($info['context'])) {
-            foreach($info['context'] as $contextTag) if($contextTag->page && $contextTag->page->is_visible || ($user && $user->canWrite)) $info['pages'][] = $contextTag->page;
-            $info['pages'] = collect($info['pages']);
-            foreach($info['pages'] as $page)
-                $info['subjects'][$page->category->subject['key']][] = $page;
+        if ($this->tagSearch('Context:' . $this->baseTag)->count()) {
+            $info['context'] = $this->tagSearch('Context:' . $this->baseTag)->get();
         }
 
-        if($info != []) return $info;
+        // Fetch context pages and group by subject
+        if (isset($info['context'])) {
+            foreach ($info['context'] as $contextTag) {
+                if ($contextTag->page && $contextTag->page->is_visible || ($user && $user->canWrite)) {
+                    $info['pages'][] = $contextTag->page;
+                }
+            }
+            $info['pages'] = collect($info['pages']);
+            foreach ($info['pages'] as $page) {
+                $info['subjects'][$page->category->subject['key']][] = $page;
+            }
+        }
+
+        if ($info != []) {
+            return $info;
+        }
+
         return null;
     }
-
 }

@@ -13,7 +13,6 @@ use App\Models\Page\PageVersion;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
 use App\Models\User\User;
 use App\Services\ImageManager;
 
@@ -100,7 +99,7 @@ class SpecialPageTest extends TestCase
 
         $editor = User::factory()->editor()->create();
         $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->testData($page->title, null, null, '"'.$this->faker->unique()->domainWord().'", "'.$this->faker->unique()->domainWord().'"')->create();
+        PageVersion::factory()->page($page->id)->user($editor->id)->testData($page->title, null, null, '"' . $this->faker->unique()->domainWord() . '", "' . $this->faker->unique()->domainWord() . '"')->create();
 
         $response = $this->actingAs($user)
             ->get('/special/tagged-pages');
@@ -203,7 +202,7 @@ class SpecialPageTest extends TestCase
 
         $editor = User::factory()->editor()->create();
 
-        for($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->create();
             PageVersion::factory()->page($page[$i]->id)->user($editor->id)->testData()->create();
         }
@@ -343,7 +342,7 @@ class SpecialPageTest extends TestCase
         $link = PageLink::factory()->parent($page->id)->wanted()->create();
 
         $response = $this->actingAs($user)
-            ->get('/special/create-wanted/'.$link->title);
+            ->get('/special/create-wanted/' . $link->title);
 
         $response->assertStatus(200);
     }
@@ -617,7 +616,7 @@ class SpecialPageTest extends TestCase
 
         $editor = User::factory()->editor()->create();
         $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->testData($page->title, null, null, '"'.$this->faker->unique()->domainWord().'"')->create();
+        PageVersion::factory()->page($page->id)->user($editor->id)->testData($page->title, null, null, '"' . $this->faker->unique()->domainWord() . '"')->create();
 
         $response = $this->actingAs($user)
             ->get('/special/all-tags');

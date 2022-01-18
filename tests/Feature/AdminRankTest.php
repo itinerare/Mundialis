@@ -2,12 +2,8 @@
 
 namespace Tests\Feature;
 
-use DB;
-
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
 use App\Models\User\User;
 use App\Models\User\Rank;
 
@@ -48,7 +44,7 @@ class AdminRankTest extends TestCase
 
         // Attempt page access
         $response = $this->actingAs($user)
-            ->get('/admin/ranks/edit/'.$rank->id)
+            ->get('/admin/ranks/edit/' . $rank->id)
             ->assertStatus(200);
     }
 
@@ -70,15 +66,15 @@ class AdminRankTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/ranks/edit/'.$rank->id, [
+            ->post('/admin/ranks/edit/' . $rank->id, [
                 'name' => 'Member',
-                'description' => 'TEST SUCCESS'
+                'description' => 'TEST SUCCESS',
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('ranks', [
             'name' => 'Member',
-            'description' => 'TEST SUCCESS'
+            'description' => 'TEST SUCCESS',
         ]);
     }
 }

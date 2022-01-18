@@ -38,7 +38,7 @@ class NotificationFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($user) {
             return [
-                'user_id' => $user
+                'user_id' => $user,
             ];
         });
     }
@@ -56,9 +56,9 @@ class NotificationFactory extends Factory
             return [
                 'notification_type_id' => 0,
                 'data' => json_encode([
-                    'page_url' => 'pages/'.($page ? $page->id : '1').'.'.($page ? $page->title : $this->faker->unique()->domainWord()),
+                    'page_url' => 'pages/' . ($page ? $page->id : '1') . '.' . ($page ? $page->title : $this->faker->unique()->domainWord()),
                     'page_tile' => $page ? $page->title : $this->faker->unique()->domainWord(),
-                    'user_url' => 'user/'.($user ? $user->name : $this->faker->unique()->domainWord()),
+                    'user_url' => 'user/' . ($user ? $user->name : $this->faker->unique()->domainWord()),
                     'user_name' => $user ? $user->name : $this->faker->unique()->domainWord(),
                 ]),
             ];
@@ -78,9 +78,9 @@ class NotificationFactory extends Factory
             return [
                 'notification_type_id' => 1,
                 'data' => json_encode([
-                    'page_url' => 'pages/'.($page ? $page->id : '1').'.'.($page ? $page->title : $this->faker->unique()->domainWord()),
+                    'page_url' => 'pages/' . ($page ? $page->id : '1') . '.' . ($page ? $page->title : $this->faker->unique()->domainWord()),
                     'page_tile' => $page ? $page->title : $this->faker->unique()->domainWord(),
-                    'user_url' => 'user/'.($user ? $user->name : $this->faker->unique()->domainWord()),
+                    'user_url' => 'user/' . ($user ? $user->name : $this->faker->unique()->domainWord()),
                     'user_name' => $user ? $user->name : $this->faker->unique()->domainWord(),
                 ]),
             ];
@@ -101,7 +101,7 @@ class NotificationFactory extends Factory
                 'notification_type_id' => 2,
                 'data' => json_encode([
                     'page_tile' => $page ? $page->title : $this->faker->unique()->domainWord(),
-                    'user_url' => 'user/'.($user ? $user->name : $this->faker->unique()->domainWord()),
+                    'user_url' => 'user/' . ($user ? $user->name : $this->faker->unique()->domainWord()),
                     'user_name' => $user ? $user->name : $this->faker->unique()->domainWord(),
                 ]),
             ];

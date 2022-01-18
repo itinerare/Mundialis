@@ -25,8 +25,7 @@ class SettingsProvider extends ServiceProvider
     public function boot()
     {
         //
-        App::bind('settings', function()
-        {
+        App::bind('settings', function () {
             return new \App\Helpers\Settings;
         });
     }

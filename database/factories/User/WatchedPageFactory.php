@@ -38,7 +38,7 @@ class WatchedPageFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($page) {
             return [
-                'page_id' => $page
+                'page_id' => $page,
             ];
         });
     }
@@ -54,7 +54,7 @@ class WatchedPageFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($user) {
             return [
-                'user_id' => $user
+                'user_id' => $user,
             ];
         });
     }

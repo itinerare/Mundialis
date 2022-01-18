@@ -4,16 +4,13 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
 use App\Models\Page\PageImageCreator;
 use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
 use App\Models\User\User;
-
 use App\Services\ImageManager;
-
 use Tests\TestCase;
 
 class PageImageDeleteTest extends TestCase
@@ -41,7 +38,7 @@ class PageImageDeleteTest extends TestCase
         (new ImageManager)->testImages($image, $version);
 
         $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/gallery/delete/'.$image->id);
+            ->get('/pages/' . $page->id . '/gallery/delete/' . $image->id);
 
         $response->assertStatus(200);
 
@@ -73,7 +70,7 @@ class PageImageDeleteTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/gallery/delete/'.$image->id);
+            ->post('/pages/' . $page->id . '/gallery/delete/' . $image->id);
 
         // Verify that the appropriate change has occurred
         $this->assertSoftDeleted($image);
@@ -95,7 +92,7 @@ class PageImageDeleteTest extends TestCase
 
         // Set a reason
         $data = [
-            'reason' => $this->faker->unique()->domainWord()
+            'reason' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a page to attach the image to
@@ -111,13 +108,13 @@ class PageImageDeleteTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/gallery/delete/'.$image->id, $data);
+            ->post('/pages/' . $page->id . '/gallery/delete/' . $image->id, $data);
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_image_versions', [
             'page_image_id' => $page->id,
             'type' => 'Image Deleted',
-            'reason' => $data['reason']
+            'reason' => $data['reason'],
         ]);
 
         // Delete the test images, to clean up
@@ -151,7 +148,7 @@ class PageImageDeleteTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/gallery/delete/'.$image->id);
+            ->post('/pages/' . $page->id . '/gallery/delete/' . $image->id);
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
@@ -187,7 +184,7 @@ class PageImageDeleteTest extends TestCase
         (new ImageManager)->testImages($image, $version);
 
         $response = $this->actingAs($user)
-            ->get('/admin/special/deleted-images/'.$image->id);
+            ->get('/admin/special/deleted-images/' . $image->id);
 
         $response->assertStatus(200);
 
@@ -219,7 +216,7 @@ class PageImageDeleteTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/special/deleted-images/'.$image->id.'/restore');
+            ->post('/admin/special/deleted-images/' . $image->id . '/restore');
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_images', [
@@ -244,7 +241,7 @@ class PageImageDeleteTest extends TestCase
 
         // Set a reason
         $data = [
-            'reason' => $this->faker->unique()->domainWord()
+            'reason' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a page to attach the image to
@@ -260,7 +257,7 @@ class PageImageDeleteTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/special/deleted-images/'.$image->id.'/restore', $data);
+            ->post('/admin/special/deleted-images/' . $image->id . '/restore', $data);
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_image_versions', [
@@ -303,7 +300,7 @@ class PageImageDeleteTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/admin/special/deleted-images/'.$image->id.'/restore');
+            ->post('/admin/special/deleted-images/' . $image->id . '/restore');
 
         // Verify that the appropriate change has occurred
         $this->assertSoftDeleted($image);

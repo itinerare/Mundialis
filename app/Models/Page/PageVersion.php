@@ -10,12 +10,19 @@ class PageVersion extends Model
     use HasFactory;
 
     /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = true;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'page_id', 'user_id', 'type', 'is_minor', 'reason', 'data'
+        'page_id', 'user_id', 'type', 'is_minor', 'reason', 'data',
     ];
 
     /**
@@ -24,13 +31,6 @@ class PageVersion extends Model
      * @var string
      */
     protected $table = 'page_versions';
-
-    /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = true;
 
     /**********************************************************************************************
 
@@ -67,7 +67,10 @@ class PageVersion extends Model
      */
     public function getDataAttribute()
     {
-        if(!isset($this->attributes['data'])) return null;
+        if (!isset($this->attributes['data'])) {
+            return null;
+        }
+
         return json_decode($this->attributes['data'], true);
     }
 
@@ -78,7 +81,10 @@ class PageVersion extends Model
      */
     public function getLengthAttribute()
     {
-        if(!isset($this->attributes['data'])) return null;
+        if (!isset($this->attributes['data'])) {
+            return null;
+        }
+
         return strlen($this->attributes['data']);
     }
 
@@ -93,11 +99,14 @@ class PageVersion extends Model
         $version = $this->all()->where('page_id', $this->page_id)->sortByDesc('created_at')->where('created_at', '<', $this->created_at)->first();
 
         // If there is a prior version, find the difference
-        if($version) $difference = ($this->length - $version->length);
+        if ($version) {
+            $difference = ($this->length - $version->length);
+        }
         // Otherwise the difference is the length of this version
-        else $difference = $this->length;
+        else {
+            $difference = $this->length;
+        }
 
-        return 'Length: '.$this->length.($difference != 0 ? ' <span class="text-'.($difference > 0 ? 'success' : 'danger').'">('.($difference > 0 ? '+' : '').$difference.')</span>' : null);
+        return 'Length: ' . $this->length . ($difference != 0 ? ' <span class="text-' . ($difference > 0 ? 'success' : 'danger') . '">(' . ($difference > 0 ? '+' : '') . $difference . ')</span>' : null);
     }
-
 }

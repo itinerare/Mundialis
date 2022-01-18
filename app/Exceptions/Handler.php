@@ -25,16 +25,15 @@ class Handler extends ExceptionHandler
     protected $dontFlash = [
         'password',
         'password_confirmation',
-        '_token'
+        '_token',
     ];
 
     /**
      * Report or log an exception.
      *
      * @param  \Exception  $exception
-     * @return void
-     *
      * @throws \Exception
+     * @return void
      */
     public function report(Throwable $exception)
     {

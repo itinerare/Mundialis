@@ -2,8 +2,6 @@
 
 namespace Database\Factories\Page;
 
-use Carbon\Carbon;
-
 use App\Models\Page\PageVersion;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -42,7 +40,7 @@ class PageVersionFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($page) {
             return [
-                'page_id' => $page
+                'page_id' => $page,
             ];
         });
     }
@@ -58,7 +56,7 @@ class PageVersionFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($user) {
             return [
-                'user_id' => $user
+                'user_id' => $user,
             ];
         });
     }
@@ -73,7 +71,7 @@ class PageVersionFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($type) {
             return [
-                'type' => $type
+                'type' => $type,
             ];
         });
     }
@@ -88,7 +86,7 @@ class PageVersionFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($reason) {
             return [
-                'reason' => $reason
+                'reason' => $reason,
             ];
         });
     }
@@ -102,7 +100,7 @@ class PageVersionFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'is_minor' => 1
+                'is_minor' => 1,
             ];
         });
     }
@@ -117,7 +115,7 @@ class PageVersionFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'type' => 'Page Deleted'
+                'type' => 'Page Deleted',
             ];
         });
     }
@@ -134,9 +132,9 @@ class PageVersionFactory extends Factory
      */
     public function testData($title = 'Test', $summary = null, $utilityTags = null, $pageTags = null, $division = null)
     {
-        return $this->state(function (array $attributes) use($title, $summary, $utilityTags, $pageTags, $division) {
+        return $this->state(function (array $attributes) use ($title, $summary, $utilityTags, $pageTags, $division) {
             return [
-                'data' => '{"data":{"description":null,"test_category_field":"test field answer",'.($division ? '"date":{"start":{"'.$division.'":"'.mt_rand(1,50).'"},"end":{"'.$division.'":"'.mt_rand(50,100).'"}},' : '').'"parsed":{"description":null,'.($division ? '"date":{"start":{"'.$division.'":"'.mt_rand(1,50).'"},"end":{"'.$division.'":"'.mt_rand(50,100).'"}},' : '').'"test_category_field":"test field answer"}},"title":"'.$title.'","is_visible":"1","summary":'.($summary ? '"'.$summary.'"' : null ).',"utility_tag":'.($utilityTags ? '"['.$utilityTags.']"' : null ).',"page_tag":'.($pageTags ? '"['.$pageTags.']"' : null ).'}'
+                'data' => '{"data":{"description":null,"test_category_field":"test field answer",' . ($division ? '"date":{"start":{"' . $division . '":"' . mt_rand(1, 50) . '"},"end":{"' . $division . '":"' . mt_rand(50, 100) . '"}},' : '') . '"parsed":{"description":null,' . ($division ? '"date":{"start":{"' . $division . '":"' . mt_rand(1, 50) . '"},"end":{"' . $division . '":"' . mt_rand(50, 100) . '"}},' : '') . '"test_category_field":"test field answer"}},"title":"' . $title . '","is_visible":"1","summary":' . ($summary ? '"' . $summary . '"' : null) . ',"utility_tag":' . ($utilityTags ? '"[' . $utilityTags . ']"' : null) . ',"page_tag":' . ($pageTags ? '"[' . $pageTags . ']"' : null) . '}',
             ];
         });
     }

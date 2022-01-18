@@ -10,22 +10,6 @@ class TimeChronology extends Model
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'parent_id', 'name', 'abbreviation', 'description'
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'time_chronology';
-
-    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -39,7 +23,7 @@ class TimeChronology extends Model
      */
     public static $createRules = [
         'name' => 'required|unique:time_chronology',
-        'abbreviation' => 'nullable|unique:time_chronology'
+        'abbreviation' => 'nullable|unique:time_chronology',
     ];
 
     /**
@@ -48,8 +32,24 @@ class TimeChronology extends Model
      * @var array
      */
     public static $updateRules = [
-        'name' => 'required'
+        'name' => 'required',
     ];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'parent_id', 'name', 'abbreviation', 'description',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'time_chronology';
 
     /**********************************************************************************************
 
@@ -88,24 +88,27 @@ class TimeChronology extends Model
     **********************************************************************************************/
 
     /**
-     * Return the display name (abbreviation if present, name if not) as a formatted link
+     * Return the display name (abbreviation if present, name if not) as a formatted link.
      *
      * @return string
      */
     public function getDisplayNameAttribute()
     {
-        if(isset($this->abbreviation)) return '<a href="'.$this->url.'"><abbr data-toggle="tooltip" title="'.$this->name.'">'.$this->abbreviation.'</abbr></a>';
-        return '<a href="'.$this->url.'">'.$this->name.'</a>';
+        if (isset($this->abbreviation)) {
+            return '<a href="' . $this->url . '"><abbr data-toggle="tooltip" title="' . $this->name . '">' . $this->abbreviation . '</abbr></a>';
+        }
+
+        return '<a href="' . $this->url . '">' . $this->name . '</a>';
     }
 
     /**
-     * Return the full display name as a formatted link
+     * Return the full display name as a formatted link.
      *
      * @return string
      */
     public function getDisplayNameFullAttribute()
     {
-        return '<a href="'.$this->url.'">'.$this->name.'</a>';
+        return '<a href="' . $this->url . '">' . $this->name . '</a>';
     }
 
     /**
@@ -115,7 +118,6 @@ class TimeChronology extends Model
      */
     public function getUrlAttribute()
     {
-        return url('time/chronologies/'.$this->id);
+        return url('time/chronologies/' . $this->id);
     }
-
 }

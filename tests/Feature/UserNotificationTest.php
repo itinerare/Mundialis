@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
 use App\Models\User\User;
 use App\Models\Notification;
 use App\Models\Page\Page;
@@ -145,7 +144,7 @@ class UserNotificationTest extends TestCase
 
         // Verify that the notification has been deleted
         $this->assertDatabaseHas('notifications', [
-            'id' => $notification->id
+            'id' => $notification->id,
         ]);
     }
 
@@ -171,12 +170,12 @@ class UserNotificationTest extends TestCase
         // Define some basic data
         $data = [
             'title' => $this->faker->unique()->domainWord(),
-            'summary' => null
+            'summary' => null,
         ];
 
         // Edit the page; this should send a notification to the user
         $response = $this->actingAs($editor)
-            ->post('/pages/'.$page->id.'/edit', $data);
+            ->post('/pages/' . $page->id . '/edit', $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('notifications', [
@@ -221,7 +220,7 @@ class UserNotificationTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($editor)
-            ->post('/pages/'.$page->id.'/gallery/edit/'.$image->id, $data);
+            ->post('/pages/' . $page->id . '/gallery/edit/' . $image->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('notifications', [
@@ -255,7 +254,7 @@ class UserNotificationTest extends TestCase
 
         // Edit the page; this should send a notification to the user
         $response = $this->actingAs($editor)
-            ->post('/pages/'.$page->id.'/delete');
+            ->post('/pages/' . $page->id . '/delete');
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('notifications', [

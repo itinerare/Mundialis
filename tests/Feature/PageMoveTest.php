@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
 use App\Models\User\User;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Page\Page;
@@ -28,7 +27,7 @@ class PageMoveTest extends TestCase
         $page = Page::factory()->create();
 
         $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/move');
+            ->get('/pages/' . $page->id . '/move');
 
         $response->assertStatus(200);
     }
@@ -52,13 +51,13 @@ class PageMoveTest extends TestCase
 
         $data = [
             'category_id' => $category->id,
-            'reason' => null
+            'reason' => null,
         ];
 
         // Try to post
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/move', $data);
+            ->post('/pages/' . $page->id . '/move', $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
@@ -89,19 +88,19 @@ class PageMoveTest extends TestCase
 
         $data = [
             'category_id' => $category->id,
-            'reason' => $this->faker->unique()->domainWord()
+            'reason' => $this->faker->unique()->domainWord(),
         ];
 
         // Try to post
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/move', $data);
+            ->post('/pages/' . $page->id . '/move', $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'type' => 'Page Moved from '.$oldCategory->name.' to '.$category->name,
-            'reason' => $data['reason']
+            'type' => 'Page Moved from ' . $oldCategory->name . ' to ' . $category->name,
+            'reason' => $data['reason'],
         ]);
     }
 }

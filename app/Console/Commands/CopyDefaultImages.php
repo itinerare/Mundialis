@@ -41,16 +41,15 @@ class CopyDefaultImages extends Command
         //
         $this->info('***********************');
         $this->info('* COPY DEFAULT IMAGES *');
-        $this->info('***********************'."\n");
+        $this->info('***********************' . "\n");
 
         $images = Config::get('mundialis.image_files');
 
         $sourceDir = base_path() . '/data/images/';
         $destDir = public_path() . '/images/';
 
-        foreach($images as $image)
-        {
-            $this->line("Copying image: ".$image['filename'] . "\n");
+        foreach ($images as $image) {
+            $this->line('Copying image: ' . $image['filename'] . "\n");
             copy($sourceDir . $image['filename'], $destDir . $image['filename']);
         }
         $this->line('Done!');

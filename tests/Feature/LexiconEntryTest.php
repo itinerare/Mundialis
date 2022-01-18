@@ -5,9 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
 use App\Models\User\User;
-
 use App\Models\Subject\LexiconSetting;
 use App\Models\Subject\LexiconCategory;
 use App\Models\Lexicon\LexiconEntry;
@@ -47,7 +45,7 @@ class LexiconEntryTest extends TestCase
         $category = LexiconCategory::factory()->create();
 
         $response = $this->actingAs($user)
-            ->get('/language/lexicon/create?category_id='.$category->id);
+            ->get('/language/lexicon/create?category_id=' . $category->id);
 
         $response->assertStatus(200);
     }
@@ -66,7 +64,7 @@ class LexiconEntryTest extends TestCase
         $entry = LexiconEntry::factory()->create();
 
         $response = $this->actingAs($user)
-            ->get('/language/lexicon/edit/'.$entry->id);
+            ->get('/language/lexicon/edit/' . $entry->id);
 
         $response->assertStatus(200);
     }
@@ -86,7 +84,7 @@ class LexiconEntryTest extends TestCase
         $data = [
             'word' => $this->faker->unique()->domainWord(),
             'meaning' => $this->faker->unique()->domainWord(),
-            'class' => $class->name
+            'class' => $class->name,
         ];
 
         // Make a temporary editor
@@ -101,7 +99,7 @@ class LexiconEntryTest extends TestCase
         $this->assertDatabaseHas('lexicon_entries', [
             'word' => $data['word'],
             'meaning' => $data['meaning'],
-            'class' => $data['class']
+            'class' => $data['class'],
         ]);
     }
 
@@ -119,7 +117,7 @@ class LexiconEntryTest extends TestCase
         $data = [
             'word' => $this->faker->unique()->domainWord(),
             'meaning' => $entry->meaning,
-            'class' => $entry->class
+            'class' => $entry->class,
         ];
 
         // Make a temporary editor
@@ -128,12 +126,12 @@ class LexiconEntryTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
+            ->post('/language/lexicon/edit/' . $entry->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_entries', [
             'id' => $entry->id,
-            'word' => $data['word']
+            'word' => $data['word'],
         ]);
     }
 
@@ -156,7 +154,7 @@ class LexiconEntryTest extends TestCase
             'word' => $this->faker->unique()->domainWord(),
             'meaning' => $this->faker->unique()->domainWord(),
             'class' => $class->name,
-            'category_id' => $category->id
+            'category_id' => $category->id,
         ];
 
         // Make a temporary editor
@@ -172,7 +170,7 @@ class LexiconEntryTest extends TestCase
             'word' => $data['word'],
             'meaning' => $data['meaning'],
             'class' => $data['class'],
-            'category_id' => $category->id
+            'category_id' => $category->id,
         ]);
     }
 
@@ -203,13 +201,13 @@ class LexiconEntryTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
+            ->post('/language/lexicon/edit/' . $entry->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_entries', [
             'id' => $entry->id,
             'word' => $data['word'],
-            'category_id' => $category->id
+            'category_id' => $category->id,
         ]);
     }
 
@@ -232,7 +230,7 @@ class LexiconEntryTest extends TestCase
             'word' => $this->faker->unique()->domainWord(),
             'meaning' => $this->faker->unique()->domainWord(),
             'class' => $class->name,
-            'parent_id' => [0 => $parent->id]
+            'parent_id' => [0 => $parent->id],
         ];
 
         // Make a temporary editor
@@ -249,7 +247,7 @@ class LexiconEntryTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_etymologies', [
             'entry_id' => $entry->id,
-            'parent_id' => $parent->id
+            'parent_id' => $parent->id,
         ]);
     }
 
@@ -274,7 +272,7 @@ class LexiconEntryTest extends TestCase
             'word' => $entry->word,
             'meaning' => $entry->meaning,
             'class' => $entry->class,
-            'parent_id' => [0 => $parent->id]
+            'parent_id' => [0 => $parent->id],
         ];
 
         // Make a temporary editor
@@ -283,12 +281,12 @@ class LexiconEntryTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
+            ->post('/language/lexicon/edit/' . $entry->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_etymologies', [
             'entry_id' => $entry->id,
-            'parent_id' => $parent->id
+            'parent_id' => $parent->id,
         ]);
     }
 
@@ -309,7 +307,7 @@ class LexiconEntryTest extends TestCase
             'meaning' => $this->faker->unique()->domainWord(),
             'class' => $class->name,
             'parent_id' => [0 => null],
-            'parent' => [0 => $this->faker->unique()->domainWord()]
+            'parent' => [0 => $this->faker->unique()->domainWord()],
         ];
 
         // Make a temporary editor
@@ -326,7 +324,7 @@ class LexiconEntryTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_etymologies', [
             'entry_id' => $entry->id,
-            'parent' => $data['parent'][0]
+            'parent' => $data['parent'][0],
         ]);
     }
 
@@ -349,7 +347,7 @@ class LexiconEntryTest extends TestCase
             'meaning' => $entry->meaning,
             'class' => $entry->class,
             'parent_id' => [0 => null],
-            'parent' => [0 => $this->faker->unique()->domainWord()]
+            'parent' => [0 => $this->faker->unique()->domainWord()],
         ];
 
         // Make a temporary editor
@@ -358,12 +356,12 @@ class LexiconEntryTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
+            ->post('/language/lexicon/edit/' . $entry->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_etymologies', [
             'entry_id' => $entry->id,
-            'parent' => $data['parent'][0]
+            'parent' => $data['parent'][0],
         ]);
     }
 
@@ -388,7 +386,7 @@ class LexiconEntryTest extends TestCase
             'word' => $entry->word,
             'meaning' => $entry->meaning,
             'class' => $entry->class,
-            'conjdecl' => ['Singular Nominative' => $this->faker->unique()->domainWord()]
+            'conjdecl' => ['Singular Nominative' => $this->faker->unique()->domainWord()],
         ];
 
         // Make a temporary editor
@@ -397,13 +395,13 @@ class LexiconEntryTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
+            ->post('/language/lexicon/edit/' . $entry->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_entries', [
             'id' => $entry->id,
             'word' => $data['word'],
-            'data' => '{"Singular Nominative":"'.$data['conjdecl']['Singular Nominative'].'"}'
+            'data' => '{"Singular Nominative":"' . $data['conjdecl']['Singular Nominative'] . '"}',
         ]);
     }
 
@@ -428,7 +426,7 @@ class LexiconEntryTest extends TestCase
             'word' => $entry->word,
             'meaning' => $entry->meaning,
             'class' => $entry->class,
-            'conjdecl' => ['Singular Nominative' => null]
+            'conjdecl' => ['Singular Nominative' => null],
         ];
 
         // Make a temporary editor
@@ -437,13 +435,13 @@ class LexiconEntryTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
+            ->post('/language/lexicon/edit/' . $entry->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_entries', [
             'id' => $entry->id,
             'word' => $data['word'],
-            'data' => '{"Singular Nominative":null}'
+            'data' => '{"Singular Nominative":null}',
         ]);
     }
 
@@ -464,7 +462,7 @@ class LexiconEntryTest extends TestCase
         // regex being fiddly, it's good to test with known values
         $entry->update([
             'word' => 'test',
-            'category_id' => $category->id
+            'category_id' => $category->id,
         ]);
 
         // Define some basic data
@@ -473,7 +471,7 @@ class LexiconEntryTest extends TestCase
             'meaning' => $entry->meaning,
             'class' => $entry->class,
             'autoconj' => true,
-            'conjdecl' => ['Singular Nominative' => 'test']
+            'conjdecl' => ['Singular Nominative' => 'test'],
         ];
 
         // Make a temporary editor
@@ -482,13 +480,13 @@ class LexiconEntryTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
+            ->post('/language/lexicon/edit/' . $entry->id, $data);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_entries', [
             'id' => $entry->id,
             'word' => $data['word'],
-            'data' => '{"Singular Nominative":"btest"}'
+            'data' => '{"Singular Nominative":"btest"}',
         ]);
     }
 
@@ -509,7 +507,7 @@ class LexiconEntryTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->get('/language/lexicon/delete/'.$entry->id);
+            ->get('/language/lexicon/delete/' . $entry->id);
 
         $response->assertStatus(200);
     }
@@ -531,7 +529,7 @@ class LexiconEntryTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/language/lexicon/delete/'.$entry->id);
+            ->post('/language/lexicon/delete/' . $entry->id);
 
         // Verify that the appropriate change has occurred
         $this->assertDeleted($entry);
@@ -554,7 +552,7 @@ class LexiconEntryTest extends TestCase
         // Create an etymology record
         LexiconEtymology::create([
             'entry_id' => $entry->id,
-            'parent_id' => $parent->id
+            'parent_id' => $parent->id,
         ]);
 
         // Make a temporary editor
@@ -563,7 +561,7 @@ class LexiconEntryTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/language/lexicon/delete/'.$parent->id);
+            ->post('/language/lexicon/delete/' . $parent->id);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_entries', [
@@ -589,7 +587,7 @@ class LexiconEntryTest extends TestCase
         // Create an etymology record
         $etymology = LexiconEtymology::create([
             'entry_id' => $entry->id,
-            'parent_id' => $parent->id
+            'parent_id' => $parent->id,
         ]);
 
         // Make a temporary editor
@@ -598,7 +596,7 @@ class LexiconEntryTest extends TestCase
         // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/language/lexicon/delete/'.$entry->id);
+            ->post('/language/lexicon/delete/' . $entry->id);
 
         // Verify that the appropriate change has occurred
         $this->assertDeleted($etymology);

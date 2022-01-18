@@ -10,22 +10,6 @@ class LexiconEntry extends Model
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'category_id', 'class', 'word', 'meaning', 'pronunciation', 'definition', 'parsed_definition', 'data'
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'lexicon_entries';
-
-    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -40,7 +24,7 @@ class LexiconEntry extends Model
     public static $createRules = [
         'word' => 'required',
         'meaning' => 'required',
-        'class' => 'required'
+        'class' => 'required',
     ];
 
     /**
@@ -51,8 +35,24 @@ class LexiconEntry extends Model
     public static $updateRules = [
         'word' => 'required',
         'meaning' => 'required',
-        'class' => 'required'
+        'class' => 'required',
     ];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'category_id', 'class', 'word', 'meaning', 'pronunciation', 'definition', 'parsed_definition', 'data',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'lexicon_entries';
 
     /**********************************************************************************************
 
@@ -116,7 +116,10 @@ class LexiconEntry extends Model
      */
     public function scopeVisible($query, $user = null)
     {
-        if($user && $user->canWrite) return $query;
+        if ($user && $user->canWrite) {
+            return $query;
+        }
+
         return $query->where('is_visible', 1);
     }
 
@@ -133,7 +136,10 @@ class LexiconEntry extends Model
      */
     public function getDataAttribute()
     {
-        if(!isset($this->attributes['data'])) return null;
+        if (!isset($this->attributes['data'])) {
+            return null;
+        }
+
         return json_decode($this->attributes['data'], true);
     }
 
@@ -144,7 +150,7 @@ class LexiconEntry extends Model
      */
     public function getDisplayNameAttribute()
     {
-        return '<a href="'.($this->category ? $this->category->url.'?word='.$this->word : 'language/lexicon?word='.$this->word).'">'.$this->word.'</a>';
+        return '<a href="' . ($this->category ? $this->category->url . '?word=' . $this->word : 'language/lexicon?word=' . $this->word) . '">' . $this->word . '</a>';
     }
 
     /**
@@ -154,7 +160,7 @@ class LexiconEntry extends Model
      */
     public function getDisplayWordAttribute()
     {
-        return $this->displayName.($this->lexicalClass->abbreviation ? ' <i>'.$this->lexicalClass->abbreviation.'.</i>' : ', '.$this->lexicalClass->name).', "'.$this->meaning.'"'.($this->category ? ' ('.$this->category->displayName.')' : null);
+        return $this->displayName . ($this->lexicalClass->abbreviation ? ' <i>' . $this->lexicalClass->abbreviation . '.</i>' : ', ' . $this->lexicalClass->name) . ', "' . $this->meaning . '"' . ($this->category ? ' (' . $this->category->displayName . ')' : null);
     }
 
     /**********************************************************************************************
@@ -170,17 +176,21 @@ class LexiconEntry extends Model
      */
     public function getEtymology()
     {
-        if(!$this->etymologies->count()) return null;
+        if (!$this->etymologies->count()) {
+            return null;
+        }
 
         // Cycle through parents
         $i = 0;
-        foreach($this->etymologies as $parent) {
+        foreach ($this->etymologies as $parent) {
             // If there is a parent entry
-            if($parent->parentEntry) {
-                $parentString[] = ($i == 0 ? 'from ' : ' and ').($parent->parentEntry->category ? $parent->parentEntry->category->displayName.' ' : null ).'<i>'.$parent->parentEntry->displayName.'</i> ('.($parent->parentEntry->lexicalClass->abbreviation ? '<i>'.$parent->parentEntry->lexicalClass->abbreviation.'.</i>' : $parent->parentEntry->lexicalClass->name.', ').' "'.lcfirst($parent->parentEntry->meaning).'")'.($parent->parentEntry->etymologies->count() ? ' '.$parent->parentEntry->getEtymology() : null);
+            if ($parent->parentEntry) {
+                $parentString[] = ($i == 0 ? 'from ' : ' and ') . ($parent->parentEntry->category ? $parent->parentEntry->category->displayName . ' ' : null) . '<i>' . $parent->parentEntry->displayName . '</i> (' . ($parent->parentEntry->lexicalClass->abbreviation ? '<i>' . $parent->parentEntry->lexicalClass->abbreviation . '.</i>' : $parent->parentEntry->lexicalClass->name . ', ') . ' "' . lcfirst($parent->parentEntry->meaning) . '")' . ($parent->parentEntry->etymologies->count() ? ' ' . $parent->parentEntry->getEtymology() : null);
             }
             // If there is only a string
-            else $parentString[] = ($i == 0 ? 'from ' : ' and ').$parent->parent;
+            else {
+                $parentString[] = ($i == 0 ? 'from ' : ' and ') . $parent->parent;
+            }
 
             $i++;
         }
@@ -195,16 +205,19 @@ class LexiconEntry extends Model
      */
     public function getDescendants()
     {
-        if(!$this->descendants->count()) return null;
+        if (!$this->descendants->count()) {
+            return null;
+        }
 
         // Cycle through parents
         $i = 0;
-        foreach($this->descendants->sortBy(function ($descendant) {return $descendant->entry->word;}) as $descendant) {
-            $descendantString[] = '<li>'.$descendant->entry->displayWord.($descendant->entry->descendants->count() ? $descendant->entry->getDescendants() : null).'</li>';
+        foreach ($this->descendants->sortBy(function ($descendant) {
+            return $descendant->entry->word;
+        }) as $descendant) {
+            $descendantString[] = '<li>' . $descendant->entry->displayWord . ($descendant->entry->descendants->count() ? $descendant->entry->getDescendants() : null) . '</li>';
             $i++;
         }
 
-        return '<ul>'.implode('', $descendantString).'</ul>';
+        return '<ul>' . implode('', $descendantString) . '</ul>';
     }
-
 }

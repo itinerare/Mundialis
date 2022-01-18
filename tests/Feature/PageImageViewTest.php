@@ -3,9 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
 use App\Models\User\User;
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
@@ -41,7 +39,7 @@ class PageImageViewTest extends TestCase
         (new ImageManager)->testImages($image, $version);
 
         $response = $this->actingAs($user)
-            ->get('pages/get-image/'.$page->id.'/'.$image->id);
+            ->get('pages/get-image/' . $page->id . '/' . $image->id);
 
         $response->assertStatus(200);
 
@@ -74,7 +72,7 @@ class PageImageViewTest extends TestCase
         (new ImageManager)->testImages($image, $version);
 
         $response = $this->actingAs($user)
-            ->get('pages/get-image/'.$page->id.'/'.$image->id);
+            ->get('pages/get-image/' . $page->id . '/' . $image->id);
 
         $response->assertStatus(404);
 
@@ -104,7 +102,7 @@ class PageImageViewTest extends TestCase
         (new ImageManager)->testImages($image, $version);
 
         $response = $this->actingAs($editor)
-            ->get('pages/get-image/'.$page->id.'/'.$image->id);
+            ->get('pages/get-image/' . $page->id . '/' . $image->id);
 
         $response->assertStatus(200);
 
@@ -136,7 +134,7 @@ class PageImageViewTest extends TestCase
         (new ImageManager)->testImages($image, $version);
 
         $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/gallery/'.$image->id);
+            ->get('/pages/' . $page->id . '/gallery/' . $image->id);
 
         $response->assertStatus(200);
 
@@ -169,7 +167,7 @@ class PageImageViewTest extends TestCase
         (new ImageManager)->testImages($image, $version);
 
         $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/gallery/'.$image->id);
+            ->get('/pages/' . $page->id . '/gallery/' . $image->id);
 
         $response->assertStatus(404);
 
@@ -199,7 +197,7 @@ class PageImageViewTest extends TestCase
         (new ImageManager)->testImages($image, $version);
 
         $response = $this->actingAs($editor)
-            ->get('/pages/'.$page->id.'/gallery/'.$image->id);
+            ->get('/pages/' . $page->id . '/gallery/' . $image->id);
 
         $response->assertStatus(200);
 

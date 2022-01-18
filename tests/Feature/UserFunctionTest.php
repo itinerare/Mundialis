@@ -9,7 +9,6 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Tests\TestCase;
-
 use App\Models\User\User;
 
 class UserFunctionTest extends TestCase
@@ -39,7 +38,7 @@ class UserFunctionTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
             'name' => $user->name,
-            'profile_text' => 'Profile editing test'
+            'profile_text' => 'Profile editing test',
         ]);
     }
 
@@ -60,19 +59,20 @@ class UserFunctionTest extends TestCase
         $file = UploadedFile::fake()->image('test_image.png');
 
         // Remove the current avatar if it exists
-        if(File::exists(public_path('images/avatars/'.$user->id.'.png')))
-            unlink('public/images/avatars/'.$user->id.'.png');
+        if (File::exists(public_path('images/avatars/' . $user->id . '.png'))) {
+            unlink('public/images/avatars/' . $user->id . '.png');
+        }
 
         // Try to post data
         $response = $this
             ->actingAs($user)
             ->post('/account/avatar', [
-                'avatar' => $file
+                'avatar' => $file,
             ]);
 
         // Check that the file is now present
         $this->
-            assertTrue(File::exists(public_path('images/avatars/'.$user->id.'.png')));
+            assertTrue(File::exists(public_path('images/avatars/' . $user->id . '.png')));
     }
 
     /**
@@ -91,13 +91,13 @@ class UserFunctionTest extends TestCase
         // Attempt to post data
         $response = $this->actingAs($user)
             ->post('account/email', [
-                'email' => $email
+                'email' => $email,
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
             'name' => $user->name,
-            'email' => $email
+            'email' => $email,
         ]);
     }
 
@@ -117,12 +117,11 @@ class UserFunctionTest extends TestCase
             ->post('account/password', [
                 'old_password' => 'simple_password',
                 'new_password' => 'password',
-                'new_password_confirmation' => 'password'
+                'new_password_confirmation' => 'password',
             ]);
 
         $this->
             assertTrue(Hash::check('password', $user->fresh()->password));
-
     }
 
     /**
@@ -141,7 +140,7 @@ class UserFunctionTest extends TestCase
             ->post('account/password', [
                 'old_password' => 'simple_password',
                 'new_password' => 'password',
-                'new_password_confirmation' => 'not_password'
+                'new_password_confirmation' => 'not_password',
             ]);
 
         $response->assertSessionHasErrors();

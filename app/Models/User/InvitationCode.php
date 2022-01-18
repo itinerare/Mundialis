@@ -7,12 +7,18 @@ use App\Models\Model;
 class InvitationCode extends Model
 {
     /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = true;
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'code', 'user_id', 'recipient_id'
+        'code', 'user_id', 'recipient_id',
     ];
 
     /**
@@ -21,13 +27,6 @@ class InvitationCode extends Model
      * @var string
      */
     protected $table = 'invitation_codes';
-
-    /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = true;
 
     /**********************************************************************************************
 
@@ -50,5 +49,4 @@ class InvitationCode extends Model
     {
         return $this->belongsTo('App\Models\User\User', 'recipient_id');
     }
-
 }

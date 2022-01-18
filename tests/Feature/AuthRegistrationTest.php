@@ -4,12 +4,8 @@ namespace Tests\Feature;
 
 use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Password;
 use Tests\TestCase;
-
 use App\Models\User\User;
-
 use App\Services\InvitationService;
 
 class AuthRegistrationTest extends TestCase
@@ -63,7 +59,7 @@ class AuthRegistrationTest extends TestCase
             'password' => 'password',
             'password_confirmation' => 'password',
             'agreement' => 1,
-            'code' => $code->code
+            'code' => $code->code,
         ]);
 
         $this->assertGuest();
@@ -91,7 +87,7 @@ class AuthRegistrationTest extends TestCase
             'password' => 'password',
             'password_confirmation' => 'password',
             'agreement' => 1,
-            'code' => null
+            'code' => null,
         ]);
 
         $response->assertSessionHasErrors();
@@ -121,7 +117,7 @@ class AuthRegistrationTest extends TestCase
             'password' => 'password',
             'password_confirmation' => 'password',
             'agreement' => 1,
-            'code' => randomString(15)
+            'code' => randomString(15),
         ]);
 
         $response->assertSessionHasErrors();
@@ -160,7 +156,7 @@ class AuthRegistrationTest extends TestCase
             'password' => 'password',
             'password_confirmation' => 'password',
             'agreement' => 1,
-            'code' => $code->code
+            'code' => $code->code,
         ]);
 
         $response->assertSessionHasErrors();
@@ -194,7 +190,7 @@ class AuthRegistrationTest extends TestCase
             'password' => 'password',
             'password_confirmation' => 'password',
             'agreement' => 1,
-            'code' => $code->code
+            'code' => $code->code,
         ]);
 
         $response->assertStatus(302);
@@ -219,7 +215,7 @@ class AuthRegistrationTest extends TestCase
             'name' => $user->name,
             'email' => $user->email,
             'password' => 'password',
-            'password_confirmation' => 'invalid'
+            'password_confirmation' => 'invalid',
         ]);
 
         $response->assertSessionHasErrors();

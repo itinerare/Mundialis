@@ -7,22 +7,6 @@ use App\Models\Model;
 class SubjectTemplate extends Model
 {
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'subject', 'data'
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'subject_templates';
-
-    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -49,8 +33,23 @@ class SubjectTemplate extends Model
         'field_choices.*' => 'nullable|string|required_if:field_type.*,choice,multiple',
         'field_rules.*' => 'nullable|string|max:255',
         'field_value.*' => 'nullable|string|max:255',
-        'field_help.*' => 'nullable|string|max:255'
+        'field_help.*' => 'nullable|string|max:255',
     ];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'subject', 'data',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'subject_templates';
 
     /**********************************************************************************************
 
@@ -79,8 +78,10 @@ class SubjectTemplate extends Model
      */
     public function getDataAttribute()
     {
-        if(!isset($this->attributes['data'])) return null;
+        if (!isset($this->attributes['data'])) {
+            return null;
+        }
+
         return json_decode($this->attributes['data'], true);
     }
-
 }

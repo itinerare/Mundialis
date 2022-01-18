@@ -2,14 +2,11 @@
 
 namespace Tests\Feature;
 
-use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Tests\TestCase;
-
 use App\Models\User\User;
 
 class AuthPasswordResetTest extends TestCase
@@ -48,7 +45,7 @@ class AuthPasswordResetTest extends TestCase
         $this->expectsNotification($user, ResetPassword::class);
 
         $response = $this->post('forgot-password', [
-            'email' => $user->email
+            'email' => $user->email,
         ]);
 
         $response->assertStatus(302);
@@ -65,7 +62,7 @@ class AuthPasswordResetTest extends TestCase
         $this->doesntExpectJobs(ResetPassword::class);
 
         $this->post('forgot-password', [
-            'email' => 'invalid@email.com'
+            'email' => 'invalid@email.com',
         ]);
     }
 
@@ -80,7 +77,7 @@ class AuthPasswordResetTest extends TestCase
 
         $token = Password::createToken($user);
 
-        $response = $this->get('reset-password/'.$token);
+        $response = $this->get('reset-password/' . $token);
 
         $response->assertStatus(200);
     }
@@ -100,7 +97,7 @@ class AuthPasswordResetTest extends TestCase
             'token' => $token,
             'email' => $user->email,
             'password' => 'password',
-            'password_confirmation' => 'password'
+            'password_confirmation' => 'password',
         ]);
 
         $this->assertTrue(Hash::check('password', $user->fresh()->password));
