@@ -10,8 +10,9 @@ class CheckRead
     /**
      * Redirect visitors to the homepage if site is private.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -22,6 +23,7 @@ class CheckRead
 
         if (!Settings::get('visitors_can_read') && !$request->user()) {
             flash('You must be logged in to view this page!')->error();
+
             return redirect('/');
         }
 

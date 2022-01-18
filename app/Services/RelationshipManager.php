@@ -2,16 +2,11 @@
 
 namespace App\Services;
 
-use App\Services\Service;
-
-use DB;
-use Image;
-use Arr;
-use Config;
-
-use App\Models\User\User;
 use App\Models\Page\Page;
 use App\Models\Page\PageRelationship;
+use App\Models\User\User;
+use DB;
+use Image;
 
 class RelationshipManager extends Service
 {
@@ -27,9 +22,10 @@ class RelationshipManager extends Service
     /**
      * Creates a relationship.
      *
-     * @param  array                         $data
-     * @param  \App\Models\Page\Page         $page
-     * @param  \App\Models\User\User         $user
+     * @param array                 $data
+     * @param \App\Models\Page\Page $page
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\Page\PageImage
      */
     public function createPageRelationship($data, $page, $user)
@@ -59,15 +55,17 @@ class RelationshipManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Updates a relationship.
      *
-     * @param  \App\Models\Page\PageRelationship  $relationship
-     * @param  array                              $data
-     * @param  \App\Models\User\User              $user
+     * @param \App\Models\Page\PageRelationship $relationship
+     * @param array                             $data
+     * @param \App\Models\User\User             $user
+     *
      * @return \App\Models\Page\Page|bool
      */
     public function updatePageRelationship($relationship, $data, $user)
@@ -87,14 +85,16 @@ class RelationshipManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Delete a relationship.
      *
-     * @param  \App\Models\Page\PageRelationship  $relationship
-     * @param  \App\Models\User\User              $user
+     * @param \App\Models\Page\PageRelationship $relationship
+     * @param \App\Models\User\User             $user
+     *
      * @return bool
      */
     public function deletePageRelationship($relationship, $user)
@@ -114,6 +114,7 @@ class RelationshipManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 }

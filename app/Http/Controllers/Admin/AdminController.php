@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Collection;
 use App\Services\FileManager;
-
 use Config;
-use Settings;
 use DB;
-use Auth;
+use Illuminate\Http\Request;
+use Settings;
 
 class AdminController extends Controller
 {
@@ -45,15 +42,16 @@ class AdminController extends Controller
     public function getSettings()
     {
         return view('admin.settings', [
-            'settings' => DB::table('site_settings')->orderBy('key')->get()
+            'settings' => DB::table('site_settings')->orderBy('key')->get(),
         ]);
     }
 
     /**
      * Edits a setting.
      *
-     * @param  \Illuminate\Http\Request       $request
-     * @param  string                         $key
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $key
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postEditSetting(Request $request, $key)
@@ -66,6 +64,7 @@ class AdminController extends Controller
         } else {
             flash('Invalid setting selected.')->error();
         }
+
         return redirect()->back();
     }
 
@@ -81,15 +80,16 @@ class AdminController extends Controller
     public function getSiteImages()
     {
         return view('admin.images', [
-            'images' => Config::get('mundialis.image_files')
+            'images' => Config::get('mundialis.image_files'),
         ]);
     }
 
     /**
      * Uploads a site image file.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FileManager  $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\FileManager $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postUploadImage(Request $request, FileManager $service)
@@ -106,14 +106,16 @@ class AdminController extends Controller
                 flash($error)->error();
             }
         }
+
         return redirect()->back();
     }
 
     /**
      * Uploads a custom site CSS file.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FileManager  $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\FileManager $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postUploadCss(Request $request, FileManager $service)
@@ -128,6 +130,7 @@ class AdminController extends Controller
                 flash($error)->error();
             }
         }
+
         return redirect()->back();
     }
 }

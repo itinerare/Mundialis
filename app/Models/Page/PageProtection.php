@@ -15,7 +15,7 @@ class PageProtection extends Model
      * @var array
      */
     protected $fillable = [
-        'page_id', 'user_id', 'is_protected', 'reason'
+        'page_id', 'user_id', 'is_protected', 'reason',
     ];
 
     /**

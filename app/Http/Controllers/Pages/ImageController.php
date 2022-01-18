@@ -2,20 +2,16 @@
 
 namespace App\Http\Controllers\Pages;
 
-use Auth;
-use Config;
-
-use App\Models\User\User;
-use App\Models\Subject\TimeDivision;
+use App\Http\Controllers\Controller;
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
 use App\Models\Page\PageImageVersion;
-use App\Models\Page\PageImageCreator;
-
+use App\Models\Subject\TimeDivision;
+use App\Models\User\User;
 use App\Services\ImageManager;
-
+use Auth;
+use Config;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class ImageController extends Controller
 {
@@ -31,8 +27,9 @@ class ImageController extends Controller
     /**
      * Shows a page's gallery.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int                       $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageGallery(Request $request, $id)
@@ -72,20 +69,21 @@ class ImageController extends Controller
         }
 
         return view('pages.images.gallery', [
-            'page' => $page,
+            'page'   => $page,
             'images' => $query->paginate(20)->appends($request->query()),
-            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
+            'users'  => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision()
+            'dateHelper' => new TimeDivision(),
         ] : []));
     }
 
     /**
      * Shows the page for a given image.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int                       $pageId
-     * @param  int                       $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $pageId
+     * @param int                      $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageImage(Request $request, $pageId, $id)
@@ -120,18 +118,19 @@ class ImageController extends Controller
         }
 
         return view('pages.images.image', [
-            'page' => $page,
-            'image' => $image,
+            'page'     => $page,
+            'image'    => $image,
             'versions' => $query->paginate(20)->appends($request->query()),
-            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
+            'users'    => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
         ]);
     }
 
     /**
      * Shows the popup for a given image.
      *
-     * @param  int                     $id
-     * @param  int                     $imageId
+     * @param int $id
+     * @param int $imageId
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageImagePopup($id, $imageId = null)
@@ -150,15 +149,16 @@ class ImageController extends Controller
         }
 
         return view('pages.images._info_popup', [
-            'page' => isset($page) ? $page : null,
-            'image' => $image
+            'page'  => isset($page) ? $page : null,
+            'image' => $image,
         ]);
     }
 
     /**
      * Shows the create image page.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreateImage($id)
@@ -185,7 +185,7 @@ class ImageController extends Controller
             }
         })->pluck('name', 'name');
 
-        foreach ($groupedPages as $subject=>$pages) {
+        foreach ($groupedPages as $subject=> $pages) {
             foreach ($pages as $id=>$groupPage) {
                 $groupedPages[$subject][$id] = $groupPage['title'];
             }
@@ -197,19 +197,20 @@ class ImageController extends Controller
         });
 
         return view('pages.images.create_edit_image', [
-            'image' => new PageImage(),
-            'page' => $page,
+            'image'       => new PageImage(),
+            'page'        => $page,
             'pageOptions' => $sortedPages,
-            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
+            'users'       => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision()
+            'dateHelper' => new TimeDivision(),
         ] : []));
     }
 
     /**
      * Shows the edit image page.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditImage($pageId, $id)
@@ -240,7 +241,7 @@ class ImageController extends Controller
             }
         })->pluck('name', 'name');
 
-        foreach ($groupedPages as $subject=>$pages) {
+        foreach ($groupedPages as $subject=> $pages) {
             foreach ($pages as $id=>$groupPage) {
                 $groupedPages[$subject][$id] = $groupPage['title'];
             }
@@ -252,22 +253,23 @@ class ImageController extends Controller
         });
 
         return view('pages.images.create_edit_image', [
-            'image' => $image,
-            'page' => $page,
+            'image'       => $image,
+            'page'        => $page,
             'pageOptions' => $sortedPages,
-            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
+            'users'       => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision()
+            'dateHelper' => new TimeDivision(),
         ] : []));
     }
 
     /**
      * Creates or edits a page image.
      *
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\ImageManager      $service
-     * @param  int                            $pageId
-     * @param  int                            $id
+     * @param \Illuminate\Http\Request  $request
+     * @param App\Services\ImageManager $service
+     * @param int                       $pageId
+     * @param int                       $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postCreateEditImage(Request $request, ImageManager $service, $pageId, $id = null)
@@ -277,7 +279,7 @@ class ImageController extends Controller
             'image', 'thumbnail', 'x0', 'x1', 'y0', 'y1', 'use_cropper',
             'creator_id', 'creator_url', 'description', 'page_id',
             'is_valid', 'is_visible', 'mark_invalid', 'mark_active',
-            'is_minor', 'reason'
+            'is_minor', 'reason',
         ]);
 
         $page = Page::where('id', $pageId)->first();
@@ -292,20 +294,23 @@ class ImageController extends Controller
             flash('Image updated successfully.')->success();
         } elseif (!$id && $image = $service->createPageImage($data, $page, Auth::user())) {
             flash('Image created successfully.')->success();
+
             return redirect()->to('pages/'.$page->id.'/gallery');
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
             }
         }
+
         return redirect()->back();
     }
 
     /**
      * Gets the image deletion modal.
      *
-     * @param  int       $pageId
-     * @param  int       $id
+     * @param int $pageId
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeleteImage($pageId, $id)
@@ -324,17 +329,18 @@ class ImageController extends Controller
 
         return view('pages.images._delete_image', [
             'image' => $image,
-            'page' => $page
+            'page'  => $page,
         ]);
     }
 
     /**
      * Deletes a page.
      *
-     * @param  \Illuminate\Http\Request      $request
-     * @param  App\Services\ImageManager     $service
-     * @param  int                           $pageId
-     * @param  int                           $id
+     * @param \Illuminate\Http\Request  $request
+     * @param App\Services\ImageManager $service
+     * @param int                       $pageId
+     * @param int                       $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeleteImage(Request $request, ImageManager $service, $pageId, $id)
@@ -346,6 +352,7 @@ class ImageController extends Controller
                 flash($error)->error();
             }
         }
+
         return redirect()->to('pages/'.$pageId.'/gallery');
     }
 }

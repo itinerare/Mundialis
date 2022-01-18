@@ -2,21 +2,18 @@
 
 namespace App\Services;
 
-use App\Services\Service;
-
-use DB;
-use Image;
-use Arr;
-use Config;
-use Notifications;
-
-use App\Models\User\User;
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
-use App\Models\Page\PageImageVersion;
 use App\Models\Page\PageImageCreator;
+use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
+use App\Models\User\User;
+use Arr;
+use Config;
+use DB;
 use Illuminate\Http\UploadedFile;
+use Image;
+use Notifications;
 
 class ImageManager extends Service
 {
@@ -32,9 +29,10 @@ class ImageManager extends Service
     /**
      * Creates an image.
      *
-     * @param  array                         $data
-     * @param  \App\Models\Page\Page         $page
-     * @param  \App\Models\User\User         $user
+     * @param array                 $data
+     * @param \App\Models\Page\Page $page
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\Page\PageImage
      */
     public function createPageImage($data, $page, $user)
@@ -67,14 +65,14 @@ class ImageManager extends Service
             // Process data and create image
             $image = $this->handlePageImage($data, $page, $user);
             if (!$image) {
-                throw new \Exception("An error occurred while trying to create image.");
+                throw new \Exception('An error occurred while trying to create image.');
             }
 
             // Create link for the creating page
             PagePageImage::create([
-                'page_id' => $page->id,
+                'page_id'       => $page->id,
                 'page_image_id' => $image->id,
-                'is_valid' => $data['is_valid']
+                'is_valid'      => $data['is_valid'],
             ]);
 
             // Update the page's image ID if relevant
@@ -88,10 +86,10 @@ class ImageManager extends Service
                 foreach ($page->watchers as $recipient) {
                     if ($recipient->id != $user->id) {
                         Notifications::create('WATCHED_PAGE_IMAGE_UPDATED', $recipient, [
-                            'page_url' => $page->url,
+                            'page_url'   => $page->url,
                             'page_title' => $page->title,
-                            'user_url' => $user->url,
-                            'user_name' => $user->name
+                            'user_url'   => $user->url,
+                            'user_name'  => $user->name,
                         ]);
                     }
                 }
@@ -101,16 +99,18 @@ class ImageManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Updates an image.
      *
-     * @param  \App\Models\Page\Page          $page
-     * @param  \App\Models\Page\PageImage     $image
-     * @param  array                          $data
-     * @param  \App\Models\User\User          $user
+     * @param \App\Models\Page\Page      $page
+     * @param \App\Models\Page\PageImage $image
+     * @param array                      $data
+     * @param \App\Models\User\User      $user
+     *
      * @return \App\Models\Page\Page|bool
      */
     public function updatePageImage($page, $image, $data, $user)
@@ -144,13 +144,13 @@ class ImageManager extends Service
             // Process data and handle image
             $image = $this->handlePageImage($data, $page, $user, $image);
             if (!$image) {
-                throw new \Exception("An error occurred while trying to process image.");
+                throw new \Exception('An error occurred while trying to process image.');
             }
 
             // If image is being marked invalid, update
             if ($image->pages()->where('pages.id', $page->id)->first()->pivot->is_valid && !$data['is_valid']) {
                 $page->images()->updateExistingPivot($image->id, [
-                    'is_valid' => 0
+                    'is_valid' => 0,
                 ]);
 
                 // Remove the image as the page's active one if it is
@@ -165,7 +165,7 @@ class ImageManager extends Service
                 // If image is being re-marked valid, update
                 if (!$image->pages()->where('pages.id', $page->id)->first()->pivot->is_valid && $data['is_valid']) {
                     $page->images()->updateExistingPivot($image->id, [
-                        'is_valid' => 1
+                        'is_valid' => 1,
                     ]);
                 }
 
@@ -184,10 +184,10 @@ class ImageManager extends Service
                 foreach ($page->watchers as $recipient) {
                     if ($recipient->id != $user->id) {
                         Notifications::create('WATCHED_PAGE_IMAGE_UPDATED', $recipient, [
-                            'page_url' => $page->url,
+                            'page_url'   => $page->url,
                             'page_title' => $page->title,
-                            'user_url' => $user->url,
-                            'user_name' => $user->name
+                            'user_url'   => $user->url,
+                            'user_name'  => $user->name,
                         ]);
                     }
                 }
@@ -197,15 +197,17 @@ class ImageManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Restore a deleted image.
      *
-     * @param  \App\Models\Page\PageImage  $page
-     * @param  \App\Models\User\User       $user
-     * @param  string                      $reason
+     * @param \App\Models\Page\PageImage $page
+     * @param \App\Models\User\User      $user
+     * @param string                     $reason
+     *
      * @return bool
      */
     public function restorePageImage($image, $user, $reason)
@@ -226,16 +228,18 @@ class ImageManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Delete an image.
      *
-     * @param  \App\Models\Page\PageImage  $image
-     * @param  bool                        $forceDelete
-     * @param  \App\Models\User\User       $user
-     * @param  string                      $reason
+     * @param \App\Models\Page\PageImage $image
+     * @param bool                       $forceDelete
+     * @param \App\Models\User\User      $user
+     * @param string                     $reason
+     *
      * @return bool
      */
     public function deletePageImage($image, $user, $reason, $forceDelete = false)
@@ -252,8 +256,8 @@ class ImageManager extends Service
                 // Delete version files
                 foreach ($image->versions as $version) {
                     if (isset($version->hash)) {
-                        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-                        unlink($image->imagePath . '/' . $version->imageFileName);
+                        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+                        unlink($image->imagePath.'/'.$version->imageFileName);
                     }
                 }
 
@@ -281,16 +285,18 @@ class ImageManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Handles page image data.
      *
-     * @param  array                       $data
-     * @param \App\Models\Page\Page        $page
-     * @param \App\Models\User\User        $user
-     * @param \App\Models\Page\PageImage   $image
+     * @param array                      $data
+     * @param \App\Models\Page\Page      $page
+     * @param \App\Models\User\User      $user
+     * @param \App\Models\Page\PageImage $image
+     *
      * @return \App\Models\Page\PageImage|bool
      */
     private function handlePageImage($data, $page, $user, $image = null)
@@ -311,7 +317,7 @@ class ImageManager extends Service
                 $imageData = Arr::only($data, [
                     'use_cropper', 'x0', 'x1', 'y0', 'y1',
                 ]);
-                $imageData['use_cropper'] = isset($data['use_cropper']) ;
+                $imageData['use_cropper'] = isset($data['use_cropper']);
                 $imageData['hash'] = randomString(15);
                 $imageData['extension'] = $data['image']->getClientOriginalExtension();
 
@@ -333,13 +339,13 @@ class ImageManager extends Service
 
                 // Save thumbnail
                 if (isset($data['use_cropper'])) {
-                    $this->cropThumbnail(Arr::only($data, ['x0','x1','y0','y1']), $image, $version);
+                    $this->cropThumbnail(Arr::only($data, ['x0', 'x1', 'y0', 'y1']), $image, $version);
                 } elseif (!$this->handleImage($data['thumbnail'], $image->imageDirectory, $version->thumbnailFileName)) {
                     throw new \Exception('An error occurred while handling thumbnail file.');
                 }
 
                 // Trim transparent parts of image.
-                $processImage = Image::make($image->imagePath . '/' . $version->imageFileName)->trim('transparent');
+                $processImage = Image::make($image->imagePath.'/'.$version->imageFileName)->trim('transparent');
 
                 if (Config::get('mundialis.settings.image_thumbnail_automation') == 1) {
                     // Make the image be square
@@ -358,7 +364,7 @@ class ImageManager extends Service
                 }
 
                 // Save the processed image
-                $processImage->save($image->imagePath . '/' . $version->imageFileName, 100, $image->extension);
+                $processImage->save($image->imagePath.'/'.$version->imageFileName, 100, $image->extension);
             } else {
                 // Otherwise, just create a new version
                 $version = $this->logImageVersion($image->id, $user->id, null, 'Image Info Updated', isset($data['reason']) ? $data['reason'] : null, null, isset($data['is_minor']) ? $data['is_minor'] : 0);
@@ -387,8 +393,8 @@ class ImageManager extends Service
                 if ($id || isset($data['creator_url'][$key])) {
                     PageImageCreator::create([
                         'page_image_id' => $image->id,
-                        'url' => $id ? null : $data['creator_url'][$key],
-                        'user_id' => $id ? $id : null,
+                        'url'           => $id ? null : $data['creator_url'][$key],
+                        'user_id'       => $id ? $id : null,
                     ]);
                 }
             }
@@ -409,7 +415,7 @@ class ImageManager extends Service
             if (isset($data['mark_invalid']) && $data['mark_invalid']) {
                 foreach ($page->images()->pluck('page_images.id')->toArray() as $imageKey) {
                     $page->images()->updateExistingPivot($imageKey, [
-                        'is_valid' => 0
+                        'is_valid' => 0,
                     ]);
                 }
             }
@@ -453,9 +459,9 @@ class ImageManager extends Service
 
                         // Create the link
                         PagePageImage::create([
-                            'page_id' => $pageId,
+                            'page_id'       => $pageId,
                             'page_image_id' => $image->id,
-                            'is_valid' => 1
+                            'is_valid'      => 1,
                         ]);
                     }
                 } else {
@@ -469,9 +475,9 @@ class ImageManager extends Service
                         // Create the link
                         if ($pageId != $page->id) {
                             PagePageImage::create([
-                                'page_id' => $pageId,
+                                'page_id'       => $pageId,
                                 'page_image_id' => $image->id,
-                                'is_valid' => 1
+                                'is_valid'      => 1,
                             ]);
                         }
                     }
@@ -485,26 +491,27 @@ class ImageManager extends Service
 
             // Update version with archival data
             $version->update([
-                'data' => json_encode($imageData['version'])
+                'data' => json_encode($imageData['version']),
             ]);
 
             return $image;
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return false;
     }
 
     /**
      * Crops a thumbnail for the given image.
      *
-     * @param  array                                 $points
-     * @param  \App\Models\Page\PageImage            $pageImage
-     * @param  \App\Models\Page\PageImageVersion     $version
+     * @param array                             $points
+     * @param \App\Models\Page\PageImage        $pageImage
+     * @param \App\Models\Page\PageImageVersion $version
      */
     private function cropThumbnail($points, $pageImage, $version)
     {
-        $image = Image::make($pageImage->imagePath . '/' . $version->imageFileName);
+        $image = Image::make($pageImage->imagePath.'/'.$version->imageFileName);
 
         if (Config::get('mundialis.settings.watermark_image_thumbnails') == 1) {
             // Trim transparent parts of image
@@ -536,23 +543,22 @@ class ImageManager extends Service
             $trimOffsetY = $imageHeightOld - $image->height();
 
             // Now shrink the image
-            {
-                $imageWidth = $image->width();
-                $imageHeight = $image->height();
 
-                if ($imageWidth > $imageHeight) {
-                    // Landscape
-                    $image->resize(null, $cropWidth, function ($constraint) {
-                        $constraint->aspectRatio();
-                        $constraint->upsize();
-                    });
-                } else {
-                    // Portrait
-                    $image->resize($cropHeight, null, function ($constraint) {
-                        $constraint->aspectRatio();
-                        $constraint->upsize();
-                    });
-                }
+            $imageWidth = $image->width();
+            $imageHeight = $image->height();
+
+            if ($imageWidth > $imageHeight) {
+                // Landscape
+                $image->resize(null, $cropWidth, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+            } else {
+                // Portrait
+                $image->resize($cropHeight, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
             }
         } else {
             $cropWidth = $points['x1'] - $points['x0'];
@@ -568,21 +574,22 @@ class ImageManager extends Service
         }
 
         // Save the thumbnail
-        $image->save($pageImage->thumbnailPath . '/' . $version->thumbnailFileName, 100, $version->extension);
+        $image->save($pageImage->thumbnailPath.'/'.$version->thumbnailFileName, 100, $version->extension);
     }
 
     /**
      * Processes version data for storage.
      *
-     * @param  array                 $data
+     * @param array $data
+     *
      * @return array
      */
     private function processVersionData($data)
     {
         // Record image information for inclusion in version data
         $versionData = [
-            'is_visible' => $data['is_visible'],
-            'description' => $data['description']
+            'is_visible'  => $data['is_visible'],
+            'description' => $data['description'],
         ];
 
         // Record creator information
@@ -605,13 +612,14 @@ class ImageManager extends Service
     /**
      * Records a new image version.
      *
-     * @param  int                              $imageId
-     * @param  int                              $userId
-     * @param  array                            $imageData
-     * @param  string                           $type
-     * @param  string                           $reason
-     * @param  array                            $data
-     * @param  bool                             $isMinor
+     * @param int    $imageId
+     * @param int    $userId
+     * @param array  $imageData
+     * @param string $type
+     * @param string $reason
+     * @param array  $data
+     * @param bool   $isMinor
+     *
      * @return \App\Models\Page\PageImageVersion|bool
      */
     public function logImageVersion($imageId, $userId, $imageData, $type, $reason, $data, $isMinor = false)
@@ -619,23 +627,24 @@ class ImageManager extends Service
         try {
             $version = PageImageVersion::create([
                 'page_image_id' => $imageId,
-                'user_id' => $userId,
-                'hash' => isset($imageData['hash']) ? $imageData['hash'] : null,
-                'extension' => isset($imageData['extension']) ? $imageData['extension'] : null,
-                'x0' => isset($imageData['x0']) ? $imageData['x0'] : null,
-                'x1' => isset($imageData['x1']) ? $imageData['x1'] : null,
-                'y0' => isset($imageData['y0']) ? $imageData['y0'] : null,
-                'y1' => isset($imageData['y1']) ? $imageData['y1'] : null,
-                'type' => $type,
-                'reason' => $reason,
-                'is_minor' => $isMinor,
-                'data' => json_encode($data)
+                'user_id'       => $userId,
+                'hash'          => isset($imageData['hash']) ? $imageData['hash'] : null,
+                'extension'     => isset($imageData['extension']) ? $imageData['extension'] : null,
+                'x0'            => isset($imageData['x0']) ? $imageData['x0'] : null,
+                'x1'            => isset($imageData['x1']) ? $imageData['x1'] : null,
+                'y0'            => isset($imageData['y0']) ? $imageData['y0'] : null,
+                'y1'            => isset($imageData['y1']) ? $imageData['y1'] : null,
+                'type'          => $type,
+                'reason'        => $reason,
+                'is_minor'      => $isMinor,
+                'data'          => json_encode($data),
             ]);
 
             return $version;
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return false;
     }
 
@@ -643,8 +652,9 @@ class ImageManager extends Service
      * Generates and saves test images for page image test purposes.
      * This is a workaround for normal image processing depending on Intervention.
      *
-     * @param  \App\Models\Page\PageImage         $image
-     * @param  \App\Models\Page\PageImageVersion  $version
+     * @param \App\Models\Page\PageImage        $image
+     * @param \App\Models\Page\PageImageVersion $version
+     *
      * @return bool
      */
     public function testImages($image, $version)

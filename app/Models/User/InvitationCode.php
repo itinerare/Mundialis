@@ -12,7 +12,7 @@ class InvitationCode extends Model
      * @var array
      */
     protected $fillable = [
-        'code', 'user_id', 'recipient_id'
+        'code', 'user_id', 'recipient_id',
     ];
 
     /**

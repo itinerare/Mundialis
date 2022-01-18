@@ -15,7 +15,7 @@ class LexiconEntry extends Model
      * @var array
      */
     protected $fillable = [
-        'category_id', 'class', 'word', 'meaning', 'pronunciation', 'definition', 'parsed_definition', 'data'
+        'category_id', 'class', 'word', 'meaning', 'pronunciation', 'definition', 'parsed_definition', 'data',
     ];
 
     /**
@@ -38,9 +38,9 @@ class LexiconEntry extends Model
      * @var array
      */
     public static $createRules = [
-        'word' => 'required',
+        'word'    => 'required',
         'meaning' => 'required',
-        'class' => 'required'
+        'class'   => 'required',
     ];
 
     /**
@@ -49,9 +49,9 @@ class LexiconEntry extends Model
      * @var array
      */
     public static $updateRules = [
-        'word' => 'required',
+        'word'    => 'required',
         'meaning' => 'required',
-        'class' => 'required'
+        'class'   => 'required',
     ];
 
     /**********************************************************************************************
@@ -109,8 +109,8 @@ class LexiconEntry extends Model
     /**
      * Scope a query to only include visible pages.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  \App\Models\User\User                  $user
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \App\Models\User\User                 $user
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -119,6 +119,7 @@ class LexiconEntry extends Model
         if ($user && $user->canWrite) {
             return $query;
         }
+
         return $query->where('is_visible', 1);
     }
 
@@ -138,6 +139,7 @@ class LexiconEntry extends Model
         if (!isset($this->attributes['data'])) {
             return null;
         }
+
         return json_decode($this->attributes['data'], true);
     }
 

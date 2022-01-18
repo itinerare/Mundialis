@@ -33,7 +33,8 @@ class PageLinkFactory extends Factory
      * Generate a link for a specific parent.
      * This is essentially required.
      *
-     * @param  int                      $parent
+     * @param int $parent
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function parent($parent)
@@ -48,7 +49,8 @@ class PageLinkFactory extends Factory
     /**
      * Generate a link for a specific target.
      *
-     * @param  int                      $link
+     * @param int $link
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function link($link)

@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
-use Auth;
-
-use App\Models\User\User;
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
 use App\Models\Page\PageImageVersion;
-
-use App\Services\PageManager;
+use App\Models\User\User;
 use App\Services\ImageManager;
+use App\Services\PageManager;
+use Auth;
+use Illuminate\Http\Request;
 
 class SpecialController extends Controller
 {
@@ -29,8 +26,9 @@ class SpecialController extends Controller
     /**
      * Shows list of unwatched pages.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string                    $mode
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $mode
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUnwatchedPages(Request $request)
@@ -41,14 +39,15 @@ class SpecialController extends Controller
         })->sortBy('title');
 
         return view('pages.special.unwatched', [
-            'pages' => $query->paginate(20)->appends($request->query())
+            'pages' => $query->paginate(20)->appends($request->query()),
         ]);
     }
 
     /**
      * Shows the list of deleted pages.
      *
-     * @param  \Illuminate\Http\Request        $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeletedPages(Request $request)
@@ -76,14 +75,15 @@ class SpecialController extends Controller
 
         return view('admin.special.deleted_pages', [
             'pages' => $query->paginate(20)->appends($request->query()),
-            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
+            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
         ]);
     }
 
     /**
      * Shows a deleted page.
      *
-     * @param  int        $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeletedPage($id)
@@ -94,16 +94,17 @@ class SpecialController extends Controller
         }
 
         return view('admin.special.deleted_page', [
-            'page' => $page
+            'page' => $page,
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision()
+            'dateHelper' => new TimeDivision(),
         ] : []));
     }
 
     /**
      * Gets the page restoration modal.
      *
-     * @param  int       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRestorePage($id)
@@ -111,16 +112,17 @@ class SpecialController extends Controller
         $page = Page::withTrashed()->find($id);
 
         return view('admin.special._restore_page', [
-            'page' => $page
+            'page' => $page,
         ]);
     }
 
     /**
      * Restores a deleted page.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\PageManager     $service
-     * @param  int                          $id
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\PageManager $service
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postRestorePage(Request $request, PageManager $service, $id)
@@ -131,15 +133,18 @@ class SpecialController extends Controller
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
             }
+
             return redirect()->back();
         }
+
         return redirect()->to('admin/special/deleted-pages');
     }
 
     /**
      * Shows the list of deleted images.
      *
-     * @param  \Illuminate\Http\Request        $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeletedImages(Request $request)
@@ -167,15 +172,16 @@ class SpecialController extends Controller
 
         return view('admin.special.deleted_images', [
             'images' => $query->paginate(20)->appends($request->query()),
-            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
+            'users'  => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
         ]);
     }
 
     /**
      * Shows a deleted image.
      *
-     * @param  \Illuminate\Http\Request        $request
-     * @param  int                             $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeletedImage(Request $request, $id)
@@ -206,16 +212,17 @@ class SpecialController extends Controller
         }
 
         return view('admin.special.deleted_image', [
-            'image' => $image,
+            'image'    => $image,
             'versions' => $query->paginate(20)->appends($request->query()),
-            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
+            'users'    => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
         ]);
     }
 
     /**
      * Gets the image restoration modal.
      *
-     * @param  int       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRestoreImage($id)
@@ -226,16 +233,17 @@ class SpecialController extends Controller
         }
 
         return view('admin.special._restore_image', [
-            'image' => $image
+            'image' => $image,
         ]);
     }
 
     /**
      * Restores a deleted image.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\PageManager     $service
-     * @param  int                          $id
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\PageManager $service
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postRestoreImage(Request $request, ImageManager $service, $id)
@@ -251,8 +259,10 @@ class SpecialController extends Controller
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
             }
+
             return redirect()->back();
         }
+
         return redirect()->to('admin/special/deleted-images');
     }
 }

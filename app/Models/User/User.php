@@ -2,12 +2,11 @@
 
 namespace App\Models\User;
 
+use App\Models\Model;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
-use App\Models\Model;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -21,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $fillable = [
         'name', 'email', 'password', 'rank_id', 'profile_text', 'avatar',
-        'is_banned', 'ban_reason', 'banned_at'
+        'is_banned', 'ban_reason', 'banned_at',
     ];
 
     /**
@@ -118,6 +117,7 @@ class User extends Authenticatable implements MustVerifyEmail
         if ($this->is_banned) {
             return false;
         }
+
         return $this->rank->isAdmin;
     }
 
@@ -131,6 +131,7 @@ class User extends Authenticatable implements MustVerifyEmail
         if ($this->is_banned) {
             return false;
         }
+
         return $this->rank->canWrite;
     }
 
@@ -161,17 +162,17 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDisplayNameAttribute()
     {
-        return ($this->is_banned ? '<strike>' : '') . '<a href="'.$this->url.'" class="display-user">'.$this->name.'</a>' . ($this->is_banned ? '</strike>' : '');
+        return ($this->is_banned ? '<strike>' : '').'<a href="'.$this->url.'" class="display-user">'.$this->name.'</a>'.($this->is_banned ? '</strike>' : '');
     }
 
     /**
-     * Displays the user's avatar
+     * Displays the user's avatar.
      *
      * @return string
      */
     public function getAvatar()
     {
-        return ($this->avatar);
+        return $this->avatar;
     }
 
     /**********************************************************************************************
@@ -183,7 +184,8 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Check if a user can edit a specific page.
      *
-     * @param  \App\Models\Page\Page     $page
+     * @param \App\Models\Page\Page $page
+     *
      * @return bool
      */
     public function canEdit($page)

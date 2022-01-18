@@ -23,14 +23,14 @@ class PageImageVersionFactory extends Factory
     {
         return [
             //
-            'hash' => randomString(15),
-            'extension' => 'png',
+            'hash'        => randomString(15),
+            'extension'   => 'png',
             'use_cropper' => 0,
-            'x0' => 0, 'x1' => 0,
-            'y0' => 0, 'y1' => 0,
-            'type' => 'Image Created',
-            'reason' => null,
-            'is_minor' => 0,
+            'x0'          => 0, 'x1' => 0,
+            'y0'          => 0, 'y1' => 0,
+            'type'        => 'Image Created',
+            'reason'      => null,
+            'is_minor'    => 0,
         ];
     }
 
@@ -38,14 +38,15 @@ class PageImageVersionFactory extends Factory
      * Generate a version for a specific image.
      * This is essentially required.
      *
-     * @param  int                      $image
+     * @param int $image
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function image($image)
     {
         return $this->state(function (array $attributes) use ($image) {
             return [
-                'page_image_id' => $image
+                'page_image_id' => $image,
             ];
         });
     }
@@ -54,14 +55,15 @@ class PageImageVersionFactory extends Factory
      * Generate a version by a specific user.
      * This is essentially required.
      *
-     * @param  int                      $user
+     * @param int $user
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function user($user)
     {
         return $this->state(function (array $attributes) use ($user) {
             return [
-                'user_id' => $user
+                'user_id' => $user,
             ];
         });
     }
@@ -69,14 +71,15 @@ class PageImageVersionFactory extends Factory
     /**
      * Generate a version of a specific type.
      *
-     * @param  string                  $type
+     * @param string $type
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function type($type)
     {
         return $this->state(function (array $attributes) use ($type) {
             return [
-                'type' => $type
+                'type' => $type,
             ];
         });
     }
@@ -84,14 +87,15 @@ class PageImageVersionFactory extends Factory
     /**
      * Generate a version with a specific reason.
      *
-     * @param  string                  $reason
+     * @param string $reason
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function reason($reason)
     {
         return $this->state(function (array $attributes) use ($reason) {
             return [
-                'reason' => $reason
+                'reason' => $reason,
             ];
         });
     }
@@ -105,7 +109,7 @@ class PageImageVersionFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'is_minor' => 1
+                'is_minor' => 1,
             ];
         });
     }
@@ -113,14 +117,15 @@ class PageImageVersionFactory extends Factory
     /**
      * Generate a version for a page deletion.
      *
-     * @param  string                  $reason
+     * @param string $reason
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function deleted()
     {
         return $this->state(function (array $attributes) {
             return [
-                'type' => 'Image Deleted'
+                'type' => 'Image Deleted',
             ];
         });
     }
@@ -128,17 +133,18 @@ class PageImageVersionFactory extends Factory
     /**
      * Generate an image version with some data.
      *
-     * @param  bool                        $isVisible
-     * @param  string                      $description
-     * @param  string                      $creators
-     * @param  string                      $pages
+     * @param bool   $isVisible
+     * @param string $description
+     * @param string $creators
+     * @param string $pages
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function testData($isVisible = 1, $description = null, $creators = "1", $pages = "1")
+    public function testData($isVisible = 1, $description = null, $creators = '1', $pages = '1')
     {
         return $this->state(function (array $attributes) use ($isVisible, $description, $creators, $pages) {
             return [
-                'data' => '{"is_visible":"'.$isVisible.'","description":'.($description ? '"'.$description.'"' : null).',"creators":['.$creators.'],"pages":['.$pages.']}'
+                'data' => '{"is_visible":"'.$isVisible.'","description":'.($description ? '"'.$description.'"' : null).',"creators":['.$creators.'],"pages":['.$pages.']}',
             ];
         });
     }

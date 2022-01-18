@@ -2,32 +2,24 @@
 
 namespace App\Http\Controllers\Users;
 
-use Auth;
-use File;
-use Image;
-
-use App\Models\User\User;
-use App\Models\Subject\SubjectCategory;
+use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use App\Models\Page\Page;
 use App\Models\Page\PageTag;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Collection;
-use App\Models\Notification;
-
-use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
-use Laravel\Fortify\RecoveryCode;
+use App\Models\Subject\SubjectCategory;
+use App\Models\User\User;
+use App\Services\UserService;
+use Auth;
 use BaconQrCode\Renderer\Color\Rgb;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\Fill;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
-
-use App\Services\UserService;
-
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
+use Laravel\Fortify\RecoveryCode;
 
 class AccountController extends Controller
 {
@@ -67,7 +59,8 @@ class AccountController extends Controller
     /**
      * Edits the user's profile.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postProfile(Request $request)
@@ -76,13 +69,15 @@ class AccountController extends Controller
             'profile_text' => $request->get('profile_text'),
         ]);
         flash('Profile updated successfully.')->success();
+
         return redirect()->back();
     }
 
     /**
      * Edits the user's avatar.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postAvatar(Request $request, UserService $service)
@@ -94,22 +89,23 @@ class AccountController extends Controller
                 flash($error)->error();
             }
         }
+
         return redirect()->back();
     }
-
 
     /**
      * Changes the user's password.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\UserService  $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\UserService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postPassword(Request $request, UserService $service)
     {
         $request->validate([
             'old_password' => 'required|string',
-            'new_password' => 'required|string|min:8|confirmed'
+            'new_password' => 'required|string|min:8|confirmed',
         ]);
         if ($service->updatePassword($request->only(['old_password', 'new_password', 'new_password_confirmation']), Auth::user())) {
             flash('Password updated successfully.')->success();
@@ -118,20 +114,22 @@ class AccountController extends Controller
                 flash($error)->error();
             }
         }
+
         return redirect()->back();
     }
 
     /**
      * Changes the user's email address and sends a verification email.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\UserService  $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\UserService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postEmail(Request $request, UserService $service)
     {
         $request->validate([
-            'email' => 'required|string|email|max:255|unique:users'
+            'email' => 'required|string|email|max:255|unique:users',
         ]);
         if ($service->updateEmail($request->only(['email']), Auth::user())) {
             flash('Email updated successfully..')->success();
@@ -140,14 +138,16 @@ class AccountController extends Controller
                 flash($error)->error();
             }
         }
+
         return redirect()->back();
     }
 
     /**
      * Enables the user's two factor auth.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\UserService  $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\UserService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postEnableTwoFactor(Request $request, UserService $service)
@@ -164,6 +164,7 @@ class AccountController extends Controller
                 flash($error)->error();
             }
         }
+
         return redirect()->to('account/two-factor/confirm');
     }
 
@@ -185,7 +186,7 @@ class AccountController extends Controller
         $qrCode = trim(substr($qrCode, strpos($qrCode, "\n") + 1));
 
         return view('auth.confirm_two_factor', [
-            'qrCode' => $qrCode,
+            'qrCode'        => $qrCode,
             'recoveryCodes' => json_decode(decrypt($request->session()->get('two_factor_recovery_codes'))),
         ]);
     }
@@ -193,14 +194,15 @@ class AccountController extends Controller
     /**
      * Confirms and fully enables the user's two factor auth.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\UserService  $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\UserService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postConfirmTwoFactor(Request $request, UserService $service)
     {
         $request->validate([
-            'code' => 'required'
+            'code' => 'required',
         ]);
         if ($service->confirmTwoFactor($request->only(['code']), $request->session()->only(['two_factor_secret', 'two_factor_recovery_codes']), Auth::user())) {
             flash('2FA enabled succesfully.')->success();
@@ -210,20 +212,22 @@ class AccountController extends Controller
                 flash($error)->error();
             }
         }
+
         return redirect()->to('account/settings');
     }
 
     /**
      * Confirms and disables the user's two factor auth.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\UserService  $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\UserService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDisableTwoFactor(Request $request, UserService $service)
     {
         $request->validate([
-            'code' => 'required'
+            'code' => 'required',
         ]);
         if ($service->disableTwoFactor($request->only(['code']), Auth::user())) {
             flash('2FA disabled succesfully.')->success();
@@ -232,13 +236,15 @@ class AccountController extends Controller
                 flash($error)->error();
             }
         }
+
         return redirect()->back();
     }
 
     /**
      * Shows the watched pages page.
      *
-     * @param  \Illuminate\Http\Request        $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getWatchedPages(Request $request)
@@ -248,7 +254,7 @@ class AccountController extends Controller
 
         if ($request->get('title')) {
             $query->where(function ($query) use ($request) {
-                $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
+                $query->where('pages.title', 'LIKE', '%'.$request->get('title').'%');
             });
         }
         if ($request->get('category_id')) {
@@ -280,17 +286,18 @@ class AccountController extends Controller
         }
 
         return view('account.watched_pages', [
-            'pages' => $query->paginate(20)->appends($request->query()),
+            'pages'           => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
-            'tags' => (new PageTag())->listTags()
+            'tags'            => (new PageTag())->listTags(),
         ]);
     }
 
     /**
      * Watches/unwatches a page.
      *
-     * @param  \Illuminate\Http\Request        $request
-     * @param  App\Services\UserService        $service
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\UserService $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postWatchPage(Request $request, UserService $service, $id)
@@ -302,6 +309,7 @@ class AccountController extends Controller
                 flash($error)->error();
             }
         }
+
         return redirect()->back();
     }
 
@@ -318,7 +326,7 @@ class AccountController extends Controller
         Auth::user()->save();
 
         return view('account.notifications', [
-            'notifications' => $notifications
+            'notifications' => $notifications,
         ]);
     }
 
@@ -333,6 +341,7 @@ class AccountController extends Controller
         if ($notification) {
             $notification->delete();
         }
+
         return response(200);
     }
 
@@ -349,6 +358,7 @@ class AccountController extends Controller
             Auth::user()->notifications()->delete();
         }
         flash('Notifications cleared successfully.')->success();
+
         return redirect()->back();
     }
 }

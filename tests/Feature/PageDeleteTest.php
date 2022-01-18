@@ -2,12 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-
-use App\Models\User\User;
-use App\Models\Subject\SubjectCategory;
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
 use App\Models\Page\PageImageCreator;
@@ -15,7 +9,12 @@ use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
 use App\Models\Page\PageRelationship;
 use App\Models\Page\PageVersion;
+use App\Models\Subject\SubjectCategory;
+use App\Models\User\User;
 use App\Services\ImageManager;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
 class PageDeleteTest extends TestCase
 {
@@ -77,7 +76,7 @@ class PageDeleteTest extends TestCase
 
         // Set a reason
         $data = [
-            'reason' => $this->faker->unique()->domainWord()
+            'reason' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a page to delete & version
@@ -92,8 +91,8 @@ class PageDeleteTest extends TestCase
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'type' => 'Page Deleted',
-            'reason' => $data['reason']
+            'type'    => 'Page Deleted',
+            'reason'  => $data['reason'],
         ]);
 
         $this->assertSoftDeleted($page);
@@ -159,8 +158,8 @@ class PageDeleteTest extends TestCase
         $this->assertSoftDeleted($page);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $imageVersion->thumbnailFileName);
-        unlink($image->imagePath . '/' . $imageVersion->imageFileName);
+        unlink($image->imagePath.'/'.$imageVersion->thumbnailFileName);
+        unlink($image->imagePath.'/'.$imageVersion->imageFileName);
     }
 
     /**
@@ -200,7 +199,7 @@ class PageDeleteTest extends TestCase
         // Verify that the appropriate change has occurred
         // In this case, this means checking that the second image is not deleted
         $this->assertDatabaseHas('page_images', [
-            'id' => $image[2]->id,
+            'id'         => $image[2]->id,
             'deleted_at' => null,
         ]);
 
@@ -210,8 +209,8 @@ class PageDeleteTest extends TestCase
 
         // Delete the test images, to clean up
         for ($i = 1; $i <= 2; $i++) {
-            unlink($image[$i]->imagePath . '/' . $imageVersion[$i]->thumbnailFileName);
-            unlink($image[$i]->imagePath . '/' . $imageVersion[$i]->imageFileName);
+            unlink($image[$i]->imagePath.'/'.$imageVersion[$i]->thumbnailFileName);
+            unlink($image[$i]->imagePath.'/'.$imageVersion[$i]->imageFileName);
         }
     }
 
@@ -246,7 +245,7 @@ class PageDeleteTest extends TestCase
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_relationships', [
-            'id' => $relationship->id
+            'id' => $relationship->id,
         ]);
         $this->assertSoftDeleted($page[1]);
     }
@@ -279,7 +278,7 @@ class PageDeleteTest extends TestCase
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
-            'id' => $page->id,
+            'id'         => $page->id,
             'deleted_at' => null,
         ]);
     }
@@ -443,7 +442,7 @@ class PageDeleteTest extends TestCase
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
-            'id' => $page->id,
+            'id'         => $page->id,
             'deleted_at' => null,
         ]);
     }
@@ -460,7 +459,7 @@ class PageDeleteTest extends TestCase
 
         // Set a reason
         $data = [
-            'reason' => $this->faker->unique()->domainWord()
+            'reason' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a page to restore & version
@@ -475,12 +474,12 @@ class PageDeleteTest extends TestCase
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'type' => 'Page Restored',
-            'reason' => $data['reason'],
+            'type'    => 'Page Restored',
+            'reason'  => $data['reason'],
         ]);
 
         $this->assertDatabaseHas('pages', [
-            'id' => $page->id,
+            'id'         => $page->id,
             'deleted_at' => null,
         ]);
     }
@@ -513,7 +512,7 @@ class PageDeleteTest extends TestCase
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_images', [
-            'id' => $image->id,
+            'id'         => $image->id,
             'deleted_at' => null,
         ]);
     }

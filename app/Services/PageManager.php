@@ -2,25 +2,17 @@
 
 namespace App\Services;
 
-use App\Services\Service;
-
-use DB;
-use Config;
-use Notifications;
-
-use App\Models\Subject\SubjectCategory;
-use App\Models\Subject\TimeDivision;
-
 use App\Models\Page\Page;
-use App\Models\Page\PageVersion;
-use App\Models\Page\PageTag;
 use App\Models\Page\PageLink;
 use App\Models\Page\PageProtection;
-
-use App\Models\Lexicon\LexiconEntry;
+use App\Models\Page\PageTag;
+use App\Models\Page\PageVersion;
+use App\Models\Subject\SubjectCategory;
+use App\Models\Subject\TimeDivision;
 use App\Models\User\WatchedPage;
-
-use App\Services\ImageManager;
+use Config;
+use DB;
+use Notifications;
 
 class PageManager extends Service
 {
@@ -36,8 +28,9 @@ class PageManager extends Service
     /**
      * Creates a page.
      *
-     * @param  array                         $data
-     * @param  \App\Models\User\User         $user
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\Page\Page
      */
     public function createPage($data, $user)
@@ -47,7 +40,7 @@ class PageManager extends Service
         try {
             // More specific validation
             if (Page::withTrashed()->where('title', $data['title'])->where('category_id', $data['category_id'])->exists()) {
-                throw new \Exception("The page title has already been taken within this category.");
+                throw new \Exception('The page title has already been taken within this category.');
             }
 
             // Process data for storage
@@ -88,7 +81,7 @@ class PageManager extends Service
                     // And update the links themselves
                     $link->update([
                         'link_id' => $page->id,
-                        'title' => null
+                        'title'   => null,
                     ]);
                 }
 
@@ -96,7 +89,7 @@ class PageManager extends Service
                 foreach (PageLink::where('title', $page->displayTitle)->where('parent_type', 'entry')->get() as $link) {
                     $entry = $link->parent;
 
-                    $parsed = $this->parse_wiki_links((array)$entry->definition);
+                    $parsed = $this->parse_wiki_links((array) $entry->definition);
 
                     // Parse data and update version
                     $entry->parsed_definition = $parsed['parsed'][0];
@@ -105,7 +98,7 @@ class PageManager extends Service
                     // And update the links themselves
                     $link->update([
                         'link_id' => $page->id,
-                        'title' => null
+                        'title'   => null,
                     ]);
                 }
             }
@@ -130,15 +123,17 @@ class PageManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Updates a page.
      *
-     * @param  \App\Models\Page\Page     $page
-     * @param  array                     $data
-     * @param  \App\Models\User\User     $user
+     * @param \App\Models\Page\Page $page
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return \App\Models\Page\Page|bool
      */
     public function updatePage($page, $data, $user)
@@ -153,7 +148,7 @@ class PageManager extends Service
 
             // More specific validation
             if (Page::withTrashed()->where('title', $data['title'])->where('category_id', $page->category->id)->where('id', '!=', $page->id)->exists()) {
-                throw new \Exception("The page title has already been taken within this category.");
+                throw new \Exception('The page title has already been taken within this category.');
             }
 
             // Process data for storage
@@ -213,10 +208,10 @@ class PageManager extends Service
                 foreach ($page->watchers as $recipient) {
                     if ($recipient->id != $user->id) {
                         Notifications::create('WATCHED_PAGE_UPDATED', $recipient, [
-                            'page_url' => $page->url,
+                            'page_url'   => $page->url,
                             'page_title' => $page->title,
-                            'user_url' => $user->url,
-                            'user_name' => $user->name
+                            'user_url'   => $user->url,
+                            'user_name'  => $user->name,
                         ]);
                     }
                 }
@@ -226,15 +221,17 @@ class PageManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Updates a page's protection information.
      *
-     * @param  \App\Models\Page\Page     $page
-     * @param  \App\Models\User\User     $user
-     * @param  array                     $data
+     * @param \App\Models\Page\Page $page
+     * @param \App\Models\User\User $user
+     * @param array                 $data
+     *
      * @return bool
      */
     public function protectPage($page, $user, $data)
@@ -249,10 +246,10 @@ class PageManager extends Service
 
             // Create new protection data
             $protection = PageProtection::create([
-                'page_id' => $page->id,
-                'user_id' => $user->id,
+                'page_id'      => $page->id,
+                'user_id'      => $user->id,
                 'is_protected' => $data['is_protected'],
-                'reason' => $data['reason']
+                'reason'       => $data['reason'],
             ]);
             if (!$protection) {
                 throw new \Exception('An error occurred while creating the protection record.');
@@ -262,16 +259,18 @@ class PageManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Moves a page to a different category.
      *
-     * @param  \App\Models\Page\Page                $page
-     * @param  \App\Models\Subject\SubjectCategory  $category
-     * @param  \App\Models\User\User                $user
-     * @param  string                               $reason
+     * @param \App\Models\Page\Page               $page
+     * @param \App\Models\Subject\SubjectCategory $category
+     * @param \App\Models\User\User               $user
+     * @param string                              $reason
+     *
      * @return bool
      */
     public function movePage($page, $category, $user, $reason)
@@ -286,7 +285,7 @@ class PageManager extends Service
 
             // More specific validation
             if (Page::withTrashed()->where('title', $page->title)->where('category_id', $category->id)->where('id', '!=', $page->id)->exists()) {
-                throw new \Exception("The page title has already been taken within the target category.");
+                throw new \Exception('The page title has already been taken within the target category.');
             }
 
             // Note the old category
@@ -305,16 +304,18 @@ class PageManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Resets a page to a given version.
      *
-     * @param  \App\Models\Page\Page         $page
-     * @param  \App\Models\Page\PageVersion  $version
-     * @param  \App\Models\User\User         $user
-     * @param  string                        $reason
+     * @param \App\Models\Page\Page        $page
+     * @param \App\Models\Page\PageVersion $version
+     * @param \App\Models\User\User        $user
+     * @param string                       $reason
+     *
      * @return bool
      */
     public function resetPage($page, $version, $user, $reason)
@@ -329,7 +330,7 @@ class PageManager extends Service
 
             // Double-check the title
             if (Page::withTrashed()->where('title', $version->data['title'])->where('id', '!=', $page->id)->exists()) {
-                throw new \Exception("The page title has already been taken.");
+                throw new \Exception('The page title has already been taken.');
             }
 
             // Update the page itself
@@ -345,16 +346,18 @@ class PageManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Delete a page.
      *
-     * @param  \App\Models\Page\Page     $page
-     * @param  \App\Models\User\User     $user
-     * @param  string                    $reason
-     * @param  bool                      $forceDelete
+     * @param \App\Models\Page\Page $page
+     * @param \App\Models\User\User $user
+     * @param string                $reason
+     * @param bool                  $forceDelete
+     *
      * @return bool
      */
     public function deletePage($page, $user, $reason, $forceDelete = false)
@@ -375,8 +378,8 @@ class PageManager extends Service
             // This should not be relevant given the check above, but just in case
             if (Page::where('parent_id', $page->id)->count()) {
                 Page::where('parent_id', $page->id)->update([
-                    'parent_id' => null
-            ]);
+                    'parent_id' => null,
+                ]);
             }
 
             if ($forceDelete) {
@@ -423,8 +426,8 @@ class PageManager extends Service
                         if ($recipient->id != $user->id) {
                             Notifications::create('WATCHED_PAGE_DELETED', $recipient, [
                                 'page_title' => $page->title,
-                                'user_url' => $user->url,
-                                'user_name' => $user->name
+                                'user_url'   => $user->url,
+                                'user_name'  => $user->name,
                             ]);
                         }
                     }
@@ -449,15 +452,17 @@ class PageManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Restore a deleted page.
      *
-     * @param  \App\Models\Page\Page     $page
-     * @param  \App\Models\User\User     $user
-     * @param  string                    $reason
+     * @param \App\Models\Page\Page $page
+     * @param \App\Models\User\User $user
+     * @param string                $reason
+     *
      * @return bool
      */
     public function restorePage($page, $user, $reason)
@@ -488,14 +493,16 @@ class PageManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Processes page data for storage.
      *
-     * @param  array                     $data
-     * @param  App\Models\Page\Page      $page
+     * @param array                $data
+     * @param App\Models\Page\Page $page
+     *
      * @return array
      */
     private function processPageData($data, $page = null)
@@ -531,9 +538,9 @@ class PageManager extends Service
                 foreach (['birth', 'death'] as $segment) {
                     if (isset($data[$segment.'_place_id']) || isset($data[$segment.'_chronology_id'])) {
                         $data['data'][$segment] = [
-                        'place' => isset($data[$segment.'_place_id']) ? $data[$segment.'_place_id'] : null,
-                        'chronology' => isset($data[$segment.'_chronology_id']) ? $data[$segment.'_chronology_id'] : null
-                    ];
+                            'place'      => isset($data[$segment.'_place_id']) ? $data[$segment.'_place_id'] : null,
+                            'chronology' => isset($data[$segment.'_chronology_id']) ? $data[$segment.'_chronology_id'] : null,
+                        ];
                     }
                     foreach ((new TimeDivision())->dateFields() as $key=>$field) {
                         if (isset($data[$segment.'_'.$key])) {
@@ -566,8 +573,9 @@ class PageManager extends Service
     /**
      * Processes tags.
      *
-     * @param  \App\Models\Page\Page  $page
-     * @param  array                  $data
+     * @param \App\Models\Page\Page $page
+     * @param array                 $data
+     *
      * @return array
      */
     private function processLinks($page, $data)
@@ -584,8 +592,8 @@ class PageManager extends Service
                 if ((isset($link['link_id']) && !$page->links()->where('link_id', $link['link_id'])->first()) || (isset($link['title']) && !$page->links()->where('title', $link['title'])->first())) {
                     $link = PageLink::create([
                         'parent_id' => $page->id,
-                        'link_id' => isset($link['link_id']) ? $link['link_id'] : null,
-                        'title' => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null
+                        'link_id'   => isset($link['link_id']) ? $link['link_id'] : null,
+                        'title'     => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null,
                     ]);
                     if (!$link) {
                         throw new \Exception('An error occurred while creating a link.');
@@ -597,14 +605,16 @@ class PageManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Processes tags.
      *
-     * @param  \App\Models\Page\Page  $page
-     * @param  array                  $data
+     * @param \App\Models\Page\Page $page
+     * @param array                 $data
+     *
      * @return array
      */
     private function processTags($page, $data)
@@ -643,8 +653,8 @@ class PageManager extends Service
                     foreach ($diff['added'] as $tag) {
                         $tag = PageTag::create([
                             'page_id' => $page->id,
-                            'type' => 'utility',
-                            'tag' => $tag
+                            'type'    => 'utility',
+                            'tag'     => $tag,
                         ]);
                         if (!$tag) {
                             throw new \Exception('An error occurred while creating a tag.');
@@ -656,8 +666,8 @@ class PageManager extends Service
                     foreach ($data['utility_tag'] as $tag) {
                         $tag = PageTag::create([
                             'page_id' => $page->id,
-                            'type' => 'utility',
-                            'tag' => $tag
+                            'type'    => 'utility',
+                            'tag'     => $tag,
                         ]);
                     }
                     if (!$tag) {
@@ -706,8 +716,8 @@ class PageManager extends Service
                     foreach ($diff['added'] as $tag) {
                         $tag = PageTag::create([
                             'page_id' => $page->id,
-                            'type' => 'page_tag',
-                            'tag' => $tag
+                            'type'    => 'page_tag',
+                            'tag'     => $tag,
                         ]);
                         if (!$tag) {
                             throw new \Exception('An error occurred while creating a tag.');
@@ -719,8 +729,8 @@ class PageManager extends Service
                     foreach ($data['page_tag'] as $tag) {
                         $tag = PageTag::create([
                             'page_id' => $page->id,
-                            'type' => 'page_tag',
-                            'tag' => $tag
+                            'type'    => 'page_tag',
+                            'tag'     => $tag,
                         ]);
                     }
                     if (!$tag) {
@@ -738,13 +748,15 @@ class PageManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Processes version data for storage.
      *
-     * @param  array                 $data
+     * @param array $data
+     *
      * @return array
      */
     private function processVersionData($data)
@@ -756,11 +768,11 @@ class PageManager extends Service
 
         // Cycle through various fields not present in data
         $versionData = $versionData + [
-            'title' => $data['title'],
-            'is_visible' => $data['is_visible'],
-            'summary' => $data['summary'],
+            'title'       => $data['title'],
+            'is_visible'  => $data['is_visible'],
+            'summary'     => $data['summary'],
             'utility_tag' => isset($data['utility_tag']) ? $data['utility_tag'] : null,
-            'page_tag' => isset($data['page_tag']) ? $data['page_tag'] : null
+            'page_tag'    => isset($data['page_tag']) ? $data['page_tag'] : null,
         ];
         if (isset($data['parent_id'])) {
             $versionData = $versionData + ['parent_id' => $data['parent_id']];
@@ -772,30 +784,32 @@ class PageManager extends Service
     /**
      * Records a new page version.
      *
-     * @param  int                         $pageId
-     * @param  int                         $userId
-     * @param  string                      $type
-     * @param  string                      $reason
-     * @param  array                       $data
-     * @param  bool                        $isMinor
+     * @param int    $pageId
+     * @param int    $userId
+     * @param string $type
+     * @param string $reason
+     * @param array  $data
+     * @param bool   $isMinor
+     *
      * @return \App\Models\Page\PageVersion|bool
      */
     public function logPageVersion($pageId, $userId, $type, $reason, $data, $isMinor = false)
     {
         try {
             $version = PageVersion::create([
-                'page_id' => $pageId,
-                'user_id' => $userId,
-                'type' => $type,
-                'reason' => $reason,
+                'page_id'  => $pageId,
+                'user_id'  => $userId,
+                'type'     => $type,
+                'reason'   => $reason,
                 'is_minor' => $isMinor,
-                'data' => json_encode($data)
+                'data'     => json_encode($data),
             ]);
 
             return $version;
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return false;
     }
 }

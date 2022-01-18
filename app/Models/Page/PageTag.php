@@ -2,9 +2,8 @@
 
 namespace App\Models\Page;
 
-use Config;
-
 use App\Models\Model;
+use Config;
 
 class PageTag extends Model
 {
@@ -14,7 +13,7 @@ class PageTag extends Model
      * @var array
      */
     protected $fillable = [
-        'page_id', 'type', 'tag'
+        'page_id', 'type', 'tag',
     ];
 
     /**
@@ -54,7 +53,7 @@ class PageTag extends Model
     /**
      * Scope a query to only include page tags.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -66,7 +65,7 @@ class PageTag extends Model
     /**
      * Scope a query to only include utility tags.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -78,8 +77,8 @@ class PageTag extends Model
     /**
      * Scope a query to include all forms of a tag.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  string                                 $tag
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string                                $tag
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -102,7 +101,7 @@ class PageTag extends Model
     /**
      * Scope a query to only include prefixed tags.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -234,11 +233,13 @@ class PageTag extends Model
             if (isset($page->parent_id) || isset($page->data['date']['start'])) {
                 return true;
             }
+
             return false;
         });
         if ($timePages->count()) {
             return true;
         }
+
         return false;
     }
 
@@ -290,7 +291,8 @@ class PageTag extends Model
      * Gets navbox information, namely: the hub tag,
      * and all context pages.
      *
-     * @param  \App\Models\User\User         $user
+     * @param \App\Models\User\User $user
+     *
      * @return array
      */
     public function navboxInfo($user = null)
@@ -321,6 +323,7 @@ class PageTag extends Model
         if ($info != []) {
             return $info;
         }
+
         return null;
     }
 }

@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers\Pages;
 
-use Auth;
-use Config;
-
-use App\Models\User\User;
-use App\Models\Subject\TimeDivision;
+use App\Http\Controllers\Controller;
 use App\Models\Page\Page;
 use App\Models\Page\PageRelationship;
-
+use App\Models\Subject\TimeDivision;
 use App\Services\RelationshipManager;
-
+use Auth;
+use Config;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class RelationshipController extends Controller
 {
@@ -29,8 +25,9 @@ class RelationshipController extends Controller
     /**
      * Shows a page's relationships.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int                       $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageRelationships(Request $request, $id)
@@ -44,6 +41,7 @@ class RelationshipController extends Controller
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }
+
             return $relationship->pageTwo->is_visible;
         });
 
@@ -51,6 +49,7 @@ class RelationshipController extends Controller
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }
+
             return $related->pageOne->is_visible;
         }));
 
@@ -70,17 +69,18 @@ class RelationshipController extends Controller
         }
 
         return view('pages.relationships.relationships', [
-            'page' => $page,
-            'relationships' => $query->paginate(20)->appends($request->query())
+            'page'          => $page,
+            'relationships' => $query->paginate(20)->appends($request->query()),
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision()
+            'dateHelper' => new TimeDivision(),
         ] : []));
     }
 
     /**
      * Shows a page's family tree.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageFamilyTree($id)
@@ -94,16 +94,17 @@ class RelationshipController extends Controller
         }
 
         return view('pages.relationships.family_tree', [
-            'page' => $page
+            'page' => $page,
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision()
+            'dateHelper' => new TimeDivision(),
         ] : []));
     }
 
     /**
      * Shows the create relationship modal.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreateRelationship($id)
@@ -118,19 +119,20 @@ class RelationshipController extends Controller
 
         return view('pages.relationships._create_edit_relationship', [
             'relationship' => new PageRelationship(),
-            'page' => $page,
-            'pageOptions' => Page::where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
+            'page'         => $page,
+            'pageOptions'  => Page::where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
                 return $option->category->subject['key'] == $page->category->subject['key'];
             })->pluck('title', 'id'),
-            'relationshipOptions' => Config::get('mundialis.'.$page->category->subject['key'].'_relationships')
+            'relationshipOptions' => Config::get('mundialis.'.$page->category->subject['key'].'_relationships'),
         ]);
     }
 
     /**
      * Shows the edit relationship modal.
      *
-     * @param  int  $pageId
-     * @param  int  $id
+     * @param int $pageId
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditRelationship($pageId, $id)
@@ -149,21 +151,22 @@ class RelationshipController extends Controller
 
         return view('pages.relationships._create_edit_relationship', [
             'relationship' => $relationship,
-            'page' => $page,
-            'pageOptions' => Page::where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
+            'page'         => $page,
+            'pageOptions'  => Page::where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
                 return $option->category->subject['key'] == $page->category->subject['key'];
             })->pluck('title', 'id'),
-            'relationshipOptions' => Config::get('mundialis.'.$page->category->subject['key'].'_relationships')
+            'relationshipOptions' => Config::get('mundialis.'.$page->category->subject['key'].'_relationships'),
         ]);
     }
 
     /**
      * Creates or edits a relationship.
      *
-     * @param  \Illuminate\Http\Request          $request
-     * @param  App\Services\RelationshipManager  $service
-     * @param  int                               $pageId
-     * @param  int                               $id
+     * @param \Illuminate\Http\Request         $request
+     * @param App\Services\RelationshipManager $service
+     * @param int                              $pageId
+     * @param int                              $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postCreateEditRelationship(Request $request, RelationshipManager $service, $pageId, $id = null)
@@ -173,7 +176,7 @@ class RelationshipController extends Controller
         $data = $request->only([
             'page_one_id', 'page_two_id',
             'type_one', 'type_one_info', 'details_one',
-            'type_two', 'type_two_info', 'details_two'
+            'type_two', 'type_two_info', 'details_two',
         ]);
 
         $page = Page::where('id', $pageId)->first();
@@ -188,20 +191,23 @@ class RelationshipController extends Controller
             flash('Relationship updated successfully.')->success();
         } elseif (!$id && $relationship = $service->createPageRelationship($data, $page, Auth::user())) {
             flash('Relationship created successfully.')->success();
+
             return redirect()->to('pages/'.$page->id.'/relationships');
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
             }
         }
+
         return redirect()->back();
     }
 
     /**
      * Gets the relationship deletion modal.
      *
-     * @param  int       $pageId
-     * @param  int       $id
+     * @param int $pageId
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeleteRelationship($pageId, $id)
@@ -220,17 +226,18 @@ class RelationshipController extends Controller
 
         return view('pages.relationships._delete_relationship', [
             'relationship' => $relationship,
-            'page' => $page
+            'page'         => $page,
         ]);
     }
 
     /**
      * Deletes a page.
      *
-     * @param  \Illuminate\Http\Request          $request
-     * @param  App\Services\RelationshipManager  $service
-     * @param  int                               $pageId
-     * @param  int                               $id
+     * @param \Illuminate\Http\Request         $request
+     * @param App\Services\RelationshipManager $service
+     * @param int                              $pageId
+     * @param int                              $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeleteRelationship(Request $request, RelationshipManager $service, $pageId, $id)
@@ -242,6 +249,7 @@ class RelationshipController extends Controller
                 flash($error)->error();
             }
         }
+
         return redirect()->to('pages/'.$pageId.'/relationships');
     }
 }

@@ -2,15 +2,11 @@
 
 namespace Tests\Feature;
 
-use DB;
-
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Tests\TestCase;
-
-use App\Models\User\User;
 
 class AdminSiteImagesTest extends TestCase
 {
@@ -59,7 +55,7 @@ class AdminSiteImagesTest extends TestCase
             ->actingAs($user)
             ->post('/admin/site-images/upload', [
                 'file' => $file,
-                'key' => 'logo'
+                'key'  => 'logo',
             ]);
 
         // Check that the file is now present
@@ -92,7 +88,7 @@ class AdminSiteImagesTest extends TestCase
         $response = $this
             ->actingAs($user)
             ->post('/admin/site-images/upload/css', [
-                'file' => $file
+                'file' => $file,
             ]);
 
         // Check that the file is now present

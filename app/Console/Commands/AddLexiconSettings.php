@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use DB;
+use Illuminate\Console\Command;
 
 class AddLexiconSettings extends Command
 {
@@ -35,24 +35,24 @@ class AddLexiconSettings extends Command
      * Add a site page.
      *
      *
-     * @param  string  $key
-     * @param  string  $title
-     * @param  string  $text
+     * @param string $key
+     * @param string $title
+     * @param string $text
      */
     private function addLexiconSetting($name, $abbreviation = null, $sort)
     {
         if (!DB::table('lexicon_settings')->where('name', $name)->exists()) {
             DB::table('lexicon_settings')->insert([
                 [
-                    'name' => $name,
+                    'name'         => $name,
                     'abbreviation' => $abbreviation ? $abbreviation : null,
-                    'sort' => $sort,
-                ]
+                    'sort'         => $sort,
+                ],
 
             ]);
-            $this->info("Added:   ".$name);
+            $this->info('Added:   '.$name);
         } else {
-            $this->line("Skipped: ".$name);
+            $this->line('Skipped: '.$name);
         }
     }
 

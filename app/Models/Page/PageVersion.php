@@ -2,8 +2,8 @@
 
 namespace App\Models\Page;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PageVersion extends Model
 {
@@ -15,7 +15,7 @@ class PageVersion extends Model
      * @var array
      */
     protected $fillable = [
-        'page_id', 'user_id', 'type', 'is_minor', 'reason', 'data'
+        'page_id', 'user_id', 'type', 'is_minor', 'reason', 'data',
     ];
 
     /**
@@ -70,6 +70,7 @@ class PageVersion extends Model
         if (!isset($this->attributes['data'])) {
             return null;
         }
+
         return json_decode($this->attributes['data'], true);
     }
 
@@ -83,6 +84,7 @@ class PageVersion extends Model
         if (!isset($this->attributes['data'])) {
             return null;
         }
+
         return strlen($this->attributes['data']);
     }
 

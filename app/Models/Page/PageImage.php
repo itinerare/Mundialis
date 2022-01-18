@@ -2,10 +2,9 @@
 
 namespace App\Models\Page;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 use App\Models\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PageImage extends Model
 {
@@ -18,7 +17,7 @@ class PageImage extends Model
      * @var array
      */
     protected $fillable = [
-        'description', 'is_visible'
+        'description', 'is_visible',
     ];
 
     /**
@@ -42,7 +41,7 @@ class PageImage extends Model
      */
     public static $createRules = [
         'creator_url.*' => 'nullable|url',
-        'image' => 'required|mimes:jpeg,gif,png|max:20000',
+        'image'         => 'required|mimes:jpeg,gif,png|max:20000',
     ];
 
     /**
@@ -52,7 +51,7 @@ class PageImage extends Model
      */
     public static $updateRules = [
         'creator_url.*' => 'nullable|url',
-        'image' => 'nullable|mimes:jpeg,gif,png|max:20000',
+        'image'         => 'nullable|mimes:jpeg,gif,png|max:20000',
     ];
 
     /**********************************************************************************************
@@ -94,8 +93,8 @@ class PageImage extends Model
     /**
      * Scope a query to only include visible pages.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  \App\Models\User\User                  $user
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \App\Models\User\User                 $user
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -104,6 +103,7 @@ class PageImage extends Model
         if ($user && $user->canWrite) {
             return $query;
         }
+
         return $query->where('is_visible', 1);
     }
 

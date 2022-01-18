@@ -10,12 +10,11 @@ use App\Models\Page\PageLink;
 use App\Models\Page\PagePageImage;
 use App\Models\Page\PageProtection;
 use App\Models\Page\PageVersion;
+use App\Models\User\User;
+use App\Services\ImageManager;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
-use App\Models\User\User;
-use App\Services\ImageManager;
 
 class SpecialPageTest extends TestCase
 {
@@ -292,8 +291,8 @@ class SpecialPageTest extends TestCase
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -668,8 +667,8 @@ class SpecialPageTest extends TestCase
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -745,8 +744,8 @@ class SpecialPageTest extends TestCase
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /******************************************************************************

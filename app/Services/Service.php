@@ -3,13 +3,11 @@
 namespace App\Services;
 
 use App;
+use App\Models\Page\Page;
 use Auth;
 use DB;
 use File;
-use Request;
 use Illuminate\Support\MessageBag;
-
-use App\Models\Page\Page;
 
 abstract class Service
 {
@@ -24,6 +22,7 @@ abstract class Service
 
     /**
      * Errors.
+     *
      * @var Illuminate\Support\MessageBag
      */
     protected $errors = null;
@@ -42,7 +41,9 @@ abstract class Service
 
     /**
      * Calls a service method and injects the required dependencies.
+     *
      * @param string $methodName
+     *
      * @return mixed
      */
     protected function callMethod($methodName)
@@ -54,6 +55,7 @@ abstract class Service
 
     /**
      * Return if an error exists.
+     *
      * @return bool
      */
     public function hasErrors()
@@ -63,6 +65,7 @@ abstract class Service
 
     /**
      * Return if an error exists.
+     *
      * @return bool
      */
     public function hasError($key)
@@ -72,14 +75,17 @@ abstract class Service
 
     /**
      * Return errors.
+     *
      * @return Illuminate\Support\MessageBag
      */
     public function errors()
     {
         return $this->errors;
     }
+
     /**
      * Return errors.
+     *
      * @return array
      */
     public function getAllErrors()
@@ -89,6 +95,7 @@ abstract class Service
 
     /**
      * Return error by key.
+     *
      * @return Illuminate\Support\MessageBag
      */
     public function getError($key)
@@ -98,6 +105,7 @@ abstract class Service
 
     /**
      * Empty the errors MessageBag.
+     *
      * @return void
      */
     public function resetErrors()
@@ -107,8 +115,10 @@ abstract class Service
 
     /**
      * Add an error to the MessageBag.
+     *
      * @param string $key
      * @param string $value
+     *
      * @return void
      */
     protected function setError($key, $value)
@@ -117,8 +127,10 @@ abstract class Service
     }
 
     /**
-     * Add multiple errors to the message bag
+     * Add multiple errors to the message bag.
+     *
      * @param Illuminate\Support\MessageBag $errors
+     *
      * @return void
      */
     protected function setErrors($errors)
@@ -128,30 +140,38 @@ abstract class Service
 
     /**
      * Commits the current DB transaction and returns a value.
+     *
      * @param mixed $return
+     *
      * @return mixed $return
      */
     protected function commitReturn($return = true)
     {
         DB::commit();
+
         return $return;
     }
 
     /**
      * Rolls back the current DB transaction and returns a value.
+     *
      * @param mixed $return
+     *
      * @return mixed $return
      */
     protected function rollbackReturn($return = false)
     {
         DB::rollback();
+
         return $return;
     }
 
     /**
      * Returns the current field if it is numeric, otherwise searches for a field if it is an array or object.
-     * @param mixed $data
+     *
+     * @param mixed  $data
      * @param string $field
+     *
      * @return mixed
      */
     protected function getNumeric($data, $field = 'id')
@@ -172,6 +192,7 @@ abstract class Service
         if (isset($this->cache[$key])) {
             return $this->cache[$key];
         }
+
         return $this->cache[$key] = $fn();
     }
 
@@ -183,6 +204,7 @@ abstract class Service
     public function setUser($user)
     {
         $this->user = $user;
+
         return $this;
     }
 
@@ -224,10 +246,11 @@ abstract class Service
     private function moveImage($dir, $name, $oldName, $copy = false)
     {
         if ($copy) {
-            File::copy($dir . '/' . $oldName, $dir . '/' . $name);
+            File::copy($dir.'/'.$oldName, $dir.'/'.$name);
         } else {
-            File::move($dir . '/' . $oldName, $dir . '/' . $name);
+            File::move($dir.'/'.$oldName, $dir.'/'.$name);
         }
+
         return true;
     }
 
@@ -238,36 +261,38 @@ abstract class Service
             // Create the directory.
             if (!mkdir($dir, 0755, true)) {
                 $this->setError('error', 'Failed to create image directory.');
+
                 return false;
             }
             chmod($dir, 0755);
         }
         if ($copy) {
-            File::copy($image, $dir . '/' . $name);
+            File::copy($image, $dir.'/'.$name);
         } else {
-            File::move($image, $dir . '/' . $name);
+            File::move($image, $dir.'/'.$name);
         }
-        chmod($dir . '/' . $name, 0755);
+        chmod($dir.'/'.$name, 0755);
 
         return true;
     }
 
     public function deleteImage($dir, $name)
     {
-        unlink($dir . '/' . $name);
+        unlink($dir.'/'.$name);
     }
 
     /**
      * Recursively compares two arrays.
-     * Taken from https://gist.github.com/jondlm/7709e54f84a3f1e1b67b
+     * Taken from https://gist.github.com/jondlm/7709e54f84a3f1e1b67b.
      *
-     * @param  array            $array1
-     * @param  array            $array2
+     * @param array $array1
+     * @param array $array2
+     *
      * @return array
      */
     public function diff_recursive($array1, $array2)
     {
-        $difference=array();
+        $difference = [];
         foreach ($array1 as $key => $value) {
             if (is_array($value) && isset($array2[$key])) {
                 // it's an array and both have the key
@@ -283,6 +308,7 @@ abstract class Service
                 $difference[$key] = $value;
             }
         }
+
         return $difference;
     }
 
@@ -290,7 +316,8 @@ abstract class Service
      * Parses inputted data for wiki-style links, and returns
      * formatted data.
      *
-     * @param  array            $data
+     * @param array $data
+     *
      * @return array
      */
     public function parse_wiki_links($data)
@@ -327,7 +354,7 @@ abstract class Service
                                 }
                                 // And make a note that the page is being linked to
                                 $data['links'][] = [
-                                    'link_id' => $page->id
+                                    'link_id' => $page->id,
                                 ];
                             } else {
                                 if ($i == 1) {
@@ -343,7 +370,7 @@ abstract class Service
                                 // which will help generate maintenance reports and, when the
                                 // page is created, help update this page.
                                 $data['links'][] = [
-                                    'title' => $match
+                                    'title' => $match,
                                 ];
                             }
                             $i2++;
@@ -358,6 +385,7 @@ abstract class Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 }

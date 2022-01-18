@@ -2,18 +2,15 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
 use App\Models\Page\PageImageCreator;
 use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
 use App\Models\User\User;
-
 use App\Services\ImageManager;
-
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class PageImageDeleteTest extends TestCase
@@ -47,8 +44,8 @@ class PageImageDeleteTest extends TestCase
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -80,8 +77,8 @@ class PageImageDeleteTest extends TestCase
         $this->assertSoftDeleted($image);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -96,7 +93,7 @@ class PageImageDeleteTest extends TestCase
 
         // Set a reason
         $data = [
-            'reason' => $this->faker->unique()->domainWord()
+            'reason' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a page to attach the image to
@@ -117,13 +114,13 @@ class PageImageDeleteTest extends TestCase
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_image_versions', [
             'page_image_id' => $page->id,
-            'type' => 'Image Deleted',
-            'reason' => $data['reason']
+            'type'          => 'Image Deleted',
+            'reason'        => $data['reason'],
         ]);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -156,15 +153,15 @@ class PageImageDeleteTest extends TestCase
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
-            'id' => $page->id,
+            'id'       => $page->id,
             'image_id' => null,
         ]);
 
         $this->assertSoftDeleted($image);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -193,8 +190,8 @@ class PageImageDeleteTest extends TestCase
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -224,13 +221,13 @@ class PageImageDeleteTest extends TestCase
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_images', [
-            'id' => $image->id,
+            'id'         => $image->id,
             'deleted_at' => null,
         ]);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -245,7 +242,7 @@ class PageImageDeleteTest extends TestCase
 
         // Set a reason
         $data = [
-            'reason' => $this->faker->unique()->domainWord()
+            'reason' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a page to attach the image to
@@ -266,18 +263,18 @@ class PageImageDeleteTest extends TestCase
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_image_versions', [
             'page_image_id' => $image->id,
-            'type' => 'Image Restored',
-            'reason' => $data['reason'],
+            'type'          => 'Image Restored',
+            'reason'        => $data['reason'],
         ]);
 
         $this->assertDatabaseHas('page_images', [
-            'id' => $image->id,
+            'id'         => $image->id,
             'deleted_at' => null,
         ]);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
@@ -310,7 +307,7 @@ class PageImageDeleteTest extends TestCase
         $this->assertSoftDeleted($image);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 }

@@ -17,12 +17,12 @@ Route::get('/', 'AdminController@getIndex');
 */
 
 Route::group(['prefix' => 'data', 'namespace' => 'Data'], function () {
-    # GENERIC ROUTES
+    // GENERIC ROUTES
     Route::get('{subject}', 'SubjectController@getSubjectIndex')
         ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
     Route::get('{subject}/edit', 'SubjectController@getEditTemplate')
         ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
-    ;
+
     Route::get('{subject}/create', 'SubjectController@getCreateCategory')
         ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
     Route::post('{subject}/edit', 'SubjectController@postEditTemplate')
@@ -37,7 +37,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data'], function () {
     Route::post('{subject}/sort', 'SubjectController@postSortCategory')
         ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
 
-    # SPECIALIZED ROUTES
+    // SPECIALIZED ROUTES
     Route::group(['prefix' => 'time'], function () {
         Route::get('divisions', 'SubjectController@getTimeDivisions');
         Route::post('divisions', 'SubjectController@postEditDivisions');
@@ -73,21 +73,21 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data'], function () {
     USERS
 */
 
-# RANKS
+// RANKS
 Route::group(['prefix' => 'ranks'], function () {
     Route::get('/', 'RankController@getIndex');
     Route::get('edit/{id}', 'RankController@getEditRank');
     Route::post('edit/{id?}', 'RankController@postEditRank');
 });
 
-# INVITATIONS
+// INVITATIONS
 Route::group(['prefix' => 'invitations'], function () {
     Route::get('/', 'InvitationController@getIndex');
     Route::post('create', 'InvitationController@postGenerateKey');
     Route::post('delete/{id}', 'InvitationController@postDeleteKey');
 });
 
-# USERS
+// USERS
 Route::group(['prefix' => 'users'], function () {
     Route::get('/', 'UserController@getUserIndex');
     Route::get('{name}/edit', 'UserController@getUser');
@@ -107,7 +107,7 @@ Route::group(['prefix' => 'users'], function () {
     MAINTENANCE
 */
 
-# SPECIAL PAGES
+// SPECIAL PAGES
 Route::group(['prefix' => 'special'], function () {
     Route::get('unwatched-pages', 'SpecialController@getUnwatchedPages');
 
@@ -131,18 +131,18 @@ Route::group(['prefix' => 'special'], function () {
     SITE SETTINGS
 */
 
-# TEXT PAGES
+// TEXT PAGES
 Route::group(['prefix' => 'pages'], function () {
     Route::get('/', 'PageController@getIndex');
     Route::get('edit/{id}', 'PageController@getEditPage');
     Route::post('edit/{id?}', 'PageController@postEditPage');
 });
 
-# SITE SETTINGS
+// SITE SETTINGS
 Route::get('site-settings', 'AdminController@getSettings');
 Route::post('site-settings/{key}', 'AdminController@postEditSetting');
 
-# SITE IMAGES
+// SITE IMAGES
 Route::group(['prefix' => 'site-images'], function () {
     Route::get('/', 'AdminController@getSiteImages');
     Route::post('upload', 'AdminController@postUploadImage');

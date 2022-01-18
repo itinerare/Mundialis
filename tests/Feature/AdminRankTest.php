@@ -2,14 +2,10 @@
 
 namespace Tests\Feature;
 
-use DB;
-
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-
-use App\Models\User\User;
 use App\Models\User\Rank;
+use App\Models\User\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AdminRankTest extends TestCase
 {
@@ -71,14 +67,14 @@ class AdminRankTest extends TestCase
         $response = $this
             ->actingAs($user)
             ->post('/admin/ranks/edit/'.$rank->id, [
-                'name' => 'Member',
-                'description' => 'TEST SUCCESS'
+                'name'        => 'Member',
+                'description' => 'TEST SUCCESS',
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('ranks', [
-            'name' => 'Member',
-            'description' => 'TEST SUCCESS'
+            'name'        => 'Member',
+            'description' => 'TEST SUCCESS',
         ]);
     }
 }

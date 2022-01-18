@@ -17,7 +17,7 @@ class PageImageVersion extends Model
     protected $fillable = [
         'page_image_id', 'user_id', 'hash', 'extension',
         'use_cropper', 'x0', 'x1', 'y0', 'y1',
-        'type', 'reason', 'is_minor', 'data'
+        'type', 'reason', 'is_minor', 'data',
     ];
 
     /**
@@ -72,6 +72,7 @@ class PageImageVersion extends Model
         if (!isset($this->attributes['data'])) {
             return null;
         }
+
         return json_decode($this->attributes['data'], true);
     }
 
@@ -82,7 +83,7 @@ class PageImageVersion extends Model
      */
     public function getImageFileNameAttribute()
     {
-        return $this->image->id . '_' . $this->id . '_'.$this->hash.'.'.$this->extension;
+        return $this->image->id.'_'.$this->id.'_'.$this->hash.'.'.$this->extension;
     }
 
     /**
@@ -95,7 +96,8 @@ class PageImageVersion extends Model
         if (!isset($this->hash)) {
             return null;
         }
-        return asset($this->image->imageDirectory . '/' . $this->imageFileName);
+
+        return asset($this->image->imageDirectory.'/'.$this->imageFileName);
     }
 
     /**
@@ -105,7 +107,7 @@ class PageImageVersion extends Model
      */
     public function getThumbnailFileNameAttribute()
     {
-        return $this->image->id . '_' . $this->id . '_'.$this->hash.'_th.'.$this->extension;
+        return $this->image->id.'_'.$this->id.'_'.$this->hash.'_th.'.$this->extension;
     }
 
     /**
@@ -118,6 +120,7 @@ class PageImageVersion extends Model
         if (!isset($this->hash)) {
             return null;
         }
-        return asset($this->image->imageDirectory . '/' . $this->thumbnailFileName);
+
+        return asset($this->image->imageDirectory.'/'.$this->thumbnailFileName);
     }
 }

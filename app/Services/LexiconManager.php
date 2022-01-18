@@ -2,20 +2,10 @@
 
 namespace App\Services;
 
-use App\Services\Service;
-
-use DB;
-use Image;
-use Arr;
-use Config;
-
-use App\Models\User\User;
-
-use App\Models\Subject\LexiconCategory;
-use App\Models\Subject\LexiconSetting;
 use App\Models\Lexicon\LexiconEntry;
 use App\Models\Lexicon\LexiconEtymology;
 use App\Models\Page\PageLink;
+use DB;
 
 class LexiconManager extends Service
 {
@@ -31,8 +21,9 @@ class LexiconManager extends Service
     /**
      * Creates a lexicon entry.
      *
-     * @param  array                                 $data
-     * @param  \App\Models\User\User                 $user
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\Lexicon\LexiconEntry
      */
     public function createLexiconEntry($data, $user)
@@ -58,11 +49,11 @@ class LexiconManager extends Service
                     foreach ($parseData['links'] as $link) {
                         if (isset($link['link_id']) || isset($link['title'])) {
                             $link = PageLink::create([
-                            'parent_id' => $entry->id,
-                            'parent_type' => 'entry',
-                            'link_id' => isset($link['link_id']) ? $link['link_id'] : null,
-                            'title' => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null
-                        ]);
+                                'parent_id'   => $entry->id,
+                                'parent_type' => 'entry',
+                                'link_id'     => isset($link['link_id']) ? $link['link_id'] : null,
+                                'title'       => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null,
+                            ]);
                             if (!$link) {
                                 throw new \Exception('An error occurred while creating a link.');
                             }
@@ -83,15 +74,17 @@ class LexiconManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Updates a lexicon entry.
      *
-     * @param  \App\Models\Lexicon\LexiconEntry      $entry
-     * @param  array                                 $data
-     * @param  \App\Models\User\User                 $user
+     * @param \App\Models\Lexicon\LexiconEntry $entry
+     * @param array                            $data
+     * @param \App\Models\User\User            $user
+     *
      * @return \App\Models\Lexicon\LexiconEntry|bool
      */
     public function updateLexiconEntry($entry, $data, $user)
@@ -119,11 +112,11 @@ class LexiconManager extends Service
                     foreach ($parseData['links'] as $link) {
                         if ((isset($link['link_id']) && !$entry->links()->where('link_id', $link['link_id'])->first()) || (isset($link['title']) && !$entry->links()->where('title', $link['title'])->first())) {
                             $link = PageLink::create([
-                            'parent_id' => $entry->id,
-                            'parent_type' => 'entry',
-                            'link_id' => isset($link['link_id']) ? $link['link_id'] : null,
-                            'title' => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null
-                        ]);
+                                'parent_id'   => $entry->id,
+                                'parent_type' => 'entry',
+                                'link_id'     => isset($link['link_id']) ? $link['link_id'] : null,
+                                'title'       => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null,
+                            ]);
                             if (!$link) {
                                 throw new \Exception('An error occurred while creating a link.');
                             }
@@ -153,14 +146,16 @@ class LexiconManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Deletes a lexicon entry.
      *
-     * @param  \App\Models\Lexicon\LexiconEntry  $entry
-     * @param  \App\Models\User\User             $user
+     * @param \App\Models\Lexicon\LexiconEntry $entry
+     * @param \App\Models\User\User            $user
+     *
      * @return bool
      */
     public function deleteLexiconEntry($entry, $user)
@@ -182,14 +177,16 @@ class LexiconManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Processes etymology data.
      *
-     * @param   \App\Models\Lexicon\LexiconEntry  $entry
-     * @param  array                              $data
+     * @param \App\Models\Lexicon\LexiconEntry $entry
+     * @param array                            $data
+     *
      * @return array
      */
     private function processEtymology($entry, $data)
@@ -217,9 +214,9 @@ class LexiconManager extends Service
                 foreach ($data['parent_id'] as $key=>$parent) {
                     if ($parent || $data['parent'][$key]) {
                         $etymology = LexiconEtymology::create([
-                            'entry_id' => $entry->id,
+                            'entry_id'  => $entry->id,
                             'parent_id' => isset($parent) ? $parent : null,
-                            'parent' => !isset($parent) && isset($data['parent'][$key]) ? $data['parent'][$key] : null
+                            'parent'    => !isset($parent) && isset($data['parent'][$key]) ? $data['parent'][$key] : null,
                         ]);
                         if (!$etymology) {
                             throw new \Exception('An error occurred while creating an etymology record.');
@@ -232,14 +229,16 @@ class LexiconManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Processes conjugation/declension data.
      *
-     * @param  \App\Models\Lexicon\LexiconEntry    $entry
-     * @param  array                               $data
+     * @param \App\Models\Lexicon\LexiconEntry $entry
+     * @param array                            $data
+     *
      * @return array
      */
     private function processConjData($entry, $data)
@@ -267,9 +266,9 @@ class LexiconManager extends Service
                     elseif (isset($conjData[$key])) {
                         foreach ($conjData[$key]['criteria'] as $conjKey=>$criteria) {
                             $matches = [];
-                            preg_match("/".$criteria."/", $entry->word, $matches);
+                            preg_match('/'.$criteria.'/', $entry->word, $matches);
                             if ($matches != []) {
-                                $data['conjdecl'][$combination] = preg_replace(isset($conjData[$key]['regex'][$conjKey]) ? "/".$conjData[$key]['regex'][$conjKey]."/" : "/".$conjData[$key]['regex'][0]."/", $conjData[$key]['replacement'][$conjKey], lcfirst($entry->word));
+                                $data['conjdecl'][$combination] = preg_replace(isset($conjData[$key]['regex'][$conjKey]) ? '/'.$conjData[$key]['regex'][$conjKey].'/' : '/'.$conjData[$key]['regex'][0].'/', $conjData[$key]['replacement'][$conjKey], lcfirst($entry->word));
                                 if ($entry->word != lcfirst($entry->word)) {
                                     $data['conjdecl'][$combination] = ucfirst($data['conjdecl'][$combination]);
                                 }

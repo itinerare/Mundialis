@@ -2,21 +2,14 @@
 
 namespace App\Services;
 
-use App\Services\Service;
-
-use DB;
-
-use App\Models\Subject\SubjectTemplate;
-use App\Models\Subject\SubjectCategory;
-
-use App\Models\Subject\TimeDivision;
-use App\Models\Subject\TimeChronology;
-use App\Models\Subject\LexiconSetting;
-use App\Models\Subject\LexiconCategory;
-
 use App\Models\Page\Page;
-
-use App\Services\PageManager;
+use App\Models\Subject\LexiconCategory;
+use App\Models\Subject\LexiconSetting;
+use App\Models\Subject\SubjectCategory;
+use App\Models\Subject\SubjectTemplate;
+use App\Models\Subject\TimeChronology;
+use App\Models\Subject\TimeDivision;
+use DB;
 
 class SubjectService extends Service
 {
@@ -32,9 +25,10 @@ class SubjectService extends Service
     /**
      * Updates a subject template.
      *
-     * @param  string                        $subject
-     * @param  array                         $data
-     * @param  \App\Models\User\User         $user
+     * @param string                $subject
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\SubjectTemplate
      */
     public function editTemplate($subject, $data, $user)
@@ -80,15 +74,17 @@ class SubjectService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Creates a category.
      *
-     * @param  array                         $data
-     * @param  \App\Models\User\User         $user
-     * @param  string                        $subject
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     * @param string                $subject
+     *
      * @return bool|\App\Models\Subject\SubjectCategory
      */
     public function createCategory($data, $user, $subject)
@@ -139,15 +135,17 @@ class SubjectService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Updates a category.
      *
-     * @param  \App\Models\Subject\SubjectCategory  $category
-     * @param  array                                $data
-     * @param  \App\Models\User\User                $user
+     * @param \App\Models\Subject\SubjectCategory $category
+     * @param array                               $data
+     * @param \App\Models\User\User               $user
+     *
      * @return \App\Models\Subject\SubjectCategory|bool
      */
     public function updateCategory($category, $data, $user)
@@ -157,7 +155,7 @@ class SubjectService extends Service
         try {
             // More specific validation
             if (SubjectCategory::where('name', $data['name'])->where('id', '!=', $category->id)->exists()) {
-                throw new \Exception("The name has already been taken.");
+                throw new \Exception('The name has already been taken.');
             }
 
             // Check to see if an existing image should be removed
@@ -222,14 +220,16 @@ class SubjectService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Delete a category.
      *
-     * @param  \App\Models\Subject\SubjectCategory  $category
-     * @param  \App\Models\User\User                $user
+     * @param \App\Models\Subject\SubjectCategory $category
+     * @param \App\Models\User\User               $user
+     *
      * @return bool
      */
     public function deleteCategory($category, $user)
@@ -242,7 +242,7 @@ class SubjectService extends Service
                 throw new \Exception('A sub-category of this category exists. Please move or delete it first.');
             }
             if (Page::where('category_id', $category->id)->exists()) {
-                throw new \Exception("A page in this category exists. Please move or delete it first.");
+                throw new \Exception('A page in this category exists. Please move or delete it first.');
             }
 
             // Permanently delete any remaining pages and associated data in the category,
@@ -261,14 +261,16 @@ class SubjectService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Sorts category order.
      *
-     * @param  array   $data
-     * @param  string  $subject
+     * @param array  $data
+     * @param string $subject
+     *
      * @return bool
      */
     public function sortCategory($data, $subject)
@@ -287,13 +289,15 @@ class SubjectService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Processes template information.
      *
-     * @param  array              $data
+     * @param array $data
+     *
      * @return array
      */
     private function processTemplateData($data)
@@ -302,8 +306,8 @@ class SubjectService extends Service
         if (isset($data['section_key'])) {
             foreach ($data['section_key'] as $key=>$section) {
                 $data['data']['sections'][strtolower($section)] = [
-                'name' => $data['section_name'][$key]
-            ];
+                    'name' => $data['section_name'][$key],
+                ];
             }
         }
 
@@ -315,13 +319,13 @@ class SubjectService extends Service
                 }
 
                 $data['data']['infobox'][$fieldKey] = [
-                'label' => $data['infobox_label'][$key],
-                'type' => $data['infobox_type'][$key],
-                'rules' => isset($data['infobox_rules'][$key]) ? $data['infobox_rules'][$key] : null,
-                'choices' => isset($data['infobox_choices'][$key]) ? $data['infobox_choices'][$key] : null,
-                'value' => isset($data['infobox_value'][$key]) ? $data['infobox_value'][$key] : null,
-                'help' => isset($data['infobox_help'][$key]) ? $data['infobox_help'][$key] : null
-            ];
+                    'label'   => $data['infobox_label'][$key],
+                    'type'    => $data['infobox_type'][$key],
+                    'rules'   => isset($data['infobox_rules'][$key]) ? $data['infobox_rules'][$key] : null,
+                    'choices' => isset($data['infobox_choices'][$key]) ? $data['infobox_choices'][$key] : null,
+                    'value'   => isset($data['infobox_value'][$key]) ? $data['infobox_value'][$key] : null,
+                    'help'    => isset($data['infobox_help'][$key]) ? $data['infobox_help'][$key] : null,
+                ];
             }
         }
 
@@ -333,14 +337,14 @@ class SubjectService extends Service
                 }
 
                 $data['data']['fields'][$data['field_section'][$key]][$fieldKey] = [
-                'label' => $data['field_label'][$key],
-                'type' => $data['field_type'][$key],
-                'rules' => isset($data['field_rules'][$key]) ? $data['field_rules'][$key] : null,
-                'choices' => isset($data['field_choices'][$key]) ? $data['field_choices'][$key] : null,
-                'value' => isset($data['field_value'][$key]) ? $data['field_value'][$key] : null,
-                'help' => isset($data['field_help'][$key]) ? $data['field_help'][$key] : null,
-                'is_subsection' => $data['field_is_subsection'][$key]
-            ];
+                    'label'         => $data['field_label'][$key],
+                    'type'          => $data['field_type'][$key],
+                    'rules'         => isset($data['field_rules'][$key]) ? $data['field_rules'][$key] : null,
+                    'choices'       => isset($data['field_choices'][$key]) ? $data['field_choices'][$key] : null,
+                    'value'         => isset($data['field_value'][$key]) ? $data['field_value'][$key] : null,
+                    'help'          => isset($data['field_help'][$key]) ? $data['field_help'][$key] : null,
+                    'is_subsection' => $data['field_is_subsection'][$key],
+                ];
             }
         }
 
@@ -350,8 +354,9 @@ class SubjectService extends Service
     /**
      * Cascades template changes.
      *
-     * @param Illuminate\Database\Eloquent\Collection    $categories
-     * @param  array                                     $data
+     * @param Illuminate\Database\Eloquent\Collection $categories
+     * @param array                                   $data
+     *
      * @return array
      */
     private function cascadeTemplateChangesRecursively($categories, $data)
@@ -374,15 +379,16 @@ class SubjectService extends Service
     /**
      * Cascades template changes.
      *
-     * @param Illuminate\Database\Eloquent\Collection    $categories
-     * @param  array                                     $data
+     * @param Illuminate\Database\Eloquent\Collection $categories
+     * @param array                                   $data
+     *
      * @return array
      */
     private function cascadeTemplateChanges($categories, $data)
     {
         // Recursively compare arrays
-        $data['changes']['added'] = $this->diff_recursive((array)$data['data'], (array)$data['old']);
-        $data['changes']['removed'] = $this->diff_recursive((array)$data['old'], (array)$data['data']);
+        $data['changes']['added'] = $this->diff_recursive((array) $data['data'], (array) $data['old']);
+        $data['changes']['removed'] = $this->diff_recursive((array) $data['old'], (array) $data['data']);
 
         // Perform operations on impacted categories
         foreach ($categories as $key=>$category) {
@@ -437,8 +443,9 @@ class SubjectService extends Service
     /**
      * Updates time divisions.
      *
-     * @param  array                         $data
-     * @param  \App\Models\User\User         $user
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\TimeDivision
      */
     public function editTimeDivisions($data, $user)
@@ -452,7 +459,7 @@ class SubjectService extends Service
                     // More specific validation
                     foreach ($data['name'] as $subKey=>$subName) {
                         if ($subName == $name && $subKey != $key) {
-                            throw new \Exception("The name has already been taken.");
+                            throw new \Exception('The name has already been taken.');
                         }
                     }
 
@@ -464,10 +471,10 @@ class SubjectService extends Service
 
                     // Assemble data
                     $data[$key] = [
-                        'name' => $data['name'][$key],
-                        'abbreviation' => isset($data['abbreviation'][$key]) ? $data['abbreviation'][$key] : null,
-                        'unit' => isset($data['unit'][$key]) ? $data['unit'][$key] : null,
-                        'use_for_dates' => $division && (isset($data['use_for_dates'][$division->id]) && $data['use_for_dates'][$division->id]) ? 1 : 0
+                        'name'          => $data['name'][$key],
+                        'abbreviation'  => isset($data['abbreviation'][$key]) ? $data['abbreviation'][$key] : null,
+                        'unit'          => isset($data['unit'][$key]) ? $data['unit'][$key] : null,
+                        'use_for_dates' => $division && (isset($data['use_for_dates'][$division->id]) && $data['use_for_dates'][$division->id]) ? 1 : 0,
                     ];
 
                     // Create or update division data
@@ -499,14 +506,16 @@ class SubjectService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Creates a chronology.
      *
-     * @param  array                         $data
-     * @param  \App\Models\User\User         $user
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\TimeChronology
      */
     public function createChronology($data, $user)
@@ -521,15 +530,17 @@ class SubjectService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Updates a chronology.
      *
-     * @param  \App\Models\Subject\TimeChronology    $chronology
-     * @param  array                                 $data
-     * @param  \App\Models\User\User                 $user
+     * @param \App\Models\Subject\TimeChronology $chronology
+     * @param array                              $data
+     * @param \App\Models\User\User              $user
+     *
      * @return \App\Models\Subject\TimeChronology|bool
      */
     public function updateChronology($chronology, $data, $user)
@@ -539,7 +550,7 @@ class SubjectService extends Service
         try {
             // More specific validation
             if (TimeChronology::where('name', $data['name'])->where('id', '!=', $chronology->id)->exists()) {
-                throw new \Exception("The name has already been taken.");
+                throw new \Exception('The name has already been taken.');
             }
 
             // Update chronology
@@ -549,13 +560,15 @@ class SubjectService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Delete a chronology.
      *
-     * @param  \App\Models\Subject\TimeChronology  $chronology
+     * @param \App\Models\Subject\TimeChronology $chronology
+     *
      * @return bool
      */
     public function deleteChronology($chronology)
@@ -575,13 +588,15 @@ class SubjectService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Sorts chronology order.
      *
-     * @param  array   $data
+     * @param array $data
+     *
      * @return bool
      */
     public function sortChronology($data)
@@ -600,6 +615,7 @@ class SubjectService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
@@ -610,8 +626,9 @@ class SubjectService extends Service
     /**
      * Updates lexicon settings.
      *
-     * @param  array                         $data
-     * @param  \App\Models\User\User         $user
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\LexiconSetting
      */
     public function editLexiconSettings($data, $user)
@@ -625,7 +642,7 @@ class SubjectService extends Service
                     // More specific validation
                     foreach ($data['name'] as $subKey=>$subName) {
                         if ($subName == $name && $subKey != $key) {
-                            throw new \Exception("The name has already been taken.");
+                            throw new \Exception('The name has already been taken.');
                         }
                     }
 
@@ -637,7 +654,7 @@ class SubjectService extends Service
 
                     // Assemble data
                     $data[$key] = [
-                        'name' => $data['name'][$key],
+                        'name'         => $data['name'][$key],
                         'abbreviation' => isset($data['abbreviation'][$key]) ? $data['abbreviation'][$key] : null,
                     ];
 
@@ -670,14 +687,16 @@ class SubjectService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Creates a lexicon category.
      *
-     * @param  array                         $data
-     * @param  \App\Models\User\User         $user
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\LexiconCategory
      */
     public function createLexiconCategory($data, $user)
@@ -702,15 +721,17 @@ class SubjectService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Updates a lexicon category.
      *
-     * @param  \App\Models\Subject\LexiconCategory  $category
-     * @param  array                                $data
-     * @param  \App\Models\User\User                $user
+     * @param \App\Models\Subject\LexiconCategory $category
+     * @param array                               $data
+     * @param \App\Models\User\User               $user
+     *
      * @return \App\Models\Subject\LexiconCategory|bool
      */
     public function updateLexiconCategory($category, $data, $user)
@@ -720,7 +741,7 @@ class SubjectService extends Service
         try {
             // More specific validation
             if (LexiconCategory::where('name', $data['name'])->where('id', '!=', $category->id)->exists()) {
-                throw new \Exception("The name has already been taken.");
+                throw new \Exception('The name has already been taken.');
             }
 
             // Process data for storage
@@ -745,13 +766,15 @@ class SubjectService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Deletes a lexicon category.
      *
-     * @param  \App\Models\Subject\LexiconCategory  $category
+     * @param \App\Models\Subject\LexiconCategory $category
+     *
      * @return bool
      */
     public function deleteLexiconCategory($category)
@@ -771,13 +794,15 @@ class SubjectService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Sorts lexicon category order.
      *
-     * @param  array   $data
+     * @param array $data
+     *
      * @return bool
      */
     public function sortLexiconCategory($data)
@@ -796,14 +821,16 @@ class SubjectService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Processes lexicon category data for storage.
      *
-     * @param  array                                     $data
-     * @param  App\Models\Subject\LexiconCategory        $category
+     * @param array                              $data
+     * @param App\Models\Subject\LexiconCategory $category
+     *
      * @return array
      */
     private function processLexiconData($data, $category = null)
@@ -813,10 +840,10 @@ class SubjectService extends Service
             foreach ($data['property_name'] as $key=>$property) {
                 $propertyKey[$key] = str_replace(' ', '_', strtolower($property));
                 $data['data'][$data['property_class'][$key]]['properties'][$propertyKey[$key]] = [
-                'name' => $property,
-                'non_dimensional' => isset($data['property_dimensions'][$key]) ? 0 : 1,
-                'dimensions' => isset($data['property_dimensions'][$key]) ? explode(',', $data['property_dimensions'][$key]) : null
-            ];
+                    'name'            => $property,
+                    'non_dimensional' => isset($data['property_dimensions'][$key]) ? 0 : 1,
+                    'dimensions'      => isset($data['property_dimensions'][$key]) ? explode(',', $data['property_dimensions'][$key]) : null,
+                ];
             }
         }
 
@@ -846,10 +873,10 @@ class SubjectService extends Service
                             // Assemble data itself, including exploding the selectize outputs
                             // as it's easiest to perform final checks on arrays
                             $data['data'][$class->id]['conjugation'][$key] = [
-                            'criteria' => explode(';', $criteria),
-                            'regex' => explode(';', $data['declension_regex'][$class->id][$key]),
-                            'replacement' => explode(';', $data['declension_replacement'][$class->id][$key]),
-                        ];
+                                'criteria'    => explode(';', $criteria),
+                                'regex'       => explode(';', $data['declension_regex'][$class->id][$key]),
+                                'replacement' => explode(';', $data['declension_replacement'][$class->id][$key]),
+                            ];
 
                             // Perform final check to see that criteria and replacements are 1:1
                             if (count($data['data'][$class->id]['conjugation'][$key]['criteria']) != count($data['data'][$class->id]['conjugation'][$key]['replacement'])) {

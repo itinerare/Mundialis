@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers\Users;
 
-use Illuminate\Http\Request;
-
-use DB;
-use Auth;
-use Route;
-use App\Models\User\User;
-
-use App\Models\Page\PageVersion;
-use App\Models\Page\PageImageVersion;
-
 use App\Http\Controllers\Controller;
+use App\Models\Page\PageImageVersion;
+use App\Models\Page\PageVersion;
+use App\Models\User\User;
+use Auth;
+use Illuminate\Http\Request;
+use Route;
 
 class UserController extends Controller
 {
@@ -42,7 +38,8 @@ class UserController extends Controller
     /**
      * Shows a user's profile.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUser($name)
@@ -54,6 +51,7 @@ class UserController extends Controller
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }
+
             return $version->page->is_visible;
         });
 
@@ -64,21 +62,23 @@ class UserController extends Controller
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }
+
             return $version->image->is_visible;
         });
 
         return view('user.profile', [
-            'user' => $this->user,
-            'pageVersions' => $pageVersions->take(15),
-            'imageVersions' => $imageVersions->take(5)
+            'user'          => $this->user,
+            'pageVersions'  => $pageVersions->take(15),
+            'imageVersions' => $imageVersions->take(5),
         ]);
     }
 
     /**
      * Shows a user's page revisions.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string                    $name
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $name
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUserPageRevisions(Request $request, $name)
@@ -90,20 +90,22 @@ class UserController extends Controller
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }
+
             return $version->page->is_visible;
         });
 
         return view('user.page_revisions', [
-            'user' => $this->user,
-            'versions' => $query->paginate(20)->appends($request->query())
+            'user'     => $this->user,
+            'versions' => $query->paginate(20)->appends($request->query()),
         ]);
     }
 
     /**
      * Shows a user's image revisions.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string                    $name
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $name
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUserImageRevisions(Request $request, $name)
@@ -115,12 +117,13 @@ class UserController extends Controller
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }
+
             return $version->image->is_visible;
         });
 
         return view('user.image_revisions', [
-            'user' => $this->user,
-            'versions' => $query->paginate(15)->appends($request->query())
+            'user'     => $this->user,
+            'versions' => $query->paginate(15)->appends($request->query()),
         ]);
     }
 }

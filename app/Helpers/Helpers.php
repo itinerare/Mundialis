@@ -12,19 +12,21 @@
 /**
  * Returns class name if the current URL corresponds to the given path.
  *
- * @param  string  $path
- * @param  string  $class
+ * @param string $path
+ * @param string $class
+ *
  * @return string
  */
 function set_active($path, $class = 'active')
 {
-    return call_user_func_array('Request::is', (array)$path) ? $class : '';
+    return call_user_func_array('Request::is', (array) $path) ? $class : '';
 }
 
 /**
  * Adds a help icon with a tooltip.
  *
- * @param  string  $text
+ * @param string $text
+ *
  * @return string
  */
 function add_help($text)
@@ -35,7 +37,8 @@ function add_help($text)
 /**
  * Uses the given array to generate breadcrumb links.
  *
- * @param  array  $links
+ * @param array $links
+ *
  * @return string
  */
 function breadcrumbs($links)
@@ -55,7 +58,7 @@ function breadcrumbs($links)
         if (!$isLast) {
             $ret .= '<a href="'.url($link).'">';
         }
-        $ret .=  $key;
+        $ret .= $key;
         if (!$isLast) {
             $ret .= '</a>';
         }
@@ -72,22 +75,24 @@ function breadcrumbs($links)
 /**
  * Formats the timestamp to a standard format.
  *
- * @param  \Illuminate\Support\Carbon\Carbon  $timestamp
+ * @param \Illuminate\Support\Carbon\Carbon $timestamp
+ *
  * @return string
  */
 function format_date($timestamp, $showTime = true)
 {
-    return $timestamp->format('j F Y' . ($showTime ? ', H:i:s' : '')) . ($showTime ? ' <abbr data-toggle="tooltip" title="UTC'.$timestamp->timezone->toOffsetName().'">' . strtoupper($timestamp->timezone->getAbbreviatedName($timestamp->isDST())) . '</abbr>' : '');
+    return $timestamp->format('j F Y'.($showTime ? ', H:i:s' : '')).($showTime ? ' <abbr data-toggle="tooltip" title="UTC'.$timestamp->timezone->toOffsetName().'">'.strtoupper($timestamp->timezone->getAbbreviatedName($timestamp->isDST())).'</abbr>' : '');
 }
 function pretty_date($timestamp, $showTime = true)
 {
-    return '<abbr data-toggle="tooltip" title="' . $timestamp->format('F j Y' . ($showTime ? ', H:i:s' : '')) . ' ' . strtoupper($timestamp->timezone->getAbbreviatedName($timestamp->isDST())).'">' .$timestamp->diffForHumans() . '</abbr>';
+    return '<abbr data-toggle="tooltip" title="'.$timestamp->format('F j Y'.($showTime ? ', H:i:s' : '')).' '.strtoupper($timestamp->timezone->getAbbreviatedName($timestamp->isDST())).'">'.$timestamp->diffForHumans().'</abbr>';
 }
 
 /**
  * Generates a string of random characters of the specified length.
  *
- * @param  int  $characters
+ * @param int $characters
+ *
  * @return string
  */
 function randomString($characters)
@@ -97,13 +102,15 @@ function randomString($characters)
     for ($i = 0; $i < $characters; $i++) {
         $code .= $src[mt_rand(0, strlen($src) - 1)];
     }
+
     return $code;
 }
 
 /**
  * Capture a web screenshot.
  *
- * @param  string   $url
+ * @param string $url
+ *
  * @return blob
  */
 function screenshot($url)
@@ -118,7 +125,7 @@ function screenshot($url)
             $hash = md5(env('THUM_IO_KEY').$expires.$url);
 
             // Return API call URL
-            return "https://image.thum.io/get/png/auth/".env('THUM_IO_ID').'-'.$expires.'-'.$hash."/".$url;
+            return 'https://image.thum.io/get/png/auth/'.env('THUM_IO_ID').'-'.$expires.'-'.$hash.'/'.$url;
         }
     } else {
         return false;
@@ -128,7 +135,8 @@ function screenshot($url)
 /**
  * Prettifies links to user profiles on various sites in a "user@site" format.
  *
- * @param  string  $url
+ * @param string $url
+ *
  * @return string
  */
 function prettyProfileLink($url)

@@ -15,7 +15,7 @@ class PageLink extends Model
      * @var array
      */
     protected $fillable = [
-        'parent_id', 'link_id', 'title', 'parent_type', 'linked_type'
+        'parent_id', 'link_id', 'title', 'parent_type', 'linked_type',
     ];
 
     /**

@@ -2,8 +2,8 @@
 
 namespace App\Models\User;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class WatchedPage extends Pivot
 {
@@ -15,7 +15,7 @@ class WatchedPage extends Pivot
      * @var array
      */
     protected $fillable = [
-        'user_id', 'page_id'
+        'user_id', 'page_id',
     ];
 
     /**

@@ -12,7 +12,7 @@
 
 Route::redirect('pages', '/');
 
-# PROFILES
+// PROFILES
 Route::group(['prefix' => 'user', 'namespace' => 'Users'], function () {
     Route::get('{name}', 'UserController@getUser');
     Route::get('{name}/page-revisions', 'UserController@getUserPageRevisions');
@@ -20,15 +20,14 @@ Route::group(['prefix' => 'user', 'namespace' => 'Users'], function () {
 });
 
 Route::group(['namespace' => 'Pages'], function () {
-    # SUBJECTS/CATEGORIES
+    // SUBJECTS/CATEGORIES
     Route::get('{subject}', 'SubjectController@getSubject')
         ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
     Route::get('{subject}/categories/{id}', 'SubjectController@getSubjectCategory')
         ->where(['subject' => implode('|', array_keys(Config::get('mundialis.subjects'))), 'id' => '[0-9]+']);
 
-    # PAGES
+    // PAGES
     Route::group(['prefix' => 'pages'], function () {
-        ;
         Route::get('{id}', 'PageController@getPage');
 
         Route::get('{id}/gallery', 'ImageController@getPageGallery')
@@ -56,14 +55,14 @@ Route::group(['namespace' => 'Pages'], function () {
         });
     });
 
-    # TIME
+    // TIME
     Route::group(['prefix' => 'time'], function () {
         Route::get('timeline', 'SubjectController@getTimeTimeline');
         Route::get('chronologies/{id}', 'SubjectController@getTimeChronology')
             ->whereNumber('id');
     });
 
-    # LEXICON
+    // LEXICON
     Route::group(['prefix' => 'language/lexicon'], function () {
         Route::get('{id}', 'SubjectController@getLexiconCategory')
             ->whereNumber('id');
@@ -71,11 +70,11 @@ Route::group(['namespace' => 'Pages'], function () {
             ->whereNumber('id');
     });
 
-    # SPECIAL PAGES
+    // SPECIAL PAGES
     Route::group(['prefix' => 'special'], function () {
         Route::get('/', 'SpecialController@getSpecialIndex');
 
-        # MAINTENANCE REPORTS
+        // MAINTENANCE REPORTS
         Route::get('untagged-pages', 'SpecialController@getUntaggedPages');
         Route::get('tagged-pages', 'SpecialController@getMostTaggedPages');
         Route::get('{mode}-revised-pages', 'SpecialController@getRevisedPages')
@@ -89,17 +88,17 @@ Route::group(['namespace' => 'Pages'], function () {
         Route::get('{tag}-pages', 'SpecialController@getUtilityTagPages')
             ->where('tag', implode('|', array_keys(Config::get('mundialis.utility_tags'))));
 
-        # LISTS
+        // LISTS
         Route::get('all-pages', 'SpecialController@getAllPages');
         Route::get('all-tags', 'SpecialController@getAllTags');
         Route::get('all-images', 'SpecialController@getAllImages');
         Route::get('get-image/{id}', 'ImageController@getPageImagePopup')
             ->whereNumber('id');
 
-        # USERS
+        // USERS
         Route::get('user-list', 'SpecialController@getUserList');
 
-        # OTHER
+        // OTHER
         Route::get('random-page', 'SpecialController@getRandomPage');
     });
 });

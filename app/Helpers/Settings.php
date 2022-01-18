@@ -18,7 +18,8 @@ class Settings
     /**
      * Gets a site setting.
      *
-     * @param  string  $key
+     * @param string $key
+     *
      * @return mixed|null
      */
     public function get($key)

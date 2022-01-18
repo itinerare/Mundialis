@@ -2,11 +2,7 @@
 
 namespace App\Services;
 
-use App\Services\Service;
-
 use DB;
-
-use App\Models\SitePage;
 
 class SitePageService extends Service
 {
@@ -23,9 +19,10 @@ class SitePageService extends Service
     /**
      * Updates a text page.
      *
-     * @param  \App\Models\TextPage   $page
-     * @param  array                  $data
-     * @param  \App\Models\User\User  $user
+     * @param \App\Models\TextPage  $page
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\TextPage
      */
     public function updatePage($page, $data, $user)
@@ -39,6 +36,7 @@ class SitePageService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 }

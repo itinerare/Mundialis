@@ -2,16 +2,11 @@
 
 namespace Tests\Feature;
 
-use DB;
-
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-
-use App\Models\User\User;
 use App\Models\User\InvitationCode;
-
+use App\Models\User\User;
 use App\Services\InvitationService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AdminInvitationTest extends TestCase
 {

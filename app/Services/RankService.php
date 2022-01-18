@@ -2,13 +2,9 @@
 
 namespace App\Services;
 
-use App\Services\Service;
-
-use DB;
-use Config;
-
-use App\Models\User\User;
 use App\Models\User\Rank;
+use App\Models\User\User;
+use DB;
 
 class RankService extends Service
 {
@@ -24,9 +20,10 @@ class RankService extends Service
     /**
      * Updates a user rank.
      *
-     * @param  \App\Models\Rank\Rank  $rank
-     * @param  array                  $data
-     * @param  \App\Models\User\User  $user
+     * @param \App\Models\Rank\Rank $rank
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool
      */
     public function updateRank($rank, $data, $user)
@@ -36,7 +33,7 @@ class RankService extends Service
         try {
             // More specific validation
             if (Rank::where('name', $data['name'])->where('id', '!=', $rank->id)->exists()) {
-                throw new \Exception("A rank with the given name already exists.");
+                throw new \Exception('A rank with the given name already exists.');
             }
 
             $rank->update($data);
@@ -45,6 +42,7 @@ class RankService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 }

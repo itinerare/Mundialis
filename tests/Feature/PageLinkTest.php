@@ -3,14 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\Lexicon\LexiconEntry;
+use App\Models\Page\Page;
+use App\Models\Subject\LexiconSetting;
+use App\Models\Subject\SubjectCategory;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
-use App\Models\User\User;
-use App\Models\Subject\SubjectCategory;
-use App\Models\Page\Page;
-use App\Models\Subject\LexiconSetting;
 
 class PageLinkTest extends TestCase
 {
@@ -32,8 +31,8 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'       => $this->faker->unique()->domainWord(),
+            'summary'     => null,
             'category_id' => $category->id,
             'description' => '<p>[['.$linkPage->title.']]</p>',
         ];
@@ -51,12 +50,12 @@ class PageLinkTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":"<p>[['.$linkPage->title.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace("(^https?://)", "", env('APP_URL', 'localhost')).'\/pages\/'.$linkPage->id.'.'.$linkPage->slug.'\" class=\"text-primary\">'.$linkPage->title.'<\/a><\/p>"},"links":[{"link_id":'.$linkPage->id.'}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":"<p>[['.$linkPage->title.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/pages\/'.$linkPage->id.'.'.$linkPage->slug.'\" class=\"text-primary\">'.$linkPage->title.'<\/a><\/p>"},"links":[{"link_id":'.$linkPage->id.'}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
 
         $this->assertDatabaseHas('page_links', [
             'parent_id' => $page->id,
-            'link_id' => $linkPage->id,
+            'link_id'   => $linkPage->id,
         ]);
     }
 
@@ -74,8 +73,8 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'       => $this->faker->unique()->domainWord(),
+            'summary'     => null,
             'description' => '<p>[['.$linkPage->title.']]</p>',
         ];
 
@@ -90,12 +89,12 @@ class PageLinkTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":"<p>[['.$linkPage->title.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace("(^https?://)", "", env('APP_URL', 'localhost')).'\/pages\/'.$linkPage->id.'.'.$linkPage->slug.'\" class=\"text-primary\">'.$linkPage->title.'<\/a><\/p>"},"links":[{"link_id":'.$linkPage->id.'}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":"<p>[['.$linkPage->title.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/pages\/'.$linkPage->id.'.'.$linkPage->slug.'\" class=\"text-primary\">'.$linkPage->title.'<\/a><\/p>"},"links":[{"link_id":'.$linkPage->id.'}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
 
         $this->assertDatabaseHas('page_links', [
             'parent_id' => $page->id,
-            'link_id' => $linkPage->id,
+            'link_id'   => $linkPage->id,
         ]);
     }
 
@@ -115,8 +114,8 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'       => $this->faker->unique()->domainWord(),
+            'summary'     => null,
             'category_id' => $category->id,
             'description' => '<p>[['.$linkPage->title.'|'.$linkWord.']]</p>',
         ];
@@ -134,12 +133,12 @@ class PageLinkTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":"<p>[['.$linkPage->title.'|'.$linkWord.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace("(^https?://)", "", env('APP_URL', 'localhost')).'\/pages\/'.$linkPage->id.'.'.$linkPage->slug.'\" class=\"text-primary\">'.$linkWord.'<\/a><\/p>"},"links":[{"link_id":'.$linkPage->id.'}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":"<p>[['.$linkPage->title.'|'.$linkWord.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/pages\/'.$linkPage->id.'.'.$linkPage->slug.'\" class=\"text-primary\">'.$linkWord.'<\/a><\/p>"},"links":[{"link_id":'.$linkPage->id.'}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
 
         $this->assertDatabaseHas('page_links', [
             'parent_id' => $page->id,
-            'link_id' => $linkPage->id,
+            'link_id'   => $linkPage->id,
         ]);
     }
 
@@ -158,8 +157,8 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'       => $this->faker->unique()->domainWord(),
+            'summary'     => null,
             'description' => '<p>[['.$linkPage->title.'|'.$linkWord.']]</p>',
         ];
 
@@ -174,12 +173,12 @@ class PageLinkTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":"<p>[['.$linkPage->title.'|'.$linkWord.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace("(^https?://)", "", env('APP_URL', 'localhost')).'\/pages\/'.$linkPage->id.'.'.$linkPage->slug.'\" class=\"text-primary\">'.$linkWord.'<\/a><\/p>"},"links":[{"link_id":'.$linkPage->id.'}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":"<p>[['.$linkPage->title.'|'.$linkWord.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/pages\/'.$linkPage->id.'.'.$linkPage->slug.'\" class=\"text-primary\">'.$linkWord.'<\/a><\/p>"},"links":[{"link_id":'.$linkPage->id.'}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
 
         $this->assertDatabaseHas('page_links', [
             'parent_id' => $page->id,
-            'link_id' => $linkPage->id,
+            'link_id'   => $linkPage->id,
         ]);
     }
 
@@ -198,8 +197,8 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'       => $this->faker->unique()->domainWord(),
+            'summary'     => null,
             'category_id' => $category->id,
             'description' => '<p>[['.$linkWord.']]</p>',
         ];
@@ -217,13 +216,13 @@ class PageLinkTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":"<p>[['.$linkWord.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace("(^https?://)", "", env('APP_URL', 'localhost')).'\/special\/create-wanted\/'.$linkWord.'\" class=\"text-danger\">'.$linkWord.'<\/a><\/p>"},"links":[{"title":"'.$linkWord.'"}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":"<p>[['.$linkWord.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/special\/create-wanted\/'.$linkWord.'\" class=\"text-danger\">'.$linkWord.'<\/a><\/p>"},"links":[{"title":"'.$linkWord.'"}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
 
         $this->assertDatabaseHas('page_links', [
             'parent_id' => $page->id,
-            'link_id' => null,
-            'title' => $linkWord,
+            'link_id'   => null,
+            'title'     => $linkWord,
         ]);
     }
 
@@ -241,8 +240,8 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'       => $this->faker->unique()->domainWord(),
+            'summary'     => null,
             'description' => '<p>[['.$linkWord.']]</p>',
         ];
 
@@ -257,13 +256,13 @@ class PageLinkTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":"<p>[['.$linkWord.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace("(^https?://)", "", env('APP_URL', 'localhost')).'\/special\/create-wanted\/'.$linkWord.'\" class=\"text-danger\">'.$linkWord.'<\/a><\/p>"},"links":[{"title":"'.$linkWord.'"}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":"<p>[['.$linkWord.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/special\/create-wanted\/'.$linkWord.'\" class=\"text-danger\">'.$linkWord.'<\/a><\/p>"},"links":[{"title":"'.$linkWord.'"}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
 
         $this->assertDatabaseHas('page_links', [
             'parent_id' => $page->id,
-            'link_id' => null,
-            'title' => $linkWord,
+            'link_id'   => null,
+            'title'     => $linkWord,
         ]);
     }
 
@@ -284,8 +283,8 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'       => $this->faker->unique()->domainWord(),
+            'summary'     => null,
             'category_id' => $category->id,
             'description' => '<p>[['.$linkWord[1].'|'.$linkWord[2].']]</p>',
         ];
@@ -303,13 +302,13 @@ class PageLinkTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":"<p>[['.$linkWord[1].'|'.$linkWord[2].']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace("(^https?://)", "", env('APP_URL', 'localhost')).'\/special\/create-wanted\/'.$linkWord[1].'\" class=\"text-danger\">'.$linkWord[2].'<\/a><\/p>"},"links":[{"title":"'.$linkWord[1].'"}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":"<p>[['.$linkWord[1].'|'.$linkWord[2].']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/special\/create-wanted\/'.$linkWord[1].'\" class=\"text-danger\">'.$linkWord[2].'<\/a><\/p>"},"links":[{"title":"'.$linkWord[1].'"}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
 
         $this->assertDatabaseHas('page_links', [
             'parent_id' => $page->id,
-            'link_id' => null,
-            'title' => $linkWord,
+            'link_id'   => null,
+            'title'     => $linkWord,
         ]);
     }
 
@@ -329,8 +328,8 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'       => $this->faker->unique()->domainWord(),
+            'summary'     => null,
             'description' => '<p>[['.$linkWord[1].'|'.$linkWord[2].']]</p>',
         ];
 
@@ -345,13 +344,13 @@ class PageLinkTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":"<p>[['.$linkWord[1].'|'.$linkWord[2].']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace("(^https?://)", "", env('APP_URL', 'localhost')).'\/special\/create-wanted\/'.$linkWord[1].'\" class=\"text-danger\">'.$linkWord[2].'<\/a><\/p>"},"links":[{"title":"'.$linkWord[1].'"}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":"<p>[['.$linkWord[1].'|'.$linkWord[2].']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/special\/create-wanted\/'.$linkWord[1].'\" class=\"text-danger\">'.$linkWord[2].'<\/a><\/p>"},"links":[{"title":"'.$linkWord[1].'"}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
 
         $this->assertDatabaseHas('page_links', [
             'parent_id' => $page->id,
-            'link_id' => null,
-            'title' => $linkWord,
+            'link_id'   => null,
+            'title'     => $linkWord,
         ]);
     }
 
@@ -371,9 +370,9 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'word' => $this->faker->unique()->domainWord(),
-            'meaning' => $this->faker->unique()->domainWord(),
-            'class' => $class->name,
+            'word'       => $this->faker->unique()->domainWord(),
+            'meaning'    => $this->faker->unique()->domainWord(),
+            'class'      => $class->name,
             'definition' => '<p>[['.$linkPage->title.']]</p>',
         ];
 
@@ -389,14 +388,14 @@ class PageLinkTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_entries', [
-            'id' => $entry->id,
-            'definition' => $data['definition'],
+            'id'                => $entry->id,
+            'definition'        => $data['definition'],
             'parsed_definition' => '<p>'.$linkPage->displayName.'</p>',
         ]);
 
         $this->assertDatabaseHas('page_links', [
-            'parent_id' => $entry->id,
-            'link_id' => $linkPage->id,
+            'parent_id'   => $entry->id,
+            'link_id'     => $linkPage->id,
             'parent_type' => 'entry',
         ]);
     }
@@ -416,9 +415,9 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'word' => $this->faker->unique()->domainWord(),
-            'meaning' => $entry->meaning,
-            'class' => $entry->class,
+            'word'       => $this->faker->unique()->domainWord(),
+            'meaning'    => $entry->meaning,
+            'class'      => $entry->class,
             'definition' => '<p>[['.$linkPage->title.']]</p>',
         ];
 
@@ -432,14 +431,14 @@ class PageLinkTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_entries', [
-            'id' => $entry->id,
-            'definition' => $data['definition'],
+            'id'                => $entry->id,
+            'definition'        => $data['definition'],
             'parsed_definition' => '<p>'.$linkPage->displayName.'</p>',
         ]);
 
         $this->assertDatabaseHas('page_links', [
-            'parent_id' => $entry->id,
-            'link_id' => $linkPage->id,
+            'parent_id'   => $entry->id,
+            'link_id'     => $linkPage->id,
             'parent_type' => 'entry',
         ]);
     }
@@ -461,9 +460,9 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'word' => $this->faker->unique()->domainWord(),
-            'meaning' => $this->faker->unique()->domainWord(),
-            'class' => $class->name,
+            'word'       => $this->faker->unique()->domainWord(),
+            'meaning'    => $this->faker->unique()->domainWord(),
+            'class'      => $class->name,
             'definition' => '<p>[['.$linkPage->title.'|'.$linkWord.']]</p>',
         ];
 
@@ -479,14 +478,14 @@ class PageLinkTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_entries', [
-            'id' => $entry->id,
-            'definition' => $data['definition'],
+            'id'                => $entry->id,
+            'definition'        => $data['definition'],
             'parsed_definition' => '<p><a href="'.$linkPage->url.'" class="text-primary">'.$linkWord.'</a></p>',
         ]);
 
         $this->assertDatabaseHas('page_links', [
-            'parent_id' => $entry->id,
-            'link_id' => $linkPage->id,
+            'parent_id'   => $entry->id,
+            'link_id'     => $linkPage->id,
             'parent_type' => 'entry',
         ]);
     }
@@ -507,9 +506,9 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'word' => $this->faker->unique()->domainWord(),
-            'meaning' => $entry->meaning,
-            'class' => $entry->class,
+            'word'       => $this->faker->unique()->domainWord(),
+            'meaning'    => $entry->meaning,
+            'class'      => $entry->class,
             'definition' => '<p>[['.$linkPage->title.'|'.$linkWord.']]</p>',
         ];
 
@@ -523,14 +522,14 @@ class PageLinkTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_entries', [
-            'id' => $entry->id,
-            'definition' => $data['definition'],
+            'id'                => $entry->id,
+            'definition'        => $data['definition'],
             'parsed_definition' => '<p><a href="'.$linkPage->url.'" class="text-primary">'.$linkWord.'</a></p>',
         ]);
 
         $this->assertDatabaseHas('page_links', [
-            'parent_id' => $entry->id,
-            'link_id' => $linkPage->id,
+            'parent_id'   => $entry->id,
+            'link_id'     => $linkPage->id,
             'parent_type' => 'entry',
         ]);
     }
@@ -551,9 +550,9 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'word' => $this->faker->unique()->domainWord(),
-            'meaning' => $this->faker->unique()->domainWord(),
-            'class' => $class->name,
+            'word'       => $this->faker->unique()->domainWord(),
+            'meaning'    => $this->faker->unique()->domainWord(),
+            'class'      => $class->name,
             'definition' => '<p>[['.$linkWord.']]</p>',
         ];
 
@@ -569,16 +568,16 @@ class PageLinkTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_entries', [
-            'id' => $entry->id,
-            'definition' => $data['definition'],
+            'id'                => $entry->id,
+            'definition'        => $data['definition'],
             'parsed_definition' => '<p><a href="'.url('special/create-wanted/'.$linkWord).'" class="text-danger">'.$linkWord.'</a></p>',
         ]);
 
         $this->assertDatabaseHas('page_links', [
-            'parent_id' => $entry->id,
+            'parent_id'   => $entry->id,
             'parent_type' => 'entry',
-            'link_id' => null,
-            'title' => $linkWord
+            'link_id'     => null,
+            'title'       => $linkWord,
         ]);
     }
 
@@ -597,9 +596,9 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'word' => $this->faker->unique()->domainWord(),
-            'meaning' => $entry->meaning,
-            'class' => $entry->class,
+            'word'       => $this->faker->unique()->domainWord(),
+            'meaning'    => $entry->meaning,
+            'class'      => $entry->class,
             'definition' => '<p>[['.$linkWord.']]</p>',
         ];
 
@@ -613,16 +612,16 @@ class PageLinkTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_entries', [
-            'id' => $entry->id,
-            'definition' => $data['definition'],
+            'id'                => $entry->id,
+            'definition'        => $data['definition'],
             'parsed_definition' => '<p><a href="'.url('special/create-wanted/'.$linkWord).'" class="text-danger">'.$linkWord.'</a></p>',
         ]);
 
         $this->assertDatabaseHas('page_links', [
-            'parent_id' => $entry->id,
+            'parent_id'   => $entry->id,
             'parent_type' => 'entry',
-            'link_id' => null,
-            'title' => $linkWord
+            'link_id'     => null,
+            'title'       => $linkWord,
         ]);
     }
 
@@ -644,9 +643,9 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'word' => $this->faker->unique()->domainWord(),
-            'meaning' => $this->faker->unique()->domainWord(),
-            'class' => $class->name,
+            'word'       => $this->faker->unique()->domainWord(),
+            'meaning'    => $this->faker->unique()->domainWord(),
+            'class'      => $class->name,
             'definition' => '<p>[['.$linkWord[1].'|'.$linkWord[2].']]</p>',
         ];
 
@@ -662,16 +661,16 @@ class PageLinkTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_entries', [
-            'id' => $entry->id,
-            'definition' => $data['definition'],
+            'id'                => $entry->id,
+            'definition'        => $data['definition'],
             'parsed_definition' => '<p><a href="'.url('special/create-wanted/'.$linkWord[1]).'" class="text-danger">'.$linkWord[2].'</a></p>',
         ]);
 
         $this->assertDatabaseHas('page_links', [
-            'parent_id' => $entry->id,
+            'parent_id'   => $entry->id,
             'parent_type' => 'entry',
-            'link_id' => null,
-            'title' => $linkWord[1]
+            'link_id'     => null,
+            'title'       => $linkWord[1],
         ]);
     }
 
@@ -692,9 +691,9 @@ class PageLinkTest extends TestCase
 
         // Define some basic data
         $data = [
-            'word' => $this->faker->unique()->domainWord(),
-            'meaning' => $entry->meaning,
-            'class' => $entry->class,
+            'word'       => $this->faker->unique()->domainWord(),
+            'meaning'    => $entry->meaning,
+            'class'      => $entry->class,
             'definition' => '<p>[['.$linkWord[1].'|'.$linkWord[2].']]</p>',
         ];
 
@@ -708,16 +707,16 @@ class PageLinkTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_entries', [
-            'id' => $entry->id,
-            'definition' => $data['definition'],
+            'id'                => $entry->id,
+            'definition'        => $data['definition'],
             'parsed_definition' => '<p><a href="'.url('special/create-wanted/'.$linkWord[1]).'" class="text-danger">'.$linkWord[2].'</a></p>',
         ]);
 
         $this->assertDatabaseHas('page_links', [
-            'parent_id' => $entry->id,
+            'parent_id'   => $entry->id,
             'parent_type' => 'entry',
-            'link_id' => null,
-            'title' => $linkWord[1]
+            'link_id'     => null,
+            'title'       => $linkWord[1],
         ]);
     }
 }

@@ -2,15 +2,12 @@
 
 namespace App\Models\Page;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Request;
-use Config;
-
+use App\Models\Model;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
-
-use App\Models\Model;
+use Config;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Page extends Model
 {
@@ -23,7 +20,7 @@ class Page extends Model
      * @var array
      */
     protected $fillable = [
-        'category_id', 'title', 'summary', 'is_visible', 'parent_id', 'image_id'
+        'category_id', 'title', 'summary', 'is_visible', 'parent_id', 'image_id',
     ];
 
     /**
@@ -46,7 +43,7 @@ class Page extends Model
      * @var array
      */
     public static $createRules = [
-        'title' => 'required'
+        'title' => 'required',
     ];
 
     /**
@@ -55,7 +52,7 @@ class Page extends Model
      * @var array
      */
     public static $updateRules = [
-        'title' => 'required'
+        'title' => 'required',
     ];
 
     /**********************************************************************************************
@@ -80,6 +77,7 @@ class Page extends Model
         if ($this->category->subject['key'] == 'time') {
             return $this->belongsTo('App\Models\Subject\TimeChronology', 'parent_id');
         }
+
         return $this->belongsTo('App\Models\Page\Page', 'parent_id');
     }
 
@@ -187,8 +185,8 @@ class Page extends Model
     /**
      * Scope a query to only include visible pages.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  \App\Models\User\User                  $user
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \App\Models\User\User                 $user
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -197,14 +195,15 @@ class Page extends Model
         if ($user && $user->canWrite) {
             return $query;
         }
+
         return $query->where('is_visible', 1);
     }
 
     /**
      * Scope a query to only include pages of a given subject.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  string                                 $subject
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string                                $subject
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -219,8 +218,8 @@ class Page extends Model
     /**
      * Scope a query to only include pages with a given title.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  string                                 $title
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string                                $title
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -255,6 +254,7 @@ class Page extends Model
         if (!$this->protections->count()) {
             return null;
         }
+
         return $this->protections()->orderBy('created_at', 'DESC')->first();
     }
 
@@ -268,6 +268,7 @@ class Page extends Model
         if (!$this->versions->count() || !isset($this->version->data['data'])) {
             return null;
         }
+
         return $this->version->data['data'];
     }
 
@@ -281,6 +282,7 @@ class Page extends Model
         if (!$this->versions->count() || !isset($this->version->data['data']['parsed'])) {
             return null;
         }
+
         return $this->version->data['data']['parsed'];
     }
 
@@ -323,6 +325,7 @@ class Page extends Model
             // Otherwise just note the subject
             return $this->title.' ('.$this->category->subject['term'].')';
         }
+
         return $this->title;
     }
 
@@ -366,8 +369,9 @@ class Page extends Model
     /**
      * Attempt to calculate the age of a person by comparing two time arrays.
      *
-     * @param  array     $birth
-     * @param  array     $current
+     * @param array $birth
+     * @param array $current
+     *
      * @return string
      */
     public function personAge($birth, $current)
@@ -405,7 +409,7 @@ class Page extends Model
                 if ($roughYear == $ageString) {
                     return $roughYear;
                 } else {
-                    return floor($ageString/pow(10, (strlen($ageString)-2)));
+                    return floor($ageString / pow(10, (strlen($ageString) - 2)));
                 }
             }
 
@@ -419,7 +423,8 @@ class Page extends Model
     /**
      * Gather a person's family from extant relationships.
      *
-     * @param  string    $type
+     * @param string $type
+     *
      * @return array
      */
     public function personRelations($type = null)
@@ -428,18 +433,18 @@ class Page extends Model
         switch ($type) {
             case 'parents':
                 $familyTypes = [
-                    'familial_parent' => 'Parent'
+                    'familial_parent' => 'Parent',
                 ];
                 break;
             case 'children':
                 $familyTypes = [
-                    'familial_child' => 'Child',
-                    'familial_adopted' => 'Child (Adopted)'
+                    'familial_child'   => 'Child',
+                    'familial_adopted' => 'Child (Adopted)',
                 ];
                 break;
             case 'siblings':
                 $familyTypes = [
-                    'familial_sibling' => 'Sibling'
+                    'familial_sibling' => 'Sibling',
                 ];
                 break;
             default:
@@ -462,17 +467,17 @@ class Page extends Model
         foreach ($family as $familyMember) {
             if ($familyMember->page_one_id == $this->id) {
                 $familyMembers[] = [
-                    'link' => $familyMember,
-                    'type' => $familyMember->type_two,
+                    'link'        => $familyMember,
+                    'type'        => $familyMember->type_two,
                     'displayType' => $familyMember->displayTypeTwo,
-                    'page' => $familyMember->pageTwo
+                    'page'        => $familyMember->pageTwo,
                 ];
             } elseif ($familyMember->page_two_id == $this->id) {
                 $familyMembers[] = [
-                    'link' => $familyMember,
-                    'type' => $familyMember->type_one,
+                    'link'        => $familyMember,
+                    'type'        => $familyMember->type_one,
                     'displayType' => $familyMember->displayTypeOne,
-                    'page' => $familyMember->pageOne
+                    'page'        => $familyMember->pageOne,
                 ];
             }
         }
@@ -482,15 +487,17 @@ class Page extends Model
         if ($familyMembers->count()) {
             return $familyMembers;
         }
+
         return null;
     }
 
     /**
      * Organize events in chronological order.
      *
-     * @param  \App\Models\User\User    $user
-     * @param  int                      $chronology
-     * @param  array                    $tags
+     * @param \App\Models\User\User $user
+     * @param int                   $chronology
+     * @param array                 $tags
+     *
      * @return \Illuminate\Support\Collection
      */
     public function timeOrderedEvents($user = null, $chronology = null, $tags = null)
@@ -512,6 +519,7 @@ class Page extends Model
             isset($page->data['date']['start'])) {
                 return true;
             }
+
             return false;
         });
 
@@ -527,15 +535,17 @@ class Page extends Model
         if ($timePages->count()) {
             return $timePages;
         }
+
         return null;
     }
 
     /**
      * Help organize events recursively.
      *
-     * @param  \Illuminate\Support\Collection  $group
-     * @param  array                           $divisionNames
-     * @param  int                             $i
+     * @param \Illuminate\Support\Collection $group
+     * @param array                          $divisionNames
+     * @param int                            $i
+     *
      * @return \Illuminate\Support\Collection
      */
     public function timeGroupEvents($group, $divisionNames, $i = 0)
@@ -545,16 +555,17 @@ class Page extends Model
             if (isset($page->data['date']['start'][$divisionNames[$i]])) {
                 return $page->data['date']['start'][$divisionNames[$i]];
             }
+
             return '00';
         })->sortBy(function ($group, $key) {
             return $key;
         });
 
         // See if there is a smaller division
-        if (isset($divisionNames[$i+1])) {
+        if (isset($divisionNames[$i + 1])) {
             // And if so, group the pages by it, etc
             $group = $group->map(function ($subGroup) use ($divisionNames, $i) {
-                return $this->timeGroupEvents($subGroup, $divisionNames, $i+1);
+                return $this->timeGroupEvents($subGroup, $divisionNames, $i + 1);
             });
         }
 

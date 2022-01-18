@@ -2,9 +2,8 @@
 
 namespace App\Models\Page;
 
-use Config;
-
 use App\Models\Model;
+use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PageRelationship extends Model
@@ -19,7 +18,7 @@ class PageRelationship extends Model
     protected $fillable = [
         'page_one_id', 'page_two_id',
         'type_one', 'type_one_info', 'details_one',
-        'type_two', 'type_two_info', 'details_two'
+        'type_two', 'type_two_info', 'details_two',
     ];
 
     /**
@@ -45,10 +44,10 @@ class PageRelationship extends Model
         'page_one_id' => 'required',
         'page_two_id' => 'required',
 
-        'type_one' => 'required',
+        'type_one'      => 'required',
         'type_one_info' => 'required_if:type_one,custom,romantic_custom',
 
-        'type_two' => 'required',
+        'type_two'      => 'required',
         'type_two_info' => 'required_if:type_two,custom,romantic_custom',
     ];
 
@@ -102,6 +101,7 @@ class PageRelationship extends Model
                 return $group[$this->type_one];
             }
         }
+
         return null;
     }
 
@@ -127,6 +127,7 @@ class PageRelationship extends Model
                 return $group[$this->type_two];
             }
         }
+
         return null;
     }
 }

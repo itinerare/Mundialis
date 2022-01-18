@@ -2,18 +2,15 @@
 
 namespace App\Services;
 
-use App\Services\Service;
-
+use App\Models\User\Rank;
+use App\Models\User\User;
+use App\Models\User\UserUpdateLog;
+use App\Models\User\WatchedPage;
+use Carbon\Carbon;
 use DB;
 use File;
-use Image;
-use Carbon\Carbon;
-
-use App\Models\User\User;
-use App\Models\User\Rank;
-use App\Models\User\WatchedPage;
-use App\Models\User\UserUpdateLog;
 use Illuminate\Support\Facades\Hash;
+use Image;
 use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
 
 class UserService extends Service
@@ -30,7 +27,8 @@ class UserService extends Service
     /**
      * Create a user.
      *
-     * @param  array  $data
+     * @param array $data
+     *
      * @return \App\Models\User\User
      */
     public function createUser($data)
@@ -41,9 +39,9 @@ class UserService extends Service
         }
 
         $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'rank_id' => $data['rank_id'],
+            'name'     => $data['name'],
+            'email'    => $data['email'],
+            'rank_id'  => $data['rank_id'],
             'password' => Hash::make($data['password']),
         ]);
 
@@ -53,7 +51,8 @@ class UserService extends Service
     /**
      * Updates a user. Used in modifying the admin user on the command line.
      *
-     * @param  array  $data
+     * @param array $data
+     *
      * @return \App\Models\User\User
      */
     public function updateUser($data)
@@ -80,8 +79,9 @@ class UserService extends Service
     /**
      * Updates the user's password.
      *
-     * @param  array                  $data
-     * @param  \App\Models\User\User  $user
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool
      */
     public function updatePassword($data, $user)
@@ -90,10 +90,10 @@ class UserService extends Service
 
         try {
             if (!Hash::check($data['old_password'], $user->password)) {
-                throw new \Exception("Please enter your old password.");
+                throw new \Exception('Please enter your old password.');
             }
             if (Hash::make($data['new_password']) == $user->password) {
-                throw new \Exception("Please enter a different password.");
+                throw new \Exception('Please enter a different password.');
             }
 
             $user->password = Hash::make($data['new_password']);
@@ -103,14 +103,16 @@ class UserService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Updates the user's email and resends a verification email.
      *
-     * @param  array                  $data
-     * @param  \App\Models\User\User  $user
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool
      */
     public function updateEmail($data, $user)
@@ -127,8 +129,9 @@ class UserService extends Service
     /**
      * Updates the user's avatar.
      *
-     * @param  array                  $data
-     * @param  \App\Models\User\User  $user
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     *
      * @return bool
      */
     public function updateAvatar($avatar, $user)
@@ -137,17 +140,17 @@ class UserService extends Service
 
         try {
             if (!$avatar) {
-                throw new \Exception("Please upload a file.");
+                throw new \Exception('Please upload a file.');
             }
-            $filename = $user->id . '.' . $avatar->getClientOriginalExtension();
+            $filename = $user->id.'.'.$avatar->getClientOriginalExtension();
 
             if ($user->avatar !== 'default.jpg') {
-                $file = 'images/avatars/' . $user->avatar;
+                $file = 'images/avatars/'.$user->avatar;
                 //$destinationPath = 'uploads/' . $id . '/';
 
                 if (File::exists($file)) {
                     if (!unlink($file)) {
-                        throw new \Exception("Failed to unlink old avatar.");
+                        throw new \Exception('Failed to unlink old avatar.');
                     }
                 }
             }
@@ -155,17 +158,17 @@ class UserService extends Service
             // Checks if uploaded file is a GIF
             if ($avatar->getClientOriginalExtension() == 'gif') {
                 if (!copy($avatar, $file)) {
-                    throw new \Exception("Failed to copy file.");
+                    throw new \Exception('Failed to copy file.');
                 }
                 if (!$file->move(public_path('images/avatars', $filename))) {
-                    throw new \Exception("Failed to move file.");
+                    throw new \Exception('Failed to move file.');
                 }
                 if (!$avatar->move(public_path('images/avatars', $filename))) {
-                    throw new \Exception("Failed to move file.");
+                    throw new \Exception('Failed to move file.');
                 }
             } else {
-                if (!Image::make($avatar)->resize(150, 150)->save(public_path('images/avatars/' . $filename))) {
-                    throw new \Exception("Failed to process avatar.");
+                if (!Image::make($avatar)->resize(150, 150)->save(public_path('images/avatars/'.$filename))) {
+                    throw new \Exception('Failed to process avatar.');
                 }
             }
 
@@ -176,15 +179,17 @@ class UserService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Confirms a user's two-factor auth.
      *
-     * @param  string                 $code
-     * @param  array                  $data
-     * @param  \App\Models\User       $user
+     * @param string           $code
+     * @param array            $data
+     * @param \App\Models\User $user
+     *
      * @return bool
      */
     public function confirmTwoFactor($code, $data, $user)
@@ -194,7 +199,7 @@ class UserService extends Service
         try {
             if (app(TwoFactorAuthenticationProvider::class)->verify(decrypt($data['two_factor_secret']), $code['code'])) {
                 $user->forceFill([
-                    'two_factor_secret' => $data['two_factor_secret'],
+                    'two_factor_secret'         => $data['two_factor_secret'],
                     'two_factor_recovery_codes' => $data['two_factor_recovery_codes'],
                 ])->save();
             } else {
@@ -205,14 +210,16 @@ class UserService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Disables a user's two-factor auth.
      *
-     * @param  string                 $code
-     * @param  \App\Models\User       $user
+     * @param string           $code
+     * @param \App\Models\User $user
+     *
      * @return bool
      */
     public function disableTwoFactor($code, $user)
@@ -222,7 +229,7 @@ class UserService extends Service
         try {
             if (app(TwoFactorAuthenticationProvider::class)->verify(decrypt($user->two_factor_secret), $code['code'])) {
                 $user->forceFill([
-                    'two_factor_secret' => null,
+                    'two_factor_secret'         => null,
                     'two_factor_recovery_codes' => null,
                 ])->save();
             } else {
@@ -233,15 +240,17 @@ class UserService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Bans a user.
      *
-     * @param  array                  $data
-     * @param  \App\Models\User\User  $user
-     * @param  \App\Models\User\User  $staff
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     * @param \App\Models\User\User $staff
+     *
      * @return bool
      */
     public function ban($data, $user, $staff)
@@ -269,14 +278,16 @@ class UserService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Unbans a user.
      *
-     * @param  \App\Models\User\User  $user
-     * @param  \App\Models\User\User  $staff
+     * @param \App\Models\User\User $user
+     * @param \App\Models\User\User $staff
+     *
      * @return bool
      */
     public function unban($user, $staff)
@@ -297,14 +308,16 @@ class UserService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Toggles favorite status on a submission for a user.
      *
-     * @param  \App\Models\Page\Page              $page
-     * @param  \App\Models\User\User              $user
+     * @param \App\Models\Page\Page $page
+     * @param \App\Models\User\User $user
+     *
      * @return bool|\App\Models\User\WatchedPage
      */
     public function watchPage($page, $user)
@@ -326,7 +339,7 @@ class UserService extends Service
             } else {
                 WatchedPage::create([
                     'user_id' => $user->id,
-                    'page_id' => $page->id
+                    'page_id' => $page->id,
                 ]);
             }
 
@@ -334,6 +347,7 @@ class UserService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 }

@@ -12,7 +12,7 @@ class LexiconEtymology extends Model
      * @var array
      */
     protected $fillable = [
-        'entry_id', 'parent_id', 'parent'
+        'entry_id', 'parent_id', 'parent',
     ];
 
     /**

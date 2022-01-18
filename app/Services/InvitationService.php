@@ -2,10 +2,8 @@
 
 namespace App\Services;
 
-use DB;
-use App\Services\Service;
-
 use App\Models\User\InvitationCode;
+use DB;
 
 class InvitationService extends Service
 {
@@ -21,7 +19,8 @@ class InvitationService extends Service
     /**
      * Generates an invitation code, saving the user who generated it.
      *
-     * @param  \App\Models\User\User $user
+     * @param \App\Models\User\User $user
+     *
      * @return \App\Models\Invitation|bool
      */
     public function generateInvitation($user)
@@ -30,21 +29,23 @@ class InvitationService extends Service
 
         try {
             $invitation = InvitationCode::create([
-                'code' => $this->generateCode(),
-                'user_id' => $user->id
+                'code'    => $this->generateCode(),
+                'user_id' => $user->id,
             ]);
 
             return $this->commitReturn($invitation);
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Marks an invitation code as used, saving the user who used it.
      *
-     * @param  \App\Models\User\User $user
+     * @param \App\Models\User\User $user
+     *
      * @return \App\Models\Invitation|bool
      */
     public function useInvitation($invitation, $user)
@@ -54,7 +55,7 @@ class InvitationService extends Service
         try {
             // More specific validation
             if ($invitation->recipient_id) {
-                throw new \Exception("This invitation key has already been used.");
+                throw new \Exception('This invitation key has already been used.');
             }
 
             $invitation->recipient_id = $user->id;
@@ -64,13 +65,15 @@ class InvitationService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
     /**
      * Deletes an unused invitation code.
      *
-     * @param  \App\Models\Invitation $invitation
+     * @param \App\Models\Invitation $invitation
+     *
      * @return bool
      */
     public function deleteInvitation($invitation)
@@ -80,7 +83,7 @@ class InvitationService extends Service
         try {
             // Check first if the invitation has been used
             if ($invitation->recipient_id) {
-                throw new \Exception("This invitation has already been used.");
+                throw new \Exception('This invitation has already been used.');
             }
             $invitation->delete();
 
@@ -88,6 +91,7 @@ class InvitationService extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 

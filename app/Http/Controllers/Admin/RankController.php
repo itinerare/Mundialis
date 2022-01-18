@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Auth;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\User\Rank;
 use App\Services\RankService;
-
-use App\Http\Controllers\Controller;
+use Auth;
+use Illuminate\Http\Request;
 
 class RankController extends Controller
 {
@@ -19,7 +18,7 @@ class RankController extends Controller
     public function getIndex()
     {
         return view('admin.users.ranks', [
-            'ranks' => Rank::orderBy('sort', 'DESC')->get()
+            'ranks' => Rank::orderBy('sort', 'DESC')->get(),
         ]);
     }
 
@@ -31,8 +30,9 @@ class RankController extends Controller
     public function getEditRank($id)
     {
         $rank = Rank::find($id);
+
         return view('admin.users._edit_rank', [
-            'rank' => $rank
+            'rank' => $rank,
         ]);
     }
 
@@ -48,6 +48,7 @@ class RankController extends Controller
                 flash($error)->error();
             }
         }
+
         return redirect()->back();
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Config;
-use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Notification extends Model
@@ -16,7 +15,7 @@ class Notification extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'notification_type_id', 'is_unread', 'data'
+        'user_id', 'notification_type_id', 'is_unread', 'data',
     ];
 
     /**
@@ -32,7 +31,6 @@ class Notification extends Model
      * @var string
      */
     public $timestamps = true;
-
 
     /**********************************************************************************************
 
@@ -96,7 +94,7 @@ class Notification extends Model
      */
     public static function getNotificationId($type)
     {
-        return constant('self::'. $type);
+        return constant('self::'.$type);
     }
 
     /**********************************************************************************************
@@ -105,7 +103,7 @@ class Notification extends Model
 
     **********************************************************************************************/
 
-    public const WATCHED_PAGE_UPDATED        = 0;
-    public const WATCHED_PAGE_IMAGE_UPDATED  = 1;
-    public const WATCHED_PAGE_DELETED        = 2;
+    public const WATCHED_PAGE_UPDATED = 0;
+    public const WATCHED_PAGE_IMAGE_UPDATED = 1;
+    public const WATCHED_PAGE_DELETED = 2;
 }

@@ -15,7 +15,7 @@ class TimeDivision extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'abbreviation', 'unit', 'use_for_dates'
+        'name', 'abbreviation', 'unit', 'use_for_dates',
     ];
 
     /**
@@ -38,7 +38,7 @@ class TimeDivision extends Model
      * @var array
      */
     public static $rules = [
-        'name.*' => 'required'
+        'name.*' => 'required',
     ];
 
     /**********************************************************************************************
@@ -50,7 +50,7 @@ class TimeDivision extends Model
     /**
      * Scope a query to only include date-enabled divisions.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -66,7 +66,7 @@ class TimeDivision extends Model
     **********************************************************************************************/
 
     /**
-     * Return the display name (abbreviation if present, name if not)
+     * Return the display name (abbreviation if present, name if not).
      *
      * @return string
      */
@@ -75,6 +75,7 @@ class TimeDivision extends Model
         if (isset($this->abbreviation)) {
             return '<abbr data-toggle="tooltip" title="'.$this->name.'">'.$this->abbreviation.'.</abbr>';
         }
+
         return $this->name;
     }
 
@@ -94,21 +95,23 @@ class TimeDivision extends Model
         $fields = [];
         foreach ($this->dateEnabled()->orderBy('sort')->get() as $division) {
             $fields[str_replace(' ', '_', strtolower($division->name))] = [
-                'label' => $division->name,
-                'type' => 'number',
-                'rules' => null,
+                'label'   => $division->name,
+                'type'    => 'number',
+                'rules'   => null,
                 'choices' => null,
-                'value' => null,
-                'help' => null
+                'value'   => null,
+                'help'    => null,
             ];
         }
+
         return $fields;
     }
 
     /**
      * Return a formatted datestring using date-enabled divisions.
      *
-     * @param  array    $data
+     * @param array $data
+     *
      * @return string
      */
     public function formatTimeDate($data)

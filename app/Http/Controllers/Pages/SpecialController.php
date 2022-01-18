@@ -2,27 +2,21 @@
 
 namespace App\Http\Controllers\Pages;
 
-use Auth;
-use Config;
-use Carbon\Carbon;
-
-use App\Models\User\User;
-use App\Models\User\Rank;
-
-use App\Models\Subject\SubjectCategory;
-use App\Models\Subject\TimeDivision;
-use App\Models\Subject\TimeChronology;
-
+use App\Http\Controllers\Controller;
 use App\Models\Page\Page;
-use App\Models\Page\PageVersion;
-use App\Models\Page\PageTag;
-use App\Models\Page\PageLink;
 use App\Models\Page\PageImage;
 use App\Models\Page\PageImageVersion;
-use App\Models\Page\PageProtection;
-
+use App\Models\Page\PageLink;
+use App\Models\Page\PageTag;
+use App\Models\Page\PageVersion;
+use App\Models\Subject\SubjectCategory;
+use App\Models\Subject\TimeDivision;
+use App\Models\User\Rank;
+use App\Models\User\User;
+use Auth;
+use Carbon\Carbon;
+use Config;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class SpecialController extends Controller
 {
@@ -63,7 +57,8 @@ class SpecialController extends Controller
     /**
      * Shows list of all pages.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getAllPages(Request $request)
@@ -73,7 +68,7 @@ class SpecialController extends Controller
 
         if ($request->get('title')) {
             $query->where(function ($query) use ($request) {
-                $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
+                $query->where('pages.title', 'LIKE', '%'.$request->get('title').'%');
             });
         }
         if ($request->get('category_id')) {
@@ -105,18 +100,19 @@ class SpecialController extends Controller
         }
 
         return view('pages.special.all_pages', [
-            'pages' => $query->paginate(20)->appends($request->query()),
+            'pages'           => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
-            'tags' => (new PageTag())->listTags(),
-            'dateHelper' => new TimeDivision()
+            'tags'            => (new PageTag())->listTags(),
+            'dateHelper'      => new TimeDivision(),
         ]);
     }
 
     /**
      * Shows list of all tags.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string                    $mode
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $mode
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getAllTags(Request $request)
@@ -129,18 +125,20 @@ class SpecialController extends Controller
             if (!$tag->page) {
                 return 0;
             }
+
             return $tag->page->is_visible;
         })->groupBy('baseTag');
 
         return view('pages.special.all_tags', [
-            'tags' => $query->paginate(20)->appends($request->query())
+            'tags' => $query->paginate(20)->appends($request->query()),
         ]);
     }
 
     /**
      * Shows list of all images.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getAllImages(Request $request)
@@ -175,15 +173,16 @@ class SpecialController extends Controller
 
         return view('pages.special.all_images', [
             'images' => $query->paginate(20)->appends($request->query()),
-            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
+            'users'  => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
         ]);
     }
 
     /**
      * Shows list of untagged pages.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string                    $mode
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $mode
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUntaggedPages(Request $request)
@@ -194,15 +193,16 @@ class SpecialController extends Controller
         })->sortBy('created_at');
 
         return view('pages.special.untagged', [
-            'pages' => $query->paginate(20)->appends($request->query())
+            'pages' => $query->paginate(20)->appends($request->query()),
         ]);
     }
 
     /**
      * Shows list of most tagged pages.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string                    $mode
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $mode
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getMostTaggedPages(Request $request)
@@ -216,15 +216,16 @@ class SpecialController extends Controller
         });
 
         return view('pages.special.most_tagged', [
-            'pages' => $query->paginate(20)->appends($request->query())
+            'pages' => $query->paginate(20)->appends($request->query()),
         ]);
     }
 
     /**
      * Shows list of revised pages.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string                    $mode
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $mode
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRevisedPages(Request $request, $mode)
@@ -242,15 +243,16 @@ class SpecialController extends Controller
         }
 
         return view('pages.special.revised', [
-            'mode' => $mode,
-            'pages' => $query->paginate(20)->appends($request->query())
+            'mode'  => $mode,
+            'pages' => $query->paginate(20)->appends($request->query()),
         ]);
     }
 
     /**
      * Shows list of most linked-to pages.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getMostLinkedPages(Request $request)
@@ -259,20 +261,22 @@ class SpecialController extends Controller
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }
+
             return $value->linkedPage->is_visible;
         })->groupBy('link_id')->sortByDesc(function ($group) {
             return $group->count();
         });
 
         return view('pages.special.linked', [
-            'pages' => $query->paginate(20)->appends($request->query())
+            'pages' => $query->paginate(20)->appends($request->query()),
         ]);
     }
 
     /**
      * Shows list of recent page edits.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRecentPages(Request $request)
@@ -284,6 +288,7 @@ class SpecialController extends Controller
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }
+
             return $version->page->is_visible;
         });
 
@@ -293,19 +298,21 @@ class SpecialController extends Controller
                 if ($version->created_at > Carbon::now()->subDays($mode)) {
                     return 1;
                 }
+
                 return 0;
             });
         }
 
         return view('pages.special.recent_pages', [
-            'pages' => $query->paginate(20)->appends($request->query())
+            'pages' => $query->paginate(20)->appends($request->query()),
         ]);
     }
 
     /**
      * Shows list of recent image edits.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRecentImages(Request $request)
@@ -317,6 +324,7 @@ class SpecialController extends Controller
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }
+
             return $version->image->is_visible;
         });
 
@@ -326,19 +334,21 @@ class SpecialController extends Controller
                 if ($version->created_at > Carbon::now()->subDays($mode)) {
                     return 1;
                 }
+
                 return 0;
             });
         }
 
         return view('pages.special.recent_images', [
-            'images' => $query->paginate(15)->appends($request->query())
+            'images' => $query->paginate(15)->appends($request->query()),
         ]);
     }
 
     /**
      * Shows list of all protected pages.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getProtectedPages(Request $request)
@@ -347,19 +357,21 @@ class SpecialController extends Controller
             if ($page->protection && $page->protection->is_protected) {
                 return 1;
             }
+
             return 0;
         })->sortBy('name');
 
         return view('pages.special.protected', [
-            'pages' => $query->paginate(20)->appends($request->query())
+            'pages' => $query->paginate(20)->appends($request->query()),
         ]);
     }
 
     /**
      * Shows list of all pages with a given utility tag.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string                    $tag
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $tag
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUtilityTagPages(Request $request, $tag)
@@ -369,7 +381,7 @@ class SpecialController extends Controller
 
         if ($request->get('title')) {
             $query->where(function ($query) use ($request) {
-                $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
+                $query->where('pages.title', 'LIKE', '%'.$request->get('title').'%');
             });
         }
         if ($request->get('category_id')) {
@@ -401,18 +413,19 @@ class SpecialController extends Controller
         }
 
         return view('pages.special.utility', [
-            'tag' => Config::get('mundialis.utility_tags.'.$tag),
-            'pages' => $query->paginate(20)->appends($request->query()),
+            'tag'             => Config::get('mundialis.utility_tags.'.$tag),
+            'pages'           => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
-            'tags' => (new PageTag())->listTags(),
-            'dateHelper' => new TimeDivision()
+            'tags'            => (new PageTag())->listTags(),
+            'dateHelper'      => new TimeDivision(),
         ]);
     }
 
     /**
      * Shows list of all wanted pages.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getWantedPages(Request $request)
@@ -421,20 +434,22 @@ class SpecialController extends Controller
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }
+
             return $value->parent->is_visible;
         })->groupBy('title')->sortByDesc(function ($group) {
             return $group->count();
         });
 
         return view('pages.special.wanted', [
-            'pages' => $query->paginate(20)->appends($request->query())
+            'pages' => $query->paginate(20)->appends($request->query()),
         ]);
     }
 
     /**
      * Shows the interface to create a wanted page.
      *
-     * @param  string                        $title
+     * @param string $title
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreateWantedPage($title)
@@ -453,7 +468,7 @@ class SpecialController extends Controller
             }
         })->pluck('name', 'name');
 
-        foreach ($groupedCategories as $subject=>$categories) {
+        foreach ($groupedCategories as $subject=> $categories) {
             foreach ($categories as $id=>$category) {
                 $groupedCategories[$subject][$id] = $category['name'];
             }
@@ -465,15 +480,16 @@ class SpecialController extends Controller
         });
 
         return view('pages.special.create_wanted', [
-            'title' => $title,
-            'categories' => $sortedCategories
+            'title'      => $title,
+            'categories' => $sortedCategories,
         ]);
     }
 
     /**
      * Redirects to page creation based on provided input.
      *
-     * @param  \Illuminate\Http\Request     $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postCreateWantedPage(Request $request)
@@ -484,7 +500,8 @@ class SpecialController extends Controller
     /**
      * Shows the user list.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUserList(Request $request)
@@ -494,7 +511,7 @@ class SpecialController extends Controller
 
         if ($request->get('name')) {
             $query->where(function ($query) use ($request) {
-                $query->where('users.name', 'LIKE', '%' . $request->get('name') . '%');
+                $query->where('users.name', 'LIKE', '%'.$request->get('name').'%');
             });
         }
         if ($request->get('rank_id')) {
@@ -524,7 +541,7 @@ class SpecialController extends Controller
 
         return view('pages.special.user_list', [
             'users' => $query->paginate(30)->appends($request->query()),
-            'ranks' => [0 => 'Any Rank'] + Rank::orderBy('ranks.sort', 'DESC')->pluck('name', 'id')->toArray()
+            'ranks' => [0 => 'Any Rank'] + Rank::orderBy('ranks.sort', 'DESC')->pluck('name', 'id')->toArray(),
         ]);
     }
 }

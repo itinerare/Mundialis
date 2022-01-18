@@ -18,7 +18,7 @@ Route::get('info/terms', 'Controller@getTermsOfService');
 Route::get('info/privacy', 'Controller@getPrivacyPolicy');
 
 Route::group(['middleware' => ['auth']], function () {
-    # BANNED
+    // BANNED
     Route::get('banned', 'Users\AccountController@getBanned');
 });
 

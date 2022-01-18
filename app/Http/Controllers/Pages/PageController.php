@@ -2,25 +2,18 @@
 
 namespace App\Http\Controllers\Pages;
 
+use App\Http\Controllers\Controller;
+use App\Models\Page\Page;
+use App\Models\Page\PageProtection;
+use App\Models\Page\PageVersion;
+use App\Models\Subject\SubjectCategory;
+use App\Models\Subject\TimeChronology;
+use App\Models\Subject\TimeDivision;
+use App\Models\User\User;
+use App\Services\PageManager;
 use Auth;
 use Config;
-
-use App\Models\User\User;
-
-use App\Models\Subject\SubjectCategory;
-use App\Models\Subject\TimeDivision;
-use App\Models\Subject\TimeChronology;
-use App\Models\Subject\LexiconCategory;
-
-use App\Models\Page\Page;
-use App\Models\Page\PageVersion;
-use App\Models\Page\PageTag;
-use App\Models\Page\PageProtection;
-
-use App\Services\PageManager;
-
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class PageController extends Controller
 {
@@ -36,7 +29,8 @@ class PageController extends Controller
     /**
      * Shows a page.
      *
-     * @param  int        $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPage($id)
@@ -47,17 +41,18 @@ class PageController extends Controller
         }
 
         return view('pages.page', [
-            'page' => $page
+            'page' => $page,
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision()
+            'dateHelper' => new TimeDivision(),
         ] : []));
     }
 
     /**
      * Shows a page's revision history.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int                       $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageHistory(Request $request, $id)
@@ -88,19 +83,20 @@ class PageController extends Controller
         }
 
         return view('pages.page_history', [
-            'page' => $page,
+            'page'     => $page,
             'versions' => $query->paginate(20)->appends($request->query()),
-            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
+            'users'    => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision()
+            'dateHelper' => new TimeDivision(),
         ] : []));
     }
 
     /**
      * Shows the links to a page.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int                       $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getLinksHere(Request $request, $id)
@@ -114,22 +110,24 @@ class PageController extends Controller
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }
+
             return $link->linked->is_visible;
         });
 
         return view('pages.page_links_here', [
-            'page' => $page,
+            'page'  => $page,
             'links' => $query->paginate(20)->appends($request->query()),
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision()
+            'dateHelper' => new TimeDivision(),
         ] : []));
     }
 
     /**
      * Shows a specific page version.
      *
-     * @param  int        $pageId
-     * @param  int        $id
+     * @param int $pageId
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageVersion($pageId, $id)
@@ -141,17 +139,18 @@ class PageController extends Controller
         $version = $page->versions()->where('id', $id)->first();
 
         return view('pages.page_version', [
-            'page' => $page,
-            'version' => $version
+            'page'    => $page,
+            'version' => $version,
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision()
+            'dateHelper' => new TimeDivision(),
         ] : []));
     }
 
     /**
      * Shows the create page page.
      *
-     * @param  string            $subject
+     * @param string $subject
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreatePage($category)
@@ -162,22 +161,23 @@ class PageController extends Controller
         }
 
         return view('pages.create_edit_page', [
-            'page' => new Page(),
-            'category' => $category
+            'page'     => new Page(),
+            'category' => $category,
         ] + ($category->subject['key'] == 'places' ? [
-            'placeOptions' => Page::subject('places')->pluck('title', 'id')
-        ] : []) + ($category->subject['key'] == 'time' ? [
-            'chronologyOptions' => TimeChronology::pluck('name', 'id')
-        ] : []) + ($category->subject['key'] == 'people' ? [
             'placeOptions' => Page::subject('places')->pluck('title', 'id'),
-            'chronologyOptions' => TimeChronology::pluck('name', 'id')
+        ] : []) + ($category->subject['key'] == 'time' ? [
+            'chronologyOptions' => TimeChronology::pluck('name', 'id'),
+        ] : []) + ($category->subject['key'] == 'people' ? [
+            'placeOptions'      => Page::subject('places')->pluck('title', 'id'),
+            'chronologyOptions' => TimeChronology::pluck('name', 'id'),
         ] : []));
     }
 
     /**
      * Shows the edit page.
      *
-     * @param  int       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditPage($id)
@@ -191,24 +191,25 @@ class PageController extends Controller
         }
 
         return view('pages.create_edit_page', [
-            'page' => $page,
-            'category' => $page->category
+            'page'     => $page,
+            'category' => $page->category,
         ] + ($page->category->subject['key'] == 'places' ? [
-            'placeOptions' => Page::subject('places')->where('id', '!=', $page->id)->pluck('title', 'id')
+            'placeOptions' => Page::subject('places')->where('id', '!=', $page->id)->pluck('title', 'id'),
         ] : []) + ($page->category->subject['key'] == 'time' ? [
-            'chronologyOptions' => TimeChronology::pluck('name', 'id')
+            'chronologyOptions' => TimeChronology::pluck('name', 'id'),
         ] : []) + ($page->category->subject['key'] == 'people' ? [
-            'placeOptions' => Page::subject('places')->pluck('title', 'id'),
-            'chronologyOptions' => TimeChronology::pluck('name', 'id')
+            'placeOptions'      => Page::subject('places')->pluck('title', 'id'),
+            'chronologyOptions' => TimeChronology::pluck('name', 'id'),
         ] : []));
     }
 
     /**
      * Creates or edits a page.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\PageManager     $service
-     * @param  int|null                     $id
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\PageManager $service
+     * @param int|null                 $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postCreateEditPage(Request $request, PageManager $service, $id = null)
@@ -223,7 +224,7 @@ class PageController extends Controller
         // Set any un-set toggles (since Laravel does not pass anything on for them),
         // and collect any custom validation rules for the configured fields
         $answerArray = ['title', 'summary', 'description', 'category_id', 'is_visible',
-        'parent_id', 'page_tag', 'utility_tag', 'reason', 'is_minor'];
+            'parent_id', 'page_tag', 'utility_tag', 'reason', 'is_minor', ];
         $validationRules = ($id ? Page::$updateRules : Page::$createRules);
         foreach ($category->formFields as $key=>$field) {
             $answerArray[] = $key;
@@ -265,20 +266,23 @@ class PageController extends Controller
             flash('Page updated successfully.')->success();
         } elseif (!$id && $page = $service->createPage($data, Auth::user())) {
             flash('Page created successfully.')->success();
+
             return redirect()->to($page->url);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
             }
         }
+
         return redirect()->back();
     }
 
     /**
      * Shows a page's protection settings.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  int                          $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getProtectPage(Request $request, $id)
@@ -309,20 +313,21 @@ class PageController extends Controller
         }
 
         return view('pages.page_protection', [
-            'page' => $page,
+            'page'        => $page,
             'protections' => $query->paginate(20)->appends($request->query()),
-            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
+            'users'       => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision()
+            'dateHelper' => new TimeDivision(),
         ] : []));
     }
 
     /**
      * Updates a page's protection.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\PageManager     $service
-     * @param  int                          $id
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\PageManager $service
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postProtectPage(Request $request, PageManager $service, $id)
@@ -333,15 +338,18 @@ class PageController extends Controller
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
             }
+
             return redirect()->back();
         }
+
         return redirect()->back();
     }
 
     /**
      * Gets the page move page.
      *
-     * @param  int       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getMovePage($id)
@@ -365,7 +373,7 @@ class PageController extends Controller
             }
         })->pluck('name', 'name');
 
-        foreach ($groupedCategories as $subject=>$categories) {
+        foreach ($groupedCategories as $subject=> $categories) {
             foreach ($categories as $id=>$category) {
                 $groupedCategories[$subject][$id] = $category['name'];
             }
@@ -377,17 +385,18 @@ class PageController extends Controller
         });
 
         return view('pages.page_move', [
-            'page' => $page,
-            'categories' => $sortedCategories
+            'page'       => $page,
+            'categories' => $sortedCategories,
         ]);
     }
 
     /**
      * Moves a page to a given category.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\PageManager     $service
-     * @param  int                          $id
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\PageManager $service
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postMovePage(Request $request, PageManager $service, $id)
@@ -398,16 +407,19 @@ class PageController extends Controller
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
             }
+
             return redirect()->back();
         }
+
         return redirect()->to(Page::find($id)->url);
     }
 
     /**
      * Gets the page reset modal.
      *
-     * @param  int       $pageID
-     * @param  int       $id
+     * @param int $pageID
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getResetPage($pageId, $id)
@@ -419,18 +431,19 @@ class PageController extends Controller
         }
 
         return view('pages._reset_page', [
-            'page' => $page,
-            'version' => $version
+            'page'    => $page,
+            'version' => $version,
         ]);
     }
 
     /**
      * Resets a page to a given version.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\PageManager     $service
-     * @param  int                          $pageId
-     * @param  int                          $id
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\PageManager $service
+     * @param int                      $pageId
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postResetPage(Request $request, PageManager $service, $pageId, $id)
@@ -441,15 +454,18 @@ class PageController extends Controller
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
             }
+
             return redirect()->back();
         }
+
         return redirect()->to(Page::find($pageId)->url);
     }
 
     /**
      * Gets the page deletion modal.
      *
-     * @param  int       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeletePage($id)
@@ -460,16 +476,17 @@ class PageController extends Controller
         }
 
         return view('pages._delete_page', [
-            'page' => $page
+            'page' => $page,
         ]);
     }
 
     /**
      * Deletes a page.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\PageManager     $service
-     * @param  int                          $id
+     * @param \Illuminate\Http\Request $request
+     * @param App\Services\PageManager $service
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeletePage(Request $request, PageManager $service, $id)
@@ -480,8 +497,10 @@ class PageController extends Controller
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
             }
+
             return redirect()->back();
         }
+
         return redirect()->to('/');
     }
 }

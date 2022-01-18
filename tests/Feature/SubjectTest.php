@@ -5,11 +5,9 @@ namespace Tests\Feature;
 use App\Models\Subject\LexiconCategory;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeChronology;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-
 use App\Models\User\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class SubjectTest extends TestCase
 {

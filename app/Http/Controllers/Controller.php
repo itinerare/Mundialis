@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Page\PageImageVersion;
+use App\Models\Page\PageVersion;
+use App\Models\SitePage;
 use Auth;
-
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
-
-use App\Models\SitePage;
-use App\Models\Page\PageVersion;
-use App\Models\Page\PageImageVersion;
 
 class Controller extends BaseController
 {
@@ -33,6 +31,7 @@ class Controller extends BaseController
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }
+
             return $version->page->is_visible;
         });
 
@@ -43,13 +42,14 @@ class Controller extends BaseController
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }
+
             return $version->image->is_visible;
         });
 
         return view('index', [
-            'page' => SitePage::where('key', 'about')->first(),
-            'pageVersions' => $pageVersions->take(10),
-            'imageVersions' => $imageVersions->take(10)
+            'page'          => SitePage::where('key', 'about')->first(),
+            'pageVersions'  => $pageVersions->take(10),
+            'imageVersions' => $imageVersions->take(10),
         ]);
     }
 
@@ -66,7 +66,7 @@ class Controller extends BaseController
         }
 
         return view('text_page', [
-            'page' => $page
+            'page' => $page,
         ]);
     }
 
@@ -83,7 +83,7 @@ class Controller extends BaseController
         }
 
         return view('text_page', [
-            'page' => $page
+            'page' => $page,
         ]);
     }
 }

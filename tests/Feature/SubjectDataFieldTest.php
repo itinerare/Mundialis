@@ -21,15 +21,15 @@ class SubjectDataFieldTest extends TestCase
     {
         // Define some basic template data
         $data = [
-            'section_key' => [0 => $this->faker->unique()->domainWord()],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_key' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_type' => [0 => 'text'],
-            'infobox_label' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_rules' => [0 => null],
+            'section_key'     => [0 => $this->faker->unique()->domainWord()],
+            'section_name'    => [0 => $this->faker->unique()->domainWord()],
+            'infobox_key'     => [0 => $this->faker->unique()->domainWord()],
+            'infobox_type'    => [0 => 'text'],
+            'infobox_label'   => [0 => $this->faker->unique()->domainWord()],
+            'infobox_rules'   => [0 => null],
             'infobox_choices' => [0 => null],
-            'infobox_value' => [0 => null],
-            'infobox_help' => [0 => null]
+            'infobox_value'   => [0 => null],
+            'infobox_help'    => [0 => null],
         ];
 
         // Make a temporary admin
@@ -43,7 +43,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'data'    => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -56,15 +56,15 @@ class SubjectDataFieldTest extends TestCase
     {
         // Define some basic template data
         $data = [
-            'section_key' => [0 => $this->faker->unique()->domainWord()],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_key' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_type' => [0 => 'text'],
-            'infobox_label' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_rules' => [0 => 'required'],
+            'section_key'     => [0 => $this->faker->unique()->domainWord()],
+            'section_name'    => [0 => $this->faker->unique()->domainWord()],
+            'infobox_key'     => [0 => $this->faker->unique()->domainWord()],
+            'infobox_type'    => [0 => 'text'],
+            'infobox_label'   => [0 => $this->faker->unique()->domainWord()],
+            'infobox_rules'   => [0 => 'required'],
             'infobox_choices' => [0 => null],
-            'infobox_value' => [0 => null],
-            'infobox_help' => [0 => null]
+            'infobox_value'   => [0 => null],
+            'infobox_help'    => [0 => null],
         ];
 
         // Make a temporary admin
@@ -78,7 +78,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"text","rules":"required","choices":null,"value":null,"help":null}}}'
+            'data'    => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"text","rules":"required","choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -91,15 +91,15 @@ class SubjectDataFieldTest extends TestCase
     {
         // Define some basic template data
         $data = [
-            'section_key' => [0 => $this->faker->unique()->domainWord()],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_key' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_type' => [0 => 'text'],
-            'infobox_label' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_rules' => [0 => null],
+            'section_key'     => [0 => $this->faker->unique()->domainWord()],
+            'section_name'    => [0 => $this->faker->unique()->domainWord()],
+            'infobox_key'     => [0 => $this->faker->unique()->domainWord()],
+            'infobox_type'    => [0 => 'text'],
+            'infobox_label'   => [0 => $this->faker->unique()->domainWord()],
+            'infobox_rules'   => [0 => null],
             'infobox_choices' => [0 => null],
-            'infobox_value' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_help' => [0 => null]
+            'infobox_value'   => [0 => $this->faker->unique()->domainWord()],
+            'infobox_help'    => [0 => null],
         ];
 
         // Make a temporary admin
@@ -113,7 +113,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"text","rules":null,"choices":null,"value":"'.$data['infobox_value'][0].'","help":null}}}'
+            'data'    => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"text","rules":null,"choices":null,"value":"'.$data['infobox_value'][0].'","help":null}}}',
         ]);
     }
 
@@ -126,15 +126,15 @@ class SubjectDataFieldTest extends TestCase
     {
         // Define some basic template data
         $data = [
-            'section_key' => [0 => $this->faker->unique()->domainWord()],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_key' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_type' => [0 => 'text'],
-            'infobox_label' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_rules' => [0 => null],
+            'section_key'     => [0 => $this->faker->unique()->domainWord()],
+            'section_name'    => [0 => $this->faker->unique()->domainWord()],
+            'infobox_key'     => [0 => $this->faker->unique()->domainWord()],
+            'infobox_type'    => [0 => 'text'],
+            'infobox_label'   => [0 => $this->faker->unique()->domainWord()],
+            'infobox_rules'   => [0 => null],
             'infobox_choices' => [0 => null],
-            'infobox_value' => [0 => null],
-            'infobox_help' => [0 => $this->faker->unique()->domainWord()]
+            'infobox_value'   => [0 => null],
+            'infobox_help'    => [0 => $this->faker->unique()->domainWord()],
         ];
 
         // Make a temporary admin
@@ -148,7 +148,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"text","rules":null,"choices":null,"value":null,"help":"'.$data['infobox_help'][0].'"}}}'
+            'data'    => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"text","rules":null,"choices":null,"value":null,"help":"'.$data['infobox_help'][0].'"}}}',
         ]);
     }
 
@@ -161,15 +161,15 @@ class SubjectDataFieldTest extends TestCase
     {
         // Define some basic template data
         $data = [
-            'section_key' => [0 => $this->faker->unique()->domainWord()],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_key' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_type' => [0 => 'number'],
-            'infobox_label' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_rules' => [0 => null],
+            'section_key'     => [0 => $this->faker->unique()->domainWord()],
+            'section_name'    => [0 => $this->faker->unique()->domainWord()],
+            'infobox_key'     => [0 => $this->faker->unique()->domainWord()],
+            'infobox_type'    => [0 => 'number'],
+            'infobox_label'   => [0 => $this->faker->unique()->domainWord()],
+            'infobox_rules'   => [0 => null],
             'infobox_choices' => [0 => null],
-            'infobox_value' => [0 => null],
-            'infobox_help' => [0 => null]
+            'infobox_value'   => [0 => null],
+            'infobox_help'    => [0 => null],
         ];
 
         // Make a temporary admin
@@ -183,7 +183,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"number","rules":null,"choices":null,"value":null,"help":null}}}'
+            'data'    => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"number","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -196,15 +196,15 @@ class SubjectDataFieldTest extends TestCase
     {
         // Define some basic template data
         $data = [
-            'section_key' => [0 => $this->faker->unique()->domainWord()],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_key' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_type' => [0 => 'checkbox'],
-            'infobox_label' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_rules' => [0 => null],
+            'section_key'     => [0 => $this->faker->unique()->domainWord()],
+            'section_name'    => [0 => $this->faker->unique()->domainWord()],
+            'infobox_key'     => [0 => $this->faker->unique()->domainWord()],
+            'infobox_type'    => [0 => 'checkbox'],
+            'infobox_label'   => [0 => $this->faker->unique()->domainWord()],
+            'infobox_rules'   => [0 => null],
             'infobox_choices' => [0 => null],
-            'infobox_value' => [0 => null],
-            'infobox_help' => [0 => null]
+            'infobox_value'   => [0 => null],
+            'infobox_help'    => [0 => null],
         ];
 
         // Make a temporary admin
@@ -218,7 +218,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"checkbox","rules":null,"choices":null,"value":null,"help":null}}}'
+            'data'    => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"checkbox","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -235,15 +235,15 @@ class SubjectDataFieldTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'section_key' => [0 => $this->faker->unique()->domainWord()],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_key' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_type' => [0 => 'choice'],
-            'infobox_label' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_rules' => [0 => null],
+            'section_key'     => [0 => $this->faker->unique()->domainWord()],
+            'section_name'    => [0 => $this->faker->unique()->domainWord()],
+            'infobox_key'     => [0 => $this->faker->unique()->domainWord()],
+            'infobox_type'    => [0 => 'choice'],
+            'infobox_label'   => [0 => $this->faker->unique()->domainWord()],
+            'infobox_rules'   => [0 => null],
             'infobox_choices' => [0 => $option[1].','.$option[2]],
-            'infobox_value' => [0 => null],
-            'infobox_help' => [0 => null]
+            'infobox_value'   => [0 => null],
+            'infobox_help'    => [0 => null],
         ];
 
         // Make a temporary admin
@@ -257,7 +257,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"choice","rules":null,"choices":["'.$option[1].'","'.$option[2].'"],"value":null,"help":null}}}'
+            'data'    => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"choice","rules":null,"choices":["'.$option[1].'","'.$option[2].'"],"value":null,"help":null}}}',
         ]);
     }
 
@@ -274,15 +274,15 @@ class SubjectDataFieldTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'section_key' => [0 => $this->faker->unique()->domainWord()],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_key' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_type' => [0 => 'multiple'],
-            'infobox_label' => [0 => $this->faker->unique()->domainWord()],
-            'infobox_rules' => [0 => null],
+            'section_key'     => [0 => $this->faker->unique()->domainWord()],
+            'section_name'    => [0 => $this->faker->unique()->domainWord()],
+            'infobox_key'     => [0 => $this->faker->unique()->domainWord()],
+            'infobox_type'    => [0 => 'multiple'],
+            'infobox_label'   => [0 => $this->faker->unique()->domainWord()],
+            'infobox_rules'   => [0 => null],
             'infobox_choices' => [0 => $option[1].','.$option[2]],
-            'infobox_value' => [0 => null],
-            'infobox_help' => [0 => null]
+            'infobox_value'   => [0 => null],
+            'infobox_help'    => [0 => null],
         ];
 
         // Make a temporary admin
@@ -296,7 +296,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"multiple","rules":null,"choices":["'.$option[1].'","'.$option[2].'"],"value":null,"help":null}}}'
+            'data'    => '{"sections":{"'.$data['section_key'][0].'":{"name":"'.$data['section_name'][0].'"}},"infobox":{"'.$data['infobox_key'][0].'":{"label":"'.$data['infobox_label'][0].'","type":"multiple","rules":null,"choices":["'.$option[1].'","'.$option[2].'"],"value":null,"help":null}}}',
         ]);
     }
 
@@ -309,16 +309,16 @@ class SubjectDataFieldTest extends TestCase
     {
         // Define some basic template data
         $data = [
-            'section_key' => [0 => 'test_section'],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'field_key' => [0 => $this->faker->unique()->domainWord()],
-            'field_type' => [0 => 'text'],
-            'field_label' => [0 => $this->faker->unique()->domainWord()],
-            'field_rules' => [0 => null],
-            'field_choices' => [0 => null],
-            'field_value' => [0 => null],
-            'field_help' => [0 => null],
-            'field_section' => [0 => 'test_section'],
+            'section_key'         => [0 => 'test_section'],
+            'section_name'        => [0 => $this->faker->unique()->domainWord()],
+            'field_key'           => [0 => $this->faker->unique()->domainWord()],
+            'field_type'          => [0 => 'text'],
+            'field_label'         => [0 => $this->faker->unique()->domainWord()],
+            'field_rules'         => [0 => null],
+            'field_choices'       => [0 => null],
+            'field_value'         => [0 => null],
+            'field_help'          => [0 => null],
+            'field_section'       => [0 => 'test_section'],
             'field_is_subsection' => [0 => 0],
         ];
 
@@ -333,7 +333,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"text","rules":null,"choices":null,"value":null,"help":null,"is_subsection":0}}}}'
+            'data'    => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"text","rules":null,"choices":null,"value":null,"help":null,"is_subsection":0}}}}',
         ]);
     }
 
@@ -346,16 +346,16 @@ class SubjectDataFieldTest extends TestCase
     {
         // Define some basic template data
         $data = [
-            'section_key' => [0 => 'test_section'],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'field_key' => [0 => $this->faker->unique()->domainWord()],
-            'field_type' => [0 => 'text'],
-            'field_label' => [0 => $this->faker->unique()->domainWord()],
-            'field_rules' => [0 => 'required'],
-            'field_choices' => [0 => null],
-            'field_value' => [0 => null],
-            'field_help' => [0 => null],
-            'field_section' => [0 => 'test_section'],
+            'section_key'         => [0 => 'test_section'],
+            'section_name'        => [0 => $this->faker->unique()->domainWord()],
+            'field_key'           => [0 => $this->faker->unique()->domainWord()],
+            'field_type'          => [0 => 'text'],
+            'field_label'         => [0 => $this->faker->unique()->domainWord()],
+            'field_rules'         => [0 => 'required'],
+            'field_choices'       => [0 => null],
+            'field_value'         => [0 => null],
+            'field_help'          => [0 => null],
+            'field_section'       => [0 => 'test_section'],
             'field_is_subsection' => [0 => 0],
         ];
 
@@ -370,7 +370,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"text","rules":"required","choices":null,"value":null,"help":null,"is_subsection":0}}}}'
+            'data'    => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"text","rules":"required","choices":null,"value":null,"help":null,"is_subsection":0}}}}',
         ]);
     }
 
@@ -383,16 +383,16 @@ class SubjectDataFieldTest extends TestCase
     {
         // Define some basic template data
         $data = [
-            'section_key' => [0 => 'test_section'],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'field_key' => [0 => $this->faker->unique()->domainWord()],
-            'field_type' => [0 => 'text'],
-            'field_label' => [0 => $this->faker->unique()->domainWord()],
-            'field_rules' => [0 => null],
-            'field_choices' => [0 => null],
-            'field_value' => [0 => $this->faker->unique()->domainWord()],
-            'field_help' => [0 => null],
-            'field_section' => [0 => 'test_section'],
+            'section_key'         => [0 => 'test_section'],
+            'section_name'        => [0 => $this->faker->unique()->domainWord()],
+            'field_key'           => [0 => $this->faker->unique()->domainWord()],
+            'field_type'          => [0 => 'text'],
+            'field_label'         => [0 => $this->faker->unique()->domainWord()],
+            'field_rules'         => [0 => null],
+            'field_choices'       => [0 => null],
+            'field_value'         => [0 => $this->faker->unique()->domainWord()],
+            'field_help'          => [0 => null],
+            'field_section'       => [0 => 'test_section'],
             'field_is_subsection' => [0 => 0],
         ];
 
@@ -407,7 +407,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"text","rules":null,"choices":null,"value":"'.$data['field_value'][0].'","help":null,"is_subsection":0}}}}'
+            'data'    => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"text","rules":null,"choices":null,"value":"'.$data['field_value'][0].'","help":null,"is_subsection":0}}}}',
         ]);
     }
 
@@ -420,16 +420,16 @@ class SubjectDataFieldTest extends TestCase
     {
         // Define some basic template data
         $data = [
-            'section_key' => [0 => 'test_section'],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'field_key' => [0 => $this->faker->unique()->domainWord()],
-            'field_type' => [0 => 'text'],
-            'field_label' => [0 => $this->faker->unique()->domainWord()],
-            'field_rules' => [0 => null],
-            'field_choices' => [0 => null],
-            'field_value' => [0 => null],
-            'field_help' => [0 => $this->faker->unique()->domainWord()],
-            'field_section' => [0 => 'test_section'],
+            'section_key'         => [0 => 'test_section'],
+            'section_name'        => [0 => $this->faker->unique()->domainWord()],
+            'field_key'           => [0 => $this->faker->unique()->domainWord()],
+            'field_type'          => [0 => 'text'],
+            'field_label'         => [0 => $this->faker->unique()->domainWord()],
+            'field_rules'         => [0 => null],
+            'field_choices'       => [0 => null],
+            'field_value'         => [0 => null],
+            'field_help'          => [0 => $this->faker->unique()->domainWord()],
+            'field_section'       => [0 => 'test_section'],
             'field_is_subsection' => [0 => 0],
         ];
 
@@ -444,7 +444,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"text","rules":null,"choices":null,"value":null,"help":"'.$data['field_help'][0].'","is_subsection":0}}}}'
+            'data'    => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"text","rules":null,"choices":null,"value":null,"help":"'.$data['field_help'][0].'","is_subsection":0}}}}',
         ]);
     }
 
@@ -457,16 +457,16 @@ class SubjectDataFieldTest extends TestCase
     {
         // Define some basic template data
         $data = [
-            'section_key' => [0 => 'test_section'],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'field_key' => [0 => $this->faker->unique()->domainWord()],
-            'field_type' => [0 => 'number'],
-            'field_label' => [0 => $this->faker->unique()->domainWord()],
-            'field_rules' => [0 => null],
-            'field_choices' => [0 => null],
-            'field_value' => [0 => null],
-            'field_help' => [0 => null],
-            'field_section' => [0 => 'test_section'],
+            'section_key'         => [0 => 'test_section'],
+            'section_name'        => [0 => $this->faker->unique()->domainWord()],
+            'field_key'           => [0 => $this->faker->unique()->domainWord()],
+            'field_type'          => [0 => 'number'],
+            'field_label'         => [0 => $this->faker->unique()->domainWord()],
+            'field_rules'         => [0 => null],
+            'field_choices'       => [0 => null],
+            'field_value'         => [0 => null],
+            'field_help'          => [0 => null],
+            'field_section'       => [0 => 'test_section'],
             'field_is_subsection' => [0 => 0],
         ];
 
@@ -481,7 +481,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"number","rules":null,"choices":null,"value":null,"help":null,"is_subsection":0}}}}'
+            'data'    => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"number","rules":null,"choices":null,"value":null,"help":null,"is_subsection":0}}}}',
         ]);
     }
 
@@ -494,16 +494,16 @@ class SubjectDataFieldTest extends TestCase
     {
         // Define some basic template data
         $data = [
-            'section_key' => [0 => 'test_section'],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'field_key' => [0 => $this->faker->unique()->domainWord()],
-            'field_type' => [0 => 'checkbox'],
-            'field_label' => [0 => $this->faker->unique()->domainWord()],
-            'field_rules' => [0 => null],
-            'field_choices' => [0 => null],
-            'field_value' => [0 => null],
-            'field_help' => [0 => null],
-            'field_section' => [0 => 'test_section'],
+            'section_key'         => [0 => 'test_section'],
+            'section_name'        => [0 => $this->faker->unique()->domainWord()],
+            'field_key'           => [0 => $this->faker->unique()->domainWord()],
+            'field_type'          => [0 => 'checkbox'],
+            'field_label'         => [0 => $this->faker->unique()->domainWord()],
+            'field_rules'         => [0 => null],
+            'field_choices'       => [0 => null],
+            'field_value'         => [0 => null],
+            'field_help'          => [0 => null],
+            'field_section'       => [0 => 'test_section'],
             'field_is_subsection' => [0 => 0],
         ];
 
@@ -518,7 +518,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"checkbox","rules":null,"choices":null,"value":null,"help":null,"is_subsection":0}}}}'
+            'data'    => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"checkbox","rules":null,"choices":null,"value":null,"help":null,"is_subsection":0}}}}',
         ]);
     }
 
@@ -535,16 +535,16 @@ class SubjectDataFieldTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'section_key' => [0 => 'test_section'],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'field_key' => [0 => $this->faker->unique()->domainWord()],
-            'field_type' => [0 => 'choice'],
-            'field_label' => [0 => $this->faker->unique()->domainWord()],
-            'field_rules' => [0 => null],
-            'field_choices' => [0 => $option[1].','.$option[2]],
-            'field_value' => [0 => null],
-            'field_help' => [0 => null],
-            'field_section' => [0 => 'test_section'],
+            'section_key'         => [0 => 'test_section'],
+            'section_name'        => [0 => $this->faker->unique()->domainWord()],
+            'field_key'           => [0 => $this->faker->unique()->domainWord()],
+            'field_type'          => [0 => 'choice'],
+            'field_label'         => [0 => $this->faker->unique()->domainWord()],
+            'field_rules'         => [0 => null],
+            'field_choices'       => [0 => $option[1].','.$option[2]],
+            'field_value'         => [0 => null],
+            'field_help'          => [0 => null],
+            'field_section'       => [0 => 'test_section'],
             'field_is_subsection' => [0 => 0],
         ];
 
@@ -559,7 +559,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"choice","rules":null,"choices":["'.$option[1].'","'.$option[2].'"],"value":null,"help":null,"is_subsection":0}}}}'
+            'data'    => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"choice","rules":null,"choices":["'.$option[1].'","'.$option[2].'"],"value":null,"help":null,"is_subsection":0}}}}',
         ]);
     }
 
@@ -576,16 +576,16 @@ class SubjectDataFieldTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'section_key' => [0 => 'test_section'],
-            'section_name' => [0 => $this->faker->unique()->domainWord()],
-            'field_key' => [0 => $this->faker->unique()->domainWord()],
-            'field_type' => [0 => 'multiple'],
-            'field_label' => [0 => $this->faker->unique()->domainWord()],
-            'field_rules' => [0 => null],
-            'field_choices' => [0 => $option[1].','.$option[2]],
-            'field_value' => [0 => null],
-            'field_help' => [0 => null],
-            'field_section' => [0 => 'test_section'],
+            'section_key'         => [0 => 'test_section'],
+            'section_name'        => [0 => $this->faker->unique()->domainWord()],
+            'field_key'           => [0 => $this->faker->unique()->domainWord()],
+            'field_type'          => [0 => 'multiple'],
+            'field_label'         => [0 => $this->faker->unique()->domainWord()],
+            'field_rules'         => [0 => null],
+            'field_choices'       => [0 => $option[1].','.$option[2]],
+            'field_value'         => [0 => null],
+            'field_help'          => [0 => null],
+            'field_section'       => [0 => 'test_section'],
             'field_is_subsection' => [0 => 0],
         ];
 
@@ -600,7 +600,7 @@ class SubjectDataFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"multiple","rules":null,"choices":["'.$option[1].'","'.$option[2].'"],"value":null,"help":null,"is_subsection":0}}}}'
+            'data'    => '{"sections":{"test_section":{"name":"'.$data['section_name'][0].'"}},"fields":{"test_section":{"'.$data['field_key'][0].'":{"label":"'.$data['field_label'][0].'","type":"multiple","rules":null,"choices":["'.$option[1].'","'.$option[2].'"],"value":null,"help":null,"is_subsection":0}}}}',
         ]);
     }
 }

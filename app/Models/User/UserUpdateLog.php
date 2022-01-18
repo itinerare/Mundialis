@@ -12,7 +12,7 @@ class UserUpdateLog extends Model
      * @var array
      */
     protected $fillable = [
-        'staff_id', 'user_id', 'type', 'data'
+        'staff_id', 'user_id', 'type', 'data',
     ];
 
     /**

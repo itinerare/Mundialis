@@ -23,7 +23,7 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -32,9 +32,9 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'category_id' => $category->id,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
+            'category_id'     => $category->id,
             $fieldData['key'] => $this->faker->unique()->domainWord(),
         ];
 
@@ -51,7 +51,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -64,7 +64,7 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -75,8 +75,8 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => $this->faker->unique()->domainWord(),
         ];
 
@@ -91,7 +91,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -104,7 +104,7 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -113,9 +113,9 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'category_id' => $category->id,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
+            'category_id'     => $category->id,
             $fieldData['key'] => mt_rand(1, 100),
         ];
 
@@ -132,7 +132,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -145,7 +145,7 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -156,8 +156,8 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => mt_rand(1, 100),
         ];
 
@@ -172,7 +172,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -185,7 +185,7 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -194,9 +194,9 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'category_id' => $category->id,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
+            'category_id'     => $category->id,
             $fieldData['key'] => mt_rand(0, 1),
         ];
 
@@ -213,7 +213,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -226,7 +226,7 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -237,8 +237,8 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => mt_rand(0, 1),
         ];
 
@@ -253,7 +253,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -266,8 +266,8 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -276,8 +276,8 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'       => $this->faker->unique()->domainWord(),
+            'summary'     => null,
             'category_id' => $category->id,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
@@ -296,7 +296,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -309,8 +309,8 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -321,7 +321,7 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
+            'title'   => $this->faker->unique()->domainWord(),
             'summary' => null,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
@@ -338,7 +338,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -351,8 +351,8 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -361,9 +361,9 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'category_id' => $category->id,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
+            'category_id'     => $category->id,
             $fieldData['key'] => [
                 0 => (string) mt_rand(0, 1),
                 1 => (string) mt_rand(0, 1),
@@ -383,7 +383,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"],"parsed":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"]}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"],"parsed":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"]}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -396,8 +396,8 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -408,8 +408,8 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => [
                 0 => (string) mt_rand(0, 1),
                 1 => (string) mt_rand(0, 1),
@@ -427,7 +427,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"],"parsed":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"]}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"],"parsed":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"]}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -440,7 +440,7 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -449,9 +449,9 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'category_id' => $category->id,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
+            'category_id'     => $category->id,
             $fieldData['key'] => $this->faker->unique()->domainWord(),
         ];
 
@@ -468,7 +468,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -481,7 +481,7 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -492,8 +492,8 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => $this->faker->unique()->domainWord(),
         ];
 
@@ -508,7 +508,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -521,7 +521,7 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -530,9 +530,9 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'category_id' => $category->id,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
+            'category_id'     => $category->id,
             $fieldData['key'] => mt_rand(1, 100),
         ];
 
@@ -549,7 +549,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -562,7 +562,7 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -573,8 +573,8 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => mt_rand(1, 100),
         ];
 
@@ -589,7 +589,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -602,7 +602,7 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -611,9 +611,9 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'category_id' => $category->id,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
+            'category_id'     => $category->id,
             $fieldData['key'] => mt_rand(0, 1),
         ];
 
@@ -630,7 +630,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -643,7 +643,7 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -654,8 +654,8 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => mt_rand(0, 1),
         ];
 
@@ -670,7 +670,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -683,8 +683,8 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -693,8 +693,8 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'       => $this->faker->unique()->domainWord(),
+            'summary'     => null,
             'category_id' => $category->id,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
@@ -713,7 +713,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -726,8 +726,8 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -738,7 +738,7 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
+            'title'   => $this->faker->unique()->domainWord(),
             'summary' => null,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
@@ -755,7 +755,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -768,8 +768,8 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -778,9 +778,9 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'category_id' => $category->id,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
+            'category_id'     => $category->id,
             $fieldData['key'] => [
                 0 => (string) mt_rand(0, 1),
                 1 => (string) mt_rand(0, 1),
@@ -800,7 +800,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"],"parsed":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"]}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"],"parsed":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"]}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -813,8 +813,8 @@ class PageEditFieldTest extends TestCase
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -825,8 +825,8 @@ class PageEditFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => [
                 0 => (string) mt_rand(0, 1),
                 1 => (string) mt_rand(0, 1),
@@ -844,7 +844,7 @@ class PageEditFieldTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"],"parsed":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"]}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"],"parsed":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"]}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 }

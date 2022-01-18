@@ -2,21 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use DB;
-use Auth;
-use Config;
-use Illuminate\Auth\Notifications\ResetPassword;
-
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-
-use App\Models\User\User;
-use App\Models\User\Rank;
-use App\Models\User\UserUpdateLog;
-
-use App\Services\UserService;
-
 use App\Http\Controllers\Controller;
+use App\Models\User\Rank;
+use App\Models\User\User;
+use App\Models\User\UserUpdateLog;
+use App\Services\UserService;
+use Auth;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -32,7 +24,7 @@ class UserController extends Controller
 
         if ($request->get('name')) {
             $query->where(function ($query) use ($request) {
-                $query->where('users.name', 'LIKE', '%' . $request->get('name') . '%')->orWhere('users.alias', 'LIKE', '%' . $request->get('name') . '%');
+                $query->where('users.name', 'LIKE', '%'.$request->get('name').'%')->orWhere('users.alias', 'LIKE', '%'.$request->get('name').'%');
             });
         }
         if ($request->get('rank_id')) {
@@ -69,7 +61,7 @@ class UserController extends Controller
         return view('admin.users.index', [
             'users' => $query->paginate(30)->appends($request->query()),
             'ranks' => [0 => 'Any Rank'] + Rank::orderBy('ranks.sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'count' => $query->count()
+            'count' => $query->count(),
         ]);
     }
 
@@ -87,8 +79,8 @@ class UserController extends Controller
         }
 
         return view('admin.users.user', [
-            'user' => $user,
-            'ranks' => Rank::orderBy('ranks.sort')->pluck('name', 'id')->toArray()
+            'user'  => $user,
+            'ranks' => Rank::orderBy('ranks.sort')->pluck('name', 'id')->toArray(),
         ]);
     }
 
@@ -101,7 +93,7 @@ class UserController extends Controller
             flash('You cannot edit the information of an admin.')->error();
         } else {
             $request->validate([
-                'name' => 'required|between:3,25'
+                'name' => 'required|between:3,25',
             ]);
             $data = $request->only(['name'] + (!$user->isAdmin ? [1 => 'rank_id'] : []));
 
@@ -113,6 +105,7 @@ class UserController extends Controller
                 flash('Failed to update user\'s information.')->error();
             }
         }
+
         return redirect()->to($user->adminUrl);
     }
 
@@ -125,6 +118,7 @@ class UserController extends Controller
         } else {
             flash('Failed to update user\'s account information.')->error();
         }
+
         return redirect()->back();
     }
 
@@ -143,7 +137,7 @@ class UserController extends Controller
 
         return view('admin.users.user_update_log', [
             'user' => $user,
-            'logs' => UserUpdateLog::where('user_id', $user->id)->orderBy('id', 'DESC')->paginate(50)
+            'logs' => UserUpdateLog::where('user_id', $user->id)->orderBy('id', 'DESC')->paginate(50),
         ]);
     }
 
@@ -161,7 +155,7 @@ class UserController extends Controller
         }
 
         return view('admin.users.user_ban', [
-            'user' => $user
+            'user' => $user,
         ]);
     }
 
@@ -179,7 +173,7 @@ class UserController extends Controller
         }
 
         return view('admin.users._user_ban_confirmation', [
-            'user' => $user
+            'user' => $user,
         ]);
     }
 
@@ -198,6 +192,7 @@ class UserController extends Controller
                 flash($error)->error();
             }
         }
+
         return redirect()->back();
     }
 
@@ -215,7 +210,7 @@ class UserController extends Controller
         }
 
         return view('admin.users._user_unban_confirmation', [
-            'user' => $user
+            'user' => $user,
         ]);
     }
 
@@ -234,6 +229,7 @@ class UserController extends Controller
                 flash($error)->error();
             }
         }
+
         return redirect()->back();
     }
 }
