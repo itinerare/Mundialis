@@ -2,15 +2,12 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-
-use App\Models\User\User;
 use App\Models\Page\Page;
 use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
-use App\Services\PageManager;
+use App\Models\User\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class PageViewTest extends TestCase
 {
@@ -18,8 +15,6 @@ class PageViewTest extends TestCase
 
     /**
      * Test page access.
-     *
-     * @return void
      */
     public function test_canGetPage()
     {
@@ -39,8 +34,6 @@ class PageViewTest extends TestCase
 
     /**
      * Test page history access.
-     *
-     * @return void
      */
     public function test_canGetPageHistory()
     {
@@ -60,8 +53,6 @@ class PageViewTest extends TestCase
 
     /**
      * Test page gallery access.
-     *
-     * @return void
      */
     public function test_canGetPageGallery()
     {
@@ -81,8 +72,6 @@ class PageViewTest extends TestCase
 
     /**
      * Test page "what links here" access.
-     *
-     * @return void
      */
     public function test_canGetPageLinks()
     {
@@ -102,8 +91,6 @@ class PageViewTest extends TestCase
 
     /**
      * Test page access in the "people" subject.
-     *
-     * @return void
      */
     public function test_canGetPeoplePage()
     {
@@ -124,8 +111,6 @@ class PageViewTest extends TestCase
 
     /**
      * Test page access in the "places" subject.
-     *
-     * @return void
      */
     public function test_canGetPlacesPage()
     {
@@ -146,8 +131,6 @@ class PageViewTest extends TestCase
 
     /**
      * Test page access in the "flora and fauna" subject.
-     *
-     * @return void
      */
     public function test_canGetSpeciesPage()
     {
@@ -168,8 +151,6 @@ class PageViewTest extends TestCase
 
     /**
      * Test page access in the "things" subject.
-     *
-     * @return void
      */
     public function test_canGetThingsPage()
     {
@@ -190,8 +171,6 @@ class PageViewTest extends TestCase
 
     /**
      * Test page access in the "concepts" subject.
-     *
-     * @return void
      */
     public function test_canGetConceptsPage()
     {
@@ -212,8 +191,6 @@ class PageViewTest extends TestCase
 
     /**
      * Test page access in the "time" subject.
-     *
-     * @return void
      */
     public function test_canGetTimePage()
     {
@@ -234,8 +211,6 @@ class PageViewTest extends TestCase
 
     /**
      * Test page access in the "language" subject.
-     *
-     * @return void
      */
     public function test_canGetLanguagePage()
     {

@@ -5,10 +5,13 @@ use PhpCsFixer\Finder;
 
 $rules = [
     // '@PSR12' => true,
+    'align_multiline_comment' => true,
     'array_syntax' => ['syntax' => 'short'],
     'binary_operator_spaces' => [
         'default' => 'single_space',
-        'operators' => ['=>' => null]
+        'operators' => [
+            '=>' => 'align'
+        ],
     ],
     'blank_line_after_namespace' => true,
     'blank_line_after_opening_tag' => true,
@@ -22,11 +25,12 @@ $rules = [
     ],
     'class_definition' => true,
     'concat_space' => [
-        'spacing' => 'one'
+        'spacing' => 'none'
     ],
     'declare_equal_normalize' => true,
     'elseif' => true,
     'encoding' => true,
+    'explicit_string_variable' => true,
     'full_opening_tag' => true,
     'fully_qualified_strict_types' => true,
     'function_declaration' => true,
@@ -90,10 +94,15 @@ $rules = [
             'function',
             'const'
         ],
-        'sort_algorithm' => 'none'
     ],
     'ordered_class_elements' => true,
     'ordered_traits' => true,
+    'no_superfluous_phpdoc_tags' => [
+        'allow_mixed' => true
+    ],
+    'phpdoc_add_missing_param_annotation' => true,
+    'phpdoc_align' => true,
+    'phpdoc_annotation_without_dot' => true,
     'phpdoc_indent' => true,
     'general_phpdoc_tag_rename' => true,
     'phpdoc_order_by_value' => true,
@@ -101,11 +110,14 @@ $rules = [
     'phpdoc_inline_tag_normalizer' => true,
     'phpdoc_tag_type' => true,
     'phpdoc_no_access' => true,
+    'phpdoc_no_empty_return' => true,
     'phpdoc_no_package' => true,
     'phpdoc_no_useless_inheritdoc' => true,
     'phpdoc_scalar' => true,
+    'phpdoc_separation' => true,
     'phpdoc_single_line_var_spacing' => true,
     'phpdoc_summary' => true,
+    'phpdoc_tag_casing' => true,
     'phpdoc_to_comment' => true,
     'phpdoc_trim' => true,
     'phpdoc_types' => true,
@@ -124,6 +136,7 @@ $rules = [
     ],
     'single_quote' => true,
     'space_after_semicolon' => true,
+    'single_space_after_construct' => true,
     'single_trait_insert_per_statement' => false,
     'standardize_not_equals' => true,
     'switch_case_semicolon_to_colon' => true,

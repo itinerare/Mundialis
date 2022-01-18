@@ -2,17 +2,15 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-
-use App\Models\User\User;
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
 use App\Models\Page\PageImageCreator;
 use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
+use App\Models\User\User;
 use App\Services\ImageManager;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class PageImageViewTest extends TestCase
 {
@@ -20,8 +18,6 @@ class PageImageViewTest extends TestCase
 
     /**
      * Test image modal access.
-     *
-     * @return void
      */
     public function test_canGetImageModal()
     {
@@ -46,15 +42,13 @@ class PageImageViewTest extends TestCase
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
      * Test hidden image modal access.
      * This shouldn't work.
-     *
-     * @return void
      */
     public function test_cannotGetHiddenImageModal()
     {
@@ -79,15 +73,13 @@ class PageImageViewTest extends TestCase
         $response->assertStatus(404);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
      * Test hidden image modal access.
      * This should work.
-     *
-     * @return void
      */
     public function test_canGetHiddenImageModalAsEditor()
     {
@@ -109,14 +101,12 @@ class PageImageViewTest extends TestCase
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
      * Test image page access.
-     *
-     * @return void
      */
     public function test_canGetImagePage()
     {
@@ -141,15 +131,13 @@ class PageImageViewTest extends TestCase
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
      * Test hidden image page access.
      * This shouldn't work.
-     *
-     * @return void
      */
     public function test_cannotGetHiddenImagePage()
     {
@@ -174,15 +162,13 @@ class PageImageViewTest extends TestCase
         $response->assertStatus(404);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
      * Test hidden image page access.
      * This should work.
-     *
-     * @return void
      */
     public function test_canGetHiddenImagePageAsEditor()
     {
@@ -204,7 +190,7 @@ class PageImageViewTest extends TestCase
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 }

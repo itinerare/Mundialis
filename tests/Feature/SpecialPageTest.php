@@ -10,12 +10,11 @@ use App\Models\Page\PageLink;
 use App\Models\Page\PagePageImage;
 use App\Models\Page\PageProtection;
 use App\Models\Page\PageVersion;
+use App\Models\User\User;
+use App\Services\ImageManager;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
-use App\Models\User\User;
-use App\Services\ImageManager;
 
 class SpecialPageTest extends TestCase
 {
@@ -27,8 +26,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests all special pages access.
-     *
-     * @return void
      */
     public function test_canGetSpecialPages()
     {
@@ -42,8 +39,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests untagged pages access.
-     *
-     * @return void
      */
     public function test_canGetUntaggedPages()
     {
@@ -57,8 +52,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests untagged pages access with an untagged page.
-     *
-     * @return void
      */
     public function test_canGetUntaggedPagesWithPage()
     {
@@ -76,8 +69,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests most tagged pages access.
-     *
-     * @return void
      */
     public function test_canGetMostTaggedPages()
     {
@@ -91,8 +82,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests most tagged pages access with a tagged page.
-     *
-     * @return void
      */
     public function test_canGetMostTaggedPagesWithPage()
     {
@@ -110,8 +99,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests least revised pages access.
-     *
-     * @return void
      */
     public function test_canGetLeastRevisedPages()
     {
@@ -125,8 +112,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests least revised pages access with a page.
-     *
-     * @return void
      */
     public function test_canGetLeastRevisedPagesWithPage()
     {
@@ -144,8 +129,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests most revised pages access.
-     *
-     * @return void
      */
     public function test_canGetMostRevisedPages()
     {
@@ -159,8 +142,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests most revised pages access with a page.
-     *
-     * @return void
      */
     public function test_canGetMostRevisedPagesWithPage()
     {
@@ -178,8 +159,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests most linked pages access.
-     *
-     * @return void
      */
     public function test_canGetMostLinkedPages()
     {
@@ -194,8 +173,6 @@ class SpecialPageTest extends TestCase
     /**
      * Tests most linked pages access with a linked page.
      * Does not work in test environment; retained for posterity.
-     *
-     * @return void
      */
     public function canGetMostLinkedPagesWithPage()
     {
@@ -203,7 +180,7 @@ class SpecialPageTest extends TestCase
 
         $editor = User::factory()->editor()->create();
 
-        for($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->create();
             PageVersion::factory()->page($page[$i]->id)->user($editor->id)->testData()->create();
         }
@@ -217,8 +194,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests recently edited pages access.
-     *
-     * @return void
      */
     public function test_canGetRecentlyEditedPages()
     {
@@ -232,8 +207,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests recently edited pages access with a page.
-     *
-     * @return void
      */
     public function test_canGetRecentlyEditedPagesWithPage()
     {
@@ -251,8 +224,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests recently edited images access.
-     *
-     * @return void
      */
     public function test_canGetRecentlyEditedImages()
     {
@@ -266,8 +237,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests recently edited images access with an image.
-     *
-     * @return void
      */
     public function test_canGetRecentlyEditedImagesWithImage()
     {
@@ -291,14 +260,12 @@ class SpecialPageTest extends TestCase
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
      * Tests wanted pages access.
-     *
-     * @return void
      */
     public function test_canGetWantedPages()
     {
@@ -312,8 +279,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests wanted pages access with a wanted page.
-     *
-     * @return void
      */
     public function test_canGetWantedPagesWithLinks()
     {
@@ -331,8 +296,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests create wanted page access.
-     *
-     * @return void
      */
     public function test_canGetCreateWantedPage()
     {
@@ -350,8 +313,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests protected pages access.
-     *
-     * @return void
      */
     public function test_canGetProtectedPages()
     {
@@ -365,8 +326,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests protected pages access with a page.
-     *
-     * @return void
      */
     public function test_canGetProtectedPagesWithPage()
     {
@@ -385,8 +344,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests WIP pages access.
-     *
-     * @return void
      */
     public function test_canGetWipPages()
     {
@@ -400,8 +357,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests WIP pages access with a page.
-     *
-     * @return void
      */
     public function test_canGetWipPagesWithPage()
     {
@@ -419,8 +374,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests stub pages access.
-     *
-     * @return void
      */
     public function test_canGetStubPages()
     {
@@ -434,8 +387,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests stub pages access with a page.
-     *
-     * @return void
      */
     public function test_canGetStubPagesWithPage()
     {
@@ -453,8 +404,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests outdated pages access.
-     *
-     * @return void
      */
     public function test_canGetOutdatedPages()
     {
@@ -468,8 +417,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests outdated pages access with a page.
-     *
-     * @return void
      */
     public function test_canGetOutdatedPagesWithPage()
     {
@@ -487,8 +434,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests pages needing cleanup access.
-     *
-     * @return void
      */
     public function test_canGetCleanupPages()
     {
@@ -502,8 +447,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests pages needing cleanup access with a page.
-     *
-     * @return void
      */
     public function test_canGetCleanupPagesWithPage()
     {
@@ -521,8 +464,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests unwatched pages access.
-     *
-     * @return void
      */
     public function test_canGetUnwatchedPages()
     {
@@ -536,8 +477,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests unwatched pages access with a page.
-     *
-     * @return void
      */
     public function test_canGetUnwatchedPagesWithPage()
     {
@@ -559,8 +498,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests all pages access.
-     *
-     * @return void
      */
     public function test_canGetAllPages()
     {
@@ -574,8 +511,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests all pages access with a page.
-     *
-     * @return void
      */
     public function test_canGetAllPagesWithPage()
     {
@@ -593,8 +528,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests all tags access.
-     *
-     * @return void
      */
     public function test_canGetAllTags()
     {
@@ -608,8 +541,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests all tags access with a tag.
-     *
-     * @return void
      */
     public function test_canGetAllTagsWithTag()
     {
@@ -627,8 +558,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests all images access.
-     *
-     * @return void
      */
     public function test_canGetAllImages()
     {
@@ -642,8 +571,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests all images access with an image.
-     *
-     * @return void
      */
     public function test_canGetAllImagesWithImage()
     {
@@ -667,14 +594,12 @@ class SpecialPageTest extends TestCase
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /**
      * Tests deleted pages access.
-     *
-     * @return void
      */
     public function test_canGetDeletedPages()
     {
@@ -688,8 +613,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests deleted pages access with a page.
-     *
-     * @return void
      */
     public function test_canGetDeletedPagesWithPage()
     {
@@ -706,8 +629,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests deleted images access.
-     *
-     * @return void
      */
     public function test_canGetDeletedImages()
     {
@@ -721,8 +642,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests deleted images access with an image.
-     *
-     * @return void
      */
     public function test_canGetDeletedImagesWithImage()
     {
@@ -744,8 +663,8 @@ class SpecialPageTest extends TestCase
         $response->assertStatus(200);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $version->thumbnailFileName);
-        unlink($image->imagePath . '/' . $version->imageFileName);
+        unlink($image->imagePath.'/'.$version->thumbnailFileName);
+        unlink($image->imagePath.'/'.$version->imageFileName);
     }
 
     /******************************************************************************
@@ -754,8 +673,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests user list access.
-     *
-     * @return void
      */
     public function test_canGetUserList()
     {
@@ -769,8 +686,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests user list access with a persistent user.
-     *
-     * @return void
      */
     public function test_canGetUserListWithUser()
     {
@@ -788,8 +703,6 @@ class SpecialPageTest extends TestCase
 
     /**
      * Tests random page access.
-     *
-     * @return void
      */
     public function test_canGetRandomPage()
     {

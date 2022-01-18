@@ -27,27 +27,27 @@ return [
         'label' => 'WIP Page',
         // Used for populating the alert on a tagged page
         'message' => 'This page is a work-in-progress! The information present on it may change or be incomplete.',
-        'verb' => 'contributing to'
+        'verb'    => 'contributing to',
     ],
 
     'stub' => [
-        'name' => 'Stubs',
-        'label' => 'Stub',
+        'name'    => 'Stubs',
+        'label'   => 'Stub',
         'message' => 'This page is a stub.',
-        'verb' => 'expanding'
+        'verb'    => 'expanding',
     ],
 
     'outdated' => [
-        'name' => 'Outdated Pages',
-        'label' => 'Outdated Page',
+        'name'    => 'Outdated Pages',
+        'label'   => 'Outdated Page',
         'message' => 'The content of this page is outdated.',
-        'verb' => 'updating'
+        'verb'    => 'updating',
     ],
 
     'cleanup' => [
-        'name' => 'Pages Needing Clean-up',
-        'label' => 'Needs Clean-up',
+        'name'    => 'Pages Needing Clean-up',
+        'label'   => 'Needs Clean-up',
         'message' => 'This page needs clean-up for formatting or other reasons.',
-        'verb' => 'resolving'
-    ]
+        'verb'    => 'resolving',
+    ],
 ];

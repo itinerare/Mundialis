@@ -2,15 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\Page\Page;
+use App\Models\Page\PageRelationship;
+use App\Models\Subject\SubjectCategory;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
-use App\Models\User\User;
-use App\Models\Page\Page;
-use App\Models\Page\PageRelationship;
-use App\Models\Page\PageVersion;
-use App\Models\Subject\SubjectCategory;
 
 class PageRelationshipTest extends TestCase
 {
@@ -18,8 +16,6 @@ class PageRelationshipTest extends TestCase
 
     /**
      * Test page relationships access.
-     *
-     * @return void
      */
     public function test_canGetRelationships()
     {
@@ -40,8 +36,6 @@ class PageRelationshipTest extends TestCase
 
     /**
      * Test page relationships access.
-     *
-     * @return void
      */
     public function test_canGetRelationshipsWithRelationship()
     {
@@ -52,8 +46,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
@@ -66,8 +61,6 @@ class PageRelationshipTest extends TestCase
 
     /**
      * Test page relationship creation access.
-     *
-     * @return void
      */
     public function test_canGetCreateRelationship()
     {
@@ -88,8 +81,6 @@ class PageRelationshipTest extends TestCase
 
     /**
      * Test page relationship editing access.
-     *
-     * @return void
      */
     public function test_canGetEditRelationship()
     {
@@ -100,8 +91,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
@@ -114,8 +106,6 @@ class PageRelationshipTest extends TestCase
 
     /**
      * Test relationship creation with minimal data.
-     *
-     * @return void
      */
     public function test_canPostCreateRelationship()
     {
@@ -126,15 +116,16 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Define some basic data
         $data = [
             'page_one_id' => $page[1]->id,
             'page_two_id' => $page[2]->id,
-            'type_one' => 'platonic_friend',
-            'type_two' => 'platonic_friend',
+            'type_one'    => 'platonic_friend',
+            'type_two'    => 'platonic_friend',
         ];
 
         // Try to post data
@@ -146,15 +137,13 @@ class PageRelationshipTest extends TestCase
         $this->assertDatabaseHas('page_relationships', [
             'page_one_id' => $page[1]->id,
             'page_two_id' => $page[2]->id,
-            'type_one' => 'platonic_friend',
-            'type_two' => 'platonic_friend',
+            'type_one'    => 'platonic_friend',
+            'type_two'    => 'platonic_friend',
         ]);
     }
 
     /**
      * Test relationship editing with minimal data.
-     *
-     * @return void
      */
     public function test_canPostEditRelationship()
     {
@@ -165,8 +154,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
@@ -175,8 +165,8 @@ class PageRelationshipTest extends TestCase
         $data = [
             'page_one_id' => $page[1]->id,
             'page_two_id' => $page[2]->id,
-            'type_one' => 'platonic_friend',
-            'type_two' => 'platonic_friend',
+            'type_one'    => 'platonic_friend',
+            'type_two'    => 'platonic_friend',
         ];
 
         // Try to post data
@@ -188,15 +178,13 @@ class PageRelationshipTest extends TestCase
         $this->assertDatabaseHas('page_relationships', [
             'page_one_id' => $page[1]->id,
             'page_two_id' => $page[2]->id,
-            'type_one' => 'platonic_friend',
-            'type_two' => 'platonic_friend',
+            'type_one'    => 'platonic_friend',
+            'type_two'    => 'platonic_friend',
         ]);
     }
 
     /**
      * Test relationship creation with type info.
-     *
-     * @return void
      */
     public function test_canPostCreateRelationshipWithTypeInfo()
     {
@@ -207,16 +195,17 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Define some basic data
         $data = [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one' => 'platonic_friend',
+            'page_one_id'   => $page[1]->id,
+            'page_two_id'   => $page[2]->id,
+            'type_one'      => 'platonic_friend',
             'type_one_info' => $this->faker->unique()->domainWord(),
-            'type_two' => 'platonic_friend',
+            'type_two'      => 'platonic_friend',
             'type_two_info' => $this->faker->unique()->domainWord(),
         ];
 
@@ -227,19 +216,17 @@ class PageRelationshipTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_relationships', [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one' => 'platonic_friend',
+            'page_one_id'   => $page[1]->id,
+            'page_two_id'   => $page[2]->id,
+            'type_one'      => 'platonic_friend',
             'type_one_info' => $data['type_one_info'],
-            'type_two' => 'platonic_friend',
+            'type_two'      => 'platonic_friend',
             'type_two_info' => $data['type_two_info'],
         ]);
     }
 
     /**
      * Test relationship editing with type info.
-     *
-     * @return void
      */
     public function test_canPostEditRelationshipWithTypeInfo()
     {
@@ -250,19 +237,20 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
 
         // Define some basic data
         $data = [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one' => 'platonic_friend',
+            'page_one_id'   => $page[1]->id,
+            'page_two_id'   => $page[2]->id,
+            'type_one'      => 'platonic_friend',
             'type_one_info' => $this->faker->unique()->domainWord(),
-            'type_two' => 'platonic_friend',
+            'type_two'      => 'platonic_friend',
             'type_two_info' => $this->faker->unique()->domainWord(),
         ];
 
@@ -273,19 +261,17 @@ class PageRelationshipTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_relationships', [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one' => 'platonic_friend',
+            'page_one_id'   => $page[1]->id,
+            'page_two_id'   => $page[2]->id,
+            'type_one'      => 'platonic_friend',
             'type_one_info' => $data['type_one_info'],
-            'type_two' => 'platonic_friend',
+            'type_two'      => 'platonic_friend',
             'type_two_info' => $data['type_two_info'],
         ]);
     }
 
     /**
      * Test relationship creation with details.
-     *
-     * @return void
      */
     public function test_canPostCreateRelationshipWithDetails()
     {
@@ -296,16 +282,17 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Define some basic data
         $data = [
             'page_one_id' => $page[1]->id,
             'page_two_id' => $page[2]->id,
-            'type_one' => 'platonic_friend',
+            'type_one'    => 'platonic_friend',
             'details_one' => $this->faker->unique()->domainWord(),
-            'type_two' => 'platonic_friend',
+            'type_two'    => 'platonic_friend',
             'details_two' => $this->faker->unique()->domainWord(),
         ];
 
@@ -318,17 +305,15 @@ class PageRelationshipTest extends TestCase
         $this->assertDatabaseHas('page_relationships', [
             'page_one_id' => $page[1]->id,
             'page_two_id' => $page[2]->id,
-            'type_one' => 'platonic_friend',
+            'type_one'    => 'platonic_friend',
             'details_one' => $data['details_one'],
-            'type_two' => 'platonic_friend',
+            'type_two'    => 'platonic_friend',
             'details_two' => $data['details_two'],
         ]);
     }
 
     /**
      * Test relationship editing with details.
-     *
-     * @return void
      */
     public function test_canPostEditRelationshipWithDetails()
     {
@@ -339,8 +324,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
@@ -349,9 +335,9 @@ class PageRelationshipTest extends TestCase
         $data = [
             'page_one_id' => $page[1]->id,
             'page_two_id' => $page[2]->id,
-            'type_one' => 'platonic_friend',
+            'type_one'    => 'platonic_friend',
             'details_one' => $this->faker->unique()->domainWord(),
-            'type_two' => 'platonic_friend',
+            'type_two'    => 'platonic_friend',
             'details_two' => $this->faker->unique()->domainWord(),
         ];
 
@@ -364,17 +350,15 @@ class PageRelationshipTest extends TestCase
         $this->assertDatabaseHas('page_relationships', [
             'page_one_id' => $page[1]->id,
             'page_two_id' => $page[2]->id,
-            'type_one' => 'platonic_friend',
+            'type_one'    => 'platonic_friend',
             'details_one' => $data['details_one'],
-            'type_two' => 'platonic_friend',
+            'type_two'    => 'platonic_friend',
             'details_two' => $data['details_two'],
         ]);
     }
 
     /**
      * Test relationship creation with a custom type and info.
-     *
-     * @return void
      */
     public function test_canPostCreateRelationshipWithCustomType()
     {
@@ -385,16 +369,17 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Define some basic data
         $data = [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one' => 'custom',
+            'page_one_id'   => $page[1]->id,
+            'page_two_id'   => $page[2]->id,
+            'type_one'      => 'custom',
             'type_one_info' => $this->faker->unique()->domainWord(),
-            'type_two' => 'custom',
+            'type_two'      => 'custom',
             'type_two_info' => $this->faker->unique()->domainWord(),
         ];
 
@@ -405,19 +390,17 @@ class PageRelationshipTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_relationships', [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one' => 'custom',
+            'page_one_id'   => $page[1]->id,
+            'page_two_id'   => $page[2]->id,
+            'type_one'      => 'custom',
             'type_one_info' => $data['type_one_info'],
-            'type_two' => 'custom',
+            'type_two'      => 'custom',
             'type_two_info' => $data['type_two_info'],
         ]);
     }
 
     /**
      * Test relationship editing with a custom type and info.
-     *
-     * @return void
      */
     public function test_canPostEditRelationshipWithCustomType()
     {
@@ -428,19 +411,20 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
 
         // Define some basic data
         $data = [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one' => 'custom',
+            'page_one_id'   => $page[1]->id,
+            'page_two_id'   => $page[2]->id,
+            'type_one'      => 'custom',
             'type_one_info' => $this->faker->unique()->domainWord(),
-            'type_two' => 'custom',
+            'type_two'      => 'custom',
             'type_two_info' => $this->faker->unique()->domainWord(),
         ];
 
@@ -451,11 +435,11 @@ class PageRelationshipTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_relationships', [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one' => 'custom',
+            'page_one_id'   => $page[1]->id,
+            'page_two_id'   => $page[2]->id,
+            'type_one'      => 'custom',
             'type_one_info' => $data['type_one_info'],
-            'type_two' => 'custom',
+            'type_two'      => 'custom',
             'type_two_info' => $data['type_two_info'],
         ]);
     }
@@ -463,8 +447,6 @@ class PageRelationshipTest extends TestCase
     /**
      * Test relationship creation with a custom type but no info.
      * This shouldn't work.
-     *
-     * @return void
      */
     public function test_cannotPostCreateRelationshipWithCustomTypeWithoutInfo()
     {
@@ -475,15 +457,16 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Define some basic data
         $data = [
             'page_one_id' => $page[1]->id,
             'page_two_id' => $page[2]->id,
-            'type_one' => 'custom',
-            'type_two' => 'custom',
+            'type_one'    => 'custom',
+            'type_two'    => 'custom',
         ];
 
         // Try to post data
@@ -495,16 +478,14 @@ class PageRelationshipTest extends TestCase
         $this->assertDatabaseMissing('page_relationships', [
             'page_one_id' => $page[1]->id,
             'page_two_id' => $page[2]->id,
-            'type_one' => 'custom',
-            'type_two' => 'custom',
+            'type_one'    => 'custom',
+            'type_two'    => 'custom',
         ]);
     }
 
     /**
      * Test relationship creation with a custom type but no info.
      * This shouldn't work.
-     *
-     * @return void
      */
     public function test_cannotPostEditRelationshipWithCustomTypeWithoutInfo()
     {
@@ -515,8 +496,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
@@ -525,8 +507,8 @@ class PageRelationshipTest extends TestCase
         $data = [
             'page_one_id' => $page[1]->id,
             'page_two_id' => $page[2]->id,
-            'type_one' => 'custom',
-            'type_two' => 'custom',
+            'type_one'    => 'custom',
+            'type_two'    => 'custom',
         ];
 
         // Try to post data
@@ -538,8 +520,8 @@ class PageRelationshipTest extends TestCase
         $this->assertDatabaseHas('page_relationships', [
             'page_one_id' => $page[1]->id,
             'page_two_id' => $page[2]->id,
-            'type_one' => 'platonic_friend',
-            'type_two' => 'platonic_friend',
+            'type_one'    => 'platonic_friend',
+            'type_two'    => 'platonic_friend',
         ]);
     }
 
@@ -549,8 +531,6 @@ class PageRelationshipTest extends TestCase
 
     /**
      * Test page relationship editing access.
-     *
-     * @return void
      */
     public function test_canGetDeleteRelationship()
     {
@@ -561,8 +541,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
@@ -575,8 +556,6 @@ class PageRelationshipTest extends TestCase
 
     /**
      * Test relationship deletion.
-     *
-     * @return void
      */
     public function test_canPostDeleteRelationship()
     {
@@ -587,8 +566,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
@@ -608,8 +588,6 @@ class PageRelationshipTest extends TestCase
 
     /**
      * Test page family tree access.
-     *
-     * @return void
      */
     public function test_canGetFamilyTree()
     {
@@ -620,8 +598,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a familial relationship for the two pages
         PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
@@ -635,8 +614,6 @@ class PageRelationshipTest extends TestCase
     /**
      * Test page family tree access without relationships.
      * This shouldn't work.
-     *
-     * @return void
      */
     public function test_cannotGetFamilyTreeWithoutRelationships()
     {
@@ -658,8 +635,6 @@ class PageRelationshipTest extends TestCase
     /**
      * Test page family tree access without any familial relationships.
      * This shouldn't work.
-     *
-     * @return void
      */
     public function test_cannotGetFamilyTreeWithoutFamily()
     {
@@ -670,8 +645,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a non-familial relationship for the two pages
         PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();

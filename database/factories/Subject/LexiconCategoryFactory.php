@@ -22,21 +22,22 @@ class LexiconCategoryFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->unique()->domainWord().$this->faker->unique()->domainWord()
+            'name' => $this->faker->unique()->domainWord().$this->faker->unique()->domainWord(),
         ];
     }
 
     /**
      * Generate a category with some fields set.
      *
-     * @param  int                         $class
+     * @param int $class
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function testData($class = 1)
     {
         return $this->state(function (array $attributes) use ($class) {
             return [
-                'data' => '{"'.$class.'":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}}}}'
+                'data' => '{"'.$class.'":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}}}}',
             ];
         });
     }
@@ -44,14 +45,15 @@ class LexiconCategoryFactory extends Factory
     /**
      * Generate a category with some fields set.
      *
-     * @param  int                         $class
+     * @param int $class
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function extendedData($class = 1)
     {
         return $this->state(function (array $attributes) use ($class) {
             return [
-                'data' => '{"'.$class.'":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}},"conjugation":[{"criteria":["test"],"regex":["^"],"replacement":["b"]}]}}'
+                'data' => '{"'.$class.'":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}},"conjugation":[{"criteria":["test"],"regex":["^"],"replacement":["b"]}]}}',
             ];
         });
     }

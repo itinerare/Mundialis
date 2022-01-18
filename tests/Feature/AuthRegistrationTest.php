@@ -2,15 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\User\User;
+use App\Services\InvitationService;
 use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Password;
 use Tests\TestCase;
-
-use App\Models\User\User;
-
-use App\Services\InvitationService;
 
 class AuthRegistrationTest extends TestCase
 {
@@ -27,8 +23,6 @@ class AuthRegistrationTest extends TestCase
      * Test registration page access.
      * This should always return positive regardless of
      * whether registration is currently open or not.
-     *
-     * @return void
      */
     public function test_canGetRegisterForm()
     {
@@ -40,8 +34,6 @@ class AuthRegistrationTest extends TestCase
     /**
      * Test registration.
      * A valid user cannot be registered when registration is closed.
-     *
-     * @return void
      */
     public function test_cannotPostValidRegistrationWhenClosed()
     {
@@ -58,12 +50,12 @@ class AuthRegistrationTest extends TestCase
         $code = (new InvitationService)->generateInvitation($admin);
 
         $response = $this->post('register', [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => 'password',
+            'name'                  => $user->name,
+            'email'                 => $user->email,
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'agreement' => 1,
-            'code' => $code->code
+            'agreement'             => 1,
+            'code'                  => $code->code,
         ]);
 
         $this->assertGuest();
@@ -72,8 +64,6 @@ class AuthRegistrationTest extends TestCase
     /**
      * Test registration.
      * Registration requires an invitation code.
-     *
-     * @return void
      */
     public function test_cannotPostValidRegistrationWhenOpenWithoutCode()
     {
@@ -86,12 +76,12 @@ class AuthRegistrationTest extends TestCase
         $user = User::factory()->safeUsername()->make();
 
         $response = $this->post('register', [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => 'password',
+            'name'                  => $user->name,
+            'email'                 => $user->email,
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'agreement' => 1,
-            'code' => null
+            'agreement'             => 1,
+            'code'                  => null,
         ]);
 
         $response->assertSessionHasErrors();
@@ -102,8 +92,6 @@ class AuthRegistrationTest extends TestCase
     /**
      * Test registration.
      * Registration requires a valid invitation code.
-     *
-     * @return void
      */
     public function test_cannotPostValidRegistrationWhenOpenWithInvalidCode()
     {
@@ -116,12 +104,12 @@ class AuthRegistrationTest extends TestCase
         $user = User::factory()->safeUsername()->make();
 
         $response = $this->post('register', [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => 'password',
+            'name'                  => $user->name,
+            'email'                 => $user->email,
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'agreement' => 1,
-            'code' => randomString(15)
+            'agreement'             => 1,
+            'code'                  => randomString(15),
         ]);
 
         $response->assertSessionHasErrors();
@@ -132,8 +120,6 @@ class AuthRegistrationTest extends TestCase
     /**
      * Test registration.
      * Registration requires a valid, unused invitation code.
-     *
-     * @return void
      */
     public function test_cannotPostValidRegistrationWhenOpenWithUsedCode()
     {
@@ -155,12 +141,12 @@ class AuthRegistrationTest extends TestCase
         $code->update(['recipient_id' => $recipient->id]);
 
         $response = $this->post('register', [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => 'password',
+            'name'                  => $user->name,
+            'email'                 => $user->email,
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'agreement' => 1,
-            'code' => $code->code
+            'agreement'             => 1,
+            'code'                  => $code->code,
         ]);
 
         $response->assertSessionHasErrors();
@@ -171,8 +157,6 @@ class AuthRegistrationTest extends TestCase
     /**
      * Test registration.
      * Ensure valid user (with unused invitation code) can be registered.
-     *
-     * @return void
      */
     public function test_canPostValidRegistrationWhenOpenWithCode()
     {
@@ -189,12 +173,12 @@ class AuthRegistrationTest extends TestCase
         $code = (new InvitationService)->generateInvitation($admin);
 
         $response = $this->post('register', [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => 'password',
+            'name'                  => $user->name,
+            'email'                 => $user->email,
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'agreement' => 1,
-            'code' => $code->code
+            'agreement'             => 1,
+            'code'                  => $code->code,
         ]);
 
         $response->assertStatus(302);
@@ -205,8 +189,6 @@ class AuthRegistrationTest extends TestCase
     /**
      * Test registration.
      * Ensure an invalid user cannot be registered.
-     *
-     * @return void
      */
     public function test_cannotPostInvalidRegistration()
     {
@@ -216,10 +198,10 @@ class AuthRegistrationTest extends TestCase
         $user = User::factory()->safeUsername()->make();
 
         $response = $this->post('register', [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => 'password',
-            'password_confirmation' => 'invalid'
+            'name'                  => $user->name,
+            'email'                 => $user->email,
+            'password'              => 'password',
+            'password_confirmation' => 'invalid',
         ]);
 
         $response->assertSessionHasErrors();

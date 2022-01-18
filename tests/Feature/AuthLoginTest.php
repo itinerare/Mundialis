@@ -2,13 +2,9 @@
 
 namespace Tests\Feature;
 
-use DB;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Password;
-use Tests\TestCase;
-
 use App\Models\User\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AuthLoginTest extends TestCase
 {
@@ -23,8 +19,6 @@ class AuthLoginTest extends TestCase
 
     /**
      * Test login form access.
-     *
-     * @return void
      */
     public function test_canGetLoginForm()
     {
@@ -36,16 +30,14 @@ class AuthLoginTest extends TestCase
     /**
      * Test login as a valid user.
      * This should work.
-     *
-     * @return void
      */
     public function test_canPostValidLogin()
     {
         $user = User::factory()->create();
 
         $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password'
+            'email'    => $user->email,
+            'password' => 'password',
         ]);
 
         $response->assertStatus(302);
@@ -56,16 +48,14 @@ class AuthLoginTest extends TestCase
     /**
      * Test login as an invalid user.
      * This shouldn't work.
-     *
-     * @return void
      */
     public function test_cannotPostInvalidLogin()
     {
         $user = User::factory()->create();
 
         $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'invalid'
+            'email'    => $user->email,
+            'password' => 'invalid',
         ]);
 
         $response->assertSessionHasErrors();
@@ -75,8 +65,6 @@ class AuthLoginTest extends TestCase
 
     /**
      * Test user logout.
-     *
-     * @return void
      */
     public function test_canPostLogout()
     {

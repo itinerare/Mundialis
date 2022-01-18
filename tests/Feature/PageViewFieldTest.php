@@ -16,14 +16,12 @@ class PageViewFieldTest extends TestCase
 
     /**
      * Test page access with an infobox text field.
-     *
-     * @return void
      */
     public function test_canGetPageWithInfoboxTextField()
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -34,8 +32,8 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => $this->faker->unique()->domainWord(),
         ];
 
@@ -52,14 +50,12 @@ class PageViewFieldTest extends TestCase
 
     /**
      * Test page access with an infobox number field.
-     *
-     * @return void
      */
     public function test_canGetPageWithInfoboxNumberField()
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -70,9 +66,9 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            $fieldData['key'] => mt_rand(1,100),
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
+            $fieldData['key'] => mt_rand(1, 100),
         ];
 
         // Create page version and update with field data
@@ -88,15 +84,13 @@ class PageViewFieldTest extends TestCase
 
     /**
      * Test page access with an infobox checkbox field.
-     *
-     * @return void
      */
     public function test_canGetPageWithInfoboxCheckboxField()
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -107,10 +101,10 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
+            'title'   => $this->faker->unique()->domainWord(),
             'summary' => null,
             // This being passed in as string echoes the form input
-            $fieldData['key'] => (string) mt_rand(0,1),
+            $fieldData['key'] => (string) mt_rand(0, 1),
         ];
 
         // Create page version and update with field data
@@ -126,15 +120,13 @@ class PageViewFieldTest extends TestCase
 
     /**
      * Test page access with an infobox choose one field.
-     *
-     * @return void
      */
     public function test_canGetPageWithInfoboxChooseOneField()
     {
-         // Generate some data for the field
-         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+        // Generate some data for the field
+        $fieldData = [
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -145,10 +137,10 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
+            'title'   => $this->faker->unique()->domainWord(),
             'summary' => null,
             // This being passed in as string echoes the form input
-            $fieldData['key'] => (string) mt_rand(0,1),
+            $fieldData['key'] => (string) mt_rand(0, 1),
         ];
 
         // Create page version and update with field data
@@ -164,15 +156,13 @@ class PageViewFieldTest extends TestCase
 
     /**
      * Test page access with an infobox choose multiple field.
-     *
-     * @return void
      */
     public function test_canGetPageWithInfoboxChooseMultipleField()
     {
-         // Generate some data for the field
+        // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -183,11 +173,11 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => [
-                0 => (string) mt_rand(0,1),
-                1 => (string) mt_rand(0,1),
+                0 => (string) mt_rand(0, 1),
+                1 => (string) mt_rand(0, 1),
             ],
         ];
 
@@ -204,14 +194,12 @@ class PageViewFieldTest extends TestCase
 
     /**
      * Test page access with a text field.
-     *
-     * @return void
      */
     public function test_canGetPageWithTextField()
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -222,8 +210,8 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => $this->faker->unique()->domainWord(),
         ];
 
@@ -240,14 +228,12 @@ class PageViewFieldTest extends TestCase
 
     /**
      * Test page access with a number field.
-     *
-     * @return void
      */
     public function test_canGetPageWithNumberField()
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
+            'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
@@ -258,9 +244,9 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            $fieldData['key'] => mt_rand(1,100),
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
+            $fieldData['key'] => mt_rand(1, 100),
         ];
 
         // Create page version and update with field data
@@ -276,15 +262,13 @@ class PageViewFieldTest extends TestCase
 
     /**
      * Test page access with a checkbox field.
-     *
-     * @return void
      */
     public function test_canGetPageWithCheckboxField()
     {
         // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -295,10 +279,10 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
+            'title'   => $this->faker->unique()->domainWord(),
             'summary' => null,
             // This being passed in as string echoes the form input
-            $fieldData['key'] => (string) mt_rand(0,1),
+            $fieldData['key'] => (string) mt_rand(0, 1),
         ];
 
         // Create page version and update with field data
@@ -314,15 +298,13 @@ class PageViewFieldTest extends TestCase
 
     /**
      * Test page access with a choose one field.
-     *
-     * @return void
      */
     public function test_canGetPageWithChooseOneField()
     {
-         // Generate some data for the field
-         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+        // Generate some data for the field
+        $fieldData = [
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -333,10 +315,10 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
+            'title'   => $this->faker->unique()->domainWord(),
             'summary' => null,
             // This being passed in as string echoes the form input
-            $fieldData['key'] => (string) mt_rand(0,1),
+            $fieldData['key'] => (string) mt_rand(0, 1),
         ];
 
         // Create page version and update with field data
@@ -352,15 +334,13 @@ class PageViewFieldTest extends TestCase
 
     /**
      * Test page access with a choose multiple field.
-     *
-     * @return void
      */
     public function test_canGetPageWithChooseMultipleField()
     {
-         // Generate some data for the field
+        // Generate some data for the field
         $fieldData = [
-            'key' => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
+            'key'     => $this->faker->unique()->domainWord(),
+            'label'   => $this->faker->unique()->domainWord(),
             'choices' => '["Choice 1","Choice 2"]',
         ];
 
@@ -371,11 +351,11 @@ class PageViewFieldTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             $fieldData['key'] => [
-                0 => (string) mt_rand(0,1),
-                1 => (string) mt_rand(0,1),
+                0 => (string) mt_rand(0, 1),
+                1 => (string) mt_rand(0, 1),
             ],
         ];
 
