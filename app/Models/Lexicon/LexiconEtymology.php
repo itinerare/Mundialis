@@ -59,5 +59,4 @@ class LexiconEtymology extends Model
     {
         return $this->belongsTo('App\Models\Lexicon\LexiconEntry', 'parent_id');
     }
-
 }

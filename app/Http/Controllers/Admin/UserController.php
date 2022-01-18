@@ -27,15 +27,19 @@ class UserController extends Controller
      */
     public function getUserIndex(Request $request)
     {
-        $query = User::join('ranks','users.rank_id', '=', 'ranks.id')->select('ranks.name AS rank_name', 'users.*');
+        $query = User::join('ranks', 'users.rank_id', '=', 'ranks.id')->select('ranks.name AS rank_name', 'users.*');
         $sort = $request->only(['sort']);
 
-        if($request->get('name')) $query->where(function($query) use ($request) {
-            $query->where('users.name', 'LIKE', '%' . $request->get('name') . '%')->orWhere('users.alias', 'LIKE', '%' . $request->get('name') . '%');
-        });
-        if($request->get('rank_id')) $query->where('rank_id', $request->get('rank_id'));
+        if ($request->get('name')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('users.name', 'LIKE', '%' . $request->get('name') . '%')->orWhere('users.alias', 'LIKE', '%' . $request->get('name') . '%');
+            });
+        }
+        if ($request->get('rank_id')) {
+            $query->where('rank_id', $request->get('rank_id'));
+        }
 
-        switch(isset($sort['sort']) ? $sort['sort'] : null) {
+        switch (isset($sort['sort']) ? $sort['sort'] : null) {
             default:
                 $query->orderBy('ranks.sort', 'DESC')->orderBy('name');
                 break;
@@ -78,7 +82,9 @@ class UserController extends Controller
     {
         $user = User::where('name', $name)->first();
 
-        if(!$user) abort(404);
+        if (!$user) {
+            abort(404);
+        }
 
         return view('admin.users.user', [
             'user' => $user,
@@ -89,24 +95,21 @@ class UserController extends Controller
     public function postUserBasicInfo(Request $request, $name)
     {
         $user = User::where('name', $name)->first();
-        if(!$user){
+        if (!$user) {
             flash('Invalid user.')->error();
-        }
-        elseif ($user->rank->sort == 2) {
+        } elseif ($user->rank->sort == 2) {
             flash('You cannot edit the information of an admin.')->error();
-        }
-        else {
+        } else {
             $request->validate([
                 'name' => 'required|between:3,25'
             ]);
             $data = $request->only(['name'] + (!$user->isAdmin ? [1 => 'rank_id'] : []));
 
             $logData = ['old_name' => $user->name] + $data;
-            if($user->update($data)) {
+            if ($user->update($data)) {
                 UserUpdateLog::create(['staff_id' => Auth::user()->id, 'user_id' => $user->id, 'data' => json_encode($logData), 'type' => 'Name/Rank Change']);
                 flash('Updated user\'s information successfully.')->success();
-            }
-            else {
+            } else {
                 flash('Failed to update user\'s information.')->error();
             }
         }
@@ -117,10 +120,9 @@ class UserController extends Controller
     {
         $user = User::where('name', $name)->first();
 
-        if(!$user) {
+        if (!$user) {
             flash('Invalid user.')->error();
-        }
-        else {
+        } else {
             flash('Failed to update user\'s account information.')->error();
         }
         return redirect()->back();
@@ -135,7 +137,9 @@ class UserController extends Controller
     {
         $user = User::where('name', $name)->first();
 
-        if(!$user) abort(404);
+        if (!$user) {
+            abort(404);
+        }
 
         return view('admin.users.user_update_log', [
             'user' => $user,
@@ -152,7 +156,9 @@ class UserController extends Controller
     {
         $user = User::where('name', $name)->first();
 
-        if(!$user) abort(404);
+        if (!$user) {
+            abort(404);
+        }
 
         return view('admin.users.user_ban', [
             'user' => $user
@@ -168,7 +174,9 @@ class UserController extends Controller
     {
         $user = User::where('name', $name)->first();
 
-        if(!$user) abort(404);
+        if (!$user) {
+            abort(404);
+        }
 
         return view('admin.users._user_ban_confirmation', [
             'user' => $user
@@ -179,17 +187,16 @@ class UserController extends Controller
     {
         $user = User::where('name', $name)->first();
         $wasBanned = $user->is_banned;
-        if(!$user) {
+        if (!$user) {
             flash('Invalid user.')->error();
-        }
-        else if ($user->rank->sort == 2) {
+        } elseif ($user->rank->sort == 2) {
             flash('You cannot ban an admin.')->error();
-        }
-        else if($service->ban(['ban_reason' => $request->get('ban_reason')], $user, Auth::user())) {
+        } elseif ($service->ban(['ban_reason' => $request->get('ban_reason')], $user, Auth::user())) {
             flash($wasBanned ? 'User ban reason edited successfully.' : 'User banned successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -203,7 +210,9 @@ class UserController extends Controller
     {
         $user = User::where('name', $name)->first();
 
-        if(!$user) abort(404);
+        if (!$user) {
+            abort(404);
+        }
 
         return view('admin.users._user_unban_confirmation', [
             'user' => $user
@@ -214,17 +223,16 @@ class UserController extends Controller
     {
         $user = User::where('name', $name)->first();
 
-        if(!$user) {
+        if (!$user) {
             flash('Invalid user.')->error();
-        }
-        else if ($user->rank->sort == 2) {
+        } elseif ($user->rank->sort == 2) {
             flash('You cannot unban an admin.')->error();
-        }
-        else if($service->unban($user, Auth::user())) {
+        } elseif ($service->unban($user, Auth::user())) {
             flash('User unbanned successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }

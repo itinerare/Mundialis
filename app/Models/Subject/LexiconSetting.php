@@ -37,5 +37,4 @@ class LexiconSetting extends Model
     public static $rules = [
         'name.*' => 'required'
     ];
-
 }

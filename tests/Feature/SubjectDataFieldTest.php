@@ -9,7 +9,8 @@ use Tests\TestCase;
 
 class SubjectDataFieldTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test subject template editing with an infobox text field.
@@ -228,8 +229,9 @@ class SubjectDataFieldTest extends TestCase
      */
     public function test_canPostEditTemplateWithInfoboxChooseOneField()
     {
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $option[$i] = $this->faker->unique()->domainWord();
+        }
 
         // Define some basic template data
         $data = [
@@ -266,8 +268,9 @@ class SubjectDataFieldTest extends TestCase
      */
     public function test_canPostEditTemplateWithInfoboxChooseMultipleField()
     {
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $option[$i] = $this->faker->unique()->domainWord();
+        }
 
         // Define some basic template data
         $data = [
@@ -526,8 +529,9 @@ class SubjectDataFieldTest extends TestCase
      */
     public function test_canPostEditTemplateWithChooseOneField()
     {
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $option[$i] = $this->faker->unique()->domainWord();
+        }
 
         // Define some basic template data
         $data = [
@@ -566,8 +570,9 @@ class SubjectDataFieldTest extends TestCase
      */
     public function test_canPostEditTemplateWithChooseMultipleField()
     {
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $option[$i] = $this->faker->unique()->domainWord();
+        }
 
         // Define some basic template data
         $data = [

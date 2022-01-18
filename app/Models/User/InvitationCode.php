@@ -50,5 +50,4 @@ class InvitationCode extends Model
     {
         return $this->belongsTo('App\Models\User\User', 'recipient_id');
     }
-
 }

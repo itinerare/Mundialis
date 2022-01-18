@@ -50,8 +50,9 @@ class AdminSiteImagesTest extends TestCase
         $file = UploadedFile::fake()->image('test_image.png');
 
         // Remove the current logo file if it exists
-        if(File::exists(public_path('images/logo.png')))
+        if (File::exists(public_path('images/logo.png'))) {
             unlink('public/images/logo.png');
+        }
 
         // Try to post data
         $response = $this
@@ -83,8 +84,9 @@ class AdminSiteImagesTest extends TestCase
         $file = UploadedFile::fake()->create('test.css', 50);
 
         // Check that the file is absent, and if not, remove it
-        if(File::exists(public_path('css/custom.css')))
+        if (File::exists(public_path('css/custom.css'))) {
             unlink('public/css/custom.css');
+        }
 
         // Try to post data
         $response = $this

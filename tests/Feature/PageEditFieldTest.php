@@ -11,7 +11,8 @@ use Tests\TestCase;
 
 class PageEditFieldTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test page creation with an infobox text field.
@@ -115,7 +116,7 @@ class PageEditFieldTest extends TestCase
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
             'category_id' => $category->id,
-            $fieldData['key'] => mt_rand(1,100),
+            $fieldData['key'] => mt_rand(1, 100),
         ];
 
         // Make a persistent editor
@@ -157,7 +158,7 @@ class PageEditFieldTest extends TestCase
         $data = [
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
-            $fieldData['key'] => mt_rand(1,100),
+            $fieldData['key'] => mt_rand(1, 100),
         ];
 
         // Make a persistent editor
@@ -196,7 +197,7 @@ class PageEditFieldTest extends TestCase
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
             'category_id' => $category->id,
-            $fieldData['key'] => mt_rand(0,1),
+            $fieldData['key'] => mt_rand(0, 1),
         ];
 
         // Make a persistent editor
@@ -238,7 +239,7 @@ class PageEditFieldTest extends TestCase
         $data = [
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
-            $fieldData['key'] => mt_rand(0,1),
+            $fieldData['key'] => mt_rand(0, 1),
         ];
 
         // Make a persistent editor
@@ -279,7 +280,7 @@ class PageEditFieldTest extends TestCase
             'summary' => null,
             'category_id' => $category->id,
             // This being passed in as string echoes the form input
-            $fieldData['key'] => (string) mt_rand(0,1),
+            $fieldData['key'] => (string) mt_rand(0, 1),
         ];
 
         // Make a persistent editor
@@ -323,7 +324,7 @@ class PageEditFieldTest extends TestCase
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
             // This being passed in as string echoes the form input
-            $fieldData['key'] => (string) mt_rand(0,1),
+            $fieldData['key'] => (string) mt_rand(0, 1),
         ];
 
         // Make a persistent editor
@@ -364,8 +365,8 @@ class PageEditFieldTest extends TestCase
             'summary' => null,
             'category_id' => $category->id,
             $fieldData['key'] => [
-                0 => (string) mt_rand(0,1),
-                1 => (string) mt_rand(0,1),
+                0 => (string) mt_rand(0, 1),
+                1 => (string) mt_rand(0, 1),
             ],
         ];
 
@@ -410,8 +411,8 @@ class PageEditFieldTest extends TestCase
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
             $fieldData['key'] => [
-                0 => (string) mt_rand(0,1),
-                1 => (string) mt_rand(0,1),
+                0 => (string) mt_rand(0, 1),
+                1 => (string) mt_rand(0, 1),
             ],
         ];
 
@@ -532,7 +533,7 @@ class PageEditFieldTest extends TestCase
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
             'category_id' => $category->id,
-            $fieldData['key'] => mt_rand(1,100),
+            $fieldData['key'] => mt_rand(1, 100),
         ];
 
         // Make a persistent editor
@@ -574,7 +575,7 @@ class PageEditFieldTest extends TestCase
         $data = [
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
-            $fieldData['key'] => mt_rand(1,100),
+            $fieldData['key'] => mt_rand(1, 100),
         ];
 
         // Make a persistent editor
@@ -613,7 +614,7 @@ class PageEditFieldTest extends TestCase
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
             'category_id' => $category->id,
-            $fieldData['key'] => mt_rand(0,1),
+            $fieldData['key'] => mt_rand(0, 1),
         ];
 
         // Make a persistent editor
@@ -655,7 +656,7 @@ class PageEditFieldTest extends TestCase
         $data = [
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
-            $fieldData['key'] => mt_rand(0,1),
+            $fieldData['key'] => mt_rand(0, 1),
         ];
 
         // Make a persistent editor
@@ -696,7 +697,7 @@ class PageEditFieldTest extends TestCase
             'summary' => null,
             'category_id' => $category->id,
             // This being passed in as string echoes the form input
-            $fieldData['key'] => (string) mt_rand(0,1),
+            $fieldData['key'] => (string) mt_rand(0, 1),
         ];
 
         // Make a persistent editor
@@ -740,7 +741,7 @@ class PageEditFieldTest extends TestCase
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
             // This being passed in as string echoes the form input
-            $fieldData['key'] => (string) mt_rand(0,1),
+            $fieldData['key'] => (string) mt_rand(0, 1),
         ];
 
         // Make a persistent editor
@@ -781,8 +782,8 @@ class PageEditFieldTest extends TestCase
             'summary' => null,
             'category_id' => $category->id,
             $fieldData['key'] => [
-                0 => (string) mt_rand(0,1),
-                1 => (string) mt_rand(0,1),
+                0 => (string) mt_rand(0, 1),
+                1 => (string) mt_rand(0, 1),
             ],
         ];
 
@@ -827,8 +828,8 @@ class PageEditFieldTest extends TestCase
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
             $fieldData['key'] => [
-                0 => (string) mt_rand(0,1),
-                1 => (string) mt_rand(0,1),
+                0 => (string) mt_rand(0, 1),
+                1 => (string) mt_rand(0, 1),
             ],
         ];
 

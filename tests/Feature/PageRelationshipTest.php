@@ -14,7 +14,8 @@ use App\Models\Subject\SubjectCategory;
 
 class PageRelationshipTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test page relationships access.
@@ -52,8 +53,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
@@ -100,8 +102,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
@@ -126,8 +129,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Define some basic data
         $data = [
@@ -165,8 +169,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
@@ -207,8 +212,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Define some basic data
         $data = [
@@ -250,8 +256,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
@@ -296,8 +303,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Define some basic data
         $data = [
@@ -339,8 +347,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
@@ -385,8 +394,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Define some basic data
         $data = [
@@ -428,8 +438,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
@@ -475,8 +486,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Define some basic data
         $data = [
@@ -515,8 +527,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
@@ -561,8 +574,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
@@ -587,8 +601,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a relationship for the two pages
         $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
@@ -620,8 +635,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a familial relationship for the two pages
         PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
@@ -670,8 +686,9 @@ class PageRelationshipTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->category($category->id)->create();
+        }
 
         // Create a non-familial relationship for the two pages
         PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();

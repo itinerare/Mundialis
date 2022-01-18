@@ -94,7 +94,9 @@ class TimeChronology extends Model
      */
     public function getDisplayNameAttribute()
     {
-        if(isset($this->abbreviation)) return '<a href="'.$this->url.'"><abbr data-toggle="tooltip" title="'.$this->name.'">'.$this->abbreviation.'</abbr></a>';
+        if (isset($this->abbreviation)) {
+            return '<a href="'.$this->url.'"><abbr data-toggle="tooltip" title="'.$this->name.'">'.$this->abbreviation.'</abbr></a>';
+        }
         return '<a href="'.$this->url.'">'.$this->name.'</a>';
     }
 
@@ -117,5 +119,4 @@ class TimeChronology extends Model
     {
         return url('time/chronologies/'.$this->id);
     }
-
 }

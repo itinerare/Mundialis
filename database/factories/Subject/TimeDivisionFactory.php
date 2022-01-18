@@ -25,7 +25,7 @@ class TimeDivisionFactory extends Factory
             //
             'name' => $this->faker->unique()->domainWord(),
             'abbreviation' => $this->faker->unique()->domainWord(),
-            'unit' => mt_rand(1,100),
+            'unit' => mt_rand(1, 100),
         ];
     }
 

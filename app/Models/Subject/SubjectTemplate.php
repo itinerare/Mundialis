@@ -79,8 +79,9 @@ class SubjectTemplate extends Model
      */
     public function getDataAttribute()
     {
-        if(!isset($this->attributes['data'])) return null;
+        if (!isset($this->attributes['data'])) {
+            return null;
+        }
         return json_decode($this->attributes['data'], true);
     }
-
 }

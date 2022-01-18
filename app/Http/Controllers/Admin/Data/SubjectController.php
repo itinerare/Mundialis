@@ -40,7 +40,8 @@ class SubjectController extends Controller
      */
     public function getSubjectIndex($subject)
     {
-        $subjectKey = $subject; $subject = Config::get('mundialis.subjects.'.$subject);
+        $subjectKey = $subject;
+        $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
         return view('admin.subjects.subject', [
@@ -57,14 +58,15 @@ class SubjectController extends Controller
      */
     public function getEditTemplate($subject)
     {
-        $subjectKey = $subject; $subject = Config::get('mundialis.subjects.'.$subject);
+        $subjectKey = $subject;
+        $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
         $template = SubjectTemplate::where('subject', $subject['key'])->first();
 
         return view('admin.subjects.template', [
             'subject' => $subject,
-            'template' => $template ? $template : new SubjectTemplate
+            'template' => $template ? $template : new SubjectTemplate()
         ]);
     }
 
@@ -86,11 +88,12 @@ class SubjectController extends Controller
             'infobox_key', 'infobox_type', 'infobox_label', 'infobox_rules', 'infobox_choices', 'infobox_value', 'infobox_help',
             'field_key', 'field_type', 'field_label', 'field_rules', 'field_choices', 'field_value', 'field_help', 'field_is_subsection', 'field_section'
         ]);
-        if($service->editTemplate($subject, $data, Auth::user())) {
+        if ($service->editTemplate($subject, $data, Auth::user())) {
             flash('Template updated successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -103,12 +106,13 @@ class SubjectController extends Controller
      */
     public function getCreateCategory($subject)
     {
-        $subjectKey = $subject; $subject = Config::get('mundialis.subjects.'.$subject);
+        $subjectKey = $subject;
+        $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
         return view('admin.subjects.create_edit_category', [
             'subject' => $subject,
-            'category' => new SubjectCategory,
+            'category' => new SubjectCategory(),
             'categoryOptions' => SubjectCategory::where('subject', $subject['key'])->pluck('name', 'id')->toArray()
         ]);
     }
@@ -122,7 +126,9 @@ class SubjectController extends Controller
     public function getEditCategory($id)
     {
         $category = SubjectCategory::find($id);
-        if(!$category) abort(404);
+        if (!$category) {
+            abort(404);
+        }
 
         $subject = $category->subject;
 
@@ -150,15 +156,15 @@ class SubjectController extends Controller
             'infobox_key', 'infobox_type', 'infobox_label', 'infobox_rules', 'infobox_choices', 'infobox_value', 'infobox_help',
             'field_key', 'field_type', 'field_label', 'field_rules', 'field_choices', 'field_value', 'field_help', 'field_is_subsection', 'field_section'
         ]);
-        if(is_numeric($subject) && $service->updateCategory(SubjectCategory::find($subject), $data, Auth::user())) {
+        if (is_numeric($subject) && $service->updateCategory(SubjectCategory::find($subject), $data, Auth::user())) {
             flash('Category updated successfully.')->success();
-        }
-        else if (!is_numeric($subject) && $category = $service->createCategory($data, Auth::user(), $subject)) {
+        } elseif (!is_numeric($subject) && $category = $service->createCategory($data, Auth::user(), $subject)) {
             flash('Category created successfully.')->success();
             return redirect()->to('admin/data/categories/edit/'.$category->id);
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -190,11 +196,12 @@ class SubjectController extends Controller
     {
         $category = SubjectCategory::find($id);
         $subject = $category->subject;
-        if($id && $service->deleteCategory($category, Auth::user())) {
+        if ($id && $service->deleteCategory($category, Auth::user())) {
             flash('Category deleted successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
             return redirect()->back();
         }
         return redirect()->to('admin/data/'.$subject['key']);
@@ -210,11 +217,12 @@ class SubjectController extends Controller
      */
     public function postSortCategory(Request $request, SubjectService $service, $subject)
     {
-        if($service->sortCategory($request->get('sort'), $subject)) {
+        if ($service->sortCategory($request->get('sort'), $subject)) {
             flash('Category order updated successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -249,11 +257,12 @@ class SubjectController extends Controller
         $data = $request->only([
             'id', 'name', 'abbreviation', 'unit', 'use_for_dates', 'sort'
         ]);
-        if($service->editTimeDivisions($data, Auth::user())) {
+        if ($service->editTimeDivisions($data, Auth::user())) {
             flash('Divisions updated successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -278,7 +287,7 @@ class SubjectController extends Controller
     public function getCreateChronology()
     {
         return view('admin.subjects.create_edit_chronology', [
-            'chronology' => new TimeChronology,
+            'chronology' => new TimeChronology(),
             'chronologyOptions' => TimeChronology::pluck('name', 'id')->toArray()
         ]);
     }
@@ -292,7 +301,9 @@ class SubjectController extends Controller
     public function getEditChronology($id)
     {
         $chronology = TimeChronology::find($id);
-        if(!$chronology) abort(404);
+        if (!$chronology) {
+            abort(404);
+        }
 
         return view('admin.subjects.create_edit_chronology', [
             'chronology' => $chronology,
@@ -314,15 +325,15 @@ class SubjectController extends Controller
         $data = $request->only([
             'name', 'abbreviation', 'description', 'parent_id'
         ]);
-        if($id && $service->updateChronology(TimeChronology::find($id), $data, Auth::user())) {
+        if ($id && $service->updateChronology(TimeChronology::find($id), $data, Auth::user())) {
             flash('Chronology updated successfully.')->success();
-        }
-        else if (!$id && $chronology = $service->createChronology($data, Auth::user())) {
+        } elseif (!$id && $chronology = $service->createChronology($data, Auth::user())) {
             flash('Chronology created successfully.')->success();
             return redirect()->to('admin/data/time/chronology/edit/'.$chronology->id);
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -352,11 +363,12 @@ class SubjectController extends Controller
      */
     public function postDeleteChronology(Request $request, SubjectService $service, $id)
     {
-        if($id && $service->deleteChronology(TimeChronology::find($id))) {
+        if ($id && $service->deleteChronology(TimeChronology::find($id))) {
             flash('Chronology deleted successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->to('admin/data/time/chronology');
     }
@@ -370,11 +382,12 @@ class SubjectController extends Controller
      */
     public function postSortChronology(Request $request, SubjectService $service)
     {
-        if($service->sortChronology($request->get('sort'))) {
+        if ($service->sortChronology($request->get('sort'))) {
             flash('Chronology order updated successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -409,11 +422,12 @@ class SubjectController extends Controller
         $data = $request->only([
             'id', 'name', 'abbreviation', 'sort'
         ]);
-        if($service->editLexiconSettings($data, Auth::user())) {
+        if ($service->editLexiconSettings($data, Auth::user())) {
             flash('Lexicon settings updated successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -438,7 +452,7 @@ class SubjectController extends Controller
     public function getCreateLexiconCategory()
     {
         return view('admin.subjects.create_edit_lang_category', [
-            'category' => new LexiconCategory,
+            'category' => new LexiconCategory(),
             'categoryOptions' => LexiconCategory::pluck('name', 'id')->toArray(),
             'classes' => LexiconSetting::all()
         ]);
@@ -453,7 +467,9 @@ class SubjectController extends Controller
     public function getEditLexiconCategory($id)
     {
         $category = LexiconCategory::find($id);
-        if(!$category) abort(404);
+        if (!$category) {
+            abort(404);
+        }
 
         return view('admin.subjects.create_edit_lang_category', [
             'category' => $category,
@@ -479,15 +495,15 @@ class SubjectController extends Controller
             'declension_criteria', 'declension_regex', 'declension_replacement',
             'populate_settings'
         ]);
-        if($id && $service->updateLexiconCategory(LexiconCategory::find($id), $data, Auth::user())) {
+        if ($id && $service->updateLexiconCategory(LexiconCategory::find($id), $data, Auth::user())) {
             flash('Category updated successfully.')->success();
-        }
-        else if (!$id && $category = $service->createLexiconCategory($data, Auth::user())) {
+        } elseif (!$id && $category = $service->createLexiconCategory($data, Auth::user())) {
             flash('Category created successfully.')->success();
             return redirect()->to('admin/data/language/lexicon-categories/edit/'.$category->id);
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -517,11 +533,12 @@ class SubjectController extends Controller
      */
     public function postDeleteLexiconCategory(Request $request, SubjectService $service, $id)
     {
-        if($id && $service->deleteLexiconCategory(LexiconCategory::find($id))) {
+        if ($id && $service->deleteLexiconCategory(LexiconCategory::find($id))) {
             flash('Category deleted successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->to('admin/data/language/lexicon-categories');
     }
@@ -535,13 +552,13 @@ class SubjectController extends Controller
      */
     public function postSortLexiconCategory(Request $request, SubjectService $service)
     {
-        if($service->sortLexiconCategory($request->get('sort'))) {
+        if ($service->sortLexiconCategory($request->get('sort'))) {
             flash('Lexicon category order updated successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
-
 }

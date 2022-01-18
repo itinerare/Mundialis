@@ -12,7 +12,8 @@ use App\Models\Page\Page;
 
 class PageEditTest extends TestCase
 {
-    use RefreshDatabase, withFaker;
+    use RefreshDatabase;
+    use withFaker;
 
     /**
      * Test page creation access.

@@ -19,7 +19,8 @@ use App\Services\ImageManager;
 
 class SpecialPageTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /******************************************************************************
         MAINTENANCE REPORTS
@@ -203,7 +204,7 @@ class SpecialPageTest extends TestCase
 
         $editor = User::factory()->editor()->create();
 
-        for($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->create();
             PageVersion::factory()->page($page[$i]->id)->user($editor->id)->testData()->create();
         }
@@ -283,7 +284,7 @@ class SpecialPageTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
             ->get('/special/recent-images');
@@ -659,7 +660,7 @@ class SpecialPageTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
             ->get('/special/all-images');
@@ -736,7 +737,7 @@ class SpecialPageTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
             ->get('/admin/special/deleted-images');

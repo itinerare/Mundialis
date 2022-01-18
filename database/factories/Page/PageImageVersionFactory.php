@@ -136,7 +136,7 @@ class PageImageVersionFactory extends Factory
      */
     public function testData($isVisible = 1, $description = null, $creators = "1", $pages = "1")
     {
-        return $this->state(function (array $attributes) use($isVisible, $description, $creators, $pages) {
+        return $this->state(function (array $attributes) use ($isVisible, $description, $creators, $pages) {
             return [
                 'data' => '{"is_visible":"'.$isVisible.'","description":'.($description ? '"'.$description.'"' : null).',"creators":['.$creators.'],"pages":['.$pages.']}'
             ];

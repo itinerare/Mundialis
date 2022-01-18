@@ -39,8 +39,9 @@ class AddLexiconSettings extends Command
      * @param  string  $title
      * @param  string  $text
      */
-    private function addLexiconSetting($name, $abbreviation = null, $sort) {
-        if(!DB::table('lexicon_settings')->where('name', $name)->exists()) {
+    private function addLexiconSetting($name, $abbreviation = null, $sort)
+    {
+        if (!DB::table('lexicon_settings')->where('name', $name)->exists()) {
             DB::table('lexicon_settings')->insert([
                 [
                     'name' => $name,
@@ -50,8 +51,9 @@ class AddLexiconSettings extends Command
 
             ]);
             $this->info("Added:   ".$name);
+        } else {
+            $this->line("Skipped: ".$name);
         }
-        else $this->line("Skipped: ".$name);
     }
 
     /**

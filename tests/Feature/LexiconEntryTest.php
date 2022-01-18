@@ -15,7 +15,8 @@ use App\Models\Lexicon\LexiconEtymology;
 
 class LexiconEntryTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test lexicon entry creation access.

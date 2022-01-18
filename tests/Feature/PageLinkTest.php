@@ -14,7 +14,8 @@ use App\Models\Subject\LexiconSetting;
 
 class PageLinkTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test page creation with a wiki-style link to a page.
@@ -277,8 +278,9 @@ class PageLinkTest extends TestCase
         $category = SubjectCategory::factory()->create();
 
         // Generate some words to use
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $linkWord[$i] = $this->faker->unique()->domainWord();
+        }
 
         // Define some basic data
         $data = [
@@ -321,8 +323,9 @@ class PageLinkTest extends TestCase
         $page = Page::factory()->create();
 
         // Generate some words to use
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $linkWord[$i] = $this->faker->unique()->domainWord();
+        }
 
         // Define some basic data
         $data = [
@@ -635,8 +638,9 @@ class PageLinkTest extends TestCase
         $class = LexiconSetting::all()->first();
 
         // Generate some words to use
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $linkWord[$i] = $this->faker->unique()->domainWord();
+        }
 
         // Define some basic data
         $data = [
@@ -682,8 +686,9 @@ class PageLinkTest extends TestCase
         $entry = LexiconEntry::factory()->create();
 
         // Generate some words to use
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $linkWord[$i] = $this->faker->unique()->domainWord();
+        }
 
         // Define some basic data
         $data = [

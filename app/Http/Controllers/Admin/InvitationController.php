@@ -32,11 +32,12 @@ class InvitationController extends Controller
      */
     public function postGenerateKey(InvitationService $service)
     {
-        if($service->generateInvitation(Auth::user())) {
+        if ($service->generateInvitation(Auth::user())) {
             flash('Generated invitation successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -51,11 +52,12 @@ class InvitationController extends Controller
     public function postDeleteKey(InvitationService $service, $id)
     {
         $invitation = InvitationCode::find($id);
-        if($invitation && $service->deleteInvitation($invitation)) {
+        if ($invitation && $service->deleteInvitation($invitation)) {
             flash('Deleted invitation key successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }

@@ -76,9 +76,11 @@ class PageImageCreator extends Model
      */
     public function getDisplayNameAttribute()
     {
-        if(isset($this->user_id) && $this->user) return $this->user->displayName;
-        elseif(isset($this->url)) return prettyProfileLink($this->url);
+        if (isset($this->user_id) && $this->user) {
+            return $this->user->displayName;
+        } elseif (isset($this->url)) {
+            return prettyProfileLink($this->url);
+        }
         return null;
     }
-
 }

@@ -16,7 +16,8 @@ use App\Models\Page\Page;
 
 class SubjectDataTimeTest extends TestCase
 {
-    use RefreshDatabase, withFaker;
+    use RefreshDatabase;
+    use withFaker;
 
     /******************************************************************************
         TIME
@@ -48,7 +49,7 @@ class SubjectDataTimeTest extends TestCase
         $data = [
             'name' => [0 => $this->faker->unique()->domainWord()],
             'abbreviation' => [0 => $this->faker->unique()->domainWord()],
-            'unit' => [0 => mt_rand(1,100)]
+            'unit' => [0 => mt_rand(1, 100)]
         ];
 
         // Make a temporary admin
@@ -84,7 +85,7 @@ class SubjectDataTimeTest extends TestCase
             'id' => [0 => $division->id],
             'name' => [0 => $this->faker->unique()->domainWord()],
             'abbreviation' => [0 => $this->faker->unique()->domainWord()],
-            'unit' => [0 => mt_rand(1,100)]
+            'unit' => [0 => mt_rand(1, 100)]
         ];
 
         // Try to post data again

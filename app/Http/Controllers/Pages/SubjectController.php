@@ -41,30 +41,36 @@ class SubjectController extends Controller
      */
     public function getSubject($subject, Request $request)
     {
-        $subjectKey = $subject; $subject = Config::get('mundialis.subjects.'.$subject);
+        $subjectKey = $subject;
+        $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
-        if($subject['key'] == 'language') {
+        if ($subject['key'] == 'language') {
             $query = LexiconEntry::whereNull('category_id')->visible(Auth::check() ? Auth::user() : null);
             $sort = $request->only(['sort']);
 
-            if($request->get('class')) {
+            if ($request->get('class')) {
                 $query->where('class', $request->get('class'));
             }
 
-            if($request->get('word')) $query->where(function($query) use ($request) {
-                $query->where('lexicon_entries.word', 'LIKE', '%' . $request->get('word') . '%');
-            });
-            if($request->get('meaning')) $query->where(function($query) use ($request) {
-                $query->where('lexicon_entries.meaning', 'LIKE', '%' . $request->get('meaning') . '%');
-            });
-            if($request->get('pronounciation')) $query->where(function($query) use ($request) {
-                $query->where('lexicon_entries.pronounciation', 'LIKE', '%' . $request->get('pronounciation') . '%');
-            });
+            if ($request->get('word')) {
+                $query->where(function ($query) use ($request) {
+                    $query->where('lexicon_entries.word', 'LIKE', '%' . $request->get('word') . '%');
+                });
+            }
+            if ($request->get('meaning')) {
+                $query->where(function ($query) use ($request) {
+                    $query->where('lexicon_entries.meaning', 'LIKE', '%' . $request->get('meaning') . '%');
+                });
+            }
+            if ($request->get('pronounciation')) {
+                $query->where(function ($query) use ($request) {
+                    $query->where('lexicon_entries.pronounciation', 'LIKE', '%' . $request->get('pronounciation') . '%');
+                });
+            }
 
-            if(isset($sort['sort']))
-            {
-                switch($sort['sort']) {
+            if (isset($sort['sort'])) {
+                switch ($sort['sort']) {
                     case 'alpha':
                         $query->orderBy('word');
                         break;
@@ -84,8 +90,9 @@ class SubjectController extends Controller
                         $query->orderBy('created_at', 'ASC');
                         break;
                 }
+            } else {
+                $query->orderBy('word');
             }
-            else $query->orderBy('word');
         }
 
         return view('pages.subjects.subject', [
@@ -112,23 +119,30 @@ class SubjectController extends Controller
     public function getSubjectCategory($subject, $id, Request $request)
     {
         $category = SubjectCategory::where('id', $id)->first();
-        if(!$category) abort(404);
-        if($category->subject['key'] != $subject) abort(404);
+        if (!$category) {
+            abort(404);
+        }
+        if ($category->subject['key'] != $subject) {
+            abort(404);
+        }
 
         $query = $category->pages()->visible(Auth::check() ? Auth::user() : null);
         $sort = $request->only(['sort']);
 
-        if($request->get('title')) $query->where(function($query) use ($request) {
-            $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
-        });
+        if ($request->get('title')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
+            });
+        }
 
-        if($request->get('tags'))
-            foreach($request->get('tags') as $tag)
+        if ($request->get('tags')) {
+            foreach ($request->get('tags') as $tag) {
                 $query->whereIn('id', PageTag::tagSearch($tag)->tag()->pluck('page_id')->toArray());
+            }
+        }
 
-        if(isset($sort['sort']))
-        {
-            switch($sort['sort']) {
+        if (isset($sort['sort'])) {
+            switch ($sort['sort']) {
                 case 'alpha':
                     $query->orderBy('title');
                     break;
@@ -142,14 +156,15 @@ class SubjectController extends Controller
                     $query->orderBy('created_at', 'ASC');
                     break;
             }
+        } else {
+            $query->orderBy('title');
         }
-        else $query->orderBy('title');
 
         return view('pages.subjects.category', [
             'category' => $category,
             'pages' => $query->paginate(20)->appends($request->query()),
-            'tags' => (new PageTag)->listTags(),
-            'dateHelper' => new TimeDivision
+            'tags' => (new PageTag())->listTags(),
+            'dateHelper' => new TimeDivision()
         ]);
     }
 
@@ -167,22 +182,27 @@ class SubjectController extends Controller
     public function getTimeChronology($id, Request $request)
     {
         $chronology = TimeChronology::where('id', $id)->first();
-        if(!$chronology) abort(404);
+        if (!$chronology) {
+            abort(404);
+        }
 
         $query = $chronology->pages()->visible(Auth::check() ? Auth::user() : null);
         $sort = $request->only(['sort']);
 
-        if($request->get('title')) $query->where(function($query) use ($request) {
-            $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
-        });
+        if ($request->get('title')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
+            });
+        }
 
-        if($request->get('tags'))
-            foreach($request->get('tags') as $tag)
+        if ($request->get('tags')) {
+            foreach ($request->get('tags') as $tag) {
                 $query->whereIn('id', PageTag::tagSearch($tag)->tag()->pluck('page_id')->toArray());
+            }
+        }
 
-        if(isset($sort['sort']))
-        {
-            switch($sort['sort']) {
+        if (isset($sort['sort'])) {
+            switch ($sort['sort']) {
                 case 'alpha':
                     $query->orderBy('title');
                     break;
@@ -196,15 +216,16 @@ class SubjectController extends Controller
                     $query->orderBy('created_at', 'ASC');
                     break;
             }
+        } else {
+            $query->orderBy('title');
         }
-        else $query->orderBy('title');
 
         return view('pages.subjects.time_chronology', [
             'chronology' => $chronology,
             'pages' => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
-            'tags' => (new PageTag)->listTags(),
-            'dateHelper' => new TimeDivision
+            'tags' => (new PageTag())->listTags(),
+            'dateHelper' => new TimeDivision()
         ]);
     }
 
@@ -215,14 +236,16 @@ class SubjectController extends Controller
      */
     public function getTimeTimeline()
     {
-        if(!TimeDivision::dateEnabled()->count()) abort(404);
+        if (!TimeDivision::dateEnabled()->count()) {
+            abort(404);
+        }
 
         return view('pages.subjects.time_timeline', [
-            'tags' => (new PageTag)->listTags(),
+            'tags' => (new PageTag())->listTags(),
             'chronologies' => TimeChronology::whereNull('parent_id')->orderBy('sort', 'DESC')->get(),
-            'eventHelper' => new Page,
-            'dateHelper' => new TimeDivision,
-            'divisions' => (new TimeDivision)->dateEnabled()->orderBy('sort', 'DESC')->get()
+            'eventHelper' => new Page(),
+            'dateHelper' => new TimeDivision(),
+            'divisions' => (new TimeDivision())->dateEnabled()->orderBy('sort', 'DESC')->get()
         ]);
     }
 
@@ -240,28 +263,35 @@ class SubjectController extends Controller
     public function getLexiconCategory(Request $request, $id)
     {
         $category = LexiconCategory::where('id', $id)->first();
-        if(!$category) abort(404);
+        if (!$category) {
+            abort(404);
+        }
 
         $query = $category->entries()->visible(Auth::check() ? Auth::user() : null);
         $sort = $request->only(['sort']);
 
-        if($request->get('class')) {
+        if ($request->get('class')) {
             $query->where('class', $request->get('class'));
         }
 
-        if($request->get('word')) $query->where(function($query) use ($request) {
-            $query->where('lexicon_entries.word', 'LIKE', '%' . $request->get('word') . '%');
-        });
-        if($request->get('meaning')) $query->where(function($query) use ($request) {
-            $query->where('lexicon_entries.meaning', 'LIKE', '%' . $request->get('meaning') . '%');
-        });
-        if($request->get('pronounciation')) $query->where(function($query) use ($request) {
-            $query->where('lexicon_entries.pronounciation', 'LIKE', '%' . $request->get('pronounciation') . '%');
-        });
+        if ($request->get('word')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('lexicon_entries.word', 'LIKE', '%' . $request->get('word') . '%');
+            });
+        }
+        if ($request->get('meaning')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('lexicon_entries.meaning', 'LIKE', '%' . $request->get('meaning') . '%');
+            });
+        }
+        if ($request->get('pronounciation')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('lexicon_entries.pronounciation', 'LIKE', '%' . $request->get('pronounciation') . '%');
+            });
+        }
 
-        if(isset($sort['sort']))
-        {
-            switch($sort['sort']) {
+        if (isset($sort['sort'])) {
+            switch ($sort['sort']) {
                 case 'alpha':
                     $query->orderBy('word');
                     break;
@@ -281,8 +311,9 @@ class SubjectController extends Controller
                     $query->orderBy('created_at', 'ASC');
                     break;
             }
+        } else {
+            $query->orderBy('word');
         }
-        else $query->orderBy('word');
 
         return view('pages.subjects.lang_category', [
             'category' => $category,
@@ -300,7 +331,9 @@ class SubjectController extends Controller
     public function getLexiconEntryModal($id)
     {
         $entry = LexiconEntry::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
-        if(!$entry) abort(404);
+        if (!$entry) {
+            abort(404);
+        }
 
         return view('pages.subjects._lang_entry', [
             'entry' => $entry
@@ -315,7 +348,7 @@ class SubjectController extends Controller
     public function getCreateLexiconEntry()
     {
         return view('pages.subjects.create_edit_lexicon_entry', [
-            'entry' => new LexiconEntry,
+            'entry' => new LexiconEntry(),
             'categoryOptions' => LexiconCategory::pluck('name', 'id'),
             'classOptions' => LexiconSetting::orderBy('sort', 'DESC')->pluck('name', 'name'),
             'entryOptions' => LexiconEntry::pluck('word', 'id')
@@ -331,7 +364,9 @@ class SubjectController extends Controller
     public function getEditLexiconEntry($id)
     {
         $entry = LexiconEntry::where('id', $id)->first();
-        if(!$entry) abort(404);
+        if (!$entry) {
+            abort(404);
+        }
 
         return view('pages.subjects.create_edit_lexicon_entry', [
             'entry' => $entry,
@@ -359,15 +394,15 @@ class SubjectController extends Controller
             'parent_id', 'parent', 'conjdecl', 'autoconj'
         ]);
 
-        if($id && $service->updateLexiconEntry(LexiconEntry::find($id), $data, Auth::user())) {
+        if ($id && $service->updateLexiconEntry(LexiconEntry::find($id), $data, Auth::user())) {
             flash('Lexicon entry updated successfully.')->success();
-        }
-        else if (!$id && $entry = $service->createLexiconEntry($data, Auth::user())) {
+        } elseif (!$id && $entry = $service->createLexiconEntry($data, Auth::user())) {
             flash('Lexicon entry created successfully.')->success();
             return redirect()->to('language/lexicon/edit/'.$entry->id);
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -381,7 +416,9 @@ class SubjectController extends Controller
     public function getDeleteLexiconEntry($id)
     {
         $entry = LexiconEntry::where('id', $id)->first();
-        if(!$entry) abort(404);
+        if (!$entry) {
+            abort(404);
+        }
 
         return view('pages.subjects._delete_lang_entry', [
             'entry' => $entry
@@ -398,14 +435,14 @@ class SubjectController extends Controller
      */
     public function postDeleteLexiconEntry(Request $request, LexiconManager $service, $id)
     {
-        if($id && $service->deleteLexiconEntry(LexiconEntry::find($id), Auth::user())) {
+        if ($id && $service->deleteLexiconEntry(LexiconEntry::find($id), Auth::user())) {
             flash('Lexicon entry deleted successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
             return redirect()->back();
         }
         return redirect()->to('language');
     }
-
 }

@@ -13,7 +13,8 @@ use Tests\TestCase;
 
 class PageTimeTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test page creation with a date.
@@ -33,8 +34,8 @@ class PageTimeTest extends TestCase
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
             'category_id' => $category->id,
-            'date_start_'.strtolower($division->name) => mt_rand(1,50),
-            'date_end_'.strtolower($division->name) => mt_rand(50,100),
+            'date_start_'.strtolower($division->name) => mt_rand(1, 50),
+            'date_end_'.strtolower($division->name) => mt_rand(50, 100),
         ];
 
         // Make a persistent editor
@@ -75,8 +76,8 @@ class PageTimeTest extends TestCase
             'title' => $this->faker->unique()->domainWord(),
             'summary' => null,
             'category_id' => $category->id,
-            'date_start_'.strtolower($division->name) => mt_rand(1,50),
-            'date_end_'.strtolower($division->name) => mt_rand(50,100),
+            'date_start_'.strtolower($division->name) => mt_rand(1, 50),
+            'date_end_'.strtolower($division->name) => mt_rand(50, 100),
         ];
 
         // Make a persistent editor

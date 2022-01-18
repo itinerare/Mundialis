@@ -116,7 +116,9 @@ class LexiconEntry extends Model
      */
     public function scopeVisible($query, $user = null)
     {
-        if($user && $user->canWrite) return $query;
+        if ($user && $user->canWrite) {
+            return $query;
+        }
         return $query->where('is_visible', 1);
     }
 
@@ -133,7 +135,9 @@ class LexiconEntry extends Model
      */
     public function getDataAttribute()
     {
-        if(!isset($this->attributes['data'])) return null;
+        if (!isset($this->attributes['data'])) {
+            return null;
+        }
         return json_decode($this->attributes['data'], true);
     }
 
@@ -170,17 +174,21 @@ class LexiconEntry extends Model
      */
     public function getEtymology()
     {
-        if(!$this->etymologies->count()) return null;
+        if (!$this->etymologies->count()) {
+            return null;
+        }
 
         // Cycle through parents
         $i = 0;
-        foreach($this->etymologies as $parent) {
+        foreach ($this->etymologies as $parent) {
             // If there is a parent entry
-            if($parent->parentEntry) {
-                $parentString[] = ($i == 0 ? 'from ' : ' and ').($parent->parentEntry->category ? $parent->parentEntry->category->displayName.' ' : null ).'<i>'.$parent->parentEntry->displayName.'</i> ('.($parent->parentEntry->lexicalClass->abbreviation ? '<i>'.$parent->parentEntry->lexicalClass->abbreviation.'.</i>' : $parent->parentEntry->lexicalClass->name.', ').' "'.lcfirst($parent->parentEntry->meaning).'")'.($parent->parentEntry->etymologies->count() ? ' '.$parent->parentEntry->getEtymology() : null);
+            if ($parent->parentEntry) {
+                $parentString[] = ($i == 0 ? 'from ' : ' and ').($parent->parentEntry->category ? $parent->parentEntry->category->displayName.' ' : null).'<i>'.$parent->parentEntry->displayName.'</i> ('.($parent->parentEntry->lexicalClass->abbreviation ? '<i>'.$parent->parentEntry->lexicalClass->abbreviation.'.</i>' : $parent->parentEntry->lexicalClass->name.', ').' "'.lcfirst($parent->parentEntry->meaning).'")'.($parent->parentEntry->etymologies->count() ? ' '.$parent->parentEntry->getEtymology() : null);
             }
             // If there is only a string
-            else $parentString[] = ($i == 0 ? 'from ' : ' and ').$parent->parent;
+            else {
+                $parentString[] = ($i == 0 ? 'from ' : ' and ').$parent->parent;
+            }
 
             $i++;
         }
@@ -195,16 +203,19 @@ class LexiconEntry extends Model
      */
     public function getDescendants()
     {
-        if(!$this->descendants->count()) return null;
+        if (!$this->descendants->count()) {
+            return null;
+        }
 
         // Cycle through parents
         $i = 0;
-        foreach($this->descendants->sortBy(function ($descendant) {return $descendant->entry->word;}) as $descendant) {
+        foreach ($this->descendants->sortBy(function ($descendant) {
+            return $descendant->entry->word;
+        }) as $descendant) {
             $descendantString[] = '<li>'.$descendant->entry->displayWord.($descendant->entry->descendants->count() ? $descendant->entry->getDescendants() : null).'</li>';
             $i++;
         }
 
         return '<ul>'.implode('', $descendantString).'</ul>';
     }
-
 }

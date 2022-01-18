@@ -18,7 +18,8 @@ use Tests\TestCase;
 
 class PageImageDeleteTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test image deletion access.
@@ -38,7 +39,7 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
             ->get('/pages/'.$page->id.'/gallery/delete/'.$image->id);
@@ -68,7 +69,7 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Try to post data
         $response = $this
@@ -106,7 +107,7 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Try to post data
         $response = $this
@@ -143,7 +144,7 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Set the page's active image
         $page->update(['image_id' => $image->id]);
@@ -184,7 +185,7 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
             ->get('/admin/special/deleted-images/'.$image->id);
@@ -214,7 +215,7 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Try to post data
         $response = $this
@@ -255,7 +256,7 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Try to post data
         $response = $this
@@ -298,7 +299,7 @@ class PageImageDeleteTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Try to post data
         $response = $this

@@ -13,13 +13,13 @@
 Route::redirect('pages', '/');
 
 # PROFILES
-Route::group(['prefix' => 'user', 'namespace' => 'Users'], function() {
+Route::group(['prefix' => 'user', 'namespace' => 'Users'], function () {
     Route::get('{name}', 'UserController@getUser');
     Route::get('{name}/page-revisions', 'UserController@getUserPageRevisions');
     Route::get('{name}/image-revisions', 'UserController@getUserImageRevisions');
 });
 
-Route::group(['namespace' => 'Pages'], function() {
+Route::group(['namespace' => 'Pages'], function () {
     # SUBJECTS/CATEGORIES
     Route::get('{subject}', 'SubjectController@getSubject')
         ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
@@ -27,7 +27,8 @@ Route::group(['namespace' => 'Pages'], function() {
         ->where(['subject' => implode('|', array_keys(Config::get('mundialis.subjects'))), 'id' => '[0-9]+']);
 
     # PAGES
-    Route::group(['prefix' => 'pages'], function() {;
+    Route::group(['prefix' => 'pages'], function () {
+        ;
         Route::get('{id}', 'PageController@getPage');
 
         Route::get('{id}/gallery', 'ImageController@getPageGallery')
@@ -50,20 +51,20 @@ Route::group(['namespace' => 'Pages'], function() {
         Route::get('{id}/links-here', 'PageController@getLinksHere')
             ->whereNumber('id');
 
-        Route::group(['prefix' => 'tags'], function() {
+        Route::group(['prefix' => 'tags'], function () {
             Route::get('{tag}', 'TagController@getTag');
         });
     });
 
     # TIME
-    Route::group(['prefix' => 'time'], function() {
+    Route::group(['prefix' => 'time'], function () {
         Route::get('timeline', 'SubjectController@getTimeTimeline');
         Route::get('chronologies/{id}', 'SubjectController@getTimeChronology')
             ->whereNumber('id');
     });
 
     # LEXICON
-    Route::group(['prefix' => 'language/lexicon'], function() {
+    Route::group(['prefix' => 'language/lexicon'], function () {
         Route::get('{id}', 'SubjectController@getLexiconCategory')
             ->whereNumber('id');
         Route::get('entries/{id}', 'SubjectController@getLexiconEntryModal')
@@ -71,7 +72,7 @@ Route::group(['namespace' => 'Pages'], function() {
     });
 
     # SPECIAL PAGES
-    Route::group(['prefix' => 'special'], function() {
+    Route::group(['prefix' => 'special'], function () {
         Route::get('/', 'SpecialController@getSpecialIndex');
 
         # MAINTENANCE REPORTS

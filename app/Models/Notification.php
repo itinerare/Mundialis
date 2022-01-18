@@ -80,8 +80,8 @@ class Notification extends Model
 
         // Replace any variables in data...
         $data = $this->data;
-        if($data && count($data)) {
-            foreach($data as $key => $value) {
+        if ($data && count($data)) {
+            foreach ($data as $key => $value) {
                 $message = str_replace('{'.$key.'}', $value, $message);
             }
         }
@@ -105,7 +105,7 @@ class Notification extends Model
 
     **********************************************************************************************/
 
-    const WATCHED_PAGE_UPDATED        = 0;
-    const WATCHED_PAGE_IMAGE_UPDATED  = 1;
-    const WATCHED_PAGE_DELETED        = 2;
+    public const WATCHED_PAGE_UPDATED        = 0;
+    public const WATCHED_PAGE_IMAGE_UPDATED  = 1;
+    public const WATCHED_PAGE_DELETED        = 2;
 }

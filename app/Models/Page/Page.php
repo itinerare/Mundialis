@@ -14,7 +14,8 @@ use App\Models\Model;
 
 class Page extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -76,8 +77,9 @@ class Page extends Model
      */
     public function parent()
     {
-        if($this->category->subject['key'] == 'time')
+        if ($this->category->subject['key'] == 'time') {
             return $this->belongsTo('App\Models\Subject\TimeChronology', 'parent_id');
+        }
         return $this->belongsTo('App\Models\Page\Page', 'parent_id');
     }
 
@@ -167,8 +169,12 @@ class Page extends Model
     public function watchers()
     {
         return $this->hasManyThrough(
-            'App\Models\User\User', 'App\Models\User\WatchedPage',
-            'page_id', 'id', 'id', 'user_id'
+            'App\Models\User\User',
+            'App\Models\User\WatchedPage',
+            'page_id',
+            'id',
+            'id',
+            'user_id'
         );
     }
 
@@ -188,7 +194,9 @@ class Page extends Model
      */
     public function scopeVisible($query, $user = null)
     {
-        if($user && $user->canWrite) return $query;
+        if ($user && $user->canWrite) {
+            return $query;
+        }
         return $query->where('is_visible', 1);
     }
 
@@ -202,7 +210,8 @@ class Page extends Model
      */
     public function scopeSubject($query, $subject)
     {
-        return $query->whereIn('category_id',
+        return $query->whereIn(
+            'category_id',
             SubjectCategory::where('subject', $subject)->pluck('id')->toArray()
         );
     }
@@ -243,7 +252,9 @@ class Page extends Model
      */
     public function getProtectionAttribute()
     {
-        if(!$this->protections->count()) return null;
+        if (!$this->protections->count()) {
+            return null;
+        }
         return $this->protections()->orderBy('created_at', 'DESC')->first();
     }
 
@@ -254,7 +265,9 @@ class Page extends Model
      */
     public function getDataAttribute()
     {
-        if(!$this->versions->count() || !isset($this->version->data['data'])) return null;
+        if (!$this->versions->count() || !isset($this->version->data['data'])) {
+            return null;
+        }
         return $this->version->data['data'];
     }
 
@@ -265,7 +278,9 @@ class Page extends Model
      */
     public function getParsedDataAttribute()
     {
-        if(!$this->versions->count() || !isset($this->version->data['data']['parsed'])) return null;
+        if (!$this->versions->count() || !isset($this->version->data['data']['parsed'])) {
+            return null;
+        }
         return $this->version->data['data']['parsed'];
     }
 
@@ -297,11 +312,11 @@ class Page extends Model
     public function getDisplayTitleAttribute()
     {
         // Check if there is more than one page with this title
-        if($this->titleSearch($this->title)->count() > 1) {
+        if ($this->titleSearch($this->title)->count() > 1) {
             $titlePages = $this->titleSearch($this->title);
 
             // Check if there is more than one page within this subject with this title
-            if($titlePages->whereIn('category_id', SubjectCategory::where('subject', $this->category->subject['key'])->pluck('id')->toArray())->count() > 1) {
+            if ($titlePages->whereIn('category_id', SubjectCategory::where('subject', $this->category->subject['key'])->pluck('id')->toArray())->count() > 1) {
                 return $this->title.' ('.$this->category->subject['term'].'/'.$this->category->name.')';
             }
 
@@ -319,7 +334,7 @@ class Page extends Model
     public function getDisplayNameAttribute()
     {
         // Check to see if this page is currently being viewed/the link would be redundant
-        if(url()->current() == $this->url) {
+        if (url()->current() == $this->url) {
             return $this->displayTitle.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
         }
         // Otherwise, return the link as usual
@@ -335,8 +350,9 @@ class Page extends Model
     public function getEntryTagsAttribute()
     {
         $tags = [];
-        foreach($this->tags()->pluck('tag') as $tag)
+        foreach ($this->tags()->pluck('tag') as $tag) {
             $tags[] = ['tag' => $tag];
+        }
 
         return json_encode($tags);
     }
@@ -356,7 +372,7 @@ class Page extends Model
      */
     public function personAge($birth, $current)
     {
-        if((isset($birth['date']) && isset($birth['date'][
+        if ((isset($birth['date']) && isset($birth['date'][
             str_replace(' ', '_', strtolower(TimeDivision::dateEnabled()->orderBy('sort', 'DESC')->first()->name))
             ])) &&
         (isset($current['date']) && isset($current['date'][
@@ -366,13 +382,13 @@ class Page extends Model
         ($birth['chronology'] == $current['chronology']))) {
             // Cycle through both birth and current dates,
             // collecting set values, then turn them into a "datestring"
-            foreach($birth['date'] as $date) {
+            foreach ($birth['date'] as $date) {
                 // Trim leading zeros on each while collecting
                 $birthString[] = ltrim($date, 0);
             }
             $birthString = implode('', array_reverse($birthString));
 
-            foreach($current['date'] as $date) {
+            foreach ($current['date'] as $date) {
                 $currentString[] = ltrim($date, 0);
             }
             $currentString = implode('', array_reverse($currentString));
@@ -383,11 +399,14 @@ class Page extends Model
 
             // If the birth and current strings are the same, more precisely
             // calculate and return age
-            if(strlen($birthString) == strlen($currentString)) {
+            if (strlen($birthString) == strlen($currentString)) {
                 $ageString = floor($currentString - $birthString);
 
-                if($roughYear == $ageString) return $roughYear;
-                else return floor($ageString/pow(10, (strlen($ageString)-2)));
+                if ($roughYear == $ageString) {
+                    return $roughYear;
+                } else {
+                    return floor($ageString/pow(10, (strlen($ageString)-2)));
+                }
             }
 
             // Failing that, just return the rough age
@@ -406,7 +425,7 @@ class Page extends Model
     public function personRelations($type = null)
     {
         // Gather family types depending on the type
-        switch($type) {
+        switch ($type) {
             case 'parents':
                 $familyTypes = [
                     'familial_parent' => 'Parent'
@@ -440,26 +459,29 @@ class Page extends Model
         }));
 
         // Cycle through family members and assemble a stripped-down array for convenience
-        foreach($family as $familyMember) {
-            if($familyMember->page_one_id == $this->id)
+        foreach ($family as $familyMember) {
+            if ($familyMember->page_one_id == $this->id) {
                 $familyMembers[] = [
                     'link' => $familyMember,
                     'type' => $familyMember->type_two,
                     'displayType' => $familyMember->displayTypeTwo,
                     'page' => $familyMember->pageTwo
                 ];
-            elseif($familyMember->page_two_id == $this->id)
+            } elseif ($familyMember->page_two_id == $this->id) {
                 $familyMembers[] = [
                     'link' => $familyMember,
                     'type' => $familyMember->type_one,
                     'displayType' => $familyMember->displayTypeOne,
                     'page' => $familyMember->pageOne
                 ];
+            }
         }
 
         $familyMembers = collect(isset($familyMembers) ? $familyMembers : null);
 
-        if($familyMembers->count()) return $familyMembers;
+        if ($familyMembers->count()) {
+            return $familyMembers;
+        }
         return null;
     }
 
@@ -475,29 +497,36 @@ class Page extends Model
     {
         // Gather relevant pages
         $timePages = $this->subject('time')->visible($user ? $user : null);
-        if($chronology) $timePages = $timePages->where('parent_id', $chronology);
-        else $timePages = $timePages->whereNull('parent_id');
-        if($tags) {
-            foreach($tags as $tag) {
+        if ($chronology) {
+            $timePages = $timePages->where('parent_id', $chronology);
+        } else {
+            $timePages = $timePages->whereNull('parent_id');
+        }
+        if ($tags) {
+            foreach ($tags as $tag) {
                 $timePages = $timePages->whereIn('id', PageTag::tagSearch($tag)->tag()->pluck('page_id')->toArray());
             }
         }
         $timePages = $timePages->get()->filter(function ($page) use ($chronology) {
-            if((isset($page->parent_id) && $chronology) ||
-            isset($page->data['date']['start'])) return true;
+            if ((isset($page->parent_id) && $chronology) ||
+            isset($page->data['date']['start'])) {
+                return true;
+            }
             return false;
         });
 
         // Get list of date-enabled divisions
         $dateDivisions = TimeDivision::dateEnabled()->orderBy('sort', 'DESC')->get();
-        foreach($dateDivisions as $division) {
+        foreach ($dateDivisions as $division) {
             $divisionNames[] = str_replace(' ', '_', strtolower($division->name));
         }
 
         // Recursively group events
         $timePages = $this->timeGroupEvents($timePages, $divisionNames);
 
-        if($timePages->count()) return $timePages;
+        if ($timePages->count()) {
+            return $timePages;
+        }
         return null;
     }
 
@@ -513,7 +542,7 @@ class Page extends Model
     {
         // Group the pages by the current division
         $group = $group->groupBy(function ($page) use ($divisionNames, $i) {
-            if(isset($page->data['date']['start'][$divisionNames[$i]])) {
+            if (isset($page->data['date']['start'][$divisionNames[$i]])) {
                 return $page->data['date']['start'][$divisionNames[$i]];
             }
             return '00';
@@ -522,7 +551,7 @@ class Page extends Model
         });
 
         // See if there is a smaller division
-        if(isset($divisionNames[$i+1])) {
+        if (isset($divisionNames[$i+1])) {
             // And if so, group the pages by it, etc
             $group = $group->map(function ($subGroup) use ($divisionNames, $i) {
                 return $this->timeGroupEvents($subGroup, $divisionNames, $i+1);
@@ -531,5 +560,4 @@ class Page extends Model
 
         return $group;
     }
-
 }

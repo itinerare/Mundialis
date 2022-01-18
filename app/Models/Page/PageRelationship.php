@@ -89,14 +89,18 @@ class PageRelationship extends Model
     {
         // First check to see if the set type is a "custom" one, and if so,
         // just return the information provided
-        if($this->type_one == 'custom' || $this->type_one == 'romantic_custom') return $this->type_one_info;
+        if ($this->type_one == 'custom' || $this->type_one == 'romantic_custom') {
+            return $this->type_one_info;
+        }
 
         // Get relevant config file
         $config = Config::get('mundialis.'.$this->pageOne->category->subject['key'].'_relationships');
 
         // Cycle through its groups
-        foreach($config as $group) {
-            if(isset($group[$this->type_one])) return $group[$this->type_one];
+        foreach ($config as $group) {
+            if (isset($group[$this->type_one])) {
+                return $group[$this->type_one];
+            }
         }
         return null;
     }
@@ -110,16 +114,19 @@ class PageRelationship extends Model
     {
         // First check to see if the set type is a "custom" one, and if so,
         // just return the information provided
-        if($this->type_two == 'custom' || $this->type_two == 'romantic_custom') return $this->type_two_info;
+        if ($this->type_two == 'custom' || $this->type_two == 'romantic_custom') {
+            return $this->type_two_info;
+        }
 
         // Get relevant config file
         $config = Config::get('mundialis.'.$this->pageTwo->category->subject['key'].'_relationships');
 
         // Cycle through its groups
-        foreach($config as $group) {
-            if(isset($group[$this->type_two])) return $group[$this->type_two];
+        foreach ($config as $group) {
+            if (isset($group[$this->type_two])) {
+                return $group[$this->type_two];
+            }
         }
         return null;
     }
-
 }

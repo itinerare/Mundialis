@@ -47,10 +47,11 @@ class AccountController extends Controller
      */
     public function getBanned()
     {
-        if(Auth::user()->is_banned)
+        if (Auth::user()->is_banned) {
             return view('account.banned');
-        else
+        } else {
             return redirect()->to('/');
+        }
     }
 
     /**
@@ -86,17 +87,18 @@ class AccountController extends Controller
      */
     public function postAvatar(Request $request, UserService $service)
     {
-        if($service->updateAvatar($request->file('avatar'), Auth::user())) {
+        if ($service->updateAvatar($request->file('avatar'), Auth::user())) {
             flash('Avatar updated successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
 
 
-	/**
+    /**
      * Changes the user's password.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -105,15 +107,16 @@ class AccountController extends Controller
      */
     public function postPassword(Request $request, UserService $service)
     {
-        $request->validate( [
+        $request->validate([
             'old_password' => 'required|string',
             'new_password' => 'required|string|min:8|confirmed'
         ]);
-        if($service->updatePassword($request->only(['old_password', 'new_password', 'new_password_confirmation']), Auth::user())) {
+        if ($service->updatePassword($request->only(['old_password', 'new_password', 'new_password_confirmation']), Auth::user())) {
             flash('Password updated successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -127,14 +130,15 @@ class AccountController extends Controller
      */
     public function postEmail(Request $request, UserService $service)
     {
-        $request->validate( [
+        $request->validate([
             'email' => 'required|string|email|max:255|unique:users'
         ]);
-        if($service->updateEmail($request->only(['email']), Auth::user())) {
+        if ($service->updateEmail($request->only(['email']), Auth::user())) {
             flash('Email updated successfully..')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -148,16 +152,17 @@ class AccountController extends Controller
      */
     public function postEnableTwoFactor(Request $request, UserService $service)
     {
-        if(!$request->session()->put([
+        if (!$request->session()->put([
             'two_factor_secret' => encrypt(app(TwoFactorAuthenticationProvider::class)->generateSecretKey()),
             'two_factor_recovery_codes' => encrypt(json_encode(Collection::times(8, function () {
                 return RecoveryCode::generate();
             })->all())),
         ])) {
             flash('2FA info generated. Please confirm to enable 2FA.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->to('account/two-factor/confirm');
     }
@@ -174,7 +179,7 @@ class AccountController extends Controller
         $qrCode = (new Writer(
             new ImageRenderer(
                 new RendererStyle(192, 0, null, null, Fill::uniformColor(new Rgb(255, 255, 255), new Rgb(45, 55, 72))),
-                new SvgImageBackEnd
+                new SvgImageBackEnd()
             )
         ))->writeString($qrUrl);
         $qrCode = trim(substr($qrCode, strpos($qrCode, "\n") + 1));
@@ -194,15 +199,16 @@ class AccountController extends Controller
      */
     public function postConfirmTwoFactor(Request $request, UserService $service)
     {
-        $request->validate( [
+        $request->validate([
             'code' => 'required'
         ]);
-        if($service->confirmTwoFactor($request->only(['code']), $request->session()->only(['two_factor_secret', 'two_factor_recovery_codes']), Auth::user())) {
+        if ($service->confirmTwoFactor($request->only(['code']), $request->session()->only(['two_factor_secret', 'two_factor_recovery_codes']), Auth::user())) {
             flash('2FA enabled succesfully.')->success();
             $request->session()->forget(['two_factor_secret', 'two_factor_recovery_codes']);
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->to('account/settings');
     }
@@ -216,14 +222,15 @@ class AccountController extends Controller
      */
     public function postDisableTwoFactor(Request $request, UserService $service)
     {
-        $request->validate( [
+        $request->validate([
             'code' => 'required'
         ]);
-        if($service->disableTwoFactor($request->only(['code']), Auth::user())) {
+        if ($service->disableTwoFactor($request->only(['code']), Auth::user())) {
             flash('2FA disabled succesfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -239,17 +246,22 @@ class AccountController extends Controller
         $query = Auth::user()->watched()->visible(Auth::user());
         $sort = $request->only(['sort']);
 
-        if($request->get('title')) $query->where(function($query) use ($request) {
-            $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
-        });
-        if($request->get('category_id')) $query->where('category_id', $request->get('category_id'));
-        if($request->get('tags'))
-            foreach($request->get('tags') as $tag)
+        if ($request->get('title')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
+            });
+        }
+        if ($request->get('category_id')) {
+            $query->where('category_id', $request->get('category_id'));
+        }
+        if ($request->get('tags')) {
+            foreach ($request->get('tags') as $tag) {
                 $query->whereIn('pages.id', PageTag::tagSearch($tag)->tag()->pluck('page_id')->toArray());
+            }
+        }
 
-        if(isset($sort['sort']))
-        {
-            switch($sort['sort']) {
+        if (isset($sort['sort'])) {
+            switch ($sort['sort']) {
                 case 'alpha':
                     $query->orderBy('title');
                     break;
@@ -263,13 +275,14 @@ class AccountController extends Controller
                     $query->orderBy('created_at', 'ASC');
                     break;
             }
+        } else {
+            $query->orderBy('title');
         }
-        else $query->orderBy('title');
 
         return view('account.watched_pages', [
             'pages' => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
-            'tags' => (new PageTag)->listTags()
+            'tags' => (new PageTag())->listTags()
         ]);
     }
 
@@ -282,11 +295,12 @@ class AccountController extends Controller
      */
     public function postWatchPage(Request $request, UserService $service, $id)
     {
-        if($service->watchPage(Page::find($id), Auth::user())) {
+        if ($service->watchPage(Page::find($id), Auth::user())) {
             flash('Page watch status updated successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -316,7 +330,9 @@ class AccountController extends Controller
     public function getDeleteNotification($id)
     {
         $notification = Notification::where('id', $id)->where('user_id', Auth::user()->id)->first();
-        if($notification) $notification->delete();
+        if ($notification) {
+            $notification->delete();
+        }
         return response(200);
     }
 
@@ -327,10 +343,11 @@ class AccountController extends Controller
      */
     public function postClearNotifications($type = null)
     {
-        if(isset($type))
+        if (isset($type)) {
             Auth::user()->notifications()->where('notification_type_id', $type)->delete();
-        else
+        } else {
             Auth::user()->notifications()->delete();
+        }
         flash('Notifications cleared successfully.')->success();
         return redirect()->back();
     }

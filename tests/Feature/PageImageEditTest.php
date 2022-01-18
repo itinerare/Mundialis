@@ -17,7 +17,8 @@ use Illuminate\Http\UploadedFile;
 
 class PageImageEditTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test image creation access.
@@ -54,7 +55,7 @@ class PageImageEditTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
             ->get('/pages/'.$page->id.'/gallery/edit/'.$image->id);
@@ -83,7 +84,7 @@ class PageImageEditTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Define some basic data
         $data = [
@@ -125,7 +126,7 @@ class PageImageEditTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Define some basic data
         $data = [
@@ -168,7 +169,7 @@ class PageImageEditTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Define some basic data
         $data = [
@@ -212,7 +213,7 @@ class PageImageEditTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Define some basic data
         $data = [
@@ -256,7 +257,7 @@ class PageImageEditTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Create a persistent user to be the added creator
         $creator = User::factory()->create();
@@ -305,7 +306,7 @@ class PageImageEditTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Create a persistent user to be the added creator
         $creator = User::factory()->create();
@@ -355,7 +356,7 @@ class PageImageEditTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Create a persistent user to be the added creator
         $creator = User::factory()->create();
@@ -411,7 +412,7 @@ class PageImageEditTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->url($page->url)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Create a persistent user to be the added creator
         $creator = User::factory()->create();
@@ -470,7 +471,7 @@ class PageImageEditTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->url($page->url)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Create a persistent user to be the added creator
         $creator = User::factory()->create();
@@ -521,15 +522,16 @@ class PageImageEditTest extends TestCase
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->create();
+        }
 
         // Create the image and associated records
         $image = PageImage::factory()->create();
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page[1]->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Define some basic data
         $data = [
@@ -565,16 +567,18 @@ class PageImageEditTest extends TestCase
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->create();
+        }
 
         // Create the image and associated records
         $image = PageImage::factory()->create();
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             PagePageImage::factory()->page($page[$i]->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        }
+        (new ImageManager())->testImages($image, $version);
 
         // Define some basic data
         $data = [
@@ -615,16 +619,18 @@ class PageImageEditTest extends TestCase
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->create();
+        }
 
         // Create the image and associated records
         $image = PageImage::factory()->create();
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             PagePageImage::factory()->page($page[$i]->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        }
+        (new ImageManager())->testImages($image, $version);
 
         // Define some basic data
         $data = [
@@ -659,16 +665,18 @@ class PageImageEditTest extends TestCase
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $page[$i] = Page::factory()->create();
+        }
 
         // Create the image and associated records
         $image = PageImage::factory()->create();
         $version = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             PagePageImage::factory()->page($page[$i]->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        }
+        (new ImageManager())->testImages($image, $version);
 
         // Set the page-to-be-detached's active image
         $page[1]->update(['image_id' => $image->id]);

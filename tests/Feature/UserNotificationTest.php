@@ -19,7 +19,8 @@ use App\Services\ImageManager;
 
 class UserNotificationTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test notifications access.
@@ -209,7 +210,7 @@ class UserNotificationTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($editor->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         // Define some basic data
         $data = [

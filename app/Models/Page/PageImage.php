@@ -9,7 +9,8 @@ use App\Models\Model;
 
 class PageImage extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -100,7 +101,9 @@ class PageImage extends Model
      */
     public function scopeVisible($query, $user = null)
     {
-        if($user && $user->canWrite) return $query;
+        if ($user && $user->canWrite) {
+            return $query;
+        }
         return $query->where('is_visible', 1);
     }
 
@@ -179,5 +182,4 @@ class PageImage extends Model
     {
         return $this->imageVersion->thumbnailUrl;
     }
-
 }

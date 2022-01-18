@@ -23,13 +23,14 @@ class LexiconEntryFactory extends Factory
      */
     public function definition()
     {
-        if(LexiconSetting::all()->first())
+        if (LexiconSetting::all()->first()) {
             $class = LexiconSetting::all()->first();
-        else
+        } else {
             $class = LexiconSetting::create([
                 'name' => $this->faker->unique()->domainWord(),
                 'abbreviation' => $this->faker->unique()->domainWord()
             ]);
+        }
 
         return [
             'word' => $this->faker->unique()->domainWord(),

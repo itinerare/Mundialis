@@ -87,7 +87,9 @@ class LexiconCategory extends Model
      */
     public function getDataAttribute()
     {
-        if(!isset($this->attributes['data'])) return null;
+        if (!isset($this->attributes['data'])) {
+            return null;
+        }
         return json_decode($this->attributes['data'], true);
     }
 
@@ -126,16 +128,29 @@ class LexiconCategory extends Model
      */
     public function classCombinations($class, $i = 0)
     {
-        if(!isset($this->data) || !isset($this->data[$class]['properties'])) return null;
-        foreach($this->data[$class]['properties'] as $property)
-            if(isset($property['dimensions'])) $arrays[] = $property['dimensions'];
+        if (!isset($this->data) || !isset($this->data[$class]['properties'])) {
+            return null;
+        }
+        foreach ($this->data[$class]['properties'] as $property) {
+            if (isset($property['dimensions'])) {
+                $arrays[] = $property['dimensions'];
+            }
+        }
 
-        if(count($arrays) == 1) return $arrays[0];
+        if (count($arrays) == 1) {
+            return $arrays[0];
+        }
 
         $results = $this->combinations($arrays);
-        foreach($results as $key=>$result) $results[$key] = implode(' ', $result);
+        foreach ($results as $key=>$result) {
+            $results[$key] = implode(' ', $result);
+        }
 
-        foreach($this->data[$class]['properties'] as $property) if(!isset($property['dimensions'])) $results[] = $property['name'];
+        foreach ($this->data[$class]['properties'] as $property) {
+            if (!isset($property['dimensions'])) {
+                $results[] = $property['name'];
+            }
+        }
 
         return $results;
     }
@@ -172,5 +187,4 @@ class LexiconCategory extends Model
 
         return $result;
     }
-
 }

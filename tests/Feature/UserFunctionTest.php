@@ -14,7 +14,8 @@ use App\Models\User\User;
 
 class UserFunctionTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /******************************************************************************
         SETTINGS
@@ -60,8 +61,9 @@ class UserFunctionTest extends TestCase
         $file = UploadedFile::fake()->image('test_image.png');
 
         // Remove the current avatar if it exists
-        if(File::exists(public_path('images/avatars/'.$user->id.'.png')))
+        if (File::exists(public_path('images/avatars/'.$user->id.'.png'))) {
             unlink('public/images/avatars/'.$user->id.'.png');
+        }
 
         // Try to post data
         $response = $this
@@ -122,7 +124,6 @@ class UserFunctionTest extends TestCase
 
         $this->
             assertTrue(Hash::check('password', $user->fresh()->password));
-
     }
 
     /**

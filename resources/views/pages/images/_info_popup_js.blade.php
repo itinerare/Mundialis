@@ -1,8 +1,11 @@
 <script>
     $(document).ready(function() {
         <?php
-            if(isset($gallery) && !$gallery) echo "var gallery = false;";
-            else echo "var gallery = true;";
+            if (isset($gallery) && !$gallery) {
+                echo "var gallery = false;";
+            } else {
+                echo "var gallery = true;";
+            }
         ?>
         $('.image-link').magnificPopup({
             type: 'ajax',

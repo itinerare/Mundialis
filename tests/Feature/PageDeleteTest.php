@@ -19,7 +19,8 @@ use App\Services\ImageManager;
 
 class PageDeleteTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test page deletion access.
@@ -146,7 +147,7 @@ class PageDeleteTest extends TestCase
         $imageVersion = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $imageVersion);
+        (new ImageManager())->testImages($image, $imageVersion);
 
         // Try to post data
         $response = $this
@@ -173,7 +174,7 @@ class PageDeleteTest extends TestCase
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
-        for($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             // Make a page
             $page[$i] = Page::factory()->create();
             // As well as accompanying version
@@ -185,7 +186,7 @@ class PageDeleteTest extends TestCase
             $imageVersion[$i] = PageImageVersion::factory()->image($image[$i]->id)->user($user->id)->create();
             PageImageCreator::factory()->image($image[$i]->id)->user($user->id)->create();
             PagePageImage::factory()->page($page[1]->id)->image($image[$i]->id)->create();
-            (new ImageManager)->testImages($image[$i], $imageVersion[$i]);
+            (new ImageManager())->testImages($image[$i], $imageVersion[$i]);
         }
 
         // Attach one of the images to page 2 as well
@@ -208,7 +209,7 @@ class PageDeleteTest extends TestCase
         $this->assertSoftDeleted($page[1]);
 
         // Delete the test images, to clean up
-        for($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             unlink($image[$i]->imagePath . '/' . $imageVersion[$i]->thumbnailFileName);
             unlink($image[$i]->imagePath . '/' . $imageVersion[$i]->imageFileName);
         }
@@ -228,7 +229,7 @@ class PageDeleteTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             // Make a deleted page
             $page[$i] = Page::factory()->category($category->id)->deleted()->create();
             // As well as accompanying version
@@ -333,7 +334,7 @@ class PageDeleteTest extends TestCase
         $imageVersion = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $imageVersion);
+        (new ImageManager())->testImages($image, $imageVersion);
 
         // Try to post data; this time the category is deleted
         // since deleting the category is the only way to force-delete pages
@@ -360,7 +361,7 @@ class PageDeleteTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             // Make a deleted page
             $page[$i] = Page::factory()->category($category->id)->deleted()->create();
             // As well as accompanying version
@@ -503,7 +504,7 @@ class PageDeleteTest extends TestCase
         $imageVersion = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $imageVersion);
+        (new ImageManager())->testImages($image, $imageVersion);
 
         // Try to post data
         $response = $this

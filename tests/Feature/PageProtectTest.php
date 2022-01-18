@@ -12,7 +12,8 @@ use App\Models\Page\PageProtection;
 
 class PageProtectTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test page protection access.

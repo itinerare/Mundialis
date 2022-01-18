@@ -53,5 +53,4 @@ class PageProtection extends Model
     {
         return $this->belongsTo('App\Models\User\User');
     }
-
 }

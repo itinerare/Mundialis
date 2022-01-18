@@ -15,7 +15,8 @@ use App\Models\Page\Page;
 
 class SubjectDataTest extends TestCase
 {
-    use RefreshDatabase, withFaker;
+    use RefreshDatabase;
+    use withFaker;
 
     /******************************************************************************
         SUBJECTS
@@ -248,14 +249,13 @@ class SubjectDataTest extends TestCase
         $user = User::factory()->admin()->make();
 
         // First, ensure the template exists and has empty data
-        if(DB::table('subject_templates')->where('subject', 'concepts')->first()) {
+        if (DB::table('subject_templates')->where('subject', 'concepts')->first()) {
             DB::table('subject_templates')->where('subject', 'concepts')->update(
                 [
                     'data' => null
                 ]
             );
-        }
-        else {
+        } else {
             DB::table('subject_templates')->insert([
                 [
                     'subject' => 'concepts',
@@ -453,14 +453,13 @@ class SubjectDataTest extends TestCase
     public function test_canPostCreateSubjectCategoryWithPopulatedTemplate()
     {
         // Ensure 'things' has specific template data to use
-        if(DB::table('subject_templates')->where('subject', 'things')->first()) {
+        if (DB::table('subject_templates')->where('subject', 'things')->first()) {
             DB::table('subject_templates')->where('subject', 'things')->update(
                 [
                     'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
                 ]
             );
-        }
-        else {
+        } else {
             DB::table('subject_templates')->insert([
                 [
                     'subject' => 'things',
@@ -499,14 +498,13 @@ class SubjectDataTest extends TestCase
     public function test_canPostEditSubjectCategoryWithPopulatedTemplate()
     {
         // Ensure 'things' has specific template data to use
-        if(DB::table('subject_templates')->where('subject', 'things')->first()) {
+        if (DB::table('subject_templates')->where('subject', 'things')->first()) {
             DB::table('subject_templates')->where('subject', 'things')->update(
                 [
                     'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
                 ]
             );
-        }
-        else {
+        } else {
             DB::table('subject_templates')->insert([
                 [
                     'subject' => 'things',

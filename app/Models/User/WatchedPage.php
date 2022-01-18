@@ -38,5 +38,4 @@ class WatchedPage extends Pivot
      * @var string
      */
     public $timestamps = false;
-
 }

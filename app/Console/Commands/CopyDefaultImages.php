@@ -48,8 +48,7 @@ class CopyDefaultImages extends Command
         $sourceDir = base_path() . '/data/images/';
         $destDir = public_path() . '/images/';
 
-        foreach($images as $image)
-        {
+        foreach ($images as $image) {
             $this->line("Copying image: ".$image['filename'] . "\n");
             copy($sourceDir . $image['filename'], $destDir . $image['filename']);
         }

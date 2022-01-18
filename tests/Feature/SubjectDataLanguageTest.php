@@ -15,7 +15,8 @@ use App\Models\Lexicon\LexiconEntry;
 
 class SubjectDataLanguageTest extends TestCase
 {
-    use RefreshDatabase, withFaker;
+    use RefreshDatabase;
+    use withFaker;
 
     /******************************************************************************
         LANGUAGE

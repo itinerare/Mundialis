@@ -41,8 +41,9 @@ class AddSitePages extends Command
      * @param  string  $title
      * @param  string  $text
      */
-    private function addSitePage($key, $title, $text) {
-        if(!DB::table('site_pages')->where('key', $key)->exists()) {
+    private function addSitePage($key, $title, $text)
+    {
+        if (!DB::table('site_pages')->where('key', $key)->exists()) {
             DB::table('site_pages')->insert([
                 [
                     'key' => $key,
@@ -54,8 +55,9 @@ class AddSitePages extends Command
 
             ]);
             $this->info("Added:   ".$title);
+        } else {
+            $this->line("Skipped: ".$title);
         }
-        else $this->line("Skipped: ".$title);
     }
 
     /**

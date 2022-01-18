@@ -52,7 +52,9 @@ class SpecialController extends Controller
      */
     public function getRandomPage()
     {
-        if(!Page::visible(Auth::check() ? Auth::user() : null)->count()) return redirect('/');
+        if (!Page::visible(Auth::check() ? Auth::user() : null)->count()) {
+            return redirect('/');
+        }
         $page = Page::visible(Auth::check() ? Auth::user() : null)->get()->random();
 
         return redirect($page->url);
@@ -69,17 +71,22 @@ class SpecialController extends Controller
         $query = Page::visible(Auth::check() ? Auth::user() : null);
         $sort = $request->only(['sort']);
 
-        if($request->get('title')) $query->where(function($query) use ($request) {
-            $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
-        });
-        if($request->get('category_id')) $query->where('category_id', $request->get('category_id'));
-        if($request->get('tags'))
-            foreach($request->get('tags') as $tag)
+        if ($request->get('title')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
+            });
+        }
+        if ($request->get('category_id')) {
+            $query->where('category_id', $request->get('category_id'));
+        }
+        if ($request->get('tags')) {
+            foreach ($request->get('tags') as $tag) {
                 $query->whereIn('id', PageTag::tagSearch($tag)->tag()->pluck('page_id')->toArray());
+            }
+        }
 
-        if(isset($sort['sort']))
-        {
-            switch($sort['sort']) {
+        if (isset($sort['sort'])) {
+            switch ($sort['sort']) {
                 case 'alpha':
                     $query->orderBy('title');
                     break;
@@ -93,14 +100,15 @@ class SpecialController extends Controller
                     $query->orderBy('created_at', 'ASC');
                     break;
             }
+        } else {
+            $query->orderBy('title');
         }
-        else $query->orderBy('title');
 
         return view('pages.special.all_pages', [
             'pages' => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
-            'tags' => (new PageTag)->listTags(),
-            'dateHelper' => new TimeDivision
+            'tags' => (new PageTag())->listTags(),
+            'dateHelper' => new TimeDivision()
         ]);
     }
 
@@ -115,8 +123,12 @@ class SpecialController extends Controller
     {
         $query = PageTag::tag()->get()
         ->filter(function ($tag) {
-            if(Auth::check() && Auth::user()->canWrite) return 1;
-            if(!$tag->page) return 0;
+            if (Auth::check() && Auth::user()->canWrite) {
+                return 1;
+            }
+            if (!$tag->page) {
+                return 0;
+            }
             return $tag->page->is_visible;
         })->groupBy('baseTag');
 
@@ -135,22 +147,21 @@ class SpecialController extends Controller
     {
         $query = PageImage::visible(Auth::check() ? Auth::user() : null);
 
-        if($request->get('creator_url')) {
+        if ($request->get('creator_url')) {
             $creatorUrl = $request->get('creator_url');
-            $query->whereHas('creators', function($query) use ($creatorUrl) {
+            $query->whereHas('creators', function ($query) use ($creatorUrl) {
                 $query->where('url', 'LIKE', '%'.$creatorUrl.'%');
             });
         }
-        if($request->get('creator_id')) {
+        if ($request->get('creator_id')) {
             $creator = User::find($request->get('creator_id'));
-            $query->whereHas('creators', function($query) use ($creator) {
+            $query->whereHas('creators', function ($query) use ($creator) {
                 $query->where('user_id', $creator->id);
             });
         }
 
-        if(isset($sort['sort']))
-        {
-            switch($sort['sort']) {
+        if (isset($sort['sort'])) {
+            switch ($sort['sort']) {
                 case 'newest':
                     $query->orderBy('created_at', 'DESC');
                     break;
@@ -158,8 +169,9 @@ class SpecialController extends Controller
                     $query->orderBy('created_at', 'ASC');
                     break;
             }
+        } else {
+            $query->orderBy('created_at', 'DESC');
         }
-        else $query->orderBy('created_at', 'DESC');
 
         return view('pages.special.all_images', [
             'images' => $query->paginate(20)->appends($request->query()),
@@ -219,14 +231,15 @@ class SpecialController extends Controller
     {
         $query = Page::visible(Auth::check() ? Auth::user() : null)->get();
 
-        if($mode == 'least')
+        if ($mode == 'least') {
             $query = $query->sortBy(function ($page) {
                 return $page->versions->count();
             });
-        else
+        } else {
             $query = $query->sortByDesc(function ($page) {
                 return $page->versions->count();
             });
+        }
 
         return view('pages.special.revised', [
             'mode' => $mode,
@@ -243,7 +256,9 @@ class SpecialController extends Controller
     public function getMostLinkedPages(Request $request)
     {
         $query = PageLink::whereNotNull('link_id')->get()->filter(function ($value) {
-            if(Auth::check() && Auth::user()->canWrite) return 1;
+            if (Auth::check() && Auth::user()->canWrite) {
+                return 1;
+            }
             return $value->linkedPage->is_visible;
         })->groupBy('link_id')->sortByDesc(function ($group) {
             return $group->count();
@@ -263,15 +278,21 @@ class SpecialController extends Controller
     public function getRecentPages(Request $request)
     {
         $query = PageVersion::orderBy('created_at', 'DESC')->get()->filter(function ($version) {
-            if(!$version->page || isset($version->page->deleted_at)) return 0;
-            if(Auth::check() && Auth::user()->canWrite) return 1;
+            if (!$version->page || isset($version->page->deleted_at)) {
+                return 0;
+            }
+            if (Auth::check() && Auth::user()->canWrite) {
+                return 1;
+            }
             return $version->page->is_visible;
         });
 
         $mode = $request->get('mode');
-        if(isset($mode) && is_numeric($mode)) {
+        if (isset($mode) && is_numeric($mode)) {
             $query = $query->filter(function ($version) use ($mode) {
-                if($version->created_at > Carbon::now()->subDays($mode)) return 1;
+                if ($version->created_at > Carbon::now()->subDays($mode)) {
+                    return 1;
+                }
                 return 0;
             });
         }
@@ -290,15 +311,21 @@ class SpecialController extends Controller
     public function getRecentImages(Request $request)
     {
         $query = PageImageVersion::orderBy('updated_at', 'DESC')->get()->filter(function ($version) {
-            if(!$version->image || isset($version->image->deleted_at)) return 0;
-            if(Auth::check() && Auth::user()->canWrite) return 1;
+            if (!$version->image || isset($version->image->deleted_at)) {
+                return 0;
+            }
+            if (Auth::check() && Auth::user()->canWrite) {
+                return 1;
+            }
             return $version->image->is_visible;
         });
 
         $mode = $request->get('mode');
-        if(isset($mode) && is_numeric($mode)) {
+        if (isset($mode) && is_numeric($mode)) {
             $query = $query->filter(function ($version) use ($mode) {
-                if($version->created_at > Carbon::now()->subDays($mode)) return 1;
+                if ($version->created_at > Carbon::now()->subDays($mode)) {
+                    return 1;
+                }
                 return 0;
             });
         }
@@ -317,7 +344,9 @@ class SpecialController extends Controller
     public function getProtectedPages(Request $request)
     {
         $query = Page::visible(Auth::check() ? Auth::user() : null)->get()->filter(function ($page) {
-            if($page->protection && $page->protection->is_protected) return 1;
+            if ($page->protection && $page->protection->is_protected) {
+                return 1;
+            }
             return 0;
         })->sortBy('name');
 
@@ -338,17 +367,22 @@ class SpecialController extends Controller
         $query = Page::visible(Auth::check() ? Auth::user() : null)->whereIn('id', PageTag::utilityTag()->tagSearch($tag)->pluck('page_id')->toArray());
         $sort = $request->only(['sort']);
 
-        if($request->get('title')) $query->where(function($query) use ($request) {
-            $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
-        });
-        if($request->get('category_id')) $query->where('category_id', $request->get('category_id'));
-        if($request->get('tags'))
-            foreach($request->get('tags') as $searchTag)
+        if ($request->get('title')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('pages.title', 'LIKE', '%' . $request->get('title') . '%');
+            });
+        }
+        if ($request->get('category_id')) {
+            $query->where('category_id', $request->get('category_id'));
+        }
+        if ($request->get('tags')) {
+            foreach ($request->get('tags') as $searchTag) {
                 $query->whereIn('id', PageTag::tagSearch($searchTag)->tag()->pluck('page_id')->toArray());
+            }
+        }
 
-        if(isset($sort['sort']))
-        {
-            switch($sort['sort']) {
+        if (isset($sort['sort'])) {
+            switch ($sort['sort']) {
                 case 'alpha':
                     $query->orderBy('title');
                     break;
@@ -362,15 +396,16 @@ class SpecialController extends Controller
                     $query->orderBy('created_at', 'ASC');
                     break;
             }
+        } else {
+            $query->orderBy('title');
         }
-        else $query->orderBy('title');
 
         return view('pages.special.utility', [
             'tag' => Config::get('mundialis.utility_tags.'.$tag),
             'pages' => $query->paginate(20)->appends($request->query()),
             'categoryOptions' => SubjectCategory::pluck('name', 'id'),
-            'tags' => (new PageTag)->listTags(),
-            'dateHelper' => new TimeDivision
+            'tags' => (new PageTag())->listTags(),
+            'dateHelper' => new TimeDivision()
         ]);
     }
 
@@ -383,7 +418,9 @@ class SpecialController extends Controller
     public function getWantedPages(Request $request)
     {
         $query = PageLink::whereNotNull('title')->get()->filter(function ($value) {
-            if(Auth::check() && Auth::user()->canWrite) return 1;
+            if (Auth::check() && Auth::user()->canWrite) {
+                return 1;
+            }
             return $value->parent->is_visible;
         })->groupBy('title')->sortByDesc(function ($group) {
             return $group->count();
@@ -409,16 +446,21 @@ class SpecialController extends Controller
 
         // Collect subjects and information
         $orderedSubjects = collect(Config::get('mundialis.subjects'))->filter(function ($subject) use ($groupedCategories) {
-            if(isset($groupedCategories[$subject['name']])) return 1;
-            else return 0;
+            if (isset($groupedCategories[$subject['name']])) {
+                return 1;
+            } else {
+                return 0;
+            }
         })->pluck('name', 'name');
 
-        foreach($groupedCategories as $subject=>$categories)
-            foreach($categories as $id=>$category)
+        foreach ($groupedCategories as $subject=>$categories) {
+            foreach ($categories as $id=>$category) {
                 $groupedCategories[$subject][$id] = $category['name'];
+            }
+        }
 
         // Organize them according to standard subject listing
-        $sortedCategories = $orderedSubjects->map(function($subject, $key) use($groupedCategories) {
+        $sortedCategories = $orderedSubjects->map(function ($subject, $key) use ($groupedCategories) {
             return $groupedCategories[$subject];
         });
 
@@ -447,15 +489,19 @@ class SpecialController extends Controller
      */
     public function getUserList(Request $request)
     {
-        $query = User::join('ranks','users.rank_id', '=', 'ranks.id')->select('ranks.name AS rank_name', 'users.*');
+        $query = User::join('ranks', 'users.rank_id', '=', 'ranks.id')->select('ranks.name AS rank_name', 'users.*');
         $sort = $request->only(['sort']);
 
-        if($request->get('name')) $query->where(function($query) use ($request) {
-            $query->where('users.name', 'LIKE', '%' . $request->get('name') . '%');
-        });
-        if($request->get('rank_id')) $query->where('rank_id', $request->get('rank_id'));
+        if ($request->get('name')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('users.name', 'LIKE', '%' . $request->get('name') . '%');
+            });
+        }
+        if ($request->get('rank_id')) {
+            $query->where('rank_id', $request->get('rank_id'));
+        }
 
-        switch(isset($sort['sort']) ? $sort['sort'] : null) {
+        switch (isset($sort['sort']) ? $sort['sort'] : null) {
             default:
                 $query->orderBy('ranks.sort', 'DESC')->orderBy('name');
                 break;
@@ -481,5 +527,4 @@ class SpecialController extends Controller
             'ranks' => [0 => 'Any Rank'] + Rank::orderBy('ranks.sort', 'DESC')->pluck('name', 'id')->toArray()
         ]);
     }
-
 }

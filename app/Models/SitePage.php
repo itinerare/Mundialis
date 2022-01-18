@@ -28,5 +28,4 @@ class SitePage extends Model
      * @var string
      */
     public $timestamps = true;
-
 }

@@ -75,7 +75,7 @@ class AdminInvitationTest extends TestCase
         $code =
             InvitationCode::where('recipient_id', null)->first() ?
             InvitationCode::where('recipient_id', null)->first() :
-            (new InvitationService)->generateInvitation($user);
+            (new InvitationService())->generateInvitation($user);
 
         // Try to post data
         $response = $this
@@ -102,10 +102,10 @@ class AdminInvitationTest extends TestCase
         $code =
             InvitationCode::where('recipient_id', '!=', null)->first() ?
             InvitationCode::where('recipient_id', '!=', null)->first() :
-            (new InvitationService)->generateInvitation($user);
+            (new InvitationService())->generateInvitation($user);
 
         // If necessary, simulate a "used" code
-        if($code->recipient_id == null) {
+        if ($code->recipient_id == null) {
             // Create a persistent user and mark them as the code's recipient
             $recipient = User::factory()->create();
             $code->update(['recipient_id' => $recipient->id]);

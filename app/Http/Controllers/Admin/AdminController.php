@@ -58,11 +58,12 @@ class AdminController extends Controller
      */
     public function postEditSetting(Request $request, $key)
     {
-        if(!$request->get('value')) $value = 0;
-        if(DB::table('site_settings')->where('key', $key)->update(['value' => isset($value) ? $value : $request->get('value')])) {
-            flash('Setting updated successfully.')->success();
+        if (!$request->get('value')) {
+            $value = 0;
         }
-        else {
+        if (DB::table('site_settings')->where('key', $key)->update(['value' => isset($value) ? $value : $request->get('value')])) {
+            flash('Setting updated successfully.')->success();
+        } else {
             flash('Invalid setting selected.')->error();
         }
         return redirect()->back();
@@ -98,11 +99,12 @@ class AdminController extends Controller
         $key = $request->get('key');
         $filename = Config::get('mundialis.image_files.'.$key)['filename'];
 
-        if($service->uploadFile($file, null, $filename, false)) {
+        if ($service->uploadFile($file, null, $filename, false)) {
             flash('Image uploaded successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }
@@ -119,11 +121,12 @@ class AdminController extends Controller
         $request->validate(['file' => 'required|file']);
         $file = $request->file('file');
 
-        if($service->uploadCss($file)) {
+        if ($service->uploadCss($file)) {
             flash('File uploaded successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
         return redirect()->back();
     }

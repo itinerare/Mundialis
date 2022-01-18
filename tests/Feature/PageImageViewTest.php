@@ -38,7 +38,7 @@ class PageImageViewTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
             ->get('pages/get-image/'.$page->id.'/'.$image->id);
@@ -71,7 +71,7 @@ class PageImageViewTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
             ->get('pages/get-image/'.$page->id.'/'.$image->id);
@@ -101,7 +101,7 @@ class PageImageViewTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($editor->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($editor)
             ->get('pages/get-image/'.$page->id.'/'.$image->id);
@@ -133,7 +133,7 @@ class PageImageViewTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
             ->get('/pages/'.$page->id.'/gallery/'.$image->id);
@@ -166,7 +166,7 @@ class PageImageViewTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($user->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($user)
             ->get('/pages/'.$page->id.'/gallery/'.$image->id);
@@ -196,7 +196,7 @@ class PageImageViewTest extends TestCase
         $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
         PageImageCreator::factory()->image($image->id)->user($editor->id)->create();
         PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        (new ImageManager())->testImages($image, $version);
 
         $response = $this->actingAs($editor)
             ->get('/pages/'.$page->id.'/gallery/'.$image->id);

@@ -25,8 +25,9 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input)
     {
-        if(!Settings::get('is_registration_open'))
+        if (!Settings::get('is_registration_open')) {
             throw new \Exception('Registration is currently closed.');
+        }
 
         Validator::make($input, [
             'name' => ['required', 'string', 'min:3', 'max:25', 'alpha_dash', 'unique:users'],
@@ -34,9 +35,11 @@ class CreateNewUser implements CreatesNewUsers
             'agreement' => ['required', 'accepted'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'code' => ['string', function ($attribute, $value, $fail) {
-                    $invitation = InvitationCode::where('code', $value)->whereNull('recipient_id')->first();
-                    if(!$invitation) $fail('Invalid code entered.');
+                $invitation = InvitationCode::where('code', $value)->whereNull('recipient_id')->first();
+                if (!$invitation) {
+                    $fail('Invalid code entered.');
                 }
+            }
             ]
         ])->validate();
 
@@ -47,7 +50,9 @@ class CreateNewUser implements CreatesNewUsers
             'rank_id' => Rank::orderBy('sort', 'ASC')->first()->id,
         ]);
 
-        if(!(new InvitationService)->useInvitation(InvitationCode::where('code', $input['code'])->whereNull('recipient_id')->first(), $user)) throw new \Exception('An error occurred while using the invitation code.');
+        if (!(new InvitationService())->useInvitation(InvitationCode::where('code', $input['code'])->whereNull('recipient_id')->first(), $user)) {
+            throw new \Exception('An error occurred while using the invitation code.');
+        }
 
         return $user;
     }

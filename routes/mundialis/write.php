@@ -15,8 +15,8 @@
 
 Route::get('get/tags', 'Pages\TagController@getAllTags');
 
-Route::group(['namespace' => 'Pages'], function() {
-    Route::group(['prefix' => 'pages'], function() {
+Route::group(['namespace' => 'Pages'], function () {
+    Route::group(['prefix' => 'pages'], function () {
         # BASIC CREATE/EDIT ROUTES
         Route::get('create/{category}', 'PageController@getCreatePage')
             ->whereNumber('category');
@@ -66,7 +66,7 @@ Route::group(['namespace' => 'Pages'], function() {
             ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
 
         # PROTECTION ROUTES
-        Route::group(['middleware' => ['admin']], function() {
+        Route::group(['middleware' => ['admin']], function () {
             Route::get('{id}/protect', 'PageController@getProtectPage')
                 ->whereNumber('id');
             Route::post('{id?}/protect', 'PageController@postProtectPage')
@@ -74,7 +74,7 @@ Route::group(['namespace' => 'Pages'], function() {
         });
     });
 
-    Route::group(['prefix' => 'language/lexicon'], function() {
+    Route::group(['prefix' => 'language/lexicon'], function () {
         # LEXICON ROUTES
         Route::get('create', 'SubjectController@getCreateLexiconEntry');
         Route::get('edit/{id?}', 'SubjectController@getEditLexiconEntry')
@@ -88,11 +88,9 @@ Route::group(['namespace' => 'Pages'], function() {
             ->whereNumber('id');
     });
 
-    Route::group(['prefix' => 'special'], function() {
+    Route::group(['prefix' => 'special'], function () {
         # SPECIAL ROUTES
         Route::get('create-wanted/{title}', 'SpecialController@getCreateWantedPage');
         Route::post('create-wanted', 'SpecialController@postCreateWantedPage');
     });
-
 });
-

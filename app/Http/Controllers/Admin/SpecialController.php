@@ -57,13 +57,12 @@ class SpecialController extends Controller
         $query = Page::withTrashed()->whereNotNull('deleted_at');
         $sort = $request->only(['sort']);
 
-        if($request->get('user_id')) {
+        if ($request->get('user_id')) {
             $query->where('user_id', $request->get('user_id'));
         }
 
-        if(isset($sort['sort']))
-        {
-            switch($sort['sort']) {
+        if (isset($sort['sort'])) {
+            switch ($sort['sort']) {
                 case 'newest':
                     $query->orderBy('deleted_at', 'DESC');
                     break;
@@ -71,8 +70,9 @@ class SpecialController extends Controller
                     $query->orderBy('deleted_at', 'ASC');
                     break;
             }
+        } else {
+            $query->orderBy('deleted_at', 'DESC');
         }
-        else $query->orderBy('deleted_at', 'DESC');
 
         return view('admin.special.deleted_pages', [
             'pages' => $query->paginate(20)->appends($request->query()),
@@ -89,12 +89,14 @@ class SpecialController extends Controller
     public function getDeletedPage($id)
     {
         $page = Page::withTrashed()->where('id', $id)->first();
-        if(!$page) abort(404);
+        if (!$page) {
+            abort(404);
+        }
 
         return view('admin.special.deleted_page', [
             'page' => $page
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision
+            'dateHelper' => new TimeDivision()
         ] : []));
     }
 
@@ -123,11 +125,12 @@ class SpecialController extends Controller
      */
     public function postRestorePage(Request $request, PageManager $service, $id)
     {
-        if($id && $service->restorePage(Page::withTrashed()->find($id), Auth::user(), $request->get('reason'))) {
+        if ($id && $service->restorePage(Page::withTrashed()->find($id), Auth::user(), $request->get('reason'))) {
             flash('Page restored successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
             return redirect()->back();
         }
         return redirect()->to('admin/special/deleted-pages');
@@ -145,13 +148,12 @@ class SpecialController extends Controller
         $query = PageImage::withTrashed()->whereNotNull('deleted_at');
         $sort = $request->only(['sort']);
 
-        if($request->get('user_id')) {
+        if ($request->get('user_id')) {
             $query->where('user_id', $request->get('user_id'));
         }
 
-        if(isset($sort['sort']))
-        {
-            switch($sort['sort']) {
+        if (isset($sort['sort'])) {
+            switch ($sort['sort']) {
                 case 'newest':
                     $query->orderBy('deleted_at', 'DESC');
                     break;
@@ -159,8 +161,9 @@ class SpecialController extends Controller
                     $query->orderBy('deleted_at', 'ASC');
                     break;
             }
+        } else {
+            $query->orderBy('deleted_at', 'DESC');
         }
-        else $query->orderBy('deleted_at', 'DESC');
 
         return view('admin.special.deleted_images', [
             'images' => $query->paginate(20)->appends($request->query()),
@@ -178,18 +181,19 @@ class SpecialController extends Controller
     public function getDeletedImage(Request $request, $id)
     {
         $image = PageImage::withTrashed()->where('id', $id)->first();
-        if(!$image) abort(404);
+        if (!$image) {
+            abort(404);
+        }
 
         $query = PageImageVersion::where('page_image_id', $image->id);
         $sort = $request->only(['sort']);
 
-        if($request->get('user_id')) {
+        if ($request->get('user_id')) {
             $query->where('user_id', $request->get('user_id'));
         }
 
-        if(isset($sort['sort']))
-        {
-            switch($sort['sort']) {
+        if (isset($sort['sort'])) {
+            switch ($sort['sort']) {
                 case 'newest':
                     $query->orderBy('created_at', 'DESC');
                     break;
@@ -197,8 +201,9 @@ class SpecialController extends Controller
                     $query->orderBy('created_at', 'ASC');
                     break;
             }
+        } else {
+            $query->orderBy('created_at', 'DESC');
         }
-        else $query->orderBy('created_at', 'DESC');
 
         return view('admin.special.deleted_image', [
             'image' => $image,
@@ -216,7 +221,9 @@ class SpecialController extends Controller
     public function getRestoreImage($id)
     {
         $image = PageImage::withTrashed()->find($id);
-        if(!$image->pages->count()) abort(404);
+        if (!$image->pages->count()) {
+            abort(404);
+        }
 
         return view('admin.special._restore_image', [
             'image' => $image
@@ -234,13 +241,16 @@ class SpecialController extends Controller
     public function postRestoreImage(Request $request, ImageManager $service, $id)
     {
         $image = PageImage::withTrashed()->find($id);
-        if(!$image->pages->count()) abort(404);
-
-        if($id && $service->restorePageImage($image, Auth::user(), $request->get('reason'))) {
-            flash('Image restored successfully.')->success();
+        if (!$image->pages->count()) {
+            abort(404);
         }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+
+        if ($id && $service->restorePageImage($image, Auth::user(), $request->get('reason'))) {
+            flash('Image restored successfully.')->success();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
             return redirect()->back();
         }
         return redirect()->to('admin/special/deleted-images');

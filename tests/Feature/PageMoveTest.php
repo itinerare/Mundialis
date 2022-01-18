@@ -13,7 +13,8 @@ use App\Models\Page\PageVersion;
 
 class PageMoveTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Test page move access.

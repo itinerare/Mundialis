@@ -6,7 +6,6 @@ use App\Models\Model;
 
 class UserUpdateLog extends Model
 {
-
     /**
      * The attributes that are mass assignable.
      *

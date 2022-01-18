@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Helpers;
-use DB;
-class Settings {
 
+use DB;
+
+class Settings
+{
     /*
     |--------------------------------------------------------------------------
     | Settings
@@ -22,7 +24,10 @@ class Settings {
     public function get($key)
     {
         $setting = DB::table('site_settings')->where('key', $key)->first();
-        if($setting) return $setting->value;
-        else return null;
+        if ($setting) {
+            return $setting->value;
+        } else {
+            return null;
+        }
     }
 }

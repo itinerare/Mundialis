@@ -6,7 +6,6 @@ use App\Models\Model;
 
 class Rank extends Model
 {
-
     /**
      * The attributes that are mass assignable.
      *
@@ -46,7 +45,9 @@ class Rank extends Model
      */
     public function getIsAdminAttribute()
     {
-        if($this->id == Rank::orderBy('sort', 'DESC')->first()->id) return true;
+        if ($this->id == Rank::orderBy('sort', 'DESC')->first()->id) {
+            return true;
+        }
         return false;
     }
 
@@ -57,8 +58,9 @@ class Rank extends Model
      */
     public function getCanWriteAttribute()
     {
-        if($this->id == Rank::orderBy('sort', 'DESC')->skip(1)->first()->id || $this->isAdmin) return true;
+        if ($this->id == Rank::orderBy('sort', 'DESC')->skip(1)->first()->id || $this->isAdmin) {
+            return true;
+        }
         return false;
     }
-
 }

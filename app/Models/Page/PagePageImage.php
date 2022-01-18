@@ -38,5 +38,4 @@ class PagePageImage extends Pivot
      * @var string
      */
     public $timestamps = false;
-
 }

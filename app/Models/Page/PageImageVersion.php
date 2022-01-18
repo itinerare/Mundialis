@@ -69,7 +69,9 @@ class PageImageVersion extends Model
      */
     public function getDataAttribute()
     {
-        if(!isset($this->attributes['data'])) return null;
+        if (!isset($this->attributes['data'])) {
+            return null;
+        }
         return json_decode($this->attributes['data'], true);
     }
 
@@ -90,7 +92,9 @@ class PageImageVersion extends Model
      */
     public function getImageUrlAttribute()
     {
-        if(!isset($this->hash)) return null;
+        if (!isset($this->hash)) {
+            return null;
+        }
         return asset($this->image->imageDirectory . '/' . $this->imageFileName);
     }
 
@@ -111,8 +115,9 @@ class PageImageVersion extends Model
      */
     public function getThumbnailUrlAttribute()
     {
-        if(!isset($this->hash)) return null;
+        if (!isset($this->hash)) {
+            return null;
+        }
         return asset($this->image->imageDirectory . '/' . $this->thumbnailFileName);
     }
-
 }

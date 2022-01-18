@@ -43,11 +43,11 @@ class PageLink extends Model
      */
     public function parent()
     {
-        switch($this->parent_type) {
-            case 'page';
+        switch ($this->parent_type) {
+            case 'page':
                 return $this->belongsTo('App\Models\Page\Page');
                 break;
-            case 'entry';
+            case 'entry':
                 return $this->belongsTo('App\Models\Lexicon\LexiconEntry');
         }
     }
@@ -57,13 +57,12 @@ class PageLink extends Model
      */
     public function linked()
     {
-        switch($this->linked_type) {
-            case 'page';
+        switch ($this->linked_type) {
+            case 'page':
             return $this->belongsTo('App\Models\Page\Page', 'link_id');
                 break;
-            case 'entry';
+            case 'entry':
                 return $this->belongsTo('App\Models\Lexicon\LexiconEntry');
         }
     }
-
 }

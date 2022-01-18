@@ -11,7 +11,8 @@ use App\Models\Model;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -92,8 +93,12 @@ class User extends Authenticatable implements MustVerifyEmail
     public function watched()
     {
         return $this->hasManyThrough(
-            'App\Models\Page\Page', 'App\Models\User\WatchedPage',
-            'user_id', 'id', 'id', 'page_id'
+            'App\Models\Page\Page',
+            'App\Models\User\WatchedPage',
+            'user_id',
+            'id',
+            'id',
+            'page_id'
         );
     }
 
@@ -110,7 +115,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getIsAdminAttribute()
     {
-        if($this->is_banned) return false;
+        if ($this->is_banned) {
+            return false;
+        }
         return $this->rank->isAdmin;
     }
 
@@ -121,7 +128,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getCanWriteAttribute()
     {
-        if($this->is_banned) return false;
+        if ($this->is_banned) {
+            return false;
+        }
         return $this->rank->canWrite;
     }
 
@@ -180,14 +189,19 @@ class User extends Authenticatable implements MustVerifyEmail
     public function canEdit($page)
     {
         // Admins can always edit pages, so just return true
-        if($this->isAdmin) return true;
+        if ($this->isAdmin) {
+            return true;
+        }
         // Normally, users with write permissions will be able to edit,
         // but if a page is protected, they cannot
-        if($this->canWrite) {
-            if($page->protection) {
-                if($page->protection->is_protected) return false;
+        if ($this->canWrite) {
+            if ($page->protection) {
+                if ($page->protection->is_protected) {
+                    return false;
+                }
+            } else {
+                return true;
             }
-            else return true;
         }
 
         return false;

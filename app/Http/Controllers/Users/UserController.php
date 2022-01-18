@@ -34,7 +34,9 @@ class UserController extends Controller
     {
         $name = Route::current()->parameter('name');
         $this->user = User::where('name', $name)->first();
-        if(!$this->user) abort(404);
+        if (!$this->user) {
+            abort(404);
+        }
     }
 
     /**
@@ -46,14 +48,22 @@ class UserController extends Controller
     public function getUser($name)
     {
         $pageVersions = PageVersion::orderBy('created_at', 'DESC')->where('user_id', $this->user->id)->get()->filter(function ($version) {
-            if(!$version->page || isset($version->page->deleted_at)) return 0;
-            if(Auth::check() && Auth::user()->canWrite) return 1;
+            if (!$version->page || isset($version->page->deleted_at)) {
+                return 0;
+            }
+            if (Auth::check() && Auth::user()->canWrite) {
+                return 1;
+            }
             return $version->page->is_visible;
         });
 
         $imageVersions = PageImageVersion::orderBy('updated_at', 'DESC')->where('user_id', $this->user->id)->get()->filter(function ($version) {
-            if(!$version->image || isset($version->image->deleted_at)) return 0;
-            if(Auth::check() && Auth::user()->canWrite) return 1;
+            if (!$version->image || isset($version->image->deleted_at)) {
+                return 0;
+            }
+            if (Auth::check() && Auth::user()->canWrite) {
+                return 1;
+            }
             return $version->image->is_visible;
         });
 
@@ -74,8 +84,12 @@ class UserController extends Controller
     public function getUserPageRevisions(Request $request, $name)
     {
         $query = PageVersion::orderBy('created_at', 'DESC')->where('user_id', $this->user->id)->get()->filter(function ($version) {
-            if(!$version->page || isset($version->page->deleted_at)) return 0;
-            if(Auth::check() && Auth::user()->canWrite) return 1;
+            if (!$version->page || isset($version->page->deleted_at)) {
+                return 0;
+            }
+            if (Auth::check() && Auth::user()->canWrite) {
+                return 1;
+            }
             return $version->page->is_visible;
         });
 
@@ -95,8 +109,12 @@ class UserController extends Controller
     public function getUserImageRevisions(Request $request, $name)
     {
         $query = PageImageVersion::orderBy('updated_at', 'DESC')->where('user_id', $this->user->id)->get()->filter(function ($version) {
-            if(!$version->image || isset($version->image->deleted_at)) return 0;
-            if(Auth::check() && Auth::user()->canWrite) return 1;
+            if (!$version->image || isset($version->image->deleted_at)) {
+                return 0;
+            }
+            if (Auth::check() && Auth::user()->canWrite) {
+                return 1;
+            }
             return $version->image->is_visible;
         });
 

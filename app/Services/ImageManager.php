@@ -1,4 +1,6 @@
-<?php namespace App\Services;
+<?php
+
+namespace App\Services;
 
 use App\Services\Service;
 
@@ -41,20 +43,32 @@ class ImageManager extends Service
 
         try {
             // Ensure user can edit the parent page
-            if(!$user->canEdit($page)) throw new \Exception('You don\'t have permission to edit this page.');
+            if (!$user->canEdit($page)) {
+                throw new \Exception('You don\'t have permission to edit this page.');
+            }
 
             // Process toggles
-            if(!isset($data['is_valid'])) $data['is_valid'] = 0;
-            if(!isset($data['is_visible'])) $data['is_visible'] = 0;
-            if(!isset($data['mark_invalid'])) $data['mark_invalid'] = 0;
-            if(!isset($data['mark_active'])) $data['mark_active'] = 0;
+            if (!isset($data['is_valid'])) {
+                $data['is_valid'] = 0;
+            }
+            if (!isset($data['is_visible'])) {
+                $data['is_visible'] = 0;
+            }
+            if (!isset($data['mark_invalid'])) {
+                $data['mark_invalid'] = 0;
+            }
+            if (!isset($data['mark_active'])) {
+                $data['mark_active'] = 0;
+            }
 
             // Set version type before moving into image creation
             $data['version_type'] = 'Image Created';
 
             // Process data and create image
             $image = $this->handlePageImage($data, $page, $user);
-            if(!$image) throw new \Exception("An error occurred while trying to create image.");
+            if (!$image) {
+                throw new \Exception("An error occurred while trying to create image.");
+            }
 
             // Create link for the creating page
             PagePageImage::create([
@@ -64,15 +78,15 @@ class ImageManager extends Service
             ]);
 
             // Update the page's image ID if relevant
-            if(isset($data['mark_active']) && $data['mark_active']) {
+            if (isset($data['mark_active']) && $data['mark_active']) {
                 $page->image_id = $image->id;
                 $page->save();
             }
 
             // Send a notification to users that have watched this page
-            if($page->watchers->count()) {
-                foreach($page->watchers as $recipient) {
-                    if($recipient->id != $user->id) {
+            if ($page->watchers->count()) {
+                foreach ($page->watchers as $recipient) {
+                    if ($recipient->id != $user->id) {
                         Notifications::create('WATCHED_PAGE_IMAGE_UPDATED', $recipient, [
                             'page_url' => $page->url,
                             'page_title' => $page->title,
@@ -84,7 +98,7 @@ class ImageManager extends Service
             }
 
             return $this->commitReturn($image);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -105,29 +119,42 @@ class ImageManager extends Service
 
         try {
             // Ensure user can edit the parent page
-            if(!$user->canEdit($page)) throw new \Exception('You don\'t have permission to edit this page.');
+            if (!$user->canEdit($page)) {
+                throw new \Exception('You don\'t have permission to edit this page.');
+            }
 
-            if(!$page->images()->where('page_image_id', $image->id)->exists())
+            if (!$page->images()->where('page_image_id', $image->id)->exists()) {
                 throw new \Exception('This image does not belong to this page.');
+            }
 
             // Process toggles
-            if(!isset($data['is_valid'])) $data['is_valid'] = 0;
-            if(!isset($data['is_visible'])) $data['is_visible'] = 0;
-            if(!isset($data['mark_invalid'])) $data['mark_invalid'] = 0;
-            if(!isset($data['mark_active'])) $data['mark_active'] = 0;
+            if (!isset($data['is_valid'])) {
+                $data['is_valid'] = 0;
+            }
+            if (!isset($data['is_visible'])) {
+                $data['is_visible'] = 0;
+            }
+            if (!isset($data['mark_invalid'])) {
+                $data['mark_invalid'] = 0;
+            }
+            if (!isset($data['mark_active'])) {
+                $data['mark_active'] = 0;
+            }
 
             // Process data and handle image
             $image = $this->handlePageImage($data, $page, $user, $image);
-            if(!$image) throw new \Exception("An error occurred while trying to process image.");
+            if (!$image) {
+                throw new \Exception("An error occurred while trying to process image.");
+            }
 
             // If image is being marked invalid, update
-            if($image->pages()->where('pages.id', $page->id)->first()->pivot->is_valid && !$data['is_valid']) {
+            if ($image->pages()->where('pages.id', $page->id)->first()->pivot->is_valid && !$data['is_valid']) {
                 $page->images()->updateExistingPivot($image->id, [
                     'is_valid' => 0
                 ]);
 
                 // Remove the image as the page's active one if it is
-                if($page->image_id == $image->id) {
+                if ($page->image_id == $image->id) {
                     $page->image_id = null;
                     $page->save();
                 }
@@ -136,13 +163,14 @@ class ImageManager extends Service
             // or made the page's active image, so this is dependent on the above not being the case
             else {
                 // If image is being re-marked valid, update
-                if(!$image->pages()->where('pages.id', $page->id)->first()->pivot->is_valid && $data['is_valid'])
+                if (!$image->pages()->where('pages.id', $page->id)->first()->pivot->is_valid && $data['is_valid']) {
                     $page->images()->updateExistingPivot($image->id, [
                         'is_valid' => 1
                     ]);
+                }
 
                 // Update the page's image ID if relevant
-                if(isset($data['mark_active']) && $data['mark_active']) {
+                if (isset($data['mark_active']) && $data['mark_active']) {
                     $page->image_id = $image->id;
                     $page->save();
                 }
@@ -152,9 +180,9 @@ class ImageManager extends Service
             $image->update($data);
 
             // Send a notification to users that have watched this page
-            if($page->watchers->count()) {
-                foreach($page->watchers as $recipient) {
-                    if($recipient->id != $user->id) {
+            if ($page->watchers->count()) {
+                foreach ($page->watchers as $recipient) {
+                    if ($recipient->id != $user->id) {
                         Notifications::create('WATCHED_PAGE_IMAGE_UPDATED', $recipient, [
                             'page_url' => $page->url,
                             'page_title' => $page->title,
@@ -166,7 +194,7 @@ class ImageManager extends Service
             }
 
             return $this->commitReturn($image);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -190,10 +218,12 @@ class ImageManager extends Service
 
             // Then, create a version logging the restoration
             $version = $this->logImageVersion($image->id, $user->id, null, 'Image Restored', $reason, $image->version->data, false);
-            if(!$version) throw new \Exception('An error occurred while saving image version.');
+            if (!$version) {
+                throw new \Exception('An error occurred while saving image version.');
+            }
 
             return $this->commitReturn($image);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -214,16 +244,18 @@ class ImageManager extends Service
 
         try {
             // Unset this image ID from any pages where it is the active image
-            if(Page::where('image_id', $image->id)->exists())
+            if (Page::where('image_id', $image->id)->exists()) {
                 Page::where('image_id', $image->id)->update(['image_id' => null]);
+            }
 
-            if($forceDelete) {
+            if ($forceDelete) {
                 // Delete version files
-                foreach($image->versions as $version)
-                    if(isset($version->hash)) {
+                foreach ($image->versions as $version) {
+                    if (isset($version->hash)) {
                         unlink($image->imagePath . '/' . $version->thumbnailFileName);
                         unlink($image->imagePath . '/' . $version->imageFileName);
                     }
+                }
 
                 // Delete the image and any relevant objects
                 // Delete creator records
@@ -234,18 +266,19 @@ class ImageManager extends Service
                 $image->pages()->detach();
                 // Finally, force-delete the image itself
                 $image->forceDelete();
-            }
-            else {
+            } else {
                 // Create a log of the deletion
                 $version = $this->logImageVersion($image->id, $user->id, null, 'Image Deleted', $reason, $image->version->data, false);
-                if(!$version) throw new \Exception('Error occurred while logging image version.');
+                if (!$version) {
+                    throw new \Exception('Error occurred while logging image version.');
+                }
 
                 // Delete the image itself
                 $image->delete();
             }
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -268,10 +301,12 @@ class ImageManager extends Service
             $imageData['is_visible'] = isset($data['is_visible']);
 
             // If there's no preexisting image, create one
-            if(!$image) $image = PageImage::create($imageData);
+            if (!$image) {
+                $image = PageImage::create($imageData);
+            }
 
             // If new or re-uploading an image
-            if(isset($data['image'])) {
+            if (isset($data['image'])) {
                 // Collect image-specific data
                 $imageData = Arr::only($data, [
                     'use_cropper', 'x0', 'x1', 'y0', 'y1',
@@ -281,34 +316,41 @@ class ImageManager extends Service
                 $imageData['extension'] = $data['image']->getClientOriginalExtension();
 
                 // If no version type is set yet, by default, this is a reupload
-                if(!isset($data['version_type'])) $data['version_type'] = 'Image Reuploaded';
+                if (!isset($data['version_type'])) {
+                    $data['version_type'] = 'Image Reuploaded';
+                }
 
                 // Create version
                 $version = $this->logImageVersion($image->id, $user->id, $imageData, $data['version_type'], isset($data['reason']) ? $data['reason'] : null, null, false);
-                if(!$version) throw new \Exception('An error occurred while creating the image version.');
+                if (!$version) {
+                    throw new \Exception('An error occurred while creating the image version.');
+                }
 
                 // Save image
-                if(!$this->handleImage($data['image'], $image->imageDirectory, $version->imageFileName)) throw new \Exception('An error occurred while handling image file.');
+                if (!$this->handleImage($data['image'], $image->imageDirectory, $version->imageFileName)) {
+                    throw new \Exception('An error occurred while handling image file.');
+                }
 
                 // Save thumbnail
-                if(isset($data['use_cropper'])) $this->cropThumbnail(Arr::only($data, ['x0','x1','y0','y1']), $image, $version);
-                elseif(!$this->handleImage($data['thumbnail'], $image->imageDirectory, $version->thumbnailFileName)) throw new \Exception('An error occurred while handling thumbnail file.');
+                if (isset($data['use_cropper'])) {
+                    $this->cropThumbnail(Arr::only($data, ['x0','x1','y0','y1']), $image, $version);
+                } elseif (!$this->handleImage($data['thumbnail'], $image->imageDirectory, $version->thumbnailFileName)) {
+                    throw new \Exception('An error occurred while handling thumbnail file.');
+                }
 
                 // Trim transparent parts of image.
                 $processImage = Image::make($image->imagePath . '/' . $version->imageFileName)->trim('transparent');
 
-                if (Config::get('mundialis.settings.image_thumbnail_automation') == 1)
-                {
+                if (Config::get('mundialis.settings.image_thumbnail_automation') == 1) {
                     // Make the image be square
                     $imageWidth = $processImage->width();
                     $imageHeight = $processImage->height();
 
-                    if( $imageWidth > $imageHeight) {
+                    if ($imageWidth > $imageHeight) {
                         // Landscape
                         $canvas = Image::canvas($processImage->width(), $processImage->width());
                         $processImage = $canvas->insert($processImage, 'center');
-                    }
-                    else {
+                    } else {
                         // Portrait
                         $canvas = Image::canvas($processImage->height(), $processImage->height());
                         $processImage = $canvas->insert($processImage, 'center');
@@ -317,28 +359,32 @@ class ImageManager extends Service
 
                 // Save the processed image
                 $processImage->save($image->imagePath . '/' . $version->imageFileName, 100, $image->extension);
-            }
-            else {
+            } else {
                 // Otherwise, just create a new version
                 $version = $this->logImageVersion($image->id, $user->id, null, 'Image Info Updated', isset($data['reason']) ? $data['reason'] : null, null, isset($data['is_minor']) ? $data['is_minor'] : 0);
-                if(!$version) throw new \Exception('An error occurred while creating the image version.');
+                if (!$version) {
+                    throw new \Exception('An error occurred while creating the image version.');
+                }
             }
 
             // Check that users with the specified id(s) exist on site
-            foreach($data['creator_id'] as $id) {
-                if(isset($id) && $id) {
+            foreach ($data['creator_id'] as $id) {
+                if (isset($id) && $id) {
                     $user = User::find($id);
-                    if(!$user) throw new \Exception('One or more creators are invalid.');
+                    if (!$user) {
+                        throw new \Exception('One or more creators are invalid.');
+                    }
                 }
             }
 
             // Delete existing creator records
-            if($image && $image->creators->count())
+            if ($image && $image->creators->count()) {
                 $image->creators()->delete();
+            }
 
             // Just attach creators
-            foreach($data['creator_id'] as $key => $id) {
-                if($id || isset($data['creator_url'][$key])) {
+            foreach ($data['creator_id'] as $key => $id) {
+                if ($id || isset($data['creator_url'][$key])) {
                     PageImageCreator::create([
                         'page_image_id' => $image->id,
                         'url' => $id ? null : $data['creator_url'][$key],
@@ -348,16 +394,20 @@ class ImageManager extends Service
             }
 
             // Check that pages with the specified id(s) exist on site
-            if(isset($data['page_id'])) foreach($data['page_id'] as $id) {
-                if(isset($id) && $id) {
-                    $pageCheck = Page::find($id);
-                    if(!$pageCheck) throw new \Exception('One or more pages are invalid.');
+            if (isset($data['page_id'])) {
+                foreach ($data['page_id'] as $id) {
+                    if (isset($id) && $id) {
+                        $pageCheck = Page::find($id);
+                        if (!$pageCheck) {
+                            throw new \Exception('One or more pages are invalid.');
+                        }
+                    }
                 }
             }
 
             // If old images should be marked invalid, do so
-            if(isset($data['mark_invalid']) && $data['mark_invalid']) {
-                foreach($page->images()->pluck('page_images.id')->toArray() as $imageKey) {
+            if (isset($data['mark_invalid']) && $data['mark_invalid']) {
+                foreach ($page->images()->pluck('page_images.id')->toArray() as $imageKey) {
                     $page->images()->updateExistingPivot($imageKey, [
                         'is_valid' => 0
                     ]);
@@ -368,8 +418,8 @@ class ImageManager extends Service
             $data['page_id'][] = $page->id;
 
             // Process page link information
-            if(isset($data['page_id'])) {
-                if($image && $image->pages()->where('pages.id', '!=', $page->id)->count()) {
+            if (isset($data['page_id'])) {
+                if ($image && $image->pages()->where('pages.id', '!=', $page->id)->count()) {
                     // This is just a matter of checking to see if there are changes in
                     // the list of page IDs.
                     $oldPages = $image->pages()->pluck('pages.id')->toArray();
@@ -378,22 +428,28 @@ class ImageManager extends Service
                     $pageDiff['added'] = array_diff($data['page_id'], $oldPages);
 
                     // Delete removed page links
-                    foreach($pageDiff['removed'] as $pageId) {
+                    foreach ($pageDiff['removed'] as $pageId) {
                         // Check to see if the user can detach the page
-                        if(Page::find($pageId)->protection && Page::find($pageId)->protection->is_protected && !$user->canEdit(Page::find($pageId))) throw new \Exception('One or more of the pages being detached is protected; you do not have permission to detach it from this image.');
+                        if (Page::find($pageId)->protection && Page::find($pageId)->protection->is_protected && !$user->canEdit(Page::find($pageId))) {
+                            throw new \Exception('One or more of the pages being detached is protected; you do not have permission to detach it from this image.');
+                        }
 
                         // Check to see if the image is the page's active image, and if so,
                         // unset it
-                        if($image->pages()->where('pages.id', $pageId)->where('image_id', $image->id)) $image->pages()->where('pages.id', $pageId)->where('image_id', $image->id)->update(['image_id' => null]);
+                        if ($image->pages()->where('pages.id', $pageId)->where('image_id', $image->id)) {
+                            $image->pages()->where('pages.id', $pageId)->where('image_id', $image->id)->update(['image_id' => null]);
+                        }
 
                         // Delete the link
                         $image->pages()->newPivotStatementForId($pageId)->wherePageImageId($image->id)->delete();
                     }
 
                     // Create added links
-                    foreach($pageDiff['added'] as $pageId) {
+                    foreach ($pageDiff['added'] as $pageId) {
                         // Check to see if the user can attach the page
-                        if(Page::find($pageId)->protection && Page::find($pageId)->protection->is_protected && !$user->canEdit(Page::find($pageId))) throw new \Exception('One or more of the pages being added is protected; you do not have permission to add it to this image.');
+                        if (Page::find($pageId)->protection && Page::find($pageId)->protection->is_protected && !$user->canEdit(Page::find($pageId))) {
+                            throw new \Exception('One or more of the pages being added is protected; you do not have permission to add it to this image.');
+                        }
 
                         // Create the link
                         PagePageImage::create([
@@ -402,24 +458,25 @@ class ImageManager extends Service
                             'is_valid' => 1
                         ]);
                     }
-                }
-                else {
+                } else {
                     // Just attach links
-                    foreach($data['page_id'] as $pageId) {
+                    foreach ($data['page_id'] as $pageId) {
                         // Check to see if the user can attach the page
-                        if(Page::find($pageId)->protection && Page::find($pageId)->protection->is_protected && !$user->canEdit(Page::find($pageId))) throw new \Exception('One or more of the pages being added is protected; you do not have permission to add it to this image.');
+                        if (Page::find($pageId)->protection && Page::find($pageId)->protection->is_protected && !$user->canEdit(Page::find($pageId))) {
+                            throw new \Exception('One or more of the pages being added is protected; you do not have permission to add it to this image.');
+                        }
 
                         // Create the link
-                        if($pageId != $page->id)
+                        if ($pageId != $page->id) {
                             PagePageImage::create([
                                 'page_id' => $pageId,
                                 'page_image_id' => $image->id,
                                 'is_valid' => 1
                             ]);
+                        }
                     }
                 }
-            }
-            elseif(!isset($data['page_id']) && $image->pages->count() > 1) {
+            } elseif (!isset($data['page_id']) && $image->pages->count() > 1) {
                 $image->pages()->where('page_id', '!=', $page->id)->detach();
             }
 
@@ -432,7 +489,7 @@ class ImageManager extends Service
             ]);
 
             return $image;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return false;
@@ -449,22 +506,20 @@ class ImageManager extends Service
     {
         $image = Image::make($pageImage->imagePath . '/' . $version->imageFileName);
 
-        if(Config::get('mundialis.settings.watermark_image_thumbnails') == 1) {
+        if (Config::get('mundialis.settings.watermark_image_thumbnails') == 1) {
             // Trim transparent parts of image
             $image->trim('transparent');
 
-            if (Config::get('mundialis.settings.image_thumbnail_automation') == 1)
-            {
+            if (Config::get('mundialis.settings.image_thumbnail_automation') == 1) {
                 // Make the image be square
                 $imageWidth = $image->width();
                 $imageHeight = $image->height();
 
-                if( $imageWidth > $imageHeight) {
+                if ($imageWidth > $imageHeight) {
                     // Landscape
                     $canvas = Image::canvas($image->width(), $image->width());
                     $image = $canvas->insert($image, 'center');
-                }
-                else {
+                } else {
                     // Portrait
                     $canvas = Image::canvas($image->height(), $image->height());
                     $image = $canvas->insert($image, 'center');
@@ -485,14 +540,13 @@ class ImageManager extends Service
                 $imageWidth = $image->width();
                 $imageHeight = $image->height();
 
-                if( $imageWidth > $imageHeight) {
+                if ($imageWidth > $imageHeight) {
                     // Landscape
                     $image->resize(null, $cropWidth, function ($constraint) {
                         $constraint->aspectRatio();
                         $constraint->upsize();
                     });
-                }
-                else {
+                } else {
                     // Portrait
                     $image->resize($cropHeight, null, function ($constraint) {
                         $constraint->aspectRatio();
@@ -500,13 +554,11 @@ class ImageManager extends Service
                     });
                 }
             }
-        }
-        else {
+        } else {
             $cropWidth = $points['x1'] - $points['x0'];
             $cropHeight = $points['y1'] - $points['y0'];
 
-            if (Config::get('mundialis.settings.image_thumbnail_automation') == 0)
-            {
+            if (Config::get('mundialis.settings.image_thumbnail_automation') == 0) {
                 // Crop according to the selected area
                 $image->crop($cropWidth, $cropHeight, $points['x0'], $points['y0']);
             }
@@ -534,16 +586,18 @@ class ImageManager extends Service
         ];
 
         // Record creator information
-        if(isset($data['creator_id']))
-            foreach($data['creator_id'] as $key=>$creator) {
+        if (isset($data['creator_id'])) {
+            foreach ($data['creator_id'] as $key=>$creator) {
                 $versionData['creators'][] = isset($creator) ? $creator : (isset($data['creator_url']) ? $data['creator_url'] : null);
             }
+        }
 
         // Record page information
-        if(isset($data['page_id']))
-            foreach($data['page_id'] as $key=>$page) {
+        if (isset($data['page_id'])) {
+            foreach ($data['page_id'] as $key=>$page) {
                 $versionData['pages'][] = $page;
             }
+        }
 
         return $versionData;
     }
@@ -579,7 +633,7 @@ class ImageManager extends Service
             ]);
 
             return $version;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return false;
@@ -605,5 +659,4 @@ class ImageManager extends Service
 
         return true;
     }
-
 }

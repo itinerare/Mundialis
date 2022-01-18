@@ -1,4 +1,6 @@
-<?php namespace App\Services;
+<?php
+
+namespace App\Services;
 
 use App\Services\Service;
 
@@ -34,7 +36,9 @@ class UserService extends Service
     public function createUser($data)
     {
         // If the rank is not given, create a user with the lowest existing rank.
-        if(!isset($data['rank_id'])) $data['rank_id'] = Rank::orderBy('sort')->first()->id;
+        if (!isset($data['rank_id'])) {
+            $data['rank_id'] = Rank::orderBy('sort')->first()->id;
+        }
 
         $user = User::create([
             'name' => $data['name'],
@@ -55,15 +59,19 @@ class UserService extends Service
     public function updateUser($data)
     {
         $user = User::find($data['id']);
-        if(isset($data['password'])) $data['password'] = Hash::make($data['password']);
-        if(isset($data['email']) && $user && $data['email'] != $user->email) {
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+        if (isset($data['email']) && $user && $data['email'] != $user->email) {
             $user->forceFill(['email_verified_at' => null]);
             $data['email_old'] = $user->email;
         }
 
-        if($user) {
+        if ($user) {
             $user->update($data);
-            if(isset($data['email_old'])) $$user->sendEmailVerificationNotification();
+            if (isset($data['email_old'])) {
+                $$user->sendEmailVerificationNotification();
+            }
         }
 
         return $user;
@@ -78,18 +86,21 @@ class UserService extends Service
      */
     public function updatePassword($data, $user)
     {
-
         DB::beginTransaction();
 
         try {
-            if(!Hash::check($data['old_password'], $user->password)) throw new \Exception("Please enter your old password.");
-            if(Hash::make($data['new_password']) == $user->password) throw new \Exception("Please enter a different password.");
+            if (!Hash::check($data['old_password'], $user->password)) {
+                throw new \Exception("Please enter your old password.");
+            }
+            if (Hash::make($data['new_password']) == $user->password) {
+                throw new \Exception("Please enter a different password.");
+            }
 
             $user->password = Hash::make($data['new_password']);
             $user->save();
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -125,7 +136,9 @@ class UserService extends Service
         DB::beginTransaction();
 
         try {
-            if(!$avatar) throw new \Exception ("Please upload a file.");
+            if (!$avatar) {
+                throw new \Exception("Please upload a file.");
+            }
             $filename = $user->id . '.' . $avatar->getClientOriginalExtension();
 
             if ($user->avatar !== 'default.jpg') {
@@ -133,28 +146,34 @@ class UserService extends Service
                 //$destinationPath = 'uploads/' . $id . '/';
 
                 if (File::exists($file)) {
-                    if(!unlink($file)) throw new \Exception("Failed to unlink old avatar.");
+                    if (!unlink($file)) {
+                        throw new \Exception("Failed to unlink old avatar.");
+                    }
                 }
             }
 
             // Checks if uploaded file is a GIF
             if ($avatar->getClientOriginalExtension() == 'gif') {
-                if(!copy($avatar, $file)) throw new \Exception("Failed to copy file.");
-                if(!$file->move( public_path('images/avatars', $filename))) throw new \Exception("Failed to move file.");
-                if(!$avatar->move( public_path('images/avatars', $filename))) throw new \Exception("Failed to move file.");
-
-            }
-
-            else {
-                if(!Image::make($avatar)->resize(150, 150)->save( public_path('images/avatars/' . $filename)))
-                throw new \Exception("Failed to process avatar.");
+                if (!copy($avatar, $file)) {
+                    throw new \Exception("Failed to copy file.");
+                }
+                if (!$file->move(public_path('images/avatars', $filename))) {
+                    throw new \Exception("Failed to move file.");
+                }
+                if (!$avatar->move(public_path('images/avatars', $filename))) {
+                    throw new \Exception("Failed to move file.");
+                }
+            } else {
+                if (!Image::make($avatar)->resize(150, 150)->save(public_path('images/avatars/' . $filename))) {
+                    throw new \Exception("Failed to process avatar.");
+                }
             }
 
             $user->avatar = $filename;
             $user->save();
 
             return $this->commitReturn($avatar);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -173,20 +192,20 @@ class UserService extends Service
         DB::beginTransaction();
 
         try {
-            if(app(TwoFactorAuthenticationProvider::class)->verify(decrypt($data['two_factor_secret']), $code['code'])) {
+            if (app(TwoFactorAuthenticationProvider::class)->verify(decrypt($data['two_factor_secret']), $code['code'])) {
                 $user->forceFill([
                     'two_factor_secret' => $data['two_factor_secret'],
                     'two_factor_recovery_codes' => $data['two_factor_recovery_codes'],
                 ])->save();
+            } else {
+                throw new \Exception('Provided code was invalid.');
             }
-            else throw new \Exception('Provided code was invalid.');
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
-
     }
 
     /**
@@ -201,16 +220,17 @@ class UserService extends Service
         DB::beginTransaction();
 
         try {
-            if(app(TwoFactorAuthenticationProvider::class)->verify(decrypt($user->two_factor_secret), $code['code'])) {
+            if (app(TwoFactorAuthenticationProvider::class)->verify(decrypt($user->two_factor_secret), $code['code'])) {
                 $user->forceFill([
                     'two_factor_secret' => null,
                     'two_factor_recovery_codes' => null,
                 ])->save();
+            } else {
+                throw new \Exception('Provided code was invalid.');
             }
-            else throw new \Exception('Provided code was invalid.');
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -229,7 +249,7 @@ class UserService extends Service
         DB::beginTransaction();
 
         try {
-            if(!$user->is_banned) {
+            if (!$user->is_banned) {
                 // For a new ban, create an update log
                 UserUpdateLog::create(['staff_id' => $staff->id, 'user_id' => $user->id, 'data' => json_encode(['is_banned' => 'Yes', 'ban_reason' => isset($data['ban_reason']) ? $data['ban_reason'] : null]), 'type' => 'Ban']);
 
@@ -238,8 +258,7 @@ class UserService extends Service
                 $user->is_banned = 1;
                 $user->rank_id = Rank::orderBy('sort', 'ASC')->first()->id;
                 $user->save();
-            }
-            else {
+            } else {
                 UserUpdateLog::create(['staff_id' => $staff->id, 'user_id' => $user->id, 'data' => json_encode(['ban_reason' => isset($data['ban_reason']) ? $data['ban_reason'] : null]), 'type' => 'Ban Update']);
             }
 
@@ -247,7 +266,7 @@ class UserService extends Service
             $user->save();
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -265,7 +284,7 @@ class UserService extends Service
         DB::beginTransaction();
 
         try {
-            if($user->is_banned) {
+            if ($user->is_banned) {
                 $user->is_banned = 0;
                 $user->ban_reason = null;
                 $user->banned_at = null;
@@ -275,7 +294,7 @@ class UserService extends Service
             }
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -294,14 +313,17 @@ class UserService extends Service
 
         try {
             // Check that the submission can be favorited
-            if(!$user->canWrite && !$page->is_visible) throw new \Exception("This page isn't visible to be watched.");
+            if (!$user->canWrite && !$page->is_visible) {
+                throw new \Exception("This page isn't visible to be watched.");
+            }
 
             // Check if the user has an existing favorite, and if so, delete it
             // or else create one.
-            if($user->watched()->where('page_id', $page->id)->first() != null) {
-                if(!WatchedPage::where('user_id', $user->id)->where('page_id', $page->id)->delete()) throw new \Exception('An error occurred while unwatching the page.');
-            }
-            else {
+            if ($user->watched()->where('page_id', $page->id)->first() != null) {
+                if (!WatchedPage::where('user_id', $user->id)->where('page_id', $page->id)->delete()) {
+                    throw new \Exception('An error occurred while unwatching the page.');
+                }
+            } else {
                 WatchedPage::create([
                     'user_id' => $user->id,
                     'page_id' => $page->id
@@ -309,7 +331,7 @@ class UserService extends Service
             }
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);

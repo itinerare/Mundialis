@@ -55,7 +55,7 @@ class AuthRegistrationTest extends TestCase
 
         // Create a persistent admin to generate an invitation code
         $admin = User::factory()->admin()->create();
-        $code = (new InvitationService)->generateInvitation($admin);
+        $code = (new InvitationService())->generateInvitation($admin);
 
         $response = $this->post('register', [
             'name' => $user->name,
@@ -148,7 +148,7 @@ class AuthRegistrationTest extends TestCase
         // Create a persistent admin to generate an invitation code
         $admin = User::factory()->admin()->create();
         // Create a code to use,
-        $code = (new InvitationService)->generateInvitation($admin);
+        $code = (new InvitationService())->generateInvitation($admin);
         // a recipient,
         $recipient = User::factory()->create();
         // and set the recipient's ID
@@ -186,7 +186,7 @@ class AuthRegistrationTest extends TestCase
 
         // Create a persistent admin to generate an invitation code
         $admin = User::factory()->admin()->create();
-        $code = (new InvitationService)->generateInvitation($admin);
+        $code = (new InvitationService())->generateInvitation($admin);
 
         $response = $this->post('register', [
             'name' => $user->name,
