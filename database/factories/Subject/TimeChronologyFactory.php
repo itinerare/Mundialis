@@ -22,7 +22,7 @@ class TimeChronologyFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->unique()->domainWord().$this->faker->unique()->domainWord()
+            'name' => $this->faker->unique()->domainWord().$this->faker->unique()->domainWord(),
         ];
     }
 }

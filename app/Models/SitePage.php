@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Model;
-
 class SitePage extends Model
 {
     /**
@@ -12,7 +10,7 @@ class SitePage extends Model
      * @var array
      */
     protected $fillable = [
-        'key', 'title', 'text'
+        'key', 'title', 'text',
     ];
 
     /**
@@ -28,5 +26,4 @@ class SitePage extends Model
      * @var string
      */
     public $timestamps = true;
-
 }

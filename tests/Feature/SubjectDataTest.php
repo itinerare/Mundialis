@@ -2,20 +2,18 @@
 
 namespace Tests\Feature;
 
+use App\Models\Page\Page;
+use App\Models\Subject\SubjectCategory;
+use App\Models\User\User;
 use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
-
-use App\Models\User\User;
-use App\Models\Subject\SubjectTemplate;
-use App\Models\Subject\SubjectCategory;
-use App\Models\Page\Page;
 
 class SubjectDataTest extends TestCase
 {
-    use RefreshDatabase, withFaker;
+    use RefreshDatabase;
+    use withFaker;
 
     /******************************************************************************
         SUBJECTS
@@ -181,7 +179,7 @@ class SubjectDataTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => null
+            'data'    => null,
         ]);
     }
 
@@ -194,15 +192,15 @@ class SubjectDataTest extends TestCase
     {
         // Define some basic template data
         $data = [
-            'section_key' => [0 => 'test_section'],
-            'section_name' => [0 => 'Test Section'],
-            'infobox_key' => [0 => 'test_field'],
-            'infobox_type' => [0 => 'text'],
-            'infobox_label' => [0 => 'Test Field'],
-            'infobox_rules' => [0 => null],
+            'section_key'     => [0 => 'test_section'],
+            'section_name'    => [0 => 'Test Section'],
+            'infobox_key'     => [0 => 'test_field'],
+            'infobox_type'    => [0 => 'text'],
+            'infobox_label'   => [0 => 'Test Field'],
+            'infobox_rules'   => [0 => null],
             'infobox_choices' => [0 => null],
-            'infobox_value' => [0 => null],
-            'infobox_help' => [0 => null]
+            'infobox_value'   => [0 => null],
+            'infobox_help'    => [0 => null],
         ];
 
         // Make a temporary admin
@@ -216,7 +214,7 @@ class SubjectDataTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_templates', [
             'subject' => 'misc',
-            'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'data'    => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -232,15 +230,15 @@ class SubjectDataTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'section_key' => [0 => 'test_section'],
-            'section_name' => [0 => 'Test Section'],
-            'infobox_key' => [0 => 'test_field'],
-            'infobox_type' => [0 => 'text'],
-            'infobox_label' => [0 => 'Test Field'],
-            'infobox_rules' => [0 => null],
-            'infobox_choices' => [0 => null],
-            'infobox_value' => [0 => null],
-            'infobox_help' => [0 => null],
+            'section_key'      => [0 => 'test_section'],
+            'section_name'     => [0 => 'Test Section'],
+            'infobox_key'      => [0 => 'test_field'],
+            'infobox_type'     => [0 => 'text'],
+            'infobox_label'    => [0 => 'Test Field'],
+            'infobox_rules'    => [0 => null],
+            'infobox_choices'  => [0 => null],
+            'infobox_value'    => [0 => null],
+            'infobox_help'     => [0 => null],
             'cascade_template' => 1,
         ];
 
@@ -248,18 +246,17 @@ class SubjectDataTest extends TestCase
         $user = User::factory()->admin()->make();
 
         // First, ensure the template exists and has empty data
-        if(DB::table('subject_templates')->where('subject', 'concepts')->first()) {
+        if (DB::table('subject_templates')->where('subject', 'concepts')->first()) {
             DB::table('subject_templates')->where('subject', 'concepts')->update(
                 [
-                    'data' => null
+                    'data' => null,
                 ]
             );
-        }
-        else {
+        } else {
             DB::table('subject_templates')->insert([
                 [
                     'subject' => 'concepts',
-                    'data' => null
+                    'data'    => null,
                 ],
             ]);
         }
@@ -271,8 +268,8 @@ class SubjectDataTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
-            'id' => $category->id,
-            'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'id'   => $category->id,
+            'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -320,7 +317,7 @@ class SubjectDataTest extends TestCase
     {
         // Define some basic data
         $data = [
-            'name' => $this->faker->unique()->domainWord()
+            'name' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a temporary admin
@@ -334,8 +331,8 @@ class SubjectDataTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
             'subject' => 'misc',
-            'name' => $data['name'],
-            'data' => null
+            'name'    => $data['name'],
+            'data'    => null,
         ]);
     }
 
@@ -350,7 +347,7 @@ class SubjectDataTest extends TestCase
 
         // Define some basic data
         $data = [
-            'name' => $this->faker->unique()->domainWord()
+            'name' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a temporary admin
@@ -363,9 +360,9 @@ class SubjectDataTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
-            'id' => $category->id,
+            'id'   => $category->id,
             'name' => $data['name'],
-            'data' => null
+            'data' => null,
         ]);
     }
 
@@ -378,16 +375,16 @@ class SubjectDataTest extends TestCase
     {
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
-            'section_key' => [0 => 'test_category_section'],
-            'section_name' => [0 => 'Test Section'],
-            'infobox_key' => [0 => 'test_category_field'],
-            'infobox_type' => [0 => 'text'],
-            'infobox_label' => [0 => 'Test Field'],
-            'infobox_rules' => [0 => null],
+            'name'            => $this->faker->unique()->domainWord(),
+            'section_key'     => [0 => 'test_category_section'],
+            'section_name'    => [0 => 'Test Section'],
+            'infobox_key'     => [0 => 'test_category_field'],
+            'infobox_type'    => [0 => 'text'],
+            'infobox_label'   => [0 => 'Test Field'],
+            'infobox_rules'   => [0 => null],
             'infobox_choices' => [0 => null],
-            'infobox_value' => [0 => null],
-            'infobox_help' => [0 => null]
+            'infobox_value'   => [0 => null],
+            'infobox_help'    => [0 => null],
         ];
 
         // Make a temporary admin
@@ -401,8 +398,8 @@ class SubjectDataTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
             'subject' => 'misc',
-            'name' => $data['name'],
-            'data' => '{"sections":{"test_category_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'name'    => $data['name'],
+            'data'    => '{"sections":{"test_category_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -417,16 +414,16 @@ class SubjectDataTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
-            'section_key' => [0 => 'test_category_section'],
-            'section_name' => [0 => 'Test Section'],
-            'infobox_key' => [0 => 'test_category_field'],
-            'infobox_type' => [0 => 'text'],
-            'infobox_label' => [0 => 'Test Field'],
-            'infobox_rules' => [0 => null],
+            'name'            => $this->faker->unique()->domainWord(),
+            'section_key'     => [0 => 'test_category_section'],
+            'section_name'    => [0 => 'Test Section'],
+            'infobox_key'     => [0 => 'test_category_field'],
+            'infobox_type'    => [0 => 'text'],
+            'infobox_label'   => [0 => 'Test Field'],
+            'infobox_rules'   => [0 => null],
             'infobox_choices' => [0 => null],
-            'infobox_value' => [0 => null],
-            'infobox_help' => [0 => null]
+            'infobox_value'   => [0 => null],
+            'infobox_help'    => [0 => null],
         ];
 
         // Make a temporary admin
@@ -439,9 +436,9 @@ class SubjectDataTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
-            'id' => $category->id,
+            'id'   => $category->id,
             'name' => $data['name'],
-            'data' => '{"sections":{"test_category_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'data' => '{"sections":{"test_category_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -453,26 +450,25 @@ class SubjectDataTest extends TestCase
     public function test_canPostCreateSubjectCategoryWithPopulatedTemplate()
     {
         // Ensure 'things' has specific template data to use
-        if(DB::table('subject_templates')->where('subject', 'things')->first()) {
+        if (DB::table('subject_templates')->where('subject', 'things')->first()) {
             DB::table('subject_templates')->where('subject', 'things')->update(
                 [
-                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
                 ]
             );
-        }
-        else {
+        } else {
             DB::table('subject_templates')->insert([
                 [
                     'subject' => 'things',
-                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+                    'data'    => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
                 ],
             ]);
         }
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
-            'populate_template' => 1
+            'name'              => $this->faker->unique()->domainWord(),
+            'populate_template' => 1,
         ];
 
         // Make a temporary admin
@@ -486,8 +482,8 @@ class SubjectDataTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
             'subject' => 'things',
-            'name' => $data['name'],
-            'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'name'    => $data['name'],
+            'data'    => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -499,26 +495,25 @@ class SubjectDataTest extends TestCase
     public function test_canPostEditSubjectCategoryWithPopulatedTemplate()
     {
         // Ensure 'things' has specific template data to use
-        if(DB::table('subject_templates')->where('subject', 'things')->first()) {
+        if (DB::table('subject_templates')->where('subject', 'things')->first()) {
             DB::table('subject_templates')->where('subject', 'things')->update(
                 [
-                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
                 ]
             );
-        }
-        else {
+        } else {
             DB::table('subject_templates')->insert([
                 [
                     'subject' => 'things',
-                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+                    'data'    => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
                 ],
             ]);
         }
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
-            'populate_template' => 1
+            'name'              => $this->faker->unique()->domainWord(),
+            'populate_template' => 1,
         ];
 
         // Make a temporary admin
@@ -533,9 +528,9 @@ class SubjectDataTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
-            'id' => $category->id,
+            'id'   => $category->id,
             'name' => $data['name'],
-            'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -550,8 +545,8 @@ class SubjectDataTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id
+            'name'      => $this->faker->unique()->domainWord(),
+            'parent_id' => $parent->id,
         ];
 
         // Make a temporary admin
@@ -564,9 +559,9 @@ class SubjectDataTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
-            'subject' => 'places',
-            'name' => $data['name'],
-            'parent_id' => $parent->id
+            'subject'   => 'places',
+            'name'      => $data['name'],
+            'parent_id' => $parent->id,
         ]);
     }
 
@@ -582,8 +577,8 @@ class SubjectDataTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id
+            'name'      => $this->faker->unique()->domainWord(),
+            'parent_id' => $parent->id,
         ];
 
         // Make a temporary admin
@@ -596,9 +591,9 @@ class SubjectDataTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
-            'id' => $category->id,
-            'name' => $data['name'],
-            'parent_id' => $parent->id
+            'id'        => $category->id,
+            'name'      => $data['name'],
+            'parent_id' => $parent->id,
         ]);
     }
 
@@ -621,16 +616,16 @@ class SubjectDataTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $category->name,
-            'section_key' => [0 => 'test_section'],
-            'section_name' => [0 => 'Test Section'],
-            'infobox_key' => [0 => 'test_field'],
-            'infobox_type' => [0 => 'text'],
-            'infobox_label' => [0 => 'Test Field'],
-            'infobox_rules' => [0 => null],
-            'infobox_choices' => [0 => null],
-            'infobox_value' => [0 => null],
-            'infobox_help' => [0 => null],
+            'name'             => $category->name,
+            'section_key'      => [0 => 'test_section'],
+            'section_name'     => [0 => 'Test Section'],
+            'infobox_key'      => [0 => 'test_field'],
+            'infobox_type'     => [0 => 'text'],
+            'infobox_label'    => [0 => 'Test Field'],
+            'infobox_rules'    => [0 => null],
+            'infobox_choices'  => [0 => null],
+            'infobox_value'    => [0 => null],
+            'infobox_help'     => [0 => null],
             'cascade_template' => 1,
         ];
 
@@ -641,8 +636,8 @@ class SubjectDataTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
-            'id' => $recipient->id,
-            'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'id'   => $recipient->id,
+            'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 
@@ -667,18 +662,18 @@ class SubjectDataTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $category->name,
-            'section_key' => [0 => 'test_section'],
-            'section_name' => [0 => 'Test Section'],
-            'infobox_key' => [0 => 'test_field'],
-            'infobox_type' => [0 => 'text'],
-            'infobox_label' => [0 => 'Test Field'],
-            'infobox_rules' => [0 => null],
-            'infobox_choices' => [0 => null],
-            'infobox_value' => [0 => null],
-            'infobox_help' => [0 => null],
-            'cascade_template' => 1,
-            'cascade_recursively' => 1
+            'name'                => $category->name,
+            'section_key'         => [0 => 'test_section'],
+            'section_name'        => [0 => 'Test Section'],
+            'infobox_key'         => [0 => 'test_field'],
+            'infobox_type'        => [0 => 'text'],
+            'infobox_label'       => [0 => 'Test Field'],
+            'infobox_rules'       => [0 => null],
+            'infobox_choices'     => [0 => null],
+            'infobox_value'       => [0 => null],
+            'infobox_help'        => [0 => null],
+            'cascade_template'    => 1,
+            'cascade_recursively' => 1,
         ];
 
         // Then attempt to edit the cascading category
@@ -688,8 +683,8 @@ class SubjectDataTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('subject_categories', [
-            'id' => $grandchild->id,
-            'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}'
+            'id'   => $grandchild->id,
+            'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
         ]);
     }
 

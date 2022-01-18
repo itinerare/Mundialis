@@ -16,12 +16,12 @@ Route::get('/', 'AdminController@getIndex');
     SUBJECTS
 */
 
-Route::group(['prefix' => 'data', 'namespace' => 'Data'], function() {
-    # GENERIC ROUTES
+Route::group(['prefix' => 'data', 'namespace' => 'Data'], function () {
+    // GENERIC ROUTES
     Route::get('{subject}', 'SubjectController@getSubjectIndex')
         ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
     Route::get('{subject}/edit', 'SubjectController@getEditTemplate')
-        ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));;
+        ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
     Route::get('{subject}/create', 'SubjectController@getCreateCategory')
         ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
     Route::post('{subject}/edit', 'SubjectController@postEditTemplate')
@@ -36,8 +36,8 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data'], function() {
     Route::post('{subject}/sort', 'SubjectController@postSortCategory')
         ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
 
-    # SPECIALIZED ROUTES
-    Route::group(['prefix' => 'time'], function() {
+    // SPECIALIZED ROUTES
+    Route::group(['prefix' => 'time'], function () {
         Route::get('divisions', 'SubjectController@getTimeDivisions');
         Route::post('divisions', 'SubjectController@postEditDivisions');
 
@@ -52,7 +52,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data'], function() {
         Route::post('chronology/sort', 'SubjectController@postSortChronology');
     });
 
-    Route::group(['prefix' => 'language'], function() {
+    Route::group(['prefix' => 'language'], function () {
         Route::get('lexicon-settings', 'SubjectController@getLexiconSettings');
         Route::post('lexicon-settings', 'SubjectController@postEditLexiconSettings');
 
@@ -72,22 +72,22 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data'], function() {
     USERS
 */
 
-# RANKS
-Route::group(['prefix' => 'ranks'], function() {
+// RANKS
+Route::group(['prefix' => 'ranks'], function () {
     Route::get('/', 'RankController@getIndex');
     Route::get('edit/{id}', 'RankController@getEditRank');
     Route::post('edit/{id?}', 'RankController@postEditRank');
 });
 
-# INVITATIONS
-Route::group(['prefix' => 'invitations'], function() {
+// INVITATIONS
+Route::group(['prefix' => 'invitations'], function () {
     Route::get('/', 'InvitationController@getIndex');
     Route::post('create', 'InvitationController@postGenerateKey');
     Route::post('delete/{id}', 'InvitationController@postDeleteKey');
 });
 
-# USERS
-Route::group(['prefix' => 'users'], function() {
+// USERS
+Route::group(['prefix' => 'users'], function () {
     Route::get('/', 'UserController@getUserIndex');
     Route::get('{name}/edit', 'UserController@getUser');
     Route::get('{name}/updates', 'UserController@getUserUpdates');
@@ -106,8 +106,8 @@ Route::group(['prefix' => 'users'], function() {
     MAINTENANCE
 */
 
-# SPECIAL PAGES
-Route::group(['prefix' => 'special'], function() {
+// SPECIAL PAGES
+Route::group(['prefix' => 'special'], function () {
     Route::get('unwatched-pages', 'SpecialController@getUnwatchedPages');
 
     Route::get('deleted-pages', 'SpecialController@getDeletedPages');
@@ -130,19 +130,19 @@ Route::group(['prefix' => 'special'], function() {
     SITE SETTINGS
 */
 
-# TEXT PAGES
-Route::group(['prefix' => 'pages'], function() {
+// TEXT PAGES
+Route::group(['prefix' => 'pages'], function () {
     Route::get('/', 'PageController@getIndex');
     Route::get('edit/{id}', 'PageController@getEditPage');
     Route::post('edit/{id?}', 'PageController@postEditPage');
 });
 
-# SITE SETTINGS
+// SITE SETTINGS
 Route::get('site-settings', 'AdminController@getSettings');
 Route::post('site-settings/{key}', 'AdminController@postEditSetting');
 
-# SITE IMAGES
-Route::group(['prefix' => 'site-images'], function() {
+// SITE IMAGES
+Route::group(['prefix' => 'site-images'], function () {
     Route::get('/', 'AdminController@getSiteImages');
     Route::post('upload', 'AdminController@postUploadImage');
     Route::post('upload/css', 'AdminController@postUploadCss');

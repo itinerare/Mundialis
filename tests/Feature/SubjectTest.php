@@ -5,11 +5,9 @@ namespace Tests\Feature;
 use App\Models\Subject\LexiconCategory;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeChronology;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-
 use App\Models\User\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class SubjectTest extends TestCase
 {
@@ -148,8 +146,9 @@ class SubjectTest extends TestCase
     {
         $user = User::factory()->make();
 
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $chronology[$i] = TimeChronology::factory()->create();
+        }
 
         $chronology[2]->update(['parent_id', $chronology[1]->id]);
 
@@ -217,8 +216,9 @@ class SubjectTest extends TestCase
     {
         $user = User::factory()->make();
 
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $category[$i] = LexiconCategory::factory()->create();
+        }
 
         $category[2]->update(['parent_id', $category[1]->id]);
 
@@ -286,8 +286,9 @@ class SubjectTest extends TestCase
     {
         $user = User::factory()->make();
 
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $category[$i] = SubjectCategory::factory()->create();
+        }
 
         $category[2]->update(['parent_id', $category[1]->id]);
 

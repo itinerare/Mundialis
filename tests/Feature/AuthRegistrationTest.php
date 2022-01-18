@@ -2,15 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\User\User;
+use App\Services\InvitationService;
 use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Password;
 use Tests\TestCase;
-
-use App\Models\User\User;
-
-use App\Services\InvitationService;
 
 class AuthRegistrationTest extends TestCase
 {
@@ -55,15 +51,15 @@ class AuthRegistrationTest extends TestCase
 
         // Create a persistent admin to generate an invitation code
         $admin = User::factory()->admin()->create();
-        $code = (new InvitationService)->generateInvitation($admin);
+        $code = (new InvitationService())->generateInvitation($admin);
 
         $response = $this->post('register', [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => 'password',
+            'name'                  => $user->name,
+            'email'                 => $user->email,
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'agreement' => 1,
-            'code' => $code->code
+            'agreement'             => 1,
+            'code'                  => $code->code,
         ]);
 
         $this->assertGuest();
@@ -86,12 +82,12 @@ class AuthRegistrationTest extends TestCase
         $user = User::factory()->safeUsername()->make();
 
         $response = $this->post('register', [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => 'password',
+            'name'                  => $user->name,
+            'email'                 => $user->email,
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'agreement' => 1,
-            'code' => null
+            'agreement'             => 1,
+            'code'                  => null,
         ]);
 
         $response->assertSessionHasErrors();
@@ -116,12 +112,12 @@ class AuthRegistrationTest extends TestCase
         $user = User::factory()->safeUsername()->make();
 
         $response = $this->post('register', [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => 'password',
+            'name'                  => $user->name,
+            'email'                 => $user->email,
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'agreement' => 1,
-            'code' => randomString(15)
+            'agreement'             => 1,
+            'code'                  => randomString(15),
         ]);
 
         $response->assertSessionHasErrors();
@@ -148,19 +144,19 @@ class AuthRegistrationTest extends TestCase
         // Create a persistent admin to generate an invitation code
         $admin = User::factory()->admin()->create();
         // Create a code to use,
-        $code = (new InvitationService)->generateInvitation($admin);
+        $code = (new InvitationService())->generateInvitation($admin);
         // a recipient,
         $recipient = User::factory()->create();
         // and set the recipient's ID
         $code->update(['recipient_id' => $recipient->id]);
 
         $response = $this->post('register', [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => 'password',
+            'name'                  => $user->name,
+            'email'                 => $user->email,
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'agreement' => 1,
-            'code' => $code->code
+            'agreement'             => 1,
+            'code'                  => $code->code,
         ]);
 
         $response->assertSessionHasErrors();
@@ -186,15 +182,15 @@ class AuthRegistrationTest extends TestCase
 
         // Create a persistent admin to generate an invitation code
         $admin = User::factory()->admin()->create();
-        $code = (new InvitationService)->generateInvitation($admin);
+        $code = (new InvitationService())->generateInvitation($admin);
 
         $response = $this->post('register', [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => 'password',
+            'name'                  => $user->name,
+            'email'                 => $user->email,
+            'password'              => 'password',
             'password_confirmation' => 'password',
-            'agreement' => 1,
-            'code' => $code->code
+            'agreement'             => 1,
+            'code'                  => $code->code,
         ]);
 
         $response->assertStatus(302);
@@ -216,10 +212,10 @@ class AuthRegistrationTest extends TestCase
         $user = User::factory()->safeUsername()->make();
 
         $response = $this->post('register', [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => 'password',
-            'password_confirmation' => 'invalid'
+            'name'                  => $user->name,
+            'email'                 => $user->email,
+            'password'              => 'password',
+            'password_confirmation' => 'invalid',
         ]);
 
         $response->assertSessionHasErrors();

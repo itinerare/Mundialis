@@ -2,13 +2,9 @@
 
 namespace Tests\Feature;
 
-use DB;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Password;
-use Tests\TestCase;
-
 use App\Models\User\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AuthLoginTest extends TestCase
 {
@@ -44,8 +40,8 @@ class AuthLoginTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password'
+            'email'    => $user->email,
+            'password' => 'password',
         ]);
 
         $response->assertStatus(302);
@@ -64,8 +60,8 @@ class AuthLoginTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'invalid'
+            'email'    => $user->email,
+            'password' => 'invalid',
         ]);
 
         $response->assertSessionHasErrors();

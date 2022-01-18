@@ -6,14 +6,13 @@ use App\Models\Model;
 
 class UserUpdateLog extends Model
 {
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'staff_id', 'user_id', 'type', 'data'
+        'staff_id', 'user_id', 'type', 'data',
     ];
 
     /**
