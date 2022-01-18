@@ -2,20 +2,18 @@
 
 namespace Tests\Feature;
 
-use DB;
+use App\Models\Lexicon\LexiconEntry;
+use App\Models\Subject\LexiconCategory;
+use App\Models\Subject\LexiconSetting;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
-
-use App\Models\User\User;
-use App\Models\Subject\LexiconSetting;
-use App\Models\Subject\LexiconCategory;
-use App\Models\Lexicon\LexiconEntry;
 
 class SubjectDataLanguageTest extends TestCase
 {
-    use RefreshDatabase, withFaker;
+    use RefreshDatabase;
+    use withFaker;
 
     /******************************************************************************
         LANGUAGE
@@ -45,7 +43,7 @@ class SubjectDataLanguageTest extends TestCase
     {
         // Define some basic data
         $data = [
-            'name' => [0 => $this->faker->unique()->domainWord()],
+            'name'         => [0 => $this->faker->unique()->domainWord()],
             'abbreviation' => [0 => $this->faker->unique()->domainWord()],
         ];
 
@@ -59,8 +57,8 @@ class SubjectDataLanguageTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_settings', [
-            'name' => $data['name'][0],
-            'abbreviation' => $data['abbreviation'][0]
+            'name'         => $data['name'][0],
+            'abbreviation' => $data['abbreviation'][0],
         ]);
     }
 
@@ -73,7 +71,7 @@ class SubjectDataLanguageTest extends TestCase
     {
         // Define some basic data
         $data = [
-            'name' => [0 => $this->faker->unique()->domainWord()],
+            'name'         => [0 => $this->faker->unique()->domainWord()],
             'abbreviation' => [0 => $this->faker->unique()->domainWord()],
         ];
 
@@ -81,7 +79,7 @@ class SubjectDataLanguageTest extends TestCase
         $user = User::factory()->admin()->make();
 
         $division = LexiconSetting::create([
-            'name' => $data['name'][0],
+            'name'         => $data['name'][0],
             'abbreviation' => $data['abbreviation'][0],
         ]);
 
@@ -97,9 +95,9 @@ class SubjectDataLanguageTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_settings', [
-            'name' => $data['name'][0],
+            'name'         => $data['name'][0],
             'abbreviation' => $data['abbreviation'][0],
-            'id' => $division->id
+            'id'           => $division->id,
         ]);
     }
 
@@ -161,8 +159,8 @@ class SubjectDataLanguageTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
-            'description' => $this->faker->unique()->domainWord()
+            'name'        => $this->faker->unique()->domainWord(),
+            'description' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a temporary admin
@@ -175,8 +173,8 @@ class SubjectDataLanguageTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_categories', [
-            'name' => $data['name'],
-            'description' => $data['description']
+            'name'        => $data['name'],
+            'description' => $data['description'],
         ]);
     }
 
@@ -191,7 +189,7 @@ class SubjectDataLanguageTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord()
+            'name' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a temporary admin
@@ -204,8 +202,8 @@ class SubjectDataLanguageTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_categories', [
-            'id' => $category->id,
-            'name' => $data['name']
+            'id'   => $category->id,
+            'name' => $data['name'],
         ]);
     }
 
@@ -220,8 +218,8 @@ class SubjectDataLanguageTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id
+            'name'      => $this->faker->unique()->domainWord(),
+            'parent_id' => $parent->id,
         ];
 
         // Make a temporary admin
@@ -234,8 +232,8 @@ class SubjectDataLanguageTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_categories', [
-            'name' => $data['name'],
-            'parent_id' => $parent->id
+            'name'      => $data['name'],
+            'parent_id' => $parent->id,
         ]);
     }
 
@@ -251,8 +249,8 @@ class SubjectDataLanguageTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id
+            'name'      => $this->faker->unique()->domainWord(),
+            'parent_id' => $parent->id,
         ];
 
         // Make a temporary admin
@@ -265,9 +263,9 @@ class SubjectDataLanguageTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_categories', [
-            'id' => $category->id,
-            'name' => $data['name'],
-            'parent_id' => $parent->id
+            'id'        => $category->id,
+            'name'      => $data['name'],
+            'parent_id' => $parent->id,
         ]);
     }
 
@@ -283,20 +281,20 @@ class SubjectDataLanguageTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
-            'description' => $this->faker->unique()->domainWord(),
+            'name'          => $this->faker->unique()->domainWord(),
+            'description'   => $this->faker->unique()->domainWord(),
             'property_name' => [
                 0 => 'Number',
-                1 => 'Case'
+                1 => 'Case',
             ],
             'property_dimensions' => [
                 0 => 'Singular,Plural',
-                1 => 'Nominative,Accusative,Dative'
+                1 => 'Nominative,Accusative,Dative',
             ],
             'property_class' => [
                 0 => 1,
-                1 => 1
-            ]
+                1 => 1,
+            ],
         ];
 
         // Make a temporary admin
@@ -309,9 +307,9 @@ class SubjectDataLanguageTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_categories', [
-            'name' => $data['name'],
+            'name'        => $data['name'],
             'description' => $data['description'],
-            'data' => '{"1":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}}}}'
+            'data'        => '{"1":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}}}}',
         ]);
     }
 
@@ -330,19 +328,19 @@ class SubjectDataLanguageTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
+            'name'          => $this->faker->unique()->domainWord(),
             'property_name' => [
                 0 => 'Number',
-                1 => 'Case'
+                1 => 'Case',
             ],
             'property_dimensions' => [
                 0 => 'Singular,Plural',
-                1 => 'Nominative,Accusative,Dative'
+                1 => 'Nominative,Accusative,Dative',
             ],
             'property_class' => [
                 0 => $class->id,
-                1 => $class->id
-            ]
+                1 => $class->id,
+            ],
         ];
 
         // Make a temporary admin
@@ -355,9 +353,9 @@ class SubjectDataLanguageTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_categories', [
-            'id' => $category->id,
+            'id'   => $category->id,
             'name' => $data['name'],
-            'data' => '{"'.$class->id.'":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}}}}'
+            'data' => '{"'.$class->id.'":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}}}}',
         ]);
     }
 
@@ -372,7 +370,7 @@ class SubjectDataLanguageTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord()
+            'name' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a temporary admin
@@ -385,9 +383,9 @@ class SubjectDataLanguageTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_categories', [
-            'id' => $category->id,
+            'id'   => $category->id,
             'name' => $data['name'],
-            'data' => null
+            'data' => null,
         ]);
     }
 
@@ -406,18 +404,18 @@ class SubjectDataLanguageTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
+            'name'          => $this->faker->unique()->domainWord(),
             'property_name' => [
                 0 => 'Number',
-                1 => 'Case'
+                1 => 'Case',
             ],
             'property_dimensions' => [
                 0 => 'Singular,Plural',
-                1 => 'Nominative,Accusative,Dative'
+                1 => 'Nominative,Accusative,Dative',
             ],
             'property_class' => [
                 0 => $class->id,
-                1 => $class->id
+                1 => $class->id,
             ],
             'declension_criteria' => [
                 $class->id => [
@@ -427,7 +425,7 @@ class SubjectDataLanguageTest extends TestCase
                     3 => null,
                     4 => null,
                     5 => null,
-                ]
+                ],
             ],
             'declension_regex' => [
                 $class->id => [
@@ -437,7 +435,7 @@ class SubjectDataLanguageTest extends TestCase
                     3 => null,
                     4 => null,
                     5 => null,
-                ]
+                ],
             ],
             'declension_replacement' => [
                 $class->id => [
@@ -447,7 +445,7 @@ class SubjectDataLanguageTest extends TestCase
                     3 => null,
                     4 => null,
                     5 => null,
-                ]
+                ],
             ],
         ];
 
@@ -461,9 +459,9 @@ class SubjectDataLanguageTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_categories', [
-            'id' => $category->id,
+            'id'   => $category->id,
             'name' => $data['name'],
-            'data' => '{"'.$class->id.'":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}},"conjugation":[{"criteria":["a"],"regex":["^"],"replacement":["b"]}]}}'
+            'data' => '{"'.$class->id.'":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}},"conjugation":[{"criteria":["a"],"regex":["^"],"replacement":["b"]}]}}',
         ]);
     }
 
@@ -482,7 +480,7 @@ class SubjectDataLanguageTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $category->name
+            'name' => $category->name,
         ];
 
         // Make a temporary admin
@@ -495,9 +493,9 @@ class SubjectDataLanguageTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('lexicon_categories', [
-            'id' => $category->id,
+            'id'   => $category->id,
             'name' => $data['name'],
-            'data' => null
+            'data' => null,
         ]);
     }
 

@@ -12,7 +12,7 @@ class InvitationCode extends Model
      * @var array
      */
     protected $fillable = [
-        'code', 'user_id', 'recipient_id'
+        'code', 'user_id', 'recipient_id',
     ];
 
     /**
@@ -50,5 +50,4 @@ class InvitationCode extends Model
     {
         return $this->belongsTo('App\Models\User\User', 'recipient_id');
     }
-
 }

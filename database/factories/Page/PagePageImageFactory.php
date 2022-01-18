@@ -23,7 +23,7 @@ class PagePageImageFactory extends Factory
     {
         return [
             //
-            'is_valid' => 1
+            'is_valid' => 1,
         ];
     }
 
@@ -31,14 +31,15 @@ class PagePageImageFactory extends Factory
      * Generate a page-image link for a specific page.
      * This is essentially required.
      *
-     * @param  int                      $page
+     * @param int $page
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function page($page)
     {
         return $this->state(function (array $attributes) use ($page) {
             return [
-                'page_id' => $page
+                'page_id' => $page,
             ];
         });
     }
@@ -47,14 +48,15 @@ class PagePageImageFactory extends Factory
      * Generate a page-image link for a specific image.
      * This is essentially required.
      *
-     * @param  int                      $image
+     * @param int $image
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function image($image)
     {
         return $this->state(function (array $attributes) use ($image) {
             return [
-                'page_image_id' => $image
+                'page_image_id' => $image,
             ];
         });
     }
@@ -68,7 +70,7 @@ class PagePageImageFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'is_valid' => 0
+                'is_valid' => 0,
             ];
         });
     }

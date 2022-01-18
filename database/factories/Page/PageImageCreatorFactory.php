@@ -30,14 +30,15 @@ class PageImageCreatorFactory extends Factory
      * Generate a creator for a specific image.
      * This is essentially required.
      *
-     * @param  int                      $image
+     * @param int $image
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function image($image)
     {
         return $this->state(function (array $attributes) use ($image) {
             return [
-                'page_image_id' => $image
+                'page_image_id' => $image,
             ];
         });
     }
@@ -46,14 +47,15 @@ class PageImageCreatorFactory extends Factory
      * Generate a creator record for a specific user.
      * This is semi-required.
      *
-     * @param  int                      $user
+     * @param int $user
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function user($user)
     {
         return $this->state(function (array $attributes) use ($user) {
             return [
-                'user_id' => $user
+                'user_id' => $user,
             ];
         });
     }
@@ -62,14 +64,15 @@ class PageImageCreatorFactory extends Factory
      * Generate a creator record for a specific url.
      * This is semi-required.
      *
-     * @param  int                      $url
+     * @param int $url
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function url($url)
     {
         return $this->state(function (array $attributes) use ($url) {
             return [
-                'url' => $url
+                'url' => $url,
             ];
         });
     }

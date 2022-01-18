@@ -2,9 +2,8 @@
 
 namespace App\Models\Page;
 
-use Config;
-
 use App\Models\Model;
+use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PageRelationship extends Model
@@ -19,7 +18,7 @@ class PageRelationship extends Model
     protected $fillable = [
         'page_one_id', 'page_two_id',
         'type_one', 'type_one_info', 'details_one',
-        'type_two', 'type_two_info', 'details_two'
+        'type_two', 'type_two_info', 'details_two',
     ];
 
     /**
@@ -45,10 +44,10 @@ class PageRelationship extends Model
         'page_one_id' => 'required',
         'page_two_id' => 'required',
 
-        'type_one' => 'required',
+        'type_one'      => 'required',
         'type_one_info' => 'required_if:type_one,custom,romantic_custom',
 
-        'type_two' => 'required',
+        'type_two'      => 'required',
         'type_two_info' => 'required_if:type_two,custom,romantic_custom',
     ];
 
@@ -89,15 +88,20 @@ class PageRelationship extends Model
     {
         // First check to see if the set type is a "custom" one, and if so,
         // just return the information provided
-        if($this->type_one == 'custom' || $this->type_one == 'romantic_custom') return $this->type_one_info;
+        if ($this->type_one == 'custom' || $this->type_one == 'romantic_custom') {
+            return $this->type_one_info;
+        }
 
         // Get relevant config file
         $config = Config::get('mundialis.'.$this->pageOne->category->subject['key'].'_relationships');
 
         // Cycle through its groups
-        foreach($config as $group) {
-            if(isset($group[$this->type_one])) return $group[$this->type_one];
+        foreach ($config as $group) {
+            if (isset($group[$this->type_one])) {
+                return $group[$this->type_one];
+            }
         }
+
         return null;
     }
 
@@ -110,16 +114,20 @@ class PageRelationship extends Model
     {
         // First check to see if the set type is a "custom" one, and if so,
         // just return the information provided
-        if($this->type_two == 'custom' || $this->type_two == 'romantic_custom') return $this->type_two_info;
+        if ($this->type_two == 'custom' || $this->type_two == 'romantic_custom') {
+            return $this->type_two_info;
+        }
 
         // Get relevant config file
         $config = Config::get('mundialis.'.$this->pageTwo->category->subject['key'].'_relationships');
 
         // Cycle through its groups
-        foreach($config as $group) {
-            if(isset($group[$this->type_two])) return $group[$this->type_two];
+        foreach ($config as $group) {
+            if (isset($group[$this->type_two])) {
+                return $group[$this->type_two];
+            }
         }
+
         return null;
     }
-
 }

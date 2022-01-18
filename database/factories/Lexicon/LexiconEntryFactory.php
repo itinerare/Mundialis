@@ -3,9 +3,8 @@
 namespace Database\Factories\Lexicon;
 
 use App\Models\Lexicon\LexiconEntry;
-use Illuminate\Database\Eloquent\Factories\Factory;
-
 use App\Models\Subject\LexiconSetting;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LexiconEntryFactory extends Factory
 {
@@ -23,32 +22,34 @@ class LexiconEntryFactory extends Factory
      */
     public function definition()
     {
-        if(LexiconSetting::all()->first())
+        if (LexiconSetting::all()->first()) {
             $class = LexiconSetting::all()->first();
-        else
+        } else {
             $class = LexiconSetting::create([
-                'name' => $this->faker->unique()->domainWord(),
-                'abbreviation' => $this->faker->unique()->domainWord()
+                'name'         => $this->faker->unique()->domainWord(),
+                'abbreviation' => $this->faker->unique()->domainWord(),
             ]);
+        }
 
         return [
-            'word' => $this->faker->unique()->domainWord(),
-            'class' => $class->name,
-            'meaning' => $this->faker->unique()->domainWord()
+            'word'    => $this->faker->unique()->domainWord(),
+            'class'   => $class->name,
+            'meaning' => $this->faker->unique()->domainWord(),
         ];
     }
 
     /**
      * Generate an entry in a specific category.
      *
-     * @param  int                      $category
+     * @param int $category
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function category($category)
     {
         return $this->state(function (array $attributes) use ($category) {
             return [
-                'category_id' => $category
+                'category_id' => $category,
             ];
         });
     }
@@ -62,7 +63,7 @@ class LexiconEntryFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'data' => '{"Singular Nominative":"'.$this->faker->unique()->domainWord().'","Singular Accusative":null,"Singular Dative":null,"Plural Nominative":null,"Plural Accusative":null,"Plural Dative":null}'
+                'data' => '{"Singular Nominative":"'.$this->faker->unique()->domainWord().'","Singular Accusative":null,"Singular Dative":null,"Plural Nominative":null,"Plural Accusative":null,"Plural Dative":null}',
             ];
         });
     }
@@ -76,7 +77,7 @@ class LexiconEntryFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'data' => '{"Singular Nominative":"test","Singular Accusative":null,"Singular Dative":null,"Plural Nominative":null,"Plural Accusative":null,"Plural Dative":null}'
+                'data' => '{"Singular Nominative":"test","Singular Accusative":null,"Singular Dative":null,"Plural Nominative":null,"Plural Accusative":null,"Plural Dative":null}',
             ];
         });
     }

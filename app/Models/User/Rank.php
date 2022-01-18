@@ -6,14 +6,13 @@ use App\Models\Model;
 
 class Rank extends Model
 {
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'sort'
+        'name', 'description', 'sort',
     ];
 
     /**
@@ -29,8 +28,8 @@ class Rank extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|between:3,100',
-        'description' => 'nullable'
+        'name'        => 'required|between:3,100',
+        'description' => 'nullable',
     ];
 
     /**********************************************************************************************
@@ -46,7 +45,10 @@ class Rank extends Model
      */
     public function getIsAdminAttribute()
     {
-        if($this->id == Rank::orderBy('sort', 'DESC')->first()->id) return true;
+        if ($this->id == Rank::orderBy('sort', 'DESC')->first()->id) {
+            return true;
+        }
+
         return false;
     }
 
@@ -57,8 +59,10 @@ class Rank extends Model
      */
     public function getCanWriteAttribute()
     {
-        if($this->id == Rank::orderBy('sort', 'DESC')->skip(1)->first()->id || $this->isAdmin) return true;
+        if ($this->id == Rank::orderBy('sort', 'DESC')->skip(1)->first()->id || $this->isAdmin) {
+            return true;
+        }
+
         return false;
     }
-
 }
