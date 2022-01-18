@@ -2,14 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\Page\Page;
+use App\Models\Page\PageVersion;
+use App\Models\Subject\SubjectCategory;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
-use App\Models\User\User;
-use App\Models\Subject\SubjectCategory;
-use App\Models\Page\Page;
-use App\Models\Page\PageVersion;
 
 class PageMoveTest extends TestCase
 {
@@ -17,8 +16,6 @@ class PageMoveTest extends TestCase
 
     /**
      * Test page move access.
-     *
-     * @return void
      */
     public function test_canGetMovePage()
     {
@@ -35,8 +32,6 @@ class PageMoveTest extends TestCase
 
     /**
      * Test page moving.
-     *
-     * @return void
      */
     public function test_canPostMovePage()
     {
@@ -52,7 +47,7 @@ class PageMoveTest extends TestCase
 
         $data = [
             'category_id' => $category->id,
-            'reason' => null
+            'reason'      => null,
         ];
 
         // Try to post
@@ -62,15 +57,13 @@ class PageMoveTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
-            'id' => $page->id,
+            'id'          => $page->id,
             'category_id' => $category->id,
         ]);
     }
 
     /**
      * Test page moving with a reason.
-     *
-     * @return void
      */
     public function test_canPostMovePageWithReason()
     {
@@ -89,7 +82,7 @@ class PageMoveTest extends TestCase
 
         $data = [
             'category_id' => $category->id,
-            'reason' => $this->faker->unique()->domainWord()
+            'reason'      => $this->faker->unique()->domainWord(),
         ];
 
         // Try to post
@@ -100,8 +93,8 @@ class PageMoveTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'type' => 'Page Moved from '.$oldCategory->name.' to '.$category->name,
-            'reason' => $data['reason']
+            'type'    => 'Page Moved from '.$oldCategory->name.' to '.$category->name,
+            'reason'  => $data['reason'],
         ]);
     }
 }

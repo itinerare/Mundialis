@@ -24,7 +24,7 @@ class PageProtectionFactory extends Factory
         return [
             //
             'is_protected' => 1,
-            'reason' => null,
+            'reason'       => null,
         ];
     }
 
@@ -32,14 +32,15 @@ class PageProtectionFactory extends Factory
      * Generate a protection record for a specific page.
      * This is essentially required.
      *
-     * @param  int                      $page
+     * @param int $page
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function page($page)
     {
         return $this->state(function (array $attributes) use ($page) {
             return [
-                'page_id' => $page
+                'page_id' => $page,
             ];
         });
     }
@@ -48,14 +49,15 @@ class PageProtectionFactory extends Factory
      * Generate a protection record by a specific user.
      * This is essentially required.
      *
-     * @param  int                      $user
+     * @param int $user
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function user($user)
     {
         return $this->state(function (array $attributes) use ($user) {
             return [
-                'user_id' => $user
+                'user_id' => $user,
             ];
         });
     }
@@ -63,14 +65,13 @@ class PageProtectionFactory extends Factory
     /**
      * Generate an unprotection record instead.
      *
-     * @param  int                      $page
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function unprotected()
     {
         return $this->state(function (array $attributes) {
             return [
-                'is_protected' => 0
+                'is_protected' => 0,
             ];
         });
     }

@@ -2,14 +2,12 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-
-use App\Models\User\User;
 use App\Models\Page\Page;
 use App\Models\Page\PageVersion;
+use App\Models\User\User;
 use App\Models\User\WatchedPage;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class PageWatchTest extends TestCase
 {
@@ -17,8 +15,6 @@ class PageWatchTest extends TestCase
 
     /**
      * Test watched pages access.
-     *
-     * @return void
      */
     public function test_canGetWatchedPages()
     {
@@ -32,8 +28,6 @@ class PageWatchTest extends TestCase
 
     /**
      * Test watched pages access with a watched page.
-     *
-     * @return void
      */
     public function test_canGetWatchedPagesWithPage()
     {
@@ -55,8 +49,6 @@ class PageWatchTest extends TestCase
 
     /**
      * Test watching a page.
-     *
-     * @return void
      */
     public function test_canPostWatchPage()
     {
@@ -74,14 +66,12 @@ class PageWatchTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('watched_pages', [
             'user_id' => $user->id,
-            'page_id' => $page->id
+            'page_id' => $page->id,
         ]);
     }
 
     /**
      * Test unwatching a page.
-     *
-     * @return void
      */
     public function test_canPostUnwatchPage()
     {
@@ -102,7 +92,7 @@ class PageWatchTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseMissing('watched_pages', [
             'user_id' => $user->id,
-            'page_id' => $page->id
+            'page_id' => $page->id,
         ]);
     }
 }

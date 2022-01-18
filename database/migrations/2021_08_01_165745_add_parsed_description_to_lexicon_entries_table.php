@@ -8,8 +8,6 @@ class AddParsedDescriptionToLexiconEntriesTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -21,8 +19,6 @@ class AddParsedDescriptionToLexiconEntriesTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

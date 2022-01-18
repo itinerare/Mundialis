@@ -5,11 +5,9 @@ namespace Tests\Feature;
 use App\Models\Subject\LexiconCategory;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeChronology;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-
 use App\Models\User\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class SubjectTest extends TestCase
 {
@@ -17,8 +15,6 @@ class SubjectTest extends TestCase
 
     /**
      * Test people access.
-     *
-     * @return void
      */
     public function test_canGetPeople()
     {
@@ -32,8 +28,6 @@ class SubjectTest extends TestCase
 
     /**
      * Test places access.
-     *
-     * @return void
      */
     public function test_canGetPlaces()
     {
@@ -47,8 +41,6 @@ class SubjectTest extends TestCase
 
     /**
      * Test flora & fauna access.
-     *
-     * @return void
      */
     public function test_canGetFloraAndFauna()
     {
@@ -62,8 +54,6 @@ class SubjectTest extends TestCase
 
     /**
      * Test things access.
-     *
-     * @return void
      */
     public function test_canGetThings()
     {
@@ -77,8 +67,6 @@ class SubjectTest extends TestCase
 
     /**
      * Test concepts access.
-     *
-     * @return void
      */
     public function test_canGetConcepts()
     {
@@ -92,8 +80,6 @@ class SubjectTest extends TestCase
 
     /**
      * Test time & events access.
-     *
-     * @return void
      */
     public function test_canGetTime()
     {
@@ -107,8 +93,6 @@ class SubjectTest extends TestCase
 
     /**
      * Test time & events access with a chronology.
-     *
-     * @return void
      */
     public function test_canGetTimeWithChronology()
     {
@@ -124,8 +108,6 @@ class SubjectTest extends TestCase
 
     /**
      * Test time chronology access.
-     *
-     * @return void
      */
     public function test_canGetTimeChronology()
     {
@@ -141,15 +123,14 @@ class SubjectTest extends TestCase
 
     /**
      * Test time chronology access with a child.
-     *
-     * @return void
      */
     public function test_canGetTimeChronologyWithChild()
     {
         $user = User::factory()->make();
 
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $chronology[$i] = TimeChronology::factory()->create();
+        }
 
         $chronology[2]->update(['parent_id', $chronology[1]->id]);
 
@@ -161,8 +142,6 @@ class SubjectTest extends TestCase
 
     /**
      * Test language access.
-     *
-     * @return void
      */
     public function test_canGetLanguage()
     {
@@ -176,8 +155,6 @@ class SubjectTest extends TestCase
 
     /**
      * Test miscellaneous access with a category.
-     *
-     * @return void
      */
     public function test_canGetLanguageWithLexiconCategory()
     {
@@ -193,8 +170,6 @@ class SubjectTest extends TestCase
 
     /**
      * Test miscellaneous category access.
-     *
-     * @return void
      */
     public function test_canGetLexiconCategory()
     {
@@ -210,15 +185,14 @@ class SubjectTest extends TestCase
 
     /**
      * Test miscellaneous category access with a child.
-     *
-     * @return void
      */
     public function test_canGetLexiconCategoryWithChild()
     {
         $user = User::factory()->make();
 
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $category[$i] = LexiconCategory::factory()->create();
+        }
 
         $category[2]->update(['parent_id', $category[1]->id]);
 
@@ -230,8 +204,6 @@ class SubjectTest extends TestCase
 
     /**
      * Test miscellaneous access.
-     *
-     * @return void
      */
     public function test_canGetMiscellaneous()
     {
@@ -245,8 +217,6 @@ class SubjectTest extends TestCase
 
     /**
      * Test miscellaneous access with a category.
-     *
-     * @return void
      */
     public function test_canGetMiscellaneousWithCategory()
     {
@@ -262,8 +232,6 @@ class SubjectTest extends TestCase
 
     /**
      * Test miscellaneous category access.
-     *
-     * @return void
      */
     public function test_canGetMiscellaneousCategory()
     {
@@ -279,15 +247,14 @@ class SubjectTest extends TestCase
 
     /**
      * Test miscellaneous category access with a child.
-     *
-     * @return void
      */
     public function test_canGetMiscellaneousCategoryWithChild()
     {
         $user = User::factory()->make();
 
-        for($i = 1; $i <= 2; $i++)
+        for ($i = 1; $i <= 2; $i++) {
             $category[$i] = SubjectCategory::factory()->create();
+        }
 
         $category[2]->update(['parent_id', $category[1]->id]);
 
