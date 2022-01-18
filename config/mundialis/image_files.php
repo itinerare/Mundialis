@@ -13,13 +13,13 @@ return [
     */
 
     'logo' => [
-        'name' => 'Site Logo',
+        'name'        => 'Site Logo',
         'description' => 'Site logo, displayed on the sidebar. Should be square, 200x200px recommended. PNG format.',
-        'filename' => 'logo.png'
+        'filename'    => 'logo.png',
     ],
     'meta-image' => [
-        'name' => 'Meta Tag Image',
+        'name'        => 'Meta Tag Image',
         'description' => 'The image displayed in meta tag previews on social media, Discord, and the like. PNG format, no size restriction.',
-        'filename' => 'meta-image.png'
+        'filename'    => 'meta-image.png',
     ],
 ];

@@ -2,10 +2,10 @@
 
 namespace Database\Factories\User;
 
-use App\Models\User\User;
 use App\Models\User\Rank;
-use Illuminate\Support\Facades\Hash;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Str;
 
 class UserFactory extends Factory
@@ -25,37 +25,37 @@ class UserFactory extends Factory
     public function definition()
     {
         // First things first, check if user ranks exist...
-        if(!Rank::count()) {
+        if (!Rank::count()) {
             // Create ranks if not already present.
             // A light-weight rank system is used here since the site is intended
             // only for individuals or small groups/granular permissions are not
             // necessary.
             $adminRank = Rank::create([
-                'name' => 'Admin',
+                'name'        => 'Admin',
                 'description' => 'The site admin. Has the ability to view/edit any data on the site.',
-                'sort' => 2
+                'sort'        => 2,
             ]);
 
             Rank::create([
-                'name' => 'Editor',
+                'name'        => 'Editor',
                 'description' => 'A member of the site with write permissions.',
-                'sort' => 1
+                'sort'        => 1,
             ]);
 
             Rank::create([
-                'name' => 'Member',
+                'name'        => 'Member',
                 'description' => 'A regular member of the site.',
-                'sort' => 0
+                'sort'        => 0,
             ]);
         }
 
         return [
-            'name' => $this->faker->unique()->userName(),
-            'email' => $this->faker->unique()->safeEmail(),
+            'name'              => $this->faker->unique()->userName(),
+            'email'             => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'rank_id' => Rank::orderBy('sort', 'ASC')->first(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
+            'rank_id'           => Rank::orderBy('sort', 'ASC')->first(),
+            'password'          => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'remember_token'    => Str::random(10),
         ];
     }
 
@@ -68,7 +68,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'name' => $this->faker->unique()->domainWord()
+                'name' => $this->faker->unique()->domainWord(),
             ];
         });
     }
@@ -82,7 +82,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'password' => Hash::make('simple_password')
+                'password' => Hash::make('simple_password'),
             ];
         });
     }
@@ -96,9 +96,9 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'is_banned' => 1,
+                'is_banned'  => 1,
                 'ban_reason' => 'Generated as banned',
-                'banned_at' => now()
+                'banned_at'  => now(),
             ];
         });
     }

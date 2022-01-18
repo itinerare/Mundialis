@@ -12,7 +12,7 @@ class LexiconSetting extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'abbreviation'
+        'name', 'abbreviation',
     ];
 
     /**
@@ -35,7 +35,6 @@ class LexiconSetting extends Model
      * @var array
      */
     public static $rules = [
-        'name.*' => 'required'
+        'name.*' => 'required',
     ];
-
 }
