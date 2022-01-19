@@ -61,11 +61,11 @@ class SubjectCategoryFactory extends Factory
      * Generate a category with just a specific infobox field.
      *
      * @param string $key
+     * @param string $label
      * @param string $type
      * @param string $rules
      * @param string $choices
      * @param string $value
-     * @param string $label
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
@@ -82,11 +82,11 @@ class SubjectCategoryFactory extends Factory
      * Generate a category with just a specific body field.
      *
      * @param string $key
+     * @param string $label
      * @param string $type
      * @param string $rules
      * @param string $choices
      * @param string $value
-     * @param string $label
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
