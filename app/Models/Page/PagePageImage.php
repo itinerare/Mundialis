@@ -10,22 +10,6 @@ class PagePageImage extends Pivot
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'page_id', 'page_image_id', 'is_valid'
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'page_page_image';
-
-    /**
      * Indicates if the IDs are auto-incrementing.
      *
      * @var bool
@@ -39,4 +23,19 @@ class PagePageImage extends Pivot
      */
     public $timestamps = false;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'page_id', 'page_image_id', 'is_valid',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'page_page_image';
 }
