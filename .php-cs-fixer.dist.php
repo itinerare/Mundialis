@@ -122,6 +122,9 @@ $rules = [
     'phpdoc_trim' => true,
     'phpdoc_trim_consecutive_blank_line_separation' => true,
     'phpdoc_types' => true,
+    'phpdoc_types_order' => [
+        'null_adjustment' => 'always_last'
+    ],
     'phpdoc_var_annotation_correct_order' => true,
     'phpdoc_var_without_name' => true,
     'psr_autoloading' => true,
