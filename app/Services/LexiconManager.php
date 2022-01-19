@@ -24,7 +24,7 @@ class LexiconManager extends Service
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return bool|\App\Models\Lexicon\LexiconEntry
+     * @return \App\Models\Lexicon\LexiconEntry|bool
      */
     public function createLexiconEntry($data, $user)
     {

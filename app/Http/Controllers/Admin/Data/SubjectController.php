@@ -145,7 +145,7 @@ class SubjectController extends Controller
      * Creates or edits a category.
      *
      * @param App\Services\SubjectService $service
-     * @param string|int                  $subject
+     * @param int|string                  $subject
      *
      * @return \Illuminate\Http\RedirectResponse
      */

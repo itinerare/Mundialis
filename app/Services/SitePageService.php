@@ -23,7 +23,7 @@ class SitePageService extends Service
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return bool|\App\Models\TextPage
+     * @return \App\Models\TextPage|bool
      */
     public function updatePage($page, $data, $user)
     {

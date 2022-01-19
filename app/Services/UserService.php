@@ -318,7 +318,7 @@ class UserService extends Service
      * @param \App\Models\Page\Page $page
      * @param \App\Models\User\User $user
      *
-     * @return bool|\App\Models\User\WatchedPage
+     * @return \App\Models\User\WatchedPage|bool
      */
     public function watchPage($page, $user)
     {

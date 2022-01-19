@@ -57,7 +57,7 @@ class AddLexiconSettings extends Command
      * Add a site page.
      *
      * @param string      $name
-     * @param null|string $abbreviation
+     * @param string|null $abbreviation
      * @param int         $sort
      */
     private function addLexiconSetting($name, $abbreviation, $sort)

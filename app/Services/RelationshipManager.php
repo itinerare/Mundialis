@@ -26,7 +26,7 @@ class RelationshipManager extends Service
      * @param \App\Models\Page\Page $page
      * @param \App\Models\User\User $user
      *
-     * @return bool|\App\Models\Page\PageImage
+     * @return \App\Models\Page\PageImage|bool
      */
     public function createPageRelationship($data, $page, $user)
     {

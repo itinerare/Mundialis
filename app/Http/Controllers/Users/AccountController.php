@@ -339,7 +339,7 @@ class AccountController extends Controller
     /**
      * Deletes all of the user's notifications.
      *
-     * @param null|int $type
+     * @param int|null $type
      *
      * @return \Illuminate\Http\RedirectResponse
      */

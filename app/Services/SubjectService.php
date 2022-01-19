@@ -29,7 +29,7 @@ class SubjectService extends Service
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return bool|\App\Models\SubjectTemplate
+     * @return \App\Models\SubjectTemplate|bool
      */
     public function editTemplate($subject, $data, $user)
     {
@@ -85,7 +85,7 @@ class SubjectService extends Service
      * @param \App\Models\User\User $user
      * @param string                $subject
      *
-     * @return bool|\App\Models\Subject\SubjectCategory
+     * @return \App\Models\Subject\SubjectCategory|bool
      */
     public function createCategory($data, $user, $subject)
     {
@@ -303,7 +303,7 @@ class SubjectService extends Service
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return bool|\App\Models\TimeDivision
+     * @return \App\Models\TimeDivision|bool
      */
     public function editTimeDivisions($data, $user)
     {
@@ -373,7 +373,7 @@ class SubjectService extends Service
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return bool|\App\Models\TimeChronology
+     * @return \App\Models\TimeChronology|bool
      */
     public function createChronology($data, $user)
     {
@@ -486,7 +486,7 @@ class SubjectService extends Service
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return bool|\App\Models\LexiconSetting
+     * @return \App\Models\LexiconSetting|bool
      */
     public function editLexiconSettings($data, $user)
     {
@@ -554,7 +554,7 @@ class SubjectService extends Service
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return bool|\App\Models\LexiconCategory
+     * @return \App\Models\LexiconCategory|bool
      */
     public function createLexiconCategory($data, $user)
     {
