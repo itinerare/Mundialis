@@ -68,7 +68,7 @@ class UserController extends Controller
     /**
      * Show a user's admin page.
      *
-     * @param mixed $name
+     * @param string $name
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -127,7 +127,7 @@ class UserController extends Controller
     /**
      * Show a user's account update log.
      *
-     * @param mixed $name
+     * @param string $name
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -148,7 +148,7 @@ class UserController extends Controller
     /**
      * Show a user's ban page.
      *
-     * @param mixed $name
+     * @param string $name
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -168,7 +168,7 @@ class UserController extends Controller
     /**
      * Show a user's ban confirmation page.
      *
-     * @param mixed $name
+     * @param string $name
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -207,7 +207,7 @@ class UserController extends Controller
     /**
      * Show a user's unban confirmation page.
      *
-     * @param mixed $name
+     * @param string $name
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */

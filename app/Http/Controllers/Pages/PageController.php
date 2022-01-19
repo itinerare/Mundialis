@@ -147,7 +147,7 @@ class PageController extends Controller
     /**
      * Shows the create page page.
      *
-     * @param mixed $category
+     * @param int $category
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -411,8 +411,8 @@ class PageController extends Controller
     /**
      * Gets the page reset modal.
      *
-     * @param int   $id
-     * @param mixed $pageId
+     * @param int $id
+     * @param int $pageId
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */

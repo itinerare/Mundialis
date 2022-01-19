@@ -25,7 +25,7 @@ class RankController extends Controller
     /**
      * Get the rank editing modal.
      *
-     * @param mixed $id
+     * @param int $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */

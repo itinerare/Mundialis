@@ -31,8 +31,6 @@ class AddLexiconSettings extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -58,9 +56,9 @@ class AddLexiconSettings extends Command
     /**
      * Add a site page.
      *
-     * @param mixed      $name
-     * @param null|mixed $abbreviation
-     * @param mixed      $sort
+     * @param string      $name
+     * @param null|string $abbreviation
+     * @param int         $sort
      */
     private function addLexiconSetting($name, $abbreviation, $sort)
     {

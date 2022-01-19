@@ -65,7 +65,7 @@ class SubjectCategoryFactory extends Factory
      * @param string $rules
      * @param string $choices
      * @param string $value
-     * @param mixed  $label
+     * @param string $label
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
@@ -86,7 +86,7 @@ class SubjectCategoryFactory extends Factory
      * @param string $rules
      * @param string $choices
      * @param string $value
-     * @param mixed  $label
+     * @param string $label
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */

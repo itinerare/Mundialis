@@ -44,8 +44,8 @@ class InvitationService extends Service
     /**
      * Marks an invitation code as used, saving the user who used it.
      *
-     * @param \App\Models\User\User $user
-     * @param mixed                 $invitation
+     * @param \App\Models\User\User           $user
+     * @param \App\Models\User\InvitationCode $invitation
      *
      * @return \App\Models\Invitation|bool
      */

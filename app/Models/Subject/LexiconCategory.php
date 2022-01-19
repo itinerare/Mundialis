@@ -124,12 +124,11 @@ class LexiconCategory extends Model
      * Assembles an array of all possible combinations of properties/dimensions
      * for a given lexical class.
      *
-     * @param int   $class
-     * @param mixed $i
+     * @param int $class
      *
      * @return array
      */
-    public function classCombinations($class, $i = 0)
+    public function classCombinations($class)
     {
         if (!isset($this->data) || !isset($this->data[$class]['properties'])) {
             return null;
@@ -163,7 +162,7 @@ class LexiconCategory extends Model
      * Taken from https://stackoverflow.com/questions/8567082/how-to-generate-in-php-all-combinations-of-items-in-multiple-arrays.
      *
      * @param array $arrays
-     * @param mixed $i
+     * @param int   $i
      *
      * @return array
      */
