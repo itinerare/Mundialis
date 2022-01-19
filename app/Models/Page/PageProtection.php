@@ -10,12 +10,19 @@ class PageProtection extends Model
     use HasFactory;
 
     /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = true;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'page_id', 'user_id', 'is_protected', 'reason'
+        'page_id', 'user_id', 'is_protected', 'reason',
     ];
 
     /**
@@ -24,13 +31,6 @@ class PageProtection extends Model
      * @var string
      */
     protected $table = 'page_protections';
-
-    /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = true;
 
     /**********************************************************************************************
 
@@ -53,5 +53,4 @@ class PageProtection extends Model
     {
         return $this->belongsTo('App\Models\User\User');
     }
-
 }

@@ -2,17 +2,21 @@
 
 namespace App\Models;
 
-use App\Models\Model;
-
 class SitePage extends Model
 {
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = true;
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'key', 'title', 'text'
+        'key', 'title', 'text',
     ];
 
     /**
@@ -21,12 +25,4 @@ class SitePage extends Model
      * @var string
      */
     protected $table = 'site_pages';
-
-    /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = true;
-
 }

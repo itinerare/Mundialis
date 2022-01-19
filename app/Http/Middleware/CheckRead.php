@@ -10,18 +10,19 @@ class CheckRead
     /**
      * Redirect visitors to the homepage if site is private.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-        if($request->user() && $request->user()->is_banned) {
+        if ($request->user() && $request->user()->is_banned) {
             return redirect('/banned');
         }
 
         if (!Settings::get('visitors_can_read') && !$request->user()) {
             flash('You must be logged in to view this page!')->error();
+
             return redirect('/');
         }
 

@@ -2,31 +2,13 @@
 
 namespace App\Models\Subject;
 
-use Config;
-use App\Models\Subject\SubjectTemplate;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 use App\Models\Model;
+use Config;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SubjectCategory extends Model
 {
     use HasFactory;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'subject', 'name', 'summary', 'parent_id', 'description', 'data', 'has_image'
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'subject_categories';
 
     /**
      * Whether the model contains timestamps to be saved and updated.
@@ -41,8 +23,8 @@ class SubjectCategory extends Model
      * @var array
      */
     public static $createRules = [
-        'name' => 'required|unique:subject_categories',
-        'image' => 'mimes:png'
+        'name'  => 'required|unique:subject_categories',
+        'image' => 'mimes:png',
     ];
 
     /**
@@ -51,9 +33,25 @@ class SubjectCategory extends Model
      * @var array
      */
     public static $updateRules = [
-        'name' => 'required',
-        'image' => 'mimes:png'
+        'name'  => 'required',
+        'image' => 'mimes:png',
     ];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'subject', 'name', 'summary', 'parent_id', 'description', 'data', 'has_image',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'subject_categories';
 
     /**********************************************************************************************
 
@@ -98,7 +96,10 @@ class SubjectCategory extends Model
      */
     public function getDataAttribute()
     {
-        if(!isset($this->attributes['data'])) return null;
+        if (!isset($this->attributes['data'])) {
+            return null;
+        }
+
         return json_decode($this->attributes['data'], true);
     }
 
@@ -139,7 +140,7 @@ class SubjectCategory extends Model
      */
     public function getImageFileNameAttribute()
     {
-        return $this->id . '-image.png';
+        return $this->id.'-image.png';
     }
 
     /**
@@ -159,8 +160,11 @@ class SubjectCategory extends Model
      */
     public function getImageUrlAttribute()
     {
-        if (!$this->has_image) return null;
-        return asset($this->imageDirectory . '/' . $this->imageFileName);
+        if (!$this->has_image) {
+            return null;
+        }
+
+        return asset($this->imageDirectory.'/'.$this->imageFileName);
     }
 
     /**
@@ -174,6 +178,7 @@ class SubjectCategory extends Model
         $subject = Config::get('mundialis.subjects.'.$this->attributes['subject']);
         // Then add its key to the array
         $subject['key'] = $this->attributes['subject'];
+
         return $subject;
     }
 
@@ -195,29 +200,28 @@ class SubjectCategory extends Model
     public function getTemplateAttribute()
     {
         // Check to see if this category's data is set,
-        if(isset($this->data) && $this->data) return $this->data;
+        if (isset($this->data) && $this->data) {
+            return $this->data;
+        }
 
         // Else recursively check parents for data and return if data is found
-        if($this->parent) {
+        if ($this->parent) {
             $template = $this->fetchTemplateRecursive($this->parent);
-            if(isset($template) && $template) return $template;
+            if (isset($template) && $template) {
+                return $template;
+            }
         }
 
         // If no data is found and the subject's template is set,
         // return the subject's template data
-        if(isset($this->subjectTemplate->data) && $this->subjectTemplate->data)
+        if (isset($this->subjectTemplate->data) && $this->subjectTemplate->data) {
             return $this->subjectTemplate->data;
+        }
 
         // Failing that return an empty array so the form builder doesn't error
-        else return [];
-    }
-    private function fetchTemplateRecursive($parent)
-    {
-        if(isset($parent->data) && $parent->data) return $parent->data;
-        if(isset($parent->parent_id) && $parent->parent)
-            return $this->fetchTemplateRecursive($parent->parent);
-
-        return null;
+        else {
+            return [];
+        }
     }
 
     /**
@@ -229,13 +233,29 @@ class SubjectCategory extends Model
     {
         $fields = [];
 
-        if(isset($this->template['infobox'])) $fields = $fields + $this->template['infobox'];
-        if(isset($this->template['sections']))
-            foreach($this->template['sections'] as $sectionKey=>$section) {
-                if(isset($this->template['fields'][$sectionKey])) $fields = $fields + $this->template['fields'][$sectionKey];
+        if (isset($this->template['infobox'])) {
+            $fields = $fields + $this->template['infobox'];
+        }
+        if (isset($this->template['sections'])) {
+            foreach ($this->template['sections'] as $sectionKey=>$section) {
+                if (isset($this->template['fields'][$sectionKey])) {
+                    $fields = $fields + $this->template['fields'][$sectionKey];
+                }
             }
+        }
 
         return $fields;
     }
 
+    private function fetchTemplateRecursive($parent)
+    {
+        if (isset($parent->data) && $parent->data) {
+            return $parent->data;
+        }
+        if (isset($parent->parent_id) && $parent->parent) {
+            return $this->fetchTemplateRecursive($parent->parent);
+        }
+
+        return null;
+    }
 }
