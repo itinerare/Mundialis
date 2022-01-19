@@ -8,12 +8,6 @@ use Config;
 class PageTag extends Model
 {
     /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = false;
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -28,6 +22,12 @@ class PageTag extends Model
      * @var string
      */
     protected $table = 'page_tags';
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = false;
 
     /**********************************************************************************************
 

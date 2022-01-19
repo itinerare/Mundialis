@@ -9,23 +9,6 @@ class Notification extends Model
 {
     use HasFactory;
 
-    /**********************************************************************************************
-
-        CONSTANTS
-
-    **********************************************************************************************/
-
-    const WATCHED_PAGE_UPDATED = 0;
-    const WATCHED_PAGE_IMAGE_UPDATED = 1;
-    const WATCHED_PAGE_DELETED = 2;
-
-    /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = true;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -41,6 +24,23 @@ class Notification extends Model
      * @var string
      */
     protected $table = 'notifications';
+
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = true;
+
+    /**********************************************************************************************
+
+        CONSTANTS
+
+    **********************************************************************************************/
+
+    const WATCHED_PAGE_UPDATED = 0;
+    const WATCHED_PAGE_IMAGE_UPDATED = 1;
+    const WATCHED_PAGE_DELETED = 2;
 
     /**********************************************************************************************
 

@@ -7,21 +7,6 @@ use App\Models\Model;
 class LexiconEtymology extends Model
 {
     /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = false;
-
-    /**
-     * Validation rules for creation.
-     *
-     * @var array
-     */
-    public static $rules = [
-
-    ];
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -36,6 +21,21 @@ class LexiconEtymology extends Model
      * @var string
      */
     protected $table = 'lexicon_etymologies';
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = false;
+
+    /**
+     * Validation rules for creation.
+     *
+     * @var array
+     */
+    public static $rules = [
+
+    ];
 
     /**********************************************************************************************
 

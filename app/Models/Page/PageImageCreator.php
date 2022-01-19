@@ -10,22 +10,6 @@ class PageImageCreator extends Model
     use HasFactory;
 
     /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = false;
-
-    /**
-     * Validation rules for creation.
-     *
-     * @var array
-     */
-    public static $rules = [
-        'creator_url' => 'nullable|url',
-    ];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -40,6 +24,22 @@ class PageImageCreator extends Model
      * @var string
      */
     protected $table = 'page_image_creators';
+
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = false;
+
+    /**
+     * Validation rules for creation.
+     *
+     * @var array
+     */
+    public static $rules = [
+        'creator_url' => 'nullable|url',
+    ];
 
     /**********************************************************************************************
 

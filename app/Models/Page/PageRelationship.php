@@ -11,6 +11,24 @@ class PageRelationship extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'page_one_id', 'page_two_id',
+        'type_one', 'type_one_info', 'details_one',
+        'type_two', 'type_two_info', 'details_two',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'page_relationships';
+
+    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -32,24 +50,6 @@ class PageRelationship extends Model
         'type_two'      => 'required',
         'type_two_info' => 'required_if:type_two,custom,romantic_custom',
     ];
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'page_one_id', 'page_two_id',
-        'type_one', 'type_one_info', 'details_one',
-        'type_two', 'type_two_info', 'details_two',
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'page_relationships';
 
     /**********************************************************************************************
 

@@ -14,6 +14,22 @@ class Page extends Model
     use HasFactory, SoftDeletes;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'category_id', 'title', 'summary', 'is_visible', 'parent_id', 'image_id',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'pages';
+
+    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -37,22 +53,6 @@ class Page extends Model
     public static $updateRules = [
         'title' => 'required',
     ];
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'category_id', 'title', 'summary', 'is_visible', 'parent_id', 'image_id',
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'pages';
 
     /**********************************************************************************************
 
