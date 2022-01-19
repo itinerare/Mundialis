@@ -285,7 +285,7 @@ class AccountController extends Controller
      * Watches/unwatches a page.
      *
      * @param App\Services\UserService $service
-     * @param mixed                    $id
+     * @param int                      $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -322,7 +322,7 @@ class AccountController extends Controller
     /**
      * Deletes a notification and returns a response.
      *
-     * @param mixed $id
+     * @param int $id
      *
      * @return \Illuminate\Http\Response
      */
@@ -339,7 +339,7 @@ class AccountController extends Controller
     /**
      * Deletes all of the user's notifications.
      *
-     * @param null|mixed $type
+     * @param null|int $type
      *
      * @return \Illuminate\Http\RedirectResponse
      */

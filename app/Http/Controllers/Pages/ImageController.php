@@ -207,8 +207,8 @@ class ImageController extends Controller
     /**
      * Shows the edit image page.
      *
-     * @param int   $id
-     * @param mixed $pageId
+     * @param int $id
+     * @param int $pageId
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
