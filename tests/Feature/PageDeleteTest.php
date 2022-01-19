@@ -2,12 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-
-use App\Models\User\User;
-use App\Models\Subject\SubjectCategory;
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
 use App\Models\Page\PageImageCreator;
@@ -15,7 +9,12 @@ use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
 use App\Models\Page\PageRelationship;
 use App\Models\Page\PageVersion;
+use App\Models\Subject\SubjectCategory;
+use App\Models\User\User;
 use App\Services\ImageManager;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
 class PageDeleteTest extends TestCase
 {
@@ -23,8 +22,6 @@ class PageDeleteTest extends TestCase
 
     /**
      * Test page deletion access.
-     *
-     * @return void
      */
     public function test_canGetDeletePage()
     {
@@ -42,8 +39,6 @@ class PageDeleteTest extends TestCase
 
     /**
      * Test (soft) page deletion.
-     *
-     * @return void
      */
     public function test_canPostSoftDeletePage()
     {
@@ -66,8 +61,6 @@ class PageDeleteTest extends TestCase
 
     /**
      * Test (soft) page deletion with a reason.
-     *
-     * @return void
      */
     public function test_canPostSoftDeletePageWithReason()
     {
@@ -76,7 +69,7 @@ class PageDeleteTest extends TestCase
 
         // Set a reason
         $data = [
-            'reason' => $this->faker->unique()->domainWord()
+            'reason' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a page to delete & version
@@ -91,8 +84,8 @@ class PageDeleteTest extends TestCase
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'type' => 'Page Deleted',
-            'reason' => $data['reason']
+            'type'    => 'Page Deleted',
+            'reason'  => $data['reason'],
         ]);
 
         $this->assertSoftDeleted($page);
@@ -100,8 +93,6 @@ class PageDeleteTest extends TestCase
 
     /**
      * Test (soft) page deletion with page content.
-     *
-     * @return void
      */
     public function test_canPostSoftDeletePageWithContent()
     {
@@ -128,8 +119,6 @@ class PageDeleteTest extends TestCase
 
     /**
      * Test (soft) page deletion with an associated image.
-     *
-     * @return void
      */
     public function test_canPostSoftDeletePageWithImage()
     {
@@ -158,22 +147,20 @@ class PageDeleteTest extends TestCase
         $this->assertSoftDeleted($page);
 
         // Delete the test images, to clean up
-        unlink($image->imagePath . '/' . $imageVersion->thumbnailFileName);
-        unlink($image->imagePath . '/' . $imageVersion->imageFileName);
+        unlink($image->imagePath.'/'.$imageVersion->thumbnailFileName);
+        unlink($image->imagePath.'/'.$imageVersion->imageFileName);
     }
 
     /**
      * Test (soft) page deletion with associated images.
      * As one image is associated with another page, it should not be deleted.
-     *
-     * @return void
      */
     public function test_canPostSoftDeletePageWithImages()
     {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
-        for($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             // Make a page
             $page[$i] = Page::factory()->create();
             // As well as accompanying version
@@ -199,7 +186,7 @@ class PageDeleteTest extends TestCase
         // Verify that the appropriate change has occurred
         // In this case, this means checking that the second image is not deleted
         $this->assertDatabaseHas('page_images', [
-            'id' => $image[2]->id,
+            'id'         => $image[2]->id,
             'deleted_at' => null,
         ]);
 
@@ -208,16 +195,14 @@ class PageDeleteTest extends TestCase
         $this->assertSoftDeleted($page[1]);
 
         // Delete the test images, to clean up
-        for($i = 1; $i <= 2; $i++) {
-            unlink($image[$i]->imagePath . '/' . $imageVersion[$i]->thumbnailFileName);
-            unlink($image[$i]->imagePath . '/' . $imageVersion[$i]->imageFileName);
+        for ($i = 1; $i <= 2; $i++) {
+            unlink($image[$i]->imagePath.'/'.$imageVersion[$i]->thumbnailFileName);
+            unlink($image[$i]->imagePath.'/'.$imageVersion[$i]->imageFileName);
         }
     }
 
     /**
      * Test (soft) page deletion with a relation.
-     *
-     * @return void
      */
     public function test_canPostSoftDeletePageWithRelationship()
     {
@@ -228,7 +213,7 @@ class PageDeleteTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             // Make a deleted page
             $page[$i] = Page::factory()->category($category->id)->deleted()->create();
             // As well as accompanying version
@@ -245,7 +230,7 @@ class PageDeleteTest extends TestCase
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_relationships', [
-            'id' => $relationship->id
+            'id' => $relationship->id,
         ]);
         $this->assertSoftDeleted($page[1]);
     }
@@ -253,8 +238,6 @@ class PageDeleteTest extends TestCase
     /**
      * Test (soft) page deletion with a child page.
      * This shouldn't work.
-     *
-     * @return void
      */
     public function test_cannotPostSoftDeletePageWithChild()
     {
@@ -278,15 +261,13 @@ class PageDeleteTest extends TestCase
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
-            'id' => $page->id,
+            'id'         => $page->id,
             'deleted_at' => null,
         ]);
     }
 
     /**
      * Test full page deletion.
-     *
-     * @return void
      */
     public function test_canPostForceDeletePage()
     {
@@ -313,8 +294,6 @@ class PageDeleteTest extends TestCase
 
     /**
      * Test full page deletion with an image.
-     *
-     * @return void
      */
     public function test_canPostForceDeletePageWithImage()
     {
@@ -348,8 +327,6 @@ class PageDeleteTest extends TestCase
 
     /**
      * Test full page deletion with a relationship.
-     *
-     * @return void
      */
     public function test_canPostForceDeletePageWithRelationship()
     {
@@ -360,7 +337,7 @@ class PageDeleteTest extends TestCase
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
-        for($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             // Make a deleted page
             $page[$i] = Page::factory()->category($category->id)->deleted()->create();
             // As well as accompanying version
@@ -383,8 +360,6 @@ class PageDeleteTest extends TestCase
 
     /**
      * Test deleted page access.
-     *
-     * @return void
      */
     public function test_canGetDeletedPage()
     {
@@ -403,8 +378,6 @@ class PageDeleteTest extends TestCase
 
     /**
      * Test restore page access.
-     *
-     * @return void
      */
     public function test_canGetRestorePage()
     {
@@ -423,8 +396,6 @@ class PageDeleteTest extends TestCase
 
     /**
      * Test page restoration.
-     *
-     * @return void
      */
     public function test_canPostRestorePage()
     {
@@ -442,15 +413,13 @@ class PageDeleteTest extends TestCase
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
-            'id' => $page->id,
+            'id'         => $page->id,
             'deleted_at' => null,
         ]);
     }
 
     /**
      * Test page restoration with a reason.
-     *
-     * @return void
      */
     public function test_canPostRestorePageWithReason()
     {
@@ -459,7 +428,7 @@ class PageDeleteTest extends TestCase
 
         // Set a reason
         $data = [
-            'reason' => $this->faker->unique()->domainWord()
+            'reason' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a page to restore & version
@@ -474,20 +443,18 @@ class PageDeleteTest extends TestCase
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'type' => 'Page Restored',
-            'reason' => $data['reason'],
+            'type'    => 'Page Restored',
+            'reason'  => $data['reason'],
         ]);
 
         $this->assertDatabaseHas('pages', [
-            'id' => $page->id,
+            'id'         => $page->id,
             'deleted_at' => null,
         ]);
     }
 
     /**
      * Test page restoration with an associated image.
-     *
-     * @return void
      */
     public function test_canPostRestorePageWithImage()
     {
@@ -512,7 +479,7 @@ class PageDeleteTest extends TestCase
 
         // Verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_images', [
-            'id' => $image->id,
+            'id'         => $image->id,
             'deleted_at' => null,
         ]);
     }

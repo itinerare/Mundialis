@@ -2,18 +2,10 @@
 
 namespace Tests\Feature;
 
-use DB;
-
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
-use Tests\TestCase;
-
 use App\Models\SitePage;
-
 use App\Models\User\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AdminSitePageTest extends TestCase
 {
@@ -25,8 +17,6 @@ class AdminSitePageTest extends TestCase
 
     /**
      * Test site page index access.
-     *
-     * @return void
      */
     public function test_canGetSitePageIndex()
     {
@@ -41,8 +31,6 @@ class AdminSitePageTest extends TestCase
 
     /**
      * Test site page editing.
-     *
-     * @return void
      */
     public function test_canPostEditSitePage()
     {
@@ -61,13 +49,13 @@ class AdminSitePageTest extends TestCase
         $response = $this
             ->actingAs($user)
             ->post('/admin/pages/edit/'.$page->id, [
-                'text' => 'TEST SUCCESS'
+                'text' => 'TEST SUCCESS',
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('site_pages', [
-            'key' => 'about',
-            'text' => 'TEST SUCCESS'
+            'key'  => 'about',
+            'text' => 'TEST SUCCESS',
         ]);
     }
 }

@@ -31,14 +31,15 @@ class WatchedPageFactory extends Factory
      * Generate a watch for a specific page.
      * This is essentially required.
      *
-     * @param  int                      $page
+     * @param int $page
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function page($page)
     {
         return $this->state(function (array $attributes) use ($page) {
             return [
-                'page_id' => $page
+                'page_id' => $page,
             ];
         });
     }
@@ -47,14 +48,15 @@ class WatchedPageFactory extends Factory
      * Generate a watch by a specific user.
      * This is essentially required.
      *
-     * @param  int                      $user
+     * @param int $user
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function user($user)
     {
         return $this->state(function (array $attributes) use ($user) {
             return [
-                'user_id' => $user
+                'user_id' => $user,
             ];
         });
     }

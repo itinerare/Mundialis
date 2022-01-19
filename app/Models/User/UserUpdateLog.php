@@ -6,16 +6,6 @@ use App\Models\Model;
 
 class UserUpdateLog extends Model
 {
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'staff_id', 'user_id', 'type', 'data'
-    ];
-
     /**
      * The primary key of the model.
      *
@@ -29,6 +19,15 @@ class UserUpdateLog extends Model
      * @var string
      */
     public $timestamps = true;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'staff_id', 'user_id', 'type', 'data',
+    ];
 
     /**
      * The table associated with the model.

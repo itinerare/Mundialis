@@ -2,13 +2,10 @@
 
 namespace Tests\Feature;
 
-use DB;
-
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-
 use App\Models\User\User;
+use DB;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AccessTest extends TestCase
 {
@@ -19,8 +16,6 @@ class AccessTest extends TestCase
 
     /**
      * Test most basic site access.
-     *
-     * @return void
      */
     public function test_canAccessSite()
     {
@@ -32,8 +27,6 @@ class AccessTest extends TestCase
 
     /**
      * Test visitor access when the site is closed.
-     *
-     * @return void
      */
     public function test_visitorCannotReadWhenClosed()
     {
@@ -51,8 +44,6 @@ class AccessTest extends TestCase
 
     /**
      * Test visitor access when the site is open.
-     *
-     * @return void
      */
     public function test_visitorCanReadWhenOpen()
     {
@@ -70,8 +61,6 @@ class AccessTest extends TestCase
 
     /**
      * Ensure visitor cannot access member-only routes.
-     *
-     * @return void
      */
     public function test_visitorCannotGetAccountSettings()
     {
@@ -82,8 +71,6 @@ class AccessTest extends TestCase
 
     /**
      * Ensure visitor cannot access editor routes.
-     *
-     * @return void
      */
     public function test_visitorCannotGetWrite()
     {
@@ -94,8 +81,6 @@ class AccessTest extends TestCase
 
     /**
      * Ensure visitor cannot access admin routes.
-     *
-     * @return void
      */
     public function test_visitorCannotGetAdminIndex()
     {
@@ -106,8 +91,6 @@ class AccessTest extends TestCase
 
     /**
      * Ensure user can access member-only routes.
-     *
-     * @return void
      */
     public function test_userCanGetUserSettings()
     {
@@ -121,8 +104,6 @@ class AccessTest extends TestCase
 
     /**
      * Ensure user cannot access editor routes.
-     *
-     * @return void
      */
     public function test_userCannotGetWrite()
     {
@@ -136,8 +117,6 @@ class AccessTest extends TestCase
 
     /**
      * Ensure user cannot access admin routes.
-     *
-     * @return void
      */
     public function test_userCannotGetAdminIndex()
     {
@@ -151,8 +130,6 @@ class AccessTest extends TestCase
 
     /**
      * Ensure editor can access editor routes.
-     *
-     * @return void
      */
     public function test_editorCanGetWrite()
     {
@@ -166,8 +143,6 @@ class AccessTest extends TestCase
 
     /**
      * Ensure editor cannot access admin routes.
-     *
-     * @return void
      */
     public function test_editorCannotGetAdminIndex()
     {
@@ -181,8 +156,6 @@ class AccessTest extends TestCase
 
     /**
      * Ensure admin can access editor routes.
-     *
-     * @return void
      */
     public function test_adminCanGetWrite()
     {
@@ -196,8 +169,6 @@ class AccessTest extends TestCase
 
     /**
      * Ensure admin can access admin routes.
-     *
-     * @return void
      */
     public function test_adminCanGetAdminIndex()
     {

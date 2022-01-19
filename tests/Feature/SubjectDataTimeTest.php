@@ -2,17 +2,14 @@
 
 namespace Tests\Feature;
 
-use DB;
+use App\Models\Page\Page;
+use App\Models\Subject\SubjectCategory;
+use App\Models\Subject\TimeChronology;
+use App\Models\Subject\TimeDivision;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
-
-use App\Models\User\User;
-use App\Models\Subject\SubjectCategory;
-use App\Models\Subject\TimeDivision;
-use App\Models\Subject\TimeChronology;
-use App\Models\Page\Page;
 
 class SubjectDataTimeTest extends TestCase
 {
@@ -24,8 +21,6 @@ class SubjectDataTimeTest extends TestCase
 
     /**
      * Test time divisions access.
-     *
-     * @return void
      */
     public function test_canGetEditTimeDivisions()
     {
@@ -39,16 +34,14 @@ class SubjectDataTimeTest extends TestCase
 
     /**
      * Test time division creation.
-     *
-     * @return void
      */
     public function test_canPostCreateTimeDivision()
     {
         // Define some basic template data
         $data = [
-            'name' => [0 => $this->faker->unique()->domainWord()],
+            'name'         => [0 => $this->faker->unique()->domainWord()],
             'abbreviation' => [0 => $this->faker->unique()->domainWord()],
-            'unit' => [0 => mt_rand(1,100)]
+            'unit'         => [0 => mt_rand(1, 100)],
         ];
 
         // Make a temporary admin
@@ -61,16 +54,14 @@ class SubjectDataTimeTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('time_divisions', [
-            'name' => $data['name'][0],
+            'name'         => $data['name'][0],
             'abbreviation' => $data['abbreviation'][0],
-            'unit' => $data['unit'][0]
+            'unit'         => $data['unit'][0],
         ]);
     }
 
     /**
      * Test time division editing.
-     *
-     * @return void
      */
     public function test_canPostEditTimeDivisions()
     {
@@ -81,10 +72,10 @@ class SubjectDataTimeTest extends TestCase
 
         // Define some basic data
         $data = [
-            'id' => [0 => $division->id],
-            'name' => [0 => $this->faker->unique()->domainWord()],
+            'id'           => [0 => $division->id],
+            'name'         => [0 => $this->faker->unique()->domainWord()],
             'abbreviation' => [0 => $this->faker->unique()->domainWord()],
-            'unit' => [0 => mt_rand(1,100)]
+            'unit'         => [0 => mt_rand(1, 100)],
         ];
 
         // Try to post data again
@@ -94,17 +85,15 @@ class SubjectDataTimeTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('time_divisions', [
-            'name' => $data['name'][0],
+            'name'         => $data['name'][0],
             'abbreviation' => $data['abbreviation'][0],
-            'unit' => $data['unit'][0],
-            'id' => $division->id
+            'unit'         => $data['unit'][0],
+            'id'           => $division->id,
         ]);
     }
 
     /**
      * Test time chronologies access.
-     *
-     * @return void
      */
     public function test_canGetTimeChronologies()
     {
@@ -118,8 +107,6 @@ class SubjectDataTimeTest extends TestCase
 
     /**
      * Test time chronology create access.
-     *
-     * @return void
      */
     public function test_canGetCreateTimeChronology()
     {
@@ -133,8 +120,6 @@ class SubjectDataTimeTest extends TestCase
 
     /**
      * Test time chronology edit access.
-     *
-     * @return void
      */
     public function test_canGetEditTimeChronology()
     {
@@ -149,15 +134,13 @@ class SubjectDataTimeTest extends TestCase
 
     /**
      * Test time chronology creation.
-     *
-     * @return void
      */
     public function test_canPostCreateTimeChronology()
     {
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
-            'description' => $this->faker->unique()->domainWord()
+            'name'        => $this->faker->unique()->domainWord(),
+            'description' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a temporary admin
@@ -170,15 +153,13 @@ class SubjectDataTimeTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('time_chronology', [
-            'name' => $data['name'],
-            'description' => $data['description']
+            'name'        => $data['name'],
+            'description' => $data['description'],
         ]);
     }
 
     /**
      * Test time chronology editing.
-     *
-     * @return void
      */
     public function test_canPostEditTimeChronology()
     {
@@ -186,7 +167,7 @@ class SubjectDataTimeTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord()
+            'name' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a temporary admin
@@ -199,15 +180,13 @@ class SubjectDataTimeTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('time_chronology', [
-            'id' => $chronology->id,
-            'name' => $data['name']
+            'id'   => $chronology->id,
+            'name' => $data['name'],
         ]);
     }
 
     /**
      * Test time chronology creation with a parent.
-     *
-     * @return void
      */
     public function test_canPostCreateTimeChronologyWithParent()
     {
@@ -215,8 +194,8 @@ class SubjectDataTimeTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id
+            'name'      => $this->faker->unique()->domainWord(),
+            'parent_id' => $parent->id,
         ];
 
         // Make a temporary admin
@@ -229,15 +208,13 @@ class SubjectDataTimeTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('time_chronology', [
-            'name' => $data['name'],
-            'parent_id' => $parent->id
+            'name'      => $data['name'],
+            'parent_id' => $parent->id,
         ]);
     }
 
     /**
      * Test time chronology editing with a parent.
-     *
-     * @return void
      */
     public function test_canPostEditTimeChronologyWithParent()
     {
@@ -246,8 +223,8 @@ class SubjectDataTimeTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id
+            'name'      => $this->faker->unique()->domainWord(),
+            'parent_id' => $parent->id,
         ];
 
         // Make a temporary admin
@@ -260,16 +237,14 @@ class SubjectDataTimeTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('time_chronology', [
-            'id' => $chronology->id,
-            'name' => $data['name'],
-            'parent_id' => $parent->id
+            'id'        => $chronology->id,
+            'name'      => $data['name'],
+            'parent_id' => $parent->id,
         ]);
     }
 
     /**
      * Test chronology delete access.
-     *
-     * @return void
      */
     public function test_canGetDeleteTimeChronology()
     {
@@ -285,8 +260,6 @@ class SubjectDataTimeTest extends TestCase
     /**
      * Test chronology deletion.
      * This should work.
-     *
-     * @return void
      */
     public function test_canPostDeleteTimeChronology()
     {
@@ -311,8 +284,6 @@ class SubjectDataTimeTest extends TestCase
     /**
      * Test chronology deletion with a page.
      * This shouldn't work.
-     *
-     * @return void
      */
     public function test_cannotPostDeleteTimeChronologyWithPage()
     {
@@ -340,8 +311,6 @@ class SubjectDataTimeTest extends TestCase
     /**
      * Test chronology deletion with a sub-category.
      * This shouldn't work.
-     *
-     * @return void
      */
     public function test_cannotPostDeleteTimeChronologyWithSubchronology()
     {

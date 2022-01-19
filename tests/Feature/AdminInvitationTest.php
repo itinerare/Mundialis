@@ -2,16 +2,11 @@
 
 namespace Tests\Feature;
 
-use DB;
-
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-
-use App\Models\User\User;
 use App\Models\User\InvitationCode;
-
+use App\Models\User\User;
 use App\Services\InvitationService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AdminInvitationTest extends TestCase
 {
@@ -23,8 +18,6 @@ class AdminInvitationTest extends TestCase
 
     /**
      * Test invitation code index access.
-     *
-     * @return void
      */
     public function test_canGetInvitationIndex()
     {
@@ -39,8 +32,6 @@ class AdminInvitationTest extends TestCase
 
     /**
      * Test invitation code creation.
-     *
-     * @return void
      */
     public function test_canPostCreateInvitation()
     {
@@ -61,8 +52,6 @@ class AdminInvitationTest extends TestCase
 
     /**
      * Test invitation code deletion.
-     *
-     * @return void
      */
     public function test_canPostDeleteInvitation()
     {
@@ -88,8 +77,6 @@ class AdminInvitationTest extends TestCase
 
     /**
      * Ensure a used invitation code cannot be deleted.
-     *
-     * @return void
      */
     public function test_cannotPostDeleteUsedInvitation()
     {
@@ -105,7 +92,7 @@ class AdminInvitationTest extends TestCase
             (new InvitationService)->generateInvitation($user);
 
         // If necessary, simulate a "used" code
-        if($code->recipient_id == null) {
+        if ($code->recipient_id == null) {
             // Create a persistent user and mark them as the code's recipient
             $recipient = User::factory()->create();
             $code->update(['recipient_id' => $recipient->id]);

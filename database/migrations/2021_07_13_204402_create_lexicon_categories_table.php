@@ -8,8 +8,6 @@ class CreateLexiconCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -39,8 +37,6 @@ class CreateLexiconCategoriesTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

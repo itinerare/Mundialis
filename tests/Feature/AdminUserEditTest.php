@@ -2,12 +2,9 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-
-use App\Models\User\User;
 use App\Models\User\Rank;
+use App\Models\User\User;
+use Tests\TestCase;
 
 class AdminUserEditTest extends TestCase
 {
@@ -19,8 +16,6 @@ class AdminUserEditTest extends TestCase
 
     /**
      * Test user index access.
-     *
-     * @return void
      */
     public function test_canGetAdminUserIndex()
     {
@@ -35,8 +30,6 @@ class AdminUserEditTest extends TestCase
 
     /**
      * Test user edit page access.
-     *
-     * @return void
      */
     public function test_canGetEditUser()
     {
@@ -55,8 +48,6 @@ class AdminUserEditTest extends TestCase
     /**
      * Test user editing, admin > regular user.
      * This should work.
-     *
-     * @return void
      */
     public function test_canPostEditUserBasic()
     {
@@ -72,22 +63,20 @@ class AdminUserEditTest extends TestCase
         // so try changing them to an editor
         $response = $this->actingAs($user)
             ->post('/admin/users/'.$subject->name.'/basic', [
-                'name' => $subject->name,
-                'rank_id' => $rank->id
+                'name'    => $subject->name,
+                'rank_id' => $rank->id,
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'rank_id' => $rank->id
+            'name'    => $subject->name,
+            'rank_id' => $rank->id,
         ]);
     }
 
     /**
      * Test user editing, admin > editor.
      * This should work.
-     *
-     * @return void
      */
     public function test_canPostEditEditorBasic()
     {
@@ -103,22 +92,20 @@ class AdminUserEditTest extends TestCase
         // so try changing them to an editor
         $response = $this->actingAs($user)
             ->post('/admin/users/'.$subject->name.'/basic', [
-                'name' => $subject->name,
-                'rank_id' => $rank->id
+                'name'    => $subject->name,
+                'rank_id' => $rank->id,
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'rank_id' => $rank->id
+            'name'    => $subject->name,
+            'rank_id' => $rank->id,
         ]);
     }
 
     /**
      * Test user editing, admin > admin.
      * This should not work.
-     *
-     * @return void
      */
     public function test_cannotPostEditAdminBasic()
     {
@@ -136,21 +123,19 @@ class AdminUserEditTest extends TestCase
         // so try changing them to an editor
         $response = $this->actingAs($user)
             ->post('/admin/users/'.$subject->name.'/basic', [
-                'name' => $subject->name,
-                'rank_id' => $rank->id
+                'name'    => $subject->name,
+                'rank_id' => $rank->id,
             ]);
 
         // Directly verify that nothing has changed
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'rank_id' => $oldRank
+            'name'    => $subject->name,
+            'rank_id' => $oldRank,
         ]);
     }
 
     /**
      * Test user updates access.
-     *
-     * @return void
      */
     public function test_canGetUserUpdates()
     {
@@ -172,8 +157,6 @@ class AdminUserEditTest extends TestCase
 
     /**
      * Test ban user page access.
-     *
-     * @return void
      */
     public function test_canGetBanUser()
     {
@@ -191,8 +174,6 @@ class AdminUserEditTest extends TestCase
 
     /**
      * Test ban confirmation access.
-     *
-     * @return void
      */
     public function test_canGetConfirmBanUser()
     {
@@ -211,8 +192,6 @@ class AdminUserEditTest extends TestCase
     /**
      * Test user banning, admin > regular user.
      * This should work.
-     *
-     * @return void
      */
     public function test_canPostBanUser()
     {
@@ -224,22 +203,20 @@ class AdminUserEditTest extends TestCase
         // Try to post data
         $response = $this->actingAs($user)
             ->post('/admin/users/'.$subject->name.'/ban', [
-                'ban_reason' => 'Ban test'
+                'ban_reason' => 'Ban test',
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'is_banned' => 1,
-            'ban_reason' => 'Ban test'
+            'name'       => $subject->name,
+            'is_banned'  => 1,
+            'ban_reason' => 'Ban test',
         ]);
     }
 
     /**
      * Test user banning, admin > editor.
      * This should work.
-     *
-     * @return void
      */
     public function test_canPostBanEditor()
     {
@@ -251,22 +228,20 @@ class AdminUserEditTest extends TestCase
         // Try to post data
         $response = $this->actingAs($user)
             ->post('/admin/users/'.$subject->name.'/ban', [
-                'ban_reason' => 'Ban test'
+                'ban_reason' => 'Ban test',
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'is_banned' => 1,
-            'ban_reason' => 'Ban test'
+            'name'       => $subject->name,
+            'is_banned'  => 1,
+            'ban_reason' => 'Ban test',
         ]);
     }
 
     /**
      * Test user banning, admin > admin.
      * This should not work.
-     *
-     * @return void
      */
     public function test_cannotPostBanAdmin()
     {
@@ -278,21 +253,19 @@ class AdminUserEditTest extends TestCase
         // Try to post data
         $response = $this->actingAs($user)
             ->post('/admin/users/'.$subject->name.'/ban', [
-                'ban_reason' => 'Ban test'
+                'ban_reason' => 'Ban test',
             ]);
 
         // Directly verify that nothing has changed
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'is_banned' => 0
+            'name'      => $subject->name,
+            'is_banned' => 0,
         ]);
     }
 
     /**
      * Test ban message editing, admin > regular user.
      * This should work.
-     *
-     * @return void
      */
     public function test_canPostEditUserBan()
     {
@@ -304,22 +277,20 @@ class AdminUserEditTest extends TestCase
         // Try to post data
         $response = $this->actingAs($user)
             ->post('/admin/users/'.$subject->name.'/ban', [
-                'ban_reason' => 'Ban message edit test'
+                'ban_reason' => 'Ban message edit test',
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'is_banned' => 1,
-            'ban_reason' => 'Ban message edit test'
+            'name'       => $subject->name,
+            'is_banned'  => 1,
+            'ban_reason' => 'Ban message edit test',
         ]);
     }
 
     /**
      * Test ban message editing, admin > editor.
      * This should work.
-     *
-     * @return void
      */
     public function test_canPostEditEditorBan()
     {
@@ -331,22 +302,20 @@ class AdminUserEditTest extends TestCase
         // Try to post data
         $response = $this->actingAs($user)
             ->post('/admin/users/'.$subject->name.'/ban', [
-                'ban_reason' => 'Ban message edit test'
+                'ban_reason' => 'Ban message edit test',
             ]);
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'is_banned' => 1,
-            'ban_reason' => 'Ban message edit test'
+            'name'       => $subject->name,
+            'is_banned'  => 1,
+            'ban_reason' => 'Ban message edit test',
         ]);
     }
 
     /**
      * Test ban message editing, admin > admin.
      * This should not work.
-     *
-     * @return void
      */
     public function test_cannotPostEditAdminBan()
     {
@@ -358,21 +327,19 @@ class AdminUserEditTest extends TestCase
         // Try to post data
         $response = $this->actingAs($user)
             ->post('/admin/users/'.$subject->name.'/ban', [
-                'ban_reason' => 'Ban message edit test'
+                'ban_reason' => 'Ban message edit test',
             ]);
 
         // Directly verify that nothing has changed
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'is_banned' => 1,
-            'ban_reason' => 'Generated as banned'
+            'name'       => $subject->name,
+            'is_banned'  => 1,
+            'ban_reason' => 'Generated as banned',
         ]);
     }
 
     /**
      * Test unban user access.
-     *
-     * @return void
      */
     public function test_canGetUnbanUser()
     {
@@ -391,8 +358,6 @@ class AdminUserEditTest extends TestCase
     /**
      * Test user unbanning, admin > regular user.
      * This should work.
-     *
-     * @return void
      */
     public function test_canPostUnbanUser()
     {
@@ -407,16 +372,14 @@ class AdminUserEditTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'is_banned' => 0
+            'name'      => $subject->name,
+            'is_banned' => 0,
         ]);
     }
 
     /**
      * Test user unbanning, admin > editor.
      * This should work.
-     *
-     * @return void
      */
     public function test_canPostUnbanEditor()
     {
@@ -431,16 +394,14 @@ class AdminUserEditTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'is_banned' => 0
+            'name'      => $subject->name,
+            'is_banned' => 0,
         ]);
     }
 
     /**
      * Test user unbanning, admin > admin.
      * This shouldn't work.
-     *
-     * @return void
      */
     public function test_cannotPostUnbanAdmin()
     {
@@ -455,8 +416,8 @@ class AdminUserEditTest extends TestCase
 
         // Directly verify that nothing has changed
         $this->assertDatabaseHas('users', [
-            'name' => $subject->name,
-            'is_banned' => 1
+            'name'      => $subject->name,
+            'is_banned' => 1,
         ]);
     }
 }

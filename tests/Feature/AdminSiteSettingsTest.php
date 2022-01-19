@@ -2,13 +2,10 @@
 
 namespace Tests\Feature;
 
-use DB;
-
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-
 use App\Models\User\User;
+use DB;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AdminSiteSettingsTest extends TestCase
 {
@@ -20,8 +17,6 @@ class AdminSiteSettingsTest extends TestCase
 
     /**
      * Test site settings access.
-     *
-     * @return void
      */
     public function test_canGetSiteSettingsIndex()
     {
@@ -36,8 +31,6 @@ class AdminSiteSettingsTest extends TestCase
 
     /**
      * Test site setting editing.
-     *
-     * @return void
      */
     public function test_canPostEditSiteSetting()
     {
@@ -57,8 +50,8 @@ class AdminSiteSettingsTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('site_settings', [
-            'key' => 'is_registration_open',
-            'value' => 0
+            'key'   => 'is_registration_open',
+            'value' => 0,
         ]);
     }
 }

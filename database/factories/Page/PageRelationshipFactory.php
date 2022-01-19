@@ -32,14 +32,15 @@ class PageRelationshipFactory extends Factory
      * Generate a relationship for a specific page.
      * This is essentially required.
      *
-     * @param  int                      $page
+     * @param int $page
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function pageOne($page)
     {
         return $this->state(function (array $attributes) use ($page) {
             return [
-                'page_one_id' => $page
+                'page_one_id' => $page,
             ];
         });
     }
@@ -48,14 +49,15 @@ class PageRelationshipFactory extends Factory
      * Generate a relationship for a specific page.
      * This is essentially required.
      *
-     * @param  int                      $page
+     * @param int $page
+     *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function pageTwo($page)
     {
         return $this->state(function (array $attributes) use ($page) {
             return [
-                'page_two_id' => $page
+                'page_two_id' => $page,
             ];
         });
     }
