@@ -31,7 +31,7 @@ class PageManager extends Service
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return bool|\App\Models\Page\Page
+     * @return \App\Models\Page\Page|bool
      */
     public function createPage($data, $user)
     {
