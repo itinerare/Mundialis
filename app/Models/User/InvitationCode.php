@@ -7,12 +7,6 @@ use App\Models\Model;
 class InvitationCode extends Model
 {
     /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = true;
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -27,6 +21,12 @@ class InvitationCode extends Model
      * @var string
      */
     protected $table = 'invitation_codes';
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = true;
 
     /**********************************************************************************************
 

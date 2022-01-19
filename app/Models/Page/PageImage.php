@@ -11,6 +11,22 @@ class PageImage extends Model
     use HasFactory, SoftDeletes;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'description', 'is_visible',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'page_images';
+
+    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -36,22 +52,6 @@ class PageImage extends Model
         'creator_url.*' => 'nullable|url',
         'image'         => 'nullable|mimes:jpeg,gif,png|max:20000',
     ];
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'description', 'is_visible',
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'page_images';
 
     /**********************************************************************************************
 

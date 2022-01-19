@@ -11,6 +11,22 @@ class SubjectCategory extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'subject', 'name', 'summary', 'parent_id', 'description', 'data', 'has_image',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'subject_categories';
+
+    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -36,22 +52,6 @@ class SubjectCategory extends Model
         'name'  => 'required',
         'image' => 'mimes:png',
     ];
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'subject', 'name', 'summary', 'parent_id', 'description', 'data', 'has_image',
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'subject_categories';
 
     /**********************************************************************************************
 

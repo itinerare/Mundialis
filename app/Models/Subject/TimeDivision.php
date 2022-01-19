@@ -10,22 +10,6 @@ class TimeDivision extends Model
     use HasFactory;
 
     /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = false;
-
-    /**
-     * Validation rules for category updating.
-     *
-     * @var array
-     */
-    public static $rules = [
-        'name.*' => 'required',
-    ];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -40,6 +24,22 @@ class TimeDivision extends Model
      * @var string
      */
     protected $table = 'time_divisions';
+
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = false;
+
+    /**
+     * Validation rules for category updating.
+     *
+     * @var array
+     */
+    public static $rules = [
+        'name.*' => 'required',
+    ];
 
     /**********************************************************************************************
 

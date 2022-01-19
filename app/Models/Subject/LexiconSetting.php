@@ -7,21 +7,6 @@ use App\Models\Model;
 class LexiconSetting extends Model
 {
     /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = false;
-
-    /**
-     * Validation rules for category updating.
-     *
-     * @var array
-     */
-    public static $rules = [
-        'name.*' => 'required',
-    ];
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -36,4 +21,19 @@ class LexiconSetting extends Model
      * @var string
      */
     protected $table = 'lexicon_settings';
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = false;
+
+    /**
+     * Validation rules for category updating.
+     *
+     * @var array
+     */
+    public static $rules = [
+        'name.*' => 'required',
+    ];
 }

@@ -10,13 +10,6 @@ class PageLink extends Model
     use HasFactory;
 
     /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = false;
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -31,6 +24,13 @@ class PageLink extends Model
      * @var string
      */
     protected $table = 'page_links';
+
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = false;
 
     /**********************************************************************************************
 

@@ -10,6 +10,22 @@ class TimeChronology extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'parent_id', 'name', 'abbreviation', 'description',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'time_chronology';
+
+    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -34,22 +50,6 @@ class TimeChronology extends Model
     public static $updateRules = [
         'name' => 'required',
     ];
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'parent_id', 'name', 'abbreviation', 'description',
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'time_chronology';
 
     /**********************************************************************************************
 

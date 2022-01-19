@@ -10,6 +10,22 @@ class LexiconCategory extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'parent_id', 'description', 'data',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'lexicon_categories';
+
+    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -33,22 +49,6 @@ class LexiconCategory extends Model
     public static $updateRules = [
         'name' => 'required',
     ];
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'parent_id', 'description', 'data',
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'lexicon_categories';
 
     /**
      * Get parent category of this category.

@@ -7,6 +7,21 @@ use App\Models\Model;
 class SubjectTemplate extends Model
 {
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'subject', 'data',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'subject_templates';
+    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -35,21 +50,6 @@ class SubjectTemplate extends Model
         'field_value.*'     => 'nullable|string|max:255',
         'field_help.*'      => 'nullable|string|max:255',
     ];
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'subject', 'data',
-    ];
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'subject_templates';
 
     /**********************************************************************************************
 
