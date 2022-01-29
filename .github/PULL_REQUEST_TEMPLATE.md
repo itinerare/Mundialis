@@ -39,3 +39,15 @@
 - [ ] I have read the **CONTRIBUTING** document.
 - [ ] I have added and/or updated tests to cover my changes (if applicable).
 - [ ] All tests passed, including new tests (if applicable).
+- [ ] I license my contributions to this project under [the MIT License](../LICENSE-MIT.md), either directly or as a consequence of agreeing with the contributor license agreement printed below.
+
+### Contributor License Agreement
+<!--- As stated in the project's license, third-party contributions are licensed under -->
+<!--- the permissive MIT license and remain the property of their author. -->
+<!--- Which is to say, you retain ownership of any code you contribute to this project, -->
+<!--- while freely allowing the project to incorporate and make use of your contribution(s). -->
+<!--- If in doubt, don't hesitate to ask any questions you might have about this! -->
+
+I, {{{contributor name}}}, give itinerare permission to license my contributions on any terms they like.  I am giving them this license in order to make it possible for them to accept my contributions into their project.
+
+***As far as the law allows, my contributions come as is, without any warranty or condition, and I will not be liable to anyone for any damages related to this software or this license, under any kind of legal claim.***
