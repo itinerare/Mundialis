@@ -94,7 +94,7 @@ class TimeDivision extends Model
     {
         $fields = [];
         foreach ($this->dateEnabled()->orderBy('sort')->get() as $division) {
-            $fields[str_replace(' ', '_', strtolower($division->name))] = [
+            $fields[$division->id] = [
                 'label'   => $division->name,
                 'type'    => 'number',
                 'rules'   => null,
@@ -118,8 +118,8 @@ class TimeDivision extends Model
     {
         // Cycle through date-enabled divisions and add a formatted string to the array
         foreach ($this->dateEnabled()->orderBy('sort')->get() as $division) {
-            if (isset($data[str_replace(' ', '_', strtolower($division->name))])) {
-                $date[] = $division->displayName.' '.$data[str_replace(' ', '_', strtolower($division->name))];
+            if (isset($data[$division->id])) {
+                $date[] = $division->displayName.' '.$data['time_division_'.$division->id];
             }
         }
 
