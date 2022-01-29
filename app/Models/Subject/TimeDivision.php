@@ -123,6 +123,10 @@ class TimeDivision extends Model
             }
         }
 
-        return implode(', ', $date);
+        if (isset($date)) {
+            return implode(', ', $date);
+        }
+
+        return null;
     }
 }
