@@ -31,8 +31,8 @@ class PageTimeTest extends TestCase
             'title'                                   => $this->faker->unique()->domainWord(),
             'summary'                                 => null,
             'category_id'                             => $category->id,
-            'date_start_'.$division->id => mt_rand(1, 50),
-            'date_end_'.$division->id   => mt_rand(50, 100),
+            'date_start_'.$division->id               => mt_rand(1, 50),
+            'date_end_'.$division->id                 => mt_rand(50, 100),
         ];
 
         // Make a persistent editor
@@ -71,8 +71,8 @@ class PageTimeTest extends TestCase
             'title'                                   => $this->faker->unique()->domainWord(),
             'summary'                                 => null,
             'category_id'                             => $category->id,
-            'date_start_'.$division->id => mt_rand(1, 50),
-            'date_end_'.$division->id   => mt_rand(50, 100),
+            'date_start_'.$division->id               => mt_rand(1, 50),
+            'date_end_'.$division->id                 => mt_rand(50, 100),
         ];
 
         // Make a persistent editor
