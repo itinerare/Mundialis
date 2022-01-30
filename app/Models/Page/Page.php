@@ -524,11 +524,11 @@ class Page extends Model
         // Get list of date-enabled divisions
         $dateDivisions = TimeDivision::dateEnabled()->orderBy('sort', 'DESC')->get();
         foreach ($dateDivisions as $division) {
-            $divisionNames[] = str_replace(' ', '_', strtolower($division->name));
+            $divisionKeys[] = $division->id;
         }
 
         // Recursively group events
-        $timePages = $this->timeGroupEvents($timePages, $divisionNames);
+        $timePages = $this->timeGroupEvents($timePages, $divisionKeys);
 
         if ($timePages->count()) {
             return $timePages;
@@ -541,17 +541,17 @@ class Page extends Model
      * Help organize events recursively.
      *
      * @param \Illuminate\Support\Collection $group
-     * @param array                          $divisionNames
+     * @param array                          $divisionKeys
      * @param int                            $i
      *
      * @return \Illuminate\Support\Collection
      */
-    public function timeGroupEvents($group, $divisionNames, $i = 0)
+    public function timeGroupEvents($group, $divisionKeys, $i = 0)
     {
         // Group the pages by the current division
-        $group = $group->groupBy(function ($page) use ($divisionNames, $i) {
-            if (isset($page->data['date']['start'][$divisionNames[$i]])) {
-                return $page->data['date']['start'][$divisionNames[$i]];
+        $group = $group->groupBy(function ($page) use ($divisionKeys, $i) {
+            if (isset($page->data['date']['start'][$divisionKeys[$i]])) {
+                return $page->data['date']['start'][$divisionKeys[$i]];
             }
 
             return '00';
@@ -560,10 +560,10 @@ class Page extends Model
         });
 
         // See if there is a smaller division
-        if (isset($divisionNames[$i + 1])) {
+        if (isset($divisionKeys[$i + 1])) {
             // And if so, group the pages by it, etc
-            $group = $group->map(function ($subGroup) use ($divisionNames, $i) {
-                return $this->timeGroupEvents($subGroup, $divisionNames, $i + 1);
+            $group = $group->map(function ($subGroup) use ($divisionKeys, $i) {
+                return $this->timeGroupEvents($subGroup, $divisionKeys, $i + 1);
             });
         }
 
