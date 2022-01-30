@@ -119,7 +119,11 @@ class TimeDivision extends Model
         // Cycle through date-enabled divisions and add a formatted string to the array
         foreach ($this->dateEnabled()->orderBy('sort')->get() as $division) {
             if (isset($data[$division->id])) {
-                $date[] = $division->displayName.' '.$data['time_division_'.$division->id];
+                // First try the current methodology for finding date information
+                $date[] = $division->displayName.' '.$data[$division->id];
+            } elseif (isset($data[str_replace(' ', '_', strtolower($division->name))])) {
+                // Then as a fallback, check for the earlier methodology
+                $date[] = $division->displayName.' '.$data[str_replace(' ', '_', strtolower($division->name))];
             }
         }
 

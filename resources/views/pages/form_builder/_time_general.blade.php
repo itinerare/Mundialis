@@ -6,7 +6,7 @@
         @foreach((new App\Models\Subject\TimeDivision)->dateFields() as $key=>$field)
             <div class="col-md">
                 {!! Form::label(ucfirst($segment).' '.$field['label']) !!}
-                {!! Form::number('date_'.$segment.'_'.$key, isset($page->data['date'][$segment][$key]) ? $page->data['date'][$segment][$key] : null, ['class' => 'form-control']) !!}
+                {!! Form::number('date_'.$segment.'_'.$key, isset($page->data['date'][$segment][$key]) ? $page->data['date'][$segment][$key] : (isset($page->data['date'][$segment][str_replace(' ', '_', strtolower($field['label']))]) ? $page->data['date'][$segment][str_replace(' ', '_', strtolower($field['label']))] : null), ['class' => 'form-control']) !!}
             </div>
         @endforeach
     </div>
