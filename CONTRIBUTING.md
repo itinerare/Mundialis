@@ -76,6 +76,13 @@ If you are fixing bug(s), there are a few possibilities depending on the circums
 - As a general rule, making feature branches for bugfixes vs. checking out `develop` or the release branch and committing them directly is recommended, but not required, as you will need to push the relevant branch to your fork and make a PR regardless.
 - If you are making a hotfix for a critical issue present **in the current release**, create a new hotfix branch off of `main`, make the necessary changes, and PR it back into `main`.
 
+### Code Style
+Contributions are recommended to follow the style of the project's existing code. However, PHP styling will automatically be adjusted for contributions on creation of a pull request or subsequent merge commit.
+
+If you wish to apply these changes locally, you can run or dry-run them via:
+- Run with `composer lint` 
+- Dry run with `composer sniff`
+
 ### Commit Formatting
 Commits to this project follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) formatting. Contributors are *highly recommended* to follow this formatting when making pull requests (it also makes it very easy to make pull requests!). It is also recommended to focus on atomic commits (commit each fix or task as a separate change, and only commit when a block of work is complete)-- this makes it much easier both to review and manage changes.
 

@@ -4,6 +4,21 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.3.1](https://github.com/itinerare/Mundialis/compare/v1.3.0...v1.3.1) (2022-01-30)
+### Bug Fixes
+
+
+##### Time
+
+* Clarify division page verbiage ([c1c2f6](https://github.com/itinerare/Mundialis/commit/c1c2f6a5e4a597037ec746e94902374c0b3ea450))
+* Compatibility measures for old dates ([0572c6](https://github.com/itinerare/Mundialis/commit/0572c65b2d74689c9a685b05ce30c268f1cec311))
+* Date fields not keyed by ID ([14a72f](https://github.com/itinerare/Mundialis/commit/14a72fba1e62749113bb71faf1c180ae7a25b046))
+* Error formatting timeline ([a398b4](https://github.com/itinerare/Mundialis/commit/a398b47fcfbcdbc460e6a33716fdf9bc23eeea2b))
+* Error viewing date with deleted divisions; fixes #55 ([412845](https://github.com/itinerare/Mundialis/commit/412845cc25a6bc76809b55aa1924bd0a0e5a1e17))
+
+
+---
+
 ## [1.3.0](https://github.com/itinerare/Mundialis/compare/v1.2.0...v1.3.0) (2022-01-16)
 ### Features
 

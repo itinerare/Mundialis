@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use DB;
 
 class UpdateMundialis extends Command
 {
@@ -23,8 +22,6 @@ class UpdateMundialis extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -36,7 +33,7 @@ class UpdateMundialis extends Command
         // Check if the user has run composer and run migrations
         $this->info('This command should be run after installing packages using composer.');
 
-        if($this->confirm('Have you run the composer install command or equivalent?')) {
+        if ($this->confirm('Have you run the composer install command or equivalent?')) {
             // Run migrations
             $this->line("\n".'Clearing caches...');
             $this->call('config:cache');
@@ -49,7 +46,8 @@ class UpdateMundialis extends Command
             $this->line("\n".'Updating site pages and settings...');
             $this->call('add-site-settings');
             $this->call('add-site-pages');
+        } else {
+            $this->line('Aborting! Please run composer install and then run this command again.');
         }
-        else $this->line('Aborting! Please run composer install and then run this command again.');
     }
 }

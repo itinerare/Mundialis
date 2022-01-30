@@ -12,14 +12,16 @@
     </div>
 </h1>
 
-<p>These are the divisions of time that will be used for your site and when creating and editing events. Feel free to be as narrow or as broad in focus as suits your project. Setting these is semi-optional; if you do not specify any divisions of time, you will be able to specify only the year for any events. Once created, divisions can be sorted; they should be sorted from largest to smallest. If divisions are set, they will be displayed along with other basic information on your project's timeframe and events. It's recommended to have the largest division of time correspond to a year at most.</p>
+<p>
+    These are the divisions of time that will be used for your site and when creating and editing events. Feel free to be as narrow or as broad in focus as suits your project. Setting these is semi-optional; if you do not specify any divisions of time, you will be able to specify only the year for any events. Once created, divisions can be sorted; they should be sorted from largest to smallest. If divisions are set, they will be displayed along with other basic information on your project's timeframe and events. It's recommended to have the largest division of time correspond to a year at most. <strong>Note that removing existing division(s) used for dates will impact any dates using them, even if the division(s) are recreated.</strong>
+</p>
 
 <p>Divisions of time have the following properties, in order:</p>
 <ul>
     <li>Name</li>
     <li>Abbreviation (Optional), e.g. "min" for minute</li>
     <li>Unit (Optional), the amount of the division that are in the next largest, e.g. 24 for hours</li>
-    <li>Use for Dates, which controls whether or not the division is used when entering dates</li>
+    <li>Use for Dates, which controls whether or not the division is used when entering dates; only available for time divisions that have already been created</li>
 </ul>
 
 {!! Form::open(['url' => 'admin/data/time/divisions']) !!}

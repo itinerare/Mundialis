@@ -2,25 +2,18 @@
 
 namespace App\Http\Controllers\Pages;
 
+use App\Http\Controllers\Controller;
+use App\Models\Page\Page;
+use App\Models\Page\PageProtection;
+use App\Models\Page\PageVersion;
+use App\Models\Subject\SubjectCategory;
+use App\Models\Subject\TimeChronology;
+use App\Models\Subject\TimeDivision;
+use App\Models\User\User;
+use App\Services\PageManager;
 use Auth;
 use Config;
-
-use App\Models\User\User;
-
-use App\Models\Subject\SubjectCategory;
-use App\Models\Subject\TimeDivision;
-use App\Models\Subject\TimeChronology;
-use App\Models\Subject\LexiconCategory;
-
-use App\Models\Page\Page;
-use App\Models\Page\PageVersion;
-use App\Models\Page\PageTag;
-use App\Models\Page\PageProtection;
-
-use App\Services\PageManager;
-
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class PageController extends Controller
 {
@@ -36,43 +29,47 @@ class PageController extends Controller
     /**
      * Shows a page.
      *
-     * @param  int        $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPage($id)
     {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
-        if(!$page) abort(404);
+        if (!$page) {
+            abort(404);
+        }
 
         return view('pages.page', [
-            'page' => $page
+            'page' => $page,
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision
+            'dateHelper' => new TimeDivision,
         ] : []));
     }
 
     /**
      * Shows a page's revision history.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int                       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageHistory(Request $request, $id)
     {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
-        if(!$page) abort(404);
+        if (!$page) {
+            abort(404);
+        }
 
         $query = PageVersion::where('page_id', $page->id);
         $sort = $request->only(['sort']);
 
-        if($request->get('user_id')) {
+        if ($request->get('user_id')) {
             $query->where('user_id', $request->get('user_id'));
         }
 
-        if(isset($sort['sort']))
-        {
-            switch($sort['sort']) {
+        if (isset($sort['sort'])) {
+            switch ($sort['sort']) {
                 case 'newest':
                     $query->orderBy('created_at', 'DESC');
                     break;
@@ -80,151 +77,180 @@ class PageController extends Controller
                     $query->orderBy('created_at', 'ASC');
                     break;
             }
+        } else {
+            $query->orderBy('created_at', 'DESC');
         }
-        else $query->orderBy('created_at', 'DESC');
 
         return view('pages.page_history', [
-            'page' => $page,
+            'page'     => $page,
             'versions' => $query->paginate(20)->appends($request->query()),
-            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
+            'users'    => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision
+            'dateHelper' => new TimeDivision,
         ] : []));
     }
 
     /**
      * Shows the links to a page.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int                       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getLinksHere(Request $request, $id)
     {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
-        if(!$page) abort(404);
+        if (!$page) {
+            abort(404);
+        }
 
         $query = $page->linked()->get()->filter(function ($link) {
-            if(Auth::check() && Auth::user()->canWrite) return 1;
+            if (Auth::check() && Auth::user()->canWrite) {
+                return 1;
+            }
+
             return $link->linked->is_visible;
         });
 
         return view('pages.page_links_here', [
-            'page' => $page,
+            'page'  => $page,
             'links' => $query->paginate(20)->appends($request->query()),
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision
+            'dateHelper' => new TimeDivision,
         ] : []));
     }
 
     /**
      * Shows a specific page version.
      *
-     * @param  int        $pageId
-     * @param  int        $id
+     * @param int $pageId
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageVersion($pageId, $id)
     {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $pageId)->first();
-        if(!$page) abort(404);
+        if (!$page) {
+            abort(404);
+        }
         $version = $page->versions()->where('id', $id)->first();
 
         return view('pages.page_version', [
-            'page' => $page,
-            'version' => $version
+            'page'    => $page,
+            'version' => $version,
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision
+            'dateHelper' => new TimeDivision,
         ] : []));
     }
 
     /**
      * Shows the create page page.
      *
-     * @param  string            $subject
+     * @param int $category
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreatePage($category)
     {
         $category = SubjectCategory::where('id', $category)->first();
-        if(!$category) abort(404);
+        if (!$category) {
+            abort(404);
+        }
 
         return view('pages.create_edit_page', [
-            'page' => new Page,
-            'category' => $category
+            'page'     => new Page,
+            'category' => $category,
         ] + ($category->subject['key'] == 'places' ? [
-            'placeOptions' => Page::subject('places')->pluck('title', 'id')
-        ] : []) + ($category->subject['key'] == 'time' ? [
-            'chronologyOptions' => TimeChronology::pluck('name', 'id')
-        ] : []) + ($category->subject['key'] == 'people' ? [
             'placeOptions' => Page::subject('places')->pluck('title', 'id'),
-            'chronologyOptions' => TimeChronology::pluck('name', 'id')
+        ] : []) + ($category->subject['key'] == 'time' ? [
+            'chronologyOptions' => TimeChronology::pluck('name', 'id'),
+        ] : []) + ($category->subject['key'] == 'people' ? [
+            'placeOptions'      => Page::subject('places')->pluck('title', 'id'),
+            'chronologyOptions' => TimeChronology::pluck('name', 'id'),
         ] : []));
     }
 
     /**
      * Shows the edit page.
      *
-     * @param  int       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditPage($id)
     {
         $page = Page::find($id);
-        if(!$page) abort(404);
-        if(!Auth::user()->canEdit($page)) abort (404);
+        if (!$page) {
+            abort(404);
+        }
+        if (!Auth::user()->canEdit($page)) {
+            abort(404);
+        }
 
         return view('pages.create_edit_page', [
-            'page' => $page,
-            'category' => $page->category
+            'page'     => $page,
+            'category' => $page->category,
         ] + ($page->category->subject['key'] == 'places' ? [
-            'placeOptions' => Page::subject('places')->where('id', '!=', $page->id)->pluck('title', 'id')
+            'placeOptions' => Page::subject('places')->where('id', '!=', $page->id)->pluck('title', 'id'),
         ] : []) + ($page->category->subject['key'] == 'time' ? [
-            'chronologyOptions' => TimeChronology::pluck('name', 'id')
+            'chronologyOptions' => TimeChronology::pluck('name', 'id'),
         ] : []) + ($page->category->subject['key'] == 'people' ? [
-            'placeOptions' => Page::subject('places')->pluck('title', 'id'),
-            'chronologyOptions' => TimeChronology::pluck('name', 'id')
+            'placeOptions'      => Page::subject('places')->pluck('title', 'id'),
+            'chronologyOptions' => TimeChronology::pluck('name', 'id'),
         ] : []));
     }
 
     /**
      * Creates or edits a page.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\PageManager     $service
-     * @param  int|null                     $id
+     * @param App\Services\PageManager $service
+     * @param int|null                 $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postCreateEditPage(Request $request, PageManager $service, $id = null)
     {
-        if(!$id) $category = SubjectCategory::where('id', $request->get('category_id'))->first();
-        else $category = Page::find($id)->category;
+        if (!$id) {
+            $category = SubjectCategory::where('id', $request->get('category_id'))->first();
+        } else {
+            $category = Page::find($id)->category;
+        }
 
         // Form an array of possible answers based on configured fields,
         // Set any un-set toggles (since Laravel does not pass anything on for them),
         // and collect any custom validation rules for the configured fields
         $answerArray = ['title', 'summary', 'description', 'category_id', 'is_visible',
-        'parent_id', 'page_tag', 'utility_tag', 'reason', 'is_minor'];
+        'parent_id', 'page_tag', 'utility_tag', 'reason', 'is_minor', ];
         $validationRules = ($id ? Page::$updateRules : Page::$createRules);
-        foreach($category->formFields as $key=>$field) {
+        foreach ($category->formFields as $key=>$field) {
             $answerArray[] = $key;
-            if(isset($field['rules'])) $validationRules[$key] = $field['rules'];
-            if($field['type'] == 'checkbox' && !isset($request[$key])) $request[$key] = 0;
+            if (isset($field['rules'])) {
+                $validationRules[$key] = $field['rules'];
+            }
+            if ($field['type'] == 'checkbox' && !isset($request[$key])) {
+                $request[$key] = 0;
+            }
         }
-        if($category->subject['key'] == 'time')
-            foreach(['start', 'end'] as $segment) {
-                foreach((new TimeDivision)->dateFields() as $key=>$field) {
+        if ($category->subject['key'] == 'time') {
+            foreach (['start', 'end'] as $segment) {
+                foreach ((new TimeDivision)->dateFields() as $key=>$field) {
                     $answerArray[] = 'date_'.$segment.'_'.$key;
-                    if(isset($field['rules'])) $validationRules['date_'.$segment.'_'.$key] = $field['rules'];
-                    if($field['type'] == 'checkbox' && !isset($request['date_'.$segment.'_'.$key])) $request['date_'.$segment.'_'.$key] = 0;
+                    if (isset($field['rules'])) {
+                        $validationRules['date_'.$segment.'_'.$key] = $field['rules'];
+                    }
+                    if ($field['type'] == 'checkbox' && !isset($request['date_'.$segment.'_'.$key])) {
+                        $request['date_'.$segment.'_'.$key] = 0;
+                    }
                 }
             }
-        if($category->subject['key'] == 'people') {
+        }
+        if ($category->subject['key'] == 'people') {
             $answerArray[] = 'people_name';
-            foreach(['birth', 'death'] as $segment) {
+            foreach (['birth', 'death'] as $segment) {
                 $answerArray[] = $segment.'_place_id';
                 $answerArray[] = $segment.'_chronology_id';
-                foreach((new TimeDivision)->dateFields() as $key=>$field) {
+                foreach ((new TimeDivision)->dateFields() as $key=>$field) {
                     $answerArray[] = $segment.'_'.$key;
                 }
             }
@@ -233,41 +259,44 @@ class PageController extends Controller
         $request->validate($validationRules);
         $data = $request->only($answerArray);
 
-        if($id && $service->updatePage(Page::find($id), $data, Auth::user())) {
+        if ($id && $service->updatePage(Page::find($id), $data, Auth::user())) {
             flash('Page updated successfully.')->success();
-        }
-        else if (!$id && $page = $service->createPage($data, Auth::user())) {
+        } elseif (!$id && $page = $service->createPage($data, Auth::user())) {
             flash('Page created successfully.')->success();
+
             return redirect()->to($page->url);
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
+
         return redirect()->back();
     }
 
     /**
      * Shows a page's protection settings.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  int                          $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getProtectPage(Request $request, $id)
     {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
-        if(!$page) abort(404);
+        if (!$page) {
+            abort(404);
+        }
 
         $query = PageProtection::where('page_id', $page->id);
         $sort = $request->only(['sort']);
 
-        if($request->get('user_id')) {
+        if ($request->get('user_id')) {
             $query->where('user_id', $request->get('user_id'));
         }
 
-        if(isset($sort['sort']))
-        {
-            switch($sort['sort']) {
+        if (isset($sort['sort'])) {
+            switch ($sort['sort']) {
                 case 'newest':
                     $query->orderBy('created_at', 'DESC');
                     break;
@@ -275,48 +304,55 @@ class PageController extends Controller
                     $query->orderBy('created_at', 'ASC');
                     break;
             }
+        } else {
+            $query->orderBy('created_at', 'DESC');
         }
-        else $query->orderBy('created_at', 'DESC');
 
         return view('pages.page_protection', [
-            'page' => $page,
+            'page'        => $page,
             'protections' => $query->paginate(20)->appends($request->query()),
-            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
+            'users'       => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
         ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
-            'dateHelper' => new TimeDivision
+            'dateHelper' => new TimeDivision,
         ] : []));
     }
 
     /**
      * Updates a page's protection.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\PageManager     $service
-     * @param  int                          $id
+     * @param App\Services\PageManager $service
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postProtectPage(Request $request, PageManager $service, $id)
     {
-        if($id && $service->protectPage(Page::find($id), Auth::user(), $request->only(['reason', 'is_protected']))) {
+        if ($id && $service->protectPage(Page::find($id), Auth::user(), $request->only(['reason', 'is_protected']))) {
             flash('Page protection updated successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+
             return redirect()->back();
         }
+
         return redirect()->back();
     }
 
     /**
      * Gets the page move page.
      *
-     * @param  int       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getMovePage($id)
     {
         $page = Page::find($id);
-        if(!Auth::user()->canEdit($page)) abort (404);
+        if (!Auth::user()->canEdit($page)) {
+            abort(404);
+        }
 
         // Collect categories and information and group them
         $groupedCategories = SubjectCategory::orderBy('sort', 'DESC')->where('id', '!=', $page->category_id)->get()->keyBy('id')->groupBy(function ($category) {
@@ -325,119 +361,138 @@ class PageController extends Controller
 
         // Collect subjects and information
         $orderedSubjects = collect(Config::get('mundialis.subjects'))->filter(function ($subject) use ($groupedCategories) {
-            if(isset($groupedCategories[$subject['name']])) return 1;
-            else return 0;
+            if (isset($groupedCategories[$subject['name']])) {
+                return 1;
+            } else {
+                return 0;
+            }
         })->pluck('name', 'name');
 
-        foreach($groupedCategories as $subject=>$categories)
-            foreach($categories as $id=>$category)
+        foreach ($groupedCategories as $subject=> $categories) {
+            foreach ($categories as $id=>$category) {
                 $groupedCategories[$subject][$id] = $category['name'];
+            }
+        }
 
         // Organize them according to standard subject listing
-        $sortedCategories = $orderedSubjects->map(function($subject, $key) use($groupedCategories) {
+        $sortedCategories = $orderedSubjects->map(function ($subject, $key) use ($groupedCategories) {
             return $groupedCategories[$subject];
         });
 
         return view('pages.page_move', [
-            'page' => $page,
-            'categories' => $sortedCategories
+            'page'       => $page,
+            'categories' => $sortedCategories,
         ]);
     }
 
     /**
      * Moves a page to a given category.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\PageManager     $service
-     * @param  int                          $id
+     * @param App\Services\PageManager $service
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postMovePage(Request $request, PageManager $service, $id)
     {
-        if($id && $service->movePage(Page::find($id), SubjectCategory::find($request->get('category_id')), Auth::user(), $request->get('reason'))) {
+        if ($id && $service->movePage(Page::find($id), SubjectCategory::find($request->get('category_id')), Auth::user(), $request->get('reason'))) {
             flash('Page moved successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+
             return redirect()->back();
         }
+
         return redirect()->to(Page::find($id)->url);
     }
 
     /**
      * Gets the page reset modal.
      *
-     * @param  int       $pageID
-     * @param  int       $id
+     * @param int $id
+     * @param int $pageId
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getResetPage($pageId, $id)
     {
         $page = Page::find($pageId);
         $version = $page->versions()->where('id', $id)->first();
-        if(!Auth::user()->canEdit($page)) abort (404);
+        if (!Auth::user()->canEdit($page)) {
+            abort(404);
+        }
 
         return view('pages._reset_page', [
-            'page' => $page,
-            'version' => $version
+            'page'    => $page,
+            'version' => $version,
         ]);
     }
 
     /**
      * Resets a page to a given version.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\PageManager     $service
-     * @param  int                          $pageId
-     * @param  int                          $id
+     * @param App\Services\PageManager $service
+     * @param int                      $pageId
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postResetPage(Request $request, PageManager $service, $pageId, $id)
     {
-        if($id && $service->resetPage(Page::find($pageId), PageVersion::find($id), Auth::user(), $request->get('reason'))) {
+        if ($id && $service->resetPage(Page::find($pageId), PageVersion::find($id), Auth::user(), $request->get('reason'))) {
             flash('Page reset successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+
             return redirect()->back();
         }
+
         return redirect()->to(Page::find($pageId)->url);
     }
 
     /**
      * Gets the page deletion modal.
      *
-     * @param  int       $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeletePage($id)
     {
         $page = Page::find($id);
-        if(!Auth::user()->canEdit($page)) abort (404);
+        if (!Auth::user()->canEdit($page)) {
+            abort(404);
+        }
 
         return view('pages._delete_page', [
-            'page' => $page
+            'page' => $page,
         ]);
     }
 
     /**
      * Deletes a page.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @param  App\Services\PageManager     $service
-     * @param  int                          $id
+     * @param App\Services\PageManager $service
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeletePage(Request $request, PageManager $service, $id)
     {
-        if($id && $service->deletePage(Page::find($id), Auth::user(), $request->get('reason'))) {
+        if ($id && $service->deletePage(Page::find($id), Auth::user(), $request->get('reason'))) {
             flash('Page deleted successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+
             return redirect()->back();
         }
+
         return redirect()->to('/');
     }
-
 }

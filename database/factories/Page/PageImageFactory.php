@@ -25,7 +25,7 @@ class PageImageFactory extends Factory
         return [
             //
             'description' => null,
-            'is_visible' => 1,
+            'is_visible'  => 1,
         ];
     }
 
@@ -38,7 +38,7 @@ class PageImageFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'is_visible' => 0
+                'is_visible' => 0,
             ];
         });
     }
@@ -52,7 +52,7 @@ class PageImageFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'deleted_at' => Carbon::now()
+                'deleted_at' => Carbon::now(),
             ];
         });
     }

@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputArgument;
 
 class GenerateChangelog extends Command
 {
@@ -23,8 +22,6 @@ class GenerateChangelog extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -33,8 +30,6 @@ class GenerateChangelog extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {

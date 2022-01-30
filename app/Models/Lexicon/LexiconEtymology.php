@@ -12,7 +12,7 @@ class LexiconEtymology extends Model
      * @var array
      */
     protected $fillable = [
-        'entry_id', 'parent_id', 'parent'
+        'entry_id', 'parent_id', 'parent',
     ];
 
     /**
@@ -21,7 +21,6 @@ class LexiconEtymology extends Model
      * @var string
      */
     protected $table = 'lexicon_etymologies';
-
     /**
      * Whether the model contains timestamps to be saved and updated.
      *
@@ -59,5 +58,4 @@ class LexiconEtymology extends Model
     {
         return $this->belongsTo('App\Models\Lexicon\LexiconEntry', 'parent_id');
     }
-
 }

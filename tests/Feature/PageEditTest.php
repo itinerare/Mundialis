@@ -2,13 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Page\Page;
+use App\Models\Subject\SubjectCategory;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
-use App\Models\User\User;
-use App\Models\Subject\SubjectCategory;
-use App\Models\Page\Page;
 
 class PageEditTest extends TestCase
 {
@@ -16,8 +15,6 @@ class PageEditTest extends TestCase
 
     /**
      * Test page creation access.
-     *
-     * @return void
      */
     public function test_canGetCreatePage()
     {
@@ -34,8 +31,6 @@ class PageEditTest extends TestCase
 
     /**
      * Test page editing access.
-     *
-     * @return void
      */
     public function test_canGetEditPage()
     {
@@ -54,8 +49,6 @@ class PageEditTest extends TestCase
      * Test page creation with minimal data.
      * Specifically, this tests editing of the basic page model,
      * rather than information stored on the page version.
-     *
-     * @return void
      */
     public function test_canPostCreateEmptyPage()
     {
@@ -64,9 +57,9 @@ class PageEditTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'category_id' => $category->id
+            'title'       => $this->faker->unique()->domainWord(),
+            'summary'     => null,
+            'category_id' => $category->id,
         ];
 
         // Make a persistent editor
@@ -80,7 +73,7 @@ class PageEditTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
             'category_id' => $category->id,
-            'title' => $data['title']
+            'title'       => $data['title'],
         ]);
     }
 
@@ -88,8 +81,6 @@ class PageEditTest extends TestCase
      * Test page editing with minimal data.
      * Specifically, this tests editing of the basic page model,
      * rather than information stored on the page version.
-     *
-     * @return void
      */
     public function test_canPostEditEmptyPage()
     {
@@ -97,8 +88,8 @@ class PageEditTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null
+            'title'   => $this->faker->unique()->domainWord(),
+            'summary' => null,
         ];
 
         // Make a persistent editor
@@ -111,15 +102,13 @@ class PageEditTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
-            'id' => $page->id,
-            'title' => $data['title']
+            'id'    => $page->id,
+            'title' => $data['title'],
         ]);
     }
 
     /**
      * Test page creation with data.
-     *
-     * @return void
      */
     public function test_canPostCreatePage()
     {
@@ -128,10 +117,10 @@ class PageEditTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'category_id' => $category->id,
-            'test_category_field' => $this->faker->unique()->domainWord()
+            'title'               => $this->faker->unique()->domainWord(),
+            'summary'             => null,
+            'category_id'         => $category->id,
+            'test_category_field' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a persistent editor
@@ -147,14 +136,12 @@ class PageEditTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"test_category_field":"'.$data['test_category_field'].'","parsed":{"description":null,"test_category_field":"'.$data['test_category_field'].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"test_category_field":"'.$data['test_category_field'].'","parsed":{"description":null,"test_category_field":"'.$data['test_category_field'].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
     /**
      * Test page editing with data.
-     *
-     * @return void
      */
     public function test_canPostEditPage()
     {
@@ -163,9 +150,9 @@ class PageEditTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'test_category_field' => $this->faker->unique()->domainWord()
+            'title'               => $this->faker->unique()->domainWord(),
+            'summary'             => null,
+            'test_category_field' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a persistent editor
@@ -179,14 +166,12 @@ class PageEditTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"test_category_field":"'.$data['test_category_field'].'","parsed":{"description":null,"test_category_field":"'.$data['test_category_field'].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"test_category_field":"'.$data['test_category_field'].'","parsed":{"description":null,"test_category_field":"'.$data['test_category_field'].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
     /**
      * Test page creation with a parent.
-     *
-     * @return void
      */
     public function test_canPostCreatePageWithParent()
     {
@@ -195,10 +180,10 @@ class PageEditTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'       => $this->faker->unique()->domainWord(),
+            'summary'     => null,
             'category_id' => $category->id,
-            'parent_id' => $parent->id
+            'parent_id'   => $parent->id,
         ];
 
         // Make a persistent editor
@@ -212,15 +197,13 @@ class PageEditTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
             'category_id' => $category->id,
-            'title' => $data['title'],
-            'parent_id' => $parent->id
+            'title'       => $data['title'],
+            'parent_id'   => $parent->id,
         ]);
     }
 
     /**
      * Test page editing with a parent.
-     *
-     * @return void
      */
     public function test_canPostEditPageWithParent()
     {
@@ -229,9 +212,9 @@ class PageEditTest extends TestCase
 
         // Define some basic template data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'parent_id' => $parent->id
+            'title'     => $this->faker->unique()->domainWord(),
+            'summary'   => null,
+            'parent_id' => $parent->id,
         ];
 
         // Make a persistent editor
@@ -244,16 +227,14 @@ class PageEditTest extends TestCase
 
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('pages', [
-            'id' => $page->id,
-            'title' => $data['title'],
-            'parent_id' => $parent->id
+            'id'        => $page->id,
+            'title'     => $data['title'],
+            'parent_id' => $parent->id,
         ]);
     }
 
     /**
      * Test page creation with utility tags.
-     *
-     * @return void
      */
     public function test_canPostCreatePageWithUtilityTags()
     {
@@ -262,10 +243,10 @@ class PageEditTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'       => $this->faker->unique()->domainWord(),
+            'summary'     => null,
             'category_id' => $category->id,
-            'utility_tag' => [0 => 'wip']
+            'utility_tag' => [0 => 'wip'],
         ];
 
         // Make a persistent editor
@@ -281,15 +262,13 @@ class PageEditTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_tags', [
             'page_id' => $page->id,
-            'type' => 'utility',
-            'tag' => 'wip'
+            'type'    => 'utility',
+            'tag'     => 'wip',
         ]);
     }
 
     /**
      * Test page editing with utility tags.
-     *
-     * @return void
      */
     public function test_canPostEditPageWithUtilityTags()
     {
@@ -297,9 +276,9 @@ class PageEditTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'utility_tag' => [0 => 'wip']
+            'title'       => $this->faker->unique()->domainWord(),
+            'summary'     => null,
+            'utility_tag' => [0 => 'wip'],
         ];
 
         // Make a persistent editor
@@ -313,15 +292,13 @@ class PageEditTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_tags', [
             'page_id' => $page->id,
-            'type' => 'utility',
-            'tag' => 'wip'
+            'type'    => 'utility',
+            'tag'     => 'wip',
         ]);
     }
 
     /**
      * Test page creation with page tags.
-     *
-     * @return void
      */
     public function test_canPostCreatePageWithPageTags()
     {
@@ -330,10 +307,10 @@ class PageEditTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'       => $this->faker->unique()->domainWord(),
+            'summary'     => null,
             'category_id' => $category->id,
-            'page_tag' => $this->faker->unique()->domainWord()
+            'page_tag'    => $this->faker->unique()->domainWord(),
         ];
 
         // Make a persistent editor
@@ -349,15 +326,13 @@ class PageEditTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_tags', [
             'page_id' => $page->id,
-            'type' => 'page_tag',
-            'tag' => $data['page_tag']
+            'type'    => 'page_tag',
+            'tag'     => $data['page_tag'],
         ]);
     }
 
     /**
      * Test page editing with page tags.
-     *
-     * @return void
      */
     public function test_canPostEditPageWithPageTags()
     {
@@ -365,9 +340,9 @@ class PageEditTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'page_tag' => $this->faker->unique()->domainWord()
+            'title'    => $this->faker->unique()->domainWord(),
+            'summary'  => null,
+            'page_tag' => $this->faker->unique()->domainWord(),
         ];
 
         // Make a persistent editor
@@ -381,8 +356,8 @@ class PageEditTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_tags', [
             'page_id' => $page->id,
-            'type' => 'page_tag',
-            'tag' => $data['page_tag']
+            'type'    => 'page_tag',
+            'tag'     => $data['page_tag'],
         ]);
     }
 }

@@ -47,7 +47,7 @@ return [
     | Do not change this value!
     |
     */
-    'version' => '1.3.0',
+    'version' => '1.3.1',
 
     /*
     |--------------------------------------------------------------------------
@@ -63,8 +63,8 @@ return [
     |
     */
     'image_thumbnails' => [
-        'width' => 300,
-        'height' => 300
+        'width'  => 300,
+        'height' => 300,
     ],
 
     /*

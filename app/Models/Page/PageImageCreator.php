@@ -15,7 +15,7 @@ class PageImageCreator extends Model
      * @var array
      */
     protected $fillable = [
-        'page_image_id', 'user_id', 'url'
+        'page_image_id', 'user_id', 'url',
     ];
 
     /**
@@ -38,7 +38,7 @@ class PageImageCreator extends Model
      * @var array
      */
     public static $rules = [
-        'creator_url' => 'nullable|url'
+        'creator_url' => 'nullable|url',
     ];
 
     /**********************************************************************************************
@@ -76,9 +76,12 @@ class PageImageCreator extends Model
      */
     public function getDisplayNameAttribute()
     {
-        if(isset($this->user_id) && $this->user) return $this->user->displayName;
-        elseif(isset($this->url)) return prettyProfileLink($this->url);
+        if (isset($this->user_id) && $this->user) {
+            return $this->user->displayName;
+        } elseif (isset($this->url)) {
+            return prettyProfileLink($this->url);
+        }
+
         return null;
     }
-
 }

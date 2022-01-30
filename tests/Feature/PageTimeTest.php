@@ -17,8 +17,6 @@ class PageTimeTest extends TestCase
 
     /**
      * Test page creation with a date.
-     *
-     * @return void
      */
     public function test_canPostCreatePageWithDate()
     {
@@ -30,11 +28,11 @@ class PageTimeTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'category_id' => $category->id,
-            'date_start_'.strtolower($division->name) => mt_rand(1,50),
-            'date_end_'.strtolower($division->name) => mt_rand(50,100),
+            'title'                                   => $this->faker->unique()->domainWord(),
+            'summary'                                 => null,
+            'category_id'                             => $category->id,
+            'date_start_'.$division->id               => mt_rand(1, 50),
+            'date_end_'.$division->id                 => mt_rand(50, 100),
         ];
 
         // Make a persistent editor
@@ -50,14 +48,12 @@ class PageTimeTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"date":{"start":{"'.strtolower($division->name).'":'.$data['date_start_'.strtolower($division->name)].'},"end":{"'.strtolower($division->name).'":'.$data['date_end_'.strtolower($division->name)].'}},"parsed":{"description":null,"date":{"start":{"'.strtolower($division->name).'":'.$data['date_start_'.strtolower($division->name)].'},"end":{"'.strtolower($division->name).'":'.$data['date_end_'.strtolower($division->name)].'}}}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"date":{"start":{"'.$division->id.'":'.$data['date_start_'.$division->id].'},"end":{"'.$division->id.'":'.$data['date_end_'.$division->id].'}},"parsed":{"description":null,"date":{"start":{"'.$division->id.'":'.$data['date_start_'.$division->id].'},"end":{"'.$division->id.'":'.$data['date_end_'.$division->id].'}}}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
     /**
      * Test page editing with a date.
-     *
-     * @return void
      */
     public function test_canPostEditPageWithDate()
     {
@@ -72,11 +68,11 @@ class PageTimeTest extends TestCase
 
         // Define some basic data
         $data = [
-            'title' => $this->faker->unique()->domainWord(),
-            'summary' => null,
-            'category_id' => $category->id,
-            'date_start_'.strtolower($division->name) => mt_rand(1,50),
-            'date_end_'.strtolower($division->name) => mt_rand(50,100),
+            'title'                                   => $this->faker->unique()->domainWord(),
+            'summary'                                 => null,
+            'category_id'                             => $category->id,
+            'date_start_'.$division->id               => mt_rand(1, 50),
+            'date_end_'.$division->id                 => mt_rand(50, 100),
         ];
 
         // Make a persistent editor
@@ -90,7 +86,7 @@ class PageTimeTest extends TestCase
         // Directly verify that the appropriate change has occurred
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data' => '{"data":{"description":null,"date":{"start":{"'.strtolower($division->name).'":'.$data['date_start_'.strtolower($division->name)].'},"end":{"'.strtolower($division->name).'":'.$data['date_end_'.strtolower($division->name)].'}},"parsed":{"description":null,"date":{"start":{"'.strtolower($division->name).'":'.$data['date_start_'.strtolower($division->name)].'},"end":{"'.strtolower($division->name).'":'.$data['date_end_'.strtolower($division->name)].'}}}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}'
+            'data'    => '{"data":{"description":null,"date":{"start":{"'.$division->id.'":'.$data['date_start_'.$division->id].'},"end":{"'.$division->id.'":'.$data['date_end_'.$division->id].'}},"parsed":{"description":null,"date":{"start":{"'.$division->id.'":'.$data['date_start_'.$division->id].'},"end":{"'.$division->id.'":'.$data['date_end_'.$division->id].'}}}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
     }
 
@@ -100,8 +96,6 @@ class PageTimeTest extends TestCase
 
     /**
      * Tests timeline access.
-     *
-     * @return void
      */
     public function test_canGetTimeline()
     {
@@ -118,8 +112,6 @@ class PageTimeTest extends TestCase
 
     /**
      * Tests timeline access with an event.
-     *
-     * @return void
      */
     public function test_canGetTimelineWithEvent()
     {
@@ -136,7 +128,7 @@ class PageTimeTest extends TestCase
 
         // Create an event
         $page = Page::factory()->category($category->id)->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->testData($this->faker->unique()->domainWord(), null, null, null, strtolower($division->name))->create();
+        PageVersion::factory()->page($page->id)->user($editor->id)->testData($this->faker->unique()->domainWord(), null, null, null, $division->id)->create();
 
         $response = $this->actingAs($user)
             ->get('/time/timeline');
@@ -146,8 +138,6 @@ class PageTimeTest extends TestCase
 
     /**
      * Tests timeline access.
-     *
-     * @return void
      */
     public function test_cannotGetTimelineWithNoDateDivisions()
     {

@@ -2,20 +2,16 @@
 
 namespace App\Providers;
 
-use View;
-use Auth;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     *
-     * @return void
      */
     public function register()
     {
@@ -24,8 +20,6 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -33,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Paginator::useBootstrap();
 
-        /**
+        /*
          * Paginate a standard Laravel Collection.
          *
          * @param int $perPage
@@ -42,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
          * @param string $pageName
          * @return array
          */
-        Collection::macro('paginate', function($perPage, $total = null, $page = null, $pageName = 'page') {
+        Collection::macro('paginate', function ($perPage, $total = null, $page = null, $pageName = 'page') {
             $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
 
             return new LengthAwarePaginator(
@@ -51,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
                 $perPage,
                 $page,
                 [
-                    'path' => LengthAwarePaginator::resolveCurrentPath(),
+                    'path'     => LengthAwarePaginator::resolveCurrentPath(),
                     'pageName' => $pageName,
                 ]
             );

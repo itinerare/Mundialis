@@ -2,9 +2,9 @@
 
 namespace App\Exceptions;
 
-use Throwable;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -25,14 +25,13 @@ class Handler extends ExceptionHandler
     protected $dontFlash = [
         'password',
         'password_confirmation',
-        '_token'
+        '_token',
     ];
 
     /**
      * Report or log an exception.
      *
-     * @param  \Exception  $exception
-     * @return void
+     * @param \Exception $exception
      *
      * @throws \Exception
      */
@@ -50,8 +49,9 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
+     * @param \Illuminate\Http\Request $request
+     * @param \Exception               $exception
+     *
      * @return \Illuminate\Http\Response
      */
     public function render($request, Throwable $exception)
