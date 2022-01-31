@@ -4,6 +4,17 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.3.2](https://github.com/itinerare/Mundialis/compare/v1.3.1...v1.3.2) (2022-01-31)
+### Bug Fixes
+
+
+##### License
+
+* Update info around patron license ([3fac0b](https://github.com/itinerare/Mundialis/commit/3fac0b90d5759c65894518ec7903ef74a7641cec))
+
+
+---
+
 ## [1.3.1](https://github.com/itinerare/Mundialis/compare/v1.3.0...v1.3.1) (2022-01-30)
 ### Bug Fixes
 
