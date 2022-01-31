@@ -3,7 +3,7 @@ Copyright 2022 itinerare and Contributors
 This project is licensed under [the Parity License](LICENSE-PARITY.md). Third-party contributions are licensed under [the MIT License](LICENSE-MIT.md) and belong to their respective authors.
 
 For proprietary use, either:
-- (For individuals/one-developer companies) [sponsor me via GitHub](https://github.com/sponsors/itinerare) under the appropriate tier to acquire a [Patron License](LICENSE-PATRON.md)
+- (For individuals/one-developer companies) sponsor me via one of the platforms listed on [Patron License](LICENSE-PATRON.md) under the appropriate tier to acquire one. 
 - (For larger companies) [Contact me](mailto:queries@itinerare.net?subject=Mundialis%20license) to discuss!
 
 This funding model helps me make my work sustainable! It compensates me for the work it took to write the project as well as for any continued maintenance, new features, etc. that I choose to write!
