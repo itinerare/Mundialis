@@ -17,7 +17,7 @@ class PageMoveTest extends TestCase
     /**
      * Test page move access.
      */
-    public function test_canGetMovePage()
+    public function testCanGetMovePage()
     {
         // Create a temporary editor
         $user = User::factory()->editor()->make();
@@ -33,7 +33,7 @@ class PageMoveTest extends TestCase
     /**
      * Test page moving.
      */
-    public function test_canPostMovePage()
+    public function testCanPostMovePage()
     {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
@@ -65,7 +65,7 @@ class PageMoveTest extends TestCase
     /**
      * Test page moving with a reason.
      */
-    public function test_canPostMovePageWithReason()
+    public function testCanPostMovePageWithReason()
     {
         // Make a persistent editor
         $user = User::factory()->editor()->create();

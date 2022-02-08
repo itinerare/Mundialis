@@ -23,7 +23,7 @@ class AuthPasswordResetTest extends TestCase
     /**
      * Test password reset access.
      */
-    public function test_canGetPasswordReset()
+    public function testCanGetPasswordReset()
     {
         $response = $this->get('forgot-password');
 
@@ -34,7 +34,7 @@ class AuthPasswordResetTest extends TestCase
      * Test password reset email with a valid user.
      * This should work.
      */
-    public function test_canPostValidPasswordResetEmail()
+    public function testCanPostValidPasswordResetEmail()
     {
         $user = User::factory()->create();
 
@@ -51,7 +51,7 @@ class AuthPasswordResetTest extends TestCase
      * Test password reset email with an invalid user.
      * This shouldn't work.
      */
-    public function test_cannotPostInvalidPasswordResetEmail()
+    public function testCannotPostInvalidPasswordResetEmail()
     {
         $this->doesntExpectJobs(ResetPassword::class);
 
@@ -63,7 +63,7 @@ class AuthPasswordResetTest extends TestCase
     /**
      * Test password reset form access.
      */
-    public function test_canGetPasswordResetForm()
+    public function testCanGetPasswordResetForm()
     {
         $user = User::factory()->create();
 
@@ -77,7 +77,7 @@ class AuthPasswordResetTest extends TestCase
     /**
      * Test password resetting.
      */
-    public function test_canResetUserPassword()
+    public function testCanResetUserPassword()
     {
         $user = User::factory()->create();
 

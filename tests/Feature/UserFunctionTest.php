@@ -22,7 +22,7 @@ class UserFunctionTest extends TestCase
     /**
      * Test profile editing.
      */
-    public function test_canPostEditProfile()
+    public function testCanPostEditProfile()
     {
         // Make a persistent user
         $user = User::factory()->create();
@@ -43,7 +43,7 @@ class UserFunctionTest extends TestCase
     /**
      * Test avatar editing.
      */
-    public function test_canPostEditAvatar()
+    public function testCanPostEditAvatar()
     {
         // Make a temporary user
         $user = User::factory()->create();
@@ -74,7 +74,7 @@ class UserFunctionTest extends TestCase
     /**
      * Test email editing.
      */
-    public function test_canPostEditEmail()
+    public function testCanPostEditEmail()
     {
         // Make a persistent user
         $user = User::factory()->create();
@@ -99,7 +99,7 @@ class UserFunctionTest extends TestCase
      * Test password editing with a valid password.
      * This should work.
      */
-    public function test_canPostEditValidPassword()
+    public function testCanPostEditValidPassword()
     {
         // Make a persistent user
         $user = User::factory()->simplePass()->create();
@@ -120,7 +120,7 @@ class UserFunctionTest extends TestCase
      * Test password editing with an invalid password.
      * This shouldn't work.
      */
-    public function test_cannotPostEditInvalidPassword()
+    public function testCannotPostEditInvalidPassword()
     {
         // Make a persistent user
         $user = User::factory()->simplePass()->create();

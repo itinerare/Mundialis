@@ -18,7 +18,7 @@ class LexiconEntryTest extends TestCase
     /**
      * Test lexicon entry creation access.
      */
-    public function test_canGetCreateLexiconEntry()
+    public function testCanGetCreateLexiconEntry()
     {
         // Create a temporary editor
         $user = User::factory()->editor()->make();
@@ -32,7 +32,7 @@ class LexiconEntryTest extends TestCase
     /**
      * Test lexicon entry creation access with a category.
      */
-    public function test_canGetCreateLexiconEntryWithCategory()
+    public function testCanGetCreateLexiconEntryWithCategory()
     {
         // Create a temporary editor
         $user = User::factory()->editor()->make();
@@ -49,7 +49,7 @@ class LexiconEntryTest extends TestCase
     /**
      * Test lexicon entry editing access.
      */
-    public function test_canGetEditLexiconEntry()
+    public function testCanGetEditLexiconEntry()
     {
         // Create a temporary editor
         $user = User::factory()->editor()->make();
@@ -66,7 +66,7 @@ class LexiconEntryTest extends TestCase
     /**
      * Test lexicon entry creation with minimal data.
      */
-    public function test_canPostCreateEmptyLexiconEntry()
+    public function testCanPostCreateEmptyLexiconEntry()
     {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
@@ -98,7 +98,7 @@ class LexiconEntryTest extends TestCase
     /**
      * Test lexicon entry editing with minimal data.
      */
-    public function test_canPostEditEmptyLexiconEntry()
+    public function testCanPostEditEmptyLexiconEntry()
     {
         // Make an entry to edit
         $entry = LexiconEntry::factory()->create();
@@ -128,7 +128,7 @@ class LexiconEntryTest extends TestCase
     /**
      * Test lexicon entry creation with a category.
      */
-    public function test_canPostCreateLexiconEntryWithCategory()
+    public function testCanPostCreateLexiconEntryWithCategory()
     {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
@@ -165,7 +165,7 @@ class LexiconEntryTest extends TestCase
     /**
      * Test lexicon entry editing with a category.
      */
-    public function test_canPostEditLexiconEntryWithCategory()
+    public function testCanPostEditLexiconEntryWithCategory()
     {
         // Make an entry to edit
         $entry = LexiconEntry::factory()->create();
@@ -200,7 +200,7 @@ class LexiconEntryTest extends TestCase
     /**
      * Test lexicon entry creation with a parent entry.
      */
-    public function test_canPostCreateLexiconEntryWithParentEntry()
+    public function testCanPostCreateLexiconEntryWithParentEntry()
     {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
@@ -238,7 +238,7 @@ class LexiconEntryTest extends TestCase
     /**
      * Test lexicon entry editing with a parent entry.
      */
-    public function test_canPostEditLexiconEntryWithParentEntry()
+    public function testCanPostEditLexiconEntryWithParentEntry()
     {
         // Make an entry to edit
         $entry = LexiconEntry::factory()->create();
@@ -275,7 +275,7 @@ class LexiconEntryTest extends TestCase
     /**
      * Test lexicon entry creation with a parent off-site word.
      */
-    public function test_canPostCreateLexiconEntryWithParentWord()
+    public function testCanPostCreateLexiconEntryWithParentWord()
     {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
@@ -311,7 +311,7 @@ class LexiconEntryTest extends TestCase
     /**
      * Test lexicon entry editing with a parent off-site word.
      */
-    public function test_canPostEditLexiconEntryWithParentWord()
+    public function testCanPostEditLexiconEntryWithParentWord()
     {
         // Make an entry to edit
         $entry = LexiconEntry::factory()->create();
@@ -346,7 +346,7 @@ class LexiconEntryTest extends TestCase
     /**
      * Test lexicon entry editing with conjugation/declension data.
      */
-    public function test_canPostEditLexiconEntryWithConjugation()
+    public function testCanPostEditLexiconEntryWithConjugation()
     {
         // Make an entry to edit
         $entry = LexiconEntry::factory()->create();
@@ -384,7 +384,7 @@ class LexiconEntryTest extends TestCase
     /**
      * Test lexicon entry editing with empty conjugation/declension data.
      */
-    public function test_canPostEditLexiconEntryWithEmptyConjugation()
+    public function testCanPostEditLexiconEntryWithEmptyConjugation()
     {
         // Make an entry to edit
         $entry = LexiconEntry::factory()->conjugationData()->create();
@@ -422,7 +422,7 @@ class LexiconEntryTest extends TestCase
     /**
      * Test lexicon entry editing with conjugation/declension data.
      */
-    public function test_canPostEditLexiconEntryWithAutoConjugation()
+    public function testCanPostEditLexiconEntryWithAutoConjugation()
     {
         // Make an entry to edit
         $entry = LexiconEntry::factory()->create();
@@ -466,7 +466,7 @@ class LexiconEntryTest extends TestCase
      * Test lexicon entry deletion.
      * This should work.
      */
-    public function test_canGetDeleteLexiconEntry()
+    public function testCanGetDeleteLexiconEntry()
     {
         // Make an entry to delete
         $entry = LexiconEntry::factory()->create();
@@ -486,7 +486,7 @@ class LexiconEntryTest extends TestCase
      * Test lexicon entry deletion.
      * This should work.
      */
-    public function test_canPostDeleteLexiconEntry()
+    public function testCanPostDeleteLexiconEntry()
     {
         // Make an entry to delete
         $entry = LexiconEntry::factory()->create();
@@ -507,7 +507,7 @@ class LexiconEntryTest extends TestCase
      * Test lexicon entry deletion with a child entry.
      * This shouldn't work.
      */
-    public function test_cannotPostDeleteLexiconEntryWithChildEntry()
+    public function testCannotPostDeleteLexiconEntryWithChildEntry()
     {
         // Make a parent to attempt to delete
         $parent = LexiconEntry::factory()->create();
@@ -540,7 +540,7 @@ class LexiconEntryTest extends TestCase
      * Test lexicon entry deletion with a parent entry.
      * This should work.
      */
-    public function test_canPostDeleteLexiconEntryWithParentEntry()
+    public function testCanPostDeleteLexiconEntryWithParentEntry()
     {
         // Make a parent to attempt to delete
         $parent = LexiconEntry::factory()->create();
