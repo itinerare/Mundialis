@@ -21,7 +21,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test lexicon settings access.
      */
-    public function test_canGetEditLexiconSettings()
+    public function testCanGetEditLexiconSettings()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -34,7 +34,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test lexicon setting creation.
      */
-    public function test_canPostCreateLexiconSettings()
+    public function testCanPostCreateLexiconSettings()
     {
         // Define some basic data
         $data = [
@@ -60,7 +60,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test lexicon setting editing.
      */
-    public function test_canPostEditLexiconSettings()
+    public function testCanPostEditLexiconSettings()
     {
         // Define some basic data
         $data = [
@@ -97,7 +97,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test lexicon categories access.
      */
-    public function test_canGetLexiconCategories()
+    public function testCanGetLexiconCategories()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -110,7 +110,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test create lexicon category access.
      */
-    public function test_canGetCreateLexiconCategory()
+    public function testCanGetCreateLexiconCategory()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -123,7 +123,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test edit lexicon category access.
      */
-    public function test_canGetEditLexiconCategory()
+    public function testCanGetEditLexiconCategory()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -137,7 +137,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test lexicon category creation.
      */
-    public function test_canPostCreateLexiconCategory()
+    public function testCanPostCreateLexiconCategory()
     {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
@@ -166,7 +166,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test lexicon category editing.
      */
-    public function test_canPostEditLexiconCategory()
+    public function testCanPostEditLexiconCategory()
     {
         $category = LexiconCategory::factory()->create();
 
@@ -193,7 +193,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test lexicon category creation with a parent.
      */
-    public function test_canPostCreateLexiconCategoryWithParent()
+    public function testCanPostCreateLexiconCategoryWithParent()
     {
         $parent = LexiconCategory::factory()->create();
 
@@ -221,7 +221,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test lexicon category editing with a parent.
      */
-    public function test_canPostEditLexiconCategoryWithParent()
+    public function testCanPostEditLexiconCategoryWithParent()
     {
         $category = LexiconCategory::factory()->create();
         $parent = LexiconCategory::factory()->create();
@@ -251,7 +251,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test lexicon category creation with some data.
      */
-    public function test_canPostCreateLexiconCategoryWithData()
+    public function testCanPostCreateLexiconCategoryWithData()
     {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
@@ -293,7 +293,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test lexicon category editing with some data.
      */
-    public function test_canPostEditLexiconCategoryWithData()
+    public function testCanPostEditLexiconCategoryWithData()
     {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
@@ -337,7 +337,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test lexicon category editing, removing data.
      */
-    public function test_canPostEditLexiconCategoryRemovingData()
+    public function testCanPostEditLexiconCategoryRemovingData()
     {
         $category = LexiconCategory::factory()->testData()->create();
 
@@ -365,7 +365,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test lexicon category editing with extended data.
      */
-    public function test_canPostEditLexiconCategoryWithExtendedData()
+    public function testCanPostEditLexiconCategoryWithExtendedData()
     {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
@@ -439,7 +439,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test lexicon category editing, removing extended data.
      */
-    public function test_canPostEditLexiconCategoryRemovingExtendedData()
+    public function testCanPostEditLexiconCategoryRemovingExtendedData()
     {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
@@ -471,7 +471,7 @@ class SubjectDataLanguageTest extends TestCase
     /**
      * Test lexicon category delete access.
      */
-    public function test_canGetDeleteLexiconCategory()
+    public function testCanGetDeleteLexiconCategory()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -486,7 +486,7 @@ class SubjectDataLanguageTest extends TestCase
      * Test lexicon category deletion.
      * This should work.
      */
-    public function test_canPostDeleteLexiconCategory()
+    public function testCanPostDeleteLexiconCategory()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -510,7 +510,7 @@ class SubjectDataLanguageTest extends TestCase
      * Test lexicon category deletion with a lexicon entry.
      * This shouldn't work.
      */
-    public function test_cannotPostDeleteLexiconCategoryWithEntry()
+    public function testCannotPostDeleteLexiconCategoryWithEntry()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -535,7 +535,7 @@ class SubjectDataLanguageTest extends TestCase
      * Test lexicon category deletion with a sub-category.
      * This shouldn't work.
      */
-    public function test_cannotPostDeleteLexiconCategoryWithSubcategory()
+    public function testCannotPostDeleteLexiconCategoryWithSubcategory()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();

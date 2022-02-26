@@ -16,7 +16,7 @@ class PageViewTest extends TestCase
     /**
      * Test page access.
      */
-    public function test_canGetPage()
+    public function testCanGetPage()
     {
         // Create a temporary user
         $user = User::factory()->make();
@@ -35,7 +35,7 @@ class PageViewTest extends TestCase
     /**
      * Test page history access.
      */
-    public function test_canGetPageHistory()
+    public function testCanGetPageHistory()
     {
         // Create a temporary user
         $user = User::factory()->make();
@@ -54,7 +54,7 @@ class PageViewTest extends TestCase
     /**
      * Test page gallery access.
      */
-    public function test_canGetPageGallery()
+    public function testCanGetPageGallery()
     {
         // Create a temporary user
         $user = User::factory()->make();
@@ -73,7 +73,7 @@ class PageViewTest extends TestCase
     /**
      * Test page "what links here" access.
      */
-    public function test_canGetPageLinks()
+    public function testCanGetPageLinks()
     {
         // Create a temporary user
         $user = User::factory()->make();
@@ -92,7 +92,7 @@ class PageViewTest extends TestCase
     /**
      * Test page access in the "people" subject.
      */
-    public function test_canGetPeoplePage()
+    public function testCanGetPeoplePage()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('people')->create();
@@ -112,7 +112,7 @@ class PageViewTest extends TestCase
     /**
      * Test page access in the "places" subject.
      */
-    public function test_canGetPlacesPage()
+    public function testCanGetPlacesPage()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('places')->create();
@@ -132,7 +132,7 @@ class PageViewTest extends TestCase
     /**
      * Test page access in the "flora and fauna" subject.
      */
-    public function test_canGetSpeciesPage()
+    public function testCanGetSpeciesPage()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('species')->create();
@@ -152,7 +152,7 @@ class PageViewTest extends TestCase
     /**
      * Test page access in the "things" subject.
      */
-    public function test_canGetThingsPage()
+    public function testCanGetThingsPage()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('things')->create();
@@ -172,7 +172,7 @@ class PageViewTest extends TestCase
     /**
      * Test page access in the "concepts" subject.
      */
-    public function test_canGetConceptsPage()
+    public function testCanGetConceptsPage()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('concepts')->create();
@@ -192,7 +192,7 @@ class PageViewTest extends TestCase
     /**
      * Test page access in the "time" subject.
      */
-    public function test_canGetTimePage()
+    public function testCanGetTimePage()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('time')->create();
@@ -212,7 +212,7 @@ class PageViewTest extends TestCase
     /**
      * Test page access in the "language" subject.
      */
-    public function test_canGetLanguagePage()
+    public function testCanGetLanguagePage()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('language')->create();

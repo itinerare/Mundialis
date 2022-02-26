@@ -16,7 +16,7 @@ class PageEditTest extends TestCase
     /**
      * Test page creation access.
      */
-    public function test_canGetCreatePage()
+    public function testCanGetCreatePage()
     {
         // Create a temporary editor
         $user = User::factory()->editor()->make();
@@ -32,7 +32,7 @@ class PageEditTest extends TestCase
     /**
      * Test page editing access.
      */
-    public function test_canGetEditPage()
+    public function testCanGetEditPage()
     {
         // Create a temporary editor
         $user = User::factory()->editor()->make();
@@ -50,7 +50,7 @@ class PageEditTest extends TestCase
      * Specifically, this tests editing of the basic page model,
      * rather than information stored on the page version.
      */
-    public function test_canPostCreateEmptyPage()
+    public function testCanPostCreateEmptyPage()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->create();
@@ -82,7 +82,7 @@ class PageEditTest extends TestCase
      * Specifically, this tests editing of the basic page model,
      * rather than information stored on the page version.
      */
-    public function test_canPostEditEmptyPage()
+    public function testCanPostEditEmptyPage()
     {
         $page = Page::factory()->create();
 
@@ -110,7 +110,7 @@ class PageEditTest extends TestCase
     /**
      * Test page creation with data.
      */
-    public function test_canPostCreatePage()
+    public function testCanPostCreatePage()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->testData()->create();
@@ -143,7 +143,7 @@ class PageEditTest extends TestCase
     /**
      * Test page editing with data.
      */
-    public function test_canPostEditPage()
+    public function testCanPostEditPage()
     {
         $category = SubjectCategory::factory()->testData()->create();
         $page = Page::factory()->category($category->id)->create();
@@ -173,7 +173,7 @@ class PageEditTest extends TestCase
     /**
      * Test page creation with a parent.
      */
-    public function test_canPostCreatePageWithParent()
+    public function testCanPostCreatePageWithParent()
     {
         $parent = Page::factory()->create();
         $category = SubjectCategory::factory()->create();
@@ -205,7 +205,7 @@ class PageEditTest extends TestCase
     /**
      * Test page editing with a parent.
      */
-    public function test_canPostEditPageWithParent()
+    public function testCanPostEditPageWithParent()
     {
         $page = Page::factory()->create();
         $parent = Page::factory()->create();
@@ -236,7 +236,7 @@ class PageEditTest extends TestCase
     /**
      * Test page creation with utility tags.
      */
-    public function test_canPostCreatePageWithUtilityTags()
+    public function testCanPostCreatePageWithUtilityTags()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->create();
@@ -270,7 +270,7 @@ class PageEditTest extends TestCase
     /**
      * Test page editing with utility tags.
      */
-    public function test_canPostEditPageWithUtilityTags()
+    public function testCanPostEditPageWithUtilityTags()
     {
         $page = Page::factory()->create();
 
@@ -300,7 +300,7 @@ class PageEditTest extends TestCase
     /**
      * Test page creation with page tags.
      */
-    public function test_canPostCreatePageWithPageTags()
+    public function testCanPostCreatePageWithPageTags()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->create();
@@ -334,7 +334,7 @@ class PageEditTest extends TestCase
     /**
      * Test page editing with page tags.
      */
-    public function test_canPostEditPageWithPageTags()
+    public function testCanPostEditPageWithPageTags()
     {
         $page = Page::factory()->create();
 

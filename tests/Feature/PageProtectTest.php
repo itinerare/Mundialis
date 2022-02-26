@@ -16,7 +16,7 @@ class PageProtectTest extends TestCase
     /**
      * Test page protection access.
      */
-    public function test_canGetProtectPage()
+    public function testCanGetProtectPage()
     {
         // Create a temporary admin
         $user = User::factory()->admin()->make();
@@ -32,7 +32,7 @@ class PageProtectTest extends TestCase
     /**
      * Test page protection.
      */
-    public function test_canPostProtectPage()
+    public function testCanPostProtectPage()
     {
         // Make a page to protect
         $page = Page::factory()->create();
@@ -61,7 +61,7 @@ class PageProtectTest extends TestCase
     /**
      * Test page protection with a reason.
      */
-    public function test_canPostProtectPageWithReason()
+    public function testCanPostProtectPageWithReason()
     {
         // Make a page to protect
         $page = Page::factory()->create();
@@ -91,7 +91,7 @@ class PageProtectTest extends TestCase
     /**
      * Test page unprotection.
      */
-    public function test_canPostUnprotectPage()
+    public function testCanPostUnprotectPage()
     {
         // Make a page to protect
         $page = Page::factory()->create();
@@ -123,7 +123,7 @@ class PageProtectTest extends TestCase
     /**
      * Test page unprotection with a reason.
      */
-    public function test_canPostUnprotectPageWithReason()
+    public function testCanPostUnprotectPageWithReason()
     {
         // Make a page to protect
         $page = Page::factory()->create();

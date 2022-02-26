@@ -17,7 +17,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with an infobox text field.
      */
-    public function test_canGetPageWithInfoboxTextField()
+    public function testCanGetPageWithInfoboxTextField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -51,7 +51,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with an infobox number field.
      */
-    public function test_canGetPageWithInfoboxNumberField()
+    public function testCanGetPageWithInfoboxNumberField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -85,7 +85,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with an infobox checkbox field.
      */
-    public function test_canGetPageWithInfoboxCheckboxField()
+    public function testCanGetPageWithInfoboxCheckboxField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -121,7 +121,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with an infobox choose one field.
      */
-    public function test_canGetPageWithInfoboxChooseOneField()
+    public function testCanGetPageWithInfoboxChooseOneField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -157,7 +157,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with an infobox choose multiple field.
      */
-    public function test_canGetPageWithInfoboxChooseMultipleField()
+    public function testCanGetPageWithInfoboxChooseMultipleField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -195,7 +195,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with a text field.
      */
-    public function test_canGetPageWithTextField()
+    public function testCanGetPageWithTextField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -229,7 +229,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with a number field.
      */
-    public function test_canGetPageWithNumberField()
+    public function testCanGetPageWithNumberField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -263,7 +263,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with a checkbox field.
      */
-    public function test_canGetPageWithCheckboxField()
+    public function testCanGetPageWithCheckboxField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -299,7 +299,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with a choose one field.
      */
-    public function test_canGetPageWithChooseOneField()
+    public function testCanGetPageWithChooseOneField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -335,7 +335,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with a choose multiple field.
      */
-    public function test_canGetPageWithChooseMultipleField()
+    public function testCanGetPageWithChooseMultipleField()
     {
         // Generate some data for the field
         $fieldData = [

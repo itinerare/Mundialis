@@ -18,7 +18,7 @@ class AdminSitePageTest extends TestCase
     /**
      * Test site page index access.
      */
-    public function test_canGetSitePageIndex()
+    public function testCanGetSitePageIndex()
     {
         // Make a temporary user
         $user = User::factory()->admin()->make();
@@ -32,7 +32,7 @@ class AdminSitePageTest extends TestCase
     /**
      * Test site page editing.
      */
-    public function test_canPostEditSitePage()
+    public function testCanPostEditSitePage()
     {
         // Ensure site pages are present to modify
         $this->artisan('add-site-pages');

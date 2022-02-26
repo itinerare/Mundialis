@@ -18,7 +18,7 @@ class PageTimeTest extends TestCase
     /**
      * Test page creation with a date.
      */
-    public function test_canPostCreatePageWithDate()
+    public function testCanPostCreatePageWithDate()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('time')->create();
@@ -55,7 +55,7 @@ class PageTimeTest extends TestCase
     /**
      * Test page editing with a date.
      */
-    public function test_canPostEditPageWithDate()
+    public function testCanPostEditPageWithDate()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('time')->create();
@@ -97,7 +97,7 @@ class PageTimeTest extends TestCase
     /**
      * Tests timeline access.
      */
-    public function test_canGetTimeline()
+    public function testCanGetTimeline()
     {
         $user = User::factory()->make();
 
@@ -113,7 +113,7 @@ class PageTimeTest extends TestCase
     /**
      * Tests timeline access with an event.
      */
-    public function test_canGetTimelineWithEvent()
+    public function testCanGetTimelineWithEvent()
     {
         $user = User::factory()->make();
 
@@ -139,7 +139,7 @@ class PageTimeTest extends TestCase
     /**
      * Tests timeline access.
      */
-    public function test_cannotGetTimelineWithNoDateDivisions()
+    public function testCannotGetTimelineWithNoDateDivisions()
     {
         $user = User::factory()->make();
 
