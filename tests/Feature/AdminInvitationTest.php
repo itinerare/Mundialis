@@ -19,7 +19,7 @@ class AdminInvitationTest extends TestCase
     /**
      * Test invitation code index access.
      */
-    public function test_canGetInvitationIndex()
+    public function testCanGetInvitationIndex()
     {
         // Make a temporary user
         $user = User::factory()->admin()->make();
@@ -33,7 +33,7 @@ class AdminInvitationTest extends TestCase
     /**
      * Test invitation code creation.
      */
-    public function test_canPostCreateInvitation()
+    public function testCanPostCreateInvitation()
     {
         // Count currently extant invitation codes
         $oldCount = InvitationCode::all()->count();
@@ -53,7 +53,7 @@ class AdminInvitationTest extends TestCase
     /**
      * Test invitation code deletion.
      */
-    public function test_canPostDeleteInvitation()
+    public function testCanPostDeleteInvitation()
     {
         // Make a persistent user (in case a code needs to be generated)
         $user = User::factory()->admin()->create();
@@ -78,7 +78,7 @@ class AdminInvitationTest extends TestCase
     /**
      * Ensure a used invitation code cannot be deleted.
      */
-    public function test_cannotPostDeleteUsedInvitation()
+    public function testCannotPostDeleteUsedInvitation()
     {
         // Make a persistent user (in case a code needs to be generated)
         $user = User::factory()->admin()->create();

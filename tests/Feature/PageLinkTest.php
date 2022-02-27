@@ -18,7 +18,7 @@ class PageLinkTest extends TestCase
     /**
      * Test page creation with a wiki-style link to a page.
      */
-    public function test_canPostCreatePageWithPageLink()
+    public function testCanPostCreatePageWithPageLink()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->create();
@@ -59,7 +59,7 @@ class PageLinkTest extends TestCase
     /**
      * Test page editing with a wiki-style link to a page.
      */
-    public function test_canPostEditPageWithPageLink()
+    public function testCanPostEditPageWithPageLink()
     {
         $page = Page::factory()->create();
 
@@ -96,7 +96,7 @@ class PageLinkTest extends TestCase
     /**
      * Test page creation with a wiki-style link to a page with a label.
      */
-    public function test_canPostCreatePageWithLabeledPageLink()
+    public function testCanPostCreatePageWithLabeledPageLink()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->create();
@@ -138,7 +138,7 @@ class PageLinkTest extends TestCase
     /**
      * Test page editing with a wiki-style link to a page with a label.
      */
-    public function test_canPostEditPageWithLabeledPageLink()
+    public function testCanPostEditPageWithLabeledPageLink()
     {
         $page = Page::factory()->create();
 
@@ -176,7 +176,7 @@ class PageLinkTest extends TestCase
     /**
      * Test page creation with a wiki-style link to a wanted page.
      */
-    public function test_canPostCreatePageWithWantedLink()
+    public function testCanPostCreatePageWithWantedLink()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->create();
@@ -218,7 +218,7 @@ class PageLinkTest extends TestCase
     /**
      * Test page editing with a wiki-style link to a wanted page.
      */
-    public function test_canPostEditPageWithWantedLink()
+    public function testCanPostEditPageWithWantedLink()
     {
         $page = Page::factory()->create();
 
@@ -256,7 +256,7 @@ class PageLinkTest extends TestCase
     /**
      * Test page creation with a wiki-style link to a wanted page with a label.
      */
-    public function test_canPostCreatePageWithLabeledWantedLink()
+    public function testCanPostCreatePageWithLabeledWantedLink()
     {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->create();
@@ -300,7 +300,7 @@ class PageLinkTest extends TestCase
     /**
      * Test page editing with a wiki-style link to a wanted page with a label.
      */
-    public function test_canPostEditPageWithLabeledWantedLink()
+    public function testCanPostEditPageWithLabeledWantedLink()
     {
         $page = Page::factory()->create();
 
@@ -340,7 +340,7 @@ class PageLinkTest extends TestCase
     /**
      * Test lexicon entry creation with a link to a page.
      */
-    public function test_canPostCreateLexiconEntryWithPageLink()
+    public function testCanPostCreateLexiconEntryWithPageLink()
     {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
@@ -384,7 +384,7 @@ class PageLinkTest extends TestCase
     /**
      * Test lexicon entry editing with a link to a page.
      */
-    public function test_canPostEditLexiconEntryWithPageLink()
+    public function testCanPostEditLexiconEntryWithPageLink()
     {
         // Make an entry to edit
         $entry = LexiconEntry::factory()->create();
@@ -425,7 +425,7 @@ class PageLinkTest extends TestCase
     /**
      * Test lexicon entry creation with a labeled link to a page.
      */
-    public function test_canPostCreateLexiconEntryWithLabeledPageLink()
+    public function testCanPostCreateLexiconEntryWithLabeledPageLink()
     {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
@@ -470,7 +470,7 @@ class PageLinkTest extends TestCase
     /**
      * Test lexicon entry editing with a labeled link to a page.
      */
-    public function test_canPostEditLexiconEntryWithLabeledPageLink()
+    public function testCanPostEditLexiconEntryWithLabeledPageLink()
     {
         // Make an entry to edit
         $entry = LexiconEntry::factory()->create();
@@ -512,7 +512,7 @@ class PageLinkTest extends TestCase
     /**
      * Test lexicon entry creation with a link to a wanted page.
      */
-    public function test_canPostCreateLexiconEntryWithWantedLink()
+    public function testCanPostCreateLexiconEntryWithWantedLink()
     {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
@@ -557,7 +557,7 @@ class PageLinkTest extends TestCase
     /**
      * Test lexicon entry editing with a link to a wanted page.
      */
-    public function test_canPostEditLexiconEntryWithWantedLink()
+    public function testCanPostEditLexiconEntryWithWantedLink()
     {
         // Make an entry to edit
         $entry = LexiconEntry::factory()->create();
@@ -599,7 +599,7 @@ class PageLinkTest extends TestCase
     /**
      * Test lexicon entry creation with a labeled link to a wanted page.
      */
-    public function test_canPostCreateLexiconEntryWithLabeledWantedLink()
+    public function testCanPostCreateLexiconEntryWithLabeledWantedLink()
     {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
@@ -646,7 +646,7 @@ class PageLinkTest extends TestCase
     /**
      * Test lexicon entry editing with a labeled link to a wanted page.
      */
-    public function test_canPostEditLexiconEntryWithLabeledWantedLink()
+    public function testCanPostEditLexiconEntryWithLabeledWantedLink()
     {
         // Make an entry to edit
         $entry = LexiconEntry::factory()->create();

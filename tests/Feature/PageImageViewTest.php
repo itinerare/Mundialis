@@ -19,7 +19,7 @@ class PageImageViewTest extends TestCase
     /**
      * Test image modal access.
      */
-    public function test_canGetImageModal()
+    public function testCanGetImageModal()
     {
         // Create a temporary user
         $user = User::factory()->make();
@@ -50,7 +50,7 @@ class PageImageViewTest extends TestCase
      * Test hidden image modal access.
      * This shouldn't work.
      */
-    public function test_cannotGetHiddenImageModal()
+    public function testCannotGetHiddenImageModal()
     {
         // Create a temporary user
         $user = User::factory()->make();
@@ -81,7 +81,7 @@ class PageImageViewTest extends TestCase
      * Test hidden image modal access.
      * This should work.
      */
-    public function test_canGetHiddenImageModalAsEditor()
+    public function testCanGetHiddenImageModalAsEditor()
     {
         // Create a persistent editor
         $editor = User::factory()->editor()->create();
@@ -108,7 +108,7 @@ class PageImageViewTest extends TestCase
     /**
      * Test image page access.
      */
-    public function test_canGetImagePage()
+    public function testCanGetImagePage()
     {
         // Create a temporary user
         $user = User::factory()->make();
@@ -139,7 +139,7 @@ class PageImageViewTest extends TestCase
      * Test hidden image page access.
      * This shouldn't work.
      */
-    public function test_cannotGetHiddenImagePage()
+    public function testCannotGetHiddenImagePage()
     {
         // Create a temporary user
         $user = User::factory()->make();
@@ -170,7 +170,7 @@ class PageImageViewTest extends TestCase
      * Test hidden image page access.
      * This should work.
      */
-    public function test_canGetHiddenImagePageAsEditor()
+    public function testCanGetHiddenImagePageAsEditor()
     {
         // Create a persistent editor
         $editor = User::factory()->editor()->create();

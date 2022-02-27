@@ -23,7 +23,7 @@ class UserNotificationTest extends TestCase
     /**
      * Test notifications access.
      */
-    public function test_canGetEmptyNotifications()
+    public function testCanGetEmptyNotifications()
     {
         // Make a temporary user
         $user = User::factory()->make();
@@ -36,7 +36,7 @@ class UserNotificationTest extends TestCase
     /**
      * Test notifications access with a notification.
      */
-    public function test_canGetNotificationsWithNotification()
+    public function testCanGetNotificationsWithNotification()
     {
         // Make a persistent user
         $user = User::factory()->create();
@@ -52,7 +52,7 @@ class UserNotificationTest extends TestCase
     /**
      * Test clearing all notifs without any notifications.
      */
-    public function test_canPostClearAllNotificationsEmpty()
+    public function testCanPostClearAllNotificationsEmpty()
     {
         // Make a temporary user
         $user = User::factory()->make();
@@ -65,7 +65,7 @@ class UserNotificationTest extends TestCase
     /**
      * Test clearing all notifs with a notification.
      */
-    public function test_canPostClearAllNotificationsWithNotification()
+    public function testCanPostClearAllNotificationsWithNotification()
     {
         // Make a persistent user
         $user = User::factory()->create();
@@ -83,7 +83,7 @@ class UserNotificationTest extends TestCase
     /**
      * Test clearing notifs of a set type without any notifications.
      */
-    public function test_canPostClearTypedNotificationsEmpty()
+    public function testCanPostClearTypedNotificationsEmpty()
     {
         // Make a temporary user
         $user = User::factory()->make();
@@ -96,7 +96,7 @@ class UserNotificationTest extends TestCase
     /**
      * Test clearing notifs of a set type with a notification.
      */
-    public function test_canPostClearTypedNotificationsWithNotification()
+    public function testCanPostClearTypedNotificationsWithNotification()
     {
         // Make a persistent user
         $user = User::factory()->create();
@@ -114,7 +114,7 @@ class UserNotificationTest extends TestCase
     /**
      * Test clearing notifs only of a set type, leaving others alone.
      */
-    public function test_canPostClearOnlyTypedNotifications()
+    public function testCanPostClearOnlyTypedNotifications()
     {
         // Make a persistent user
         $user = User::factory()->create();
@@ -137,7 +137,7 @@ class UserNotificationTest extends TestCase
     /**
      * Test sending a notification by editing a watched page.
      */
-    public function test_canSendPageUpdateNotification()
+    public function testCanSendPageUpdateNotification()
     {
         // Make a persistent user to receive the notification
         $user = User::factory()->create();
@@ -171,7 +171,7 @@ class UserNotificationTest extends TestCase
     /**
      * Test basic image editing.
      */
-    public function test_canSendPageImageUpdateNotification()
+    public function testCanSendPageImageUpdateNotification()
     {
         // Make a persistent user to receive the notification
         $user = User::factory()->create();
@@ -218,7 +218,7 @@ class UserNotificationTest extends TestCase
     /**
      * Test sending a notification by deleting a watched page.
      */
-    public function test_canSendPageDeleteNotification()
+    public function testCanSendPageDeleteNotification()
     {
         // Make a persistent user to receive the notification
         $user = User::factory()->create();

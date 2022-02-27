@@ -17,7 +17,7 @@ class AccessTest extends TestCase
     /**
      * Test most basic site access.
      */
-    public function test_canAccessSite()
+    public function testCanAccessSite()
     {
         // Attempt to access the site on the most basic level
         $response = $this
@@ -28,7 +28,7 @@ class AccessTest extends TestCase
     /**
      * Test visitor access when the site is closed.
      */
-    public function test_visitorCannotReadWhenClosed()
+    public function testVisitorCannotReadWhenClosed()
     {
         // Ensure site settings are present to modify
         $this->artisan('add-site-settings');
@@ -45,7 +45,7 @@ class AccessTest extends TestCase
     /**
      * Test visitor access when the site is open.
      */
-    public function test_visitorCanReadWhenOpen()
+    public function testVisitorCanReadWhenOpen()
     {
         // Ensure site settings are present to modify
         $this->artisan('add-site-settings');
@@ -62,7 +62,7 @@ class AccessTest extends TestCase
     /**
      * Ensure visitor cannot access member-only routes.
      */
-    public function test_visitorCannotGetAccountSettings()
+    public function testVisitorCannotGetAccountSettings()
     {
         $response = $this
             ->get('/account/settings')
@@ -72,7 +72,7 @@ class AccessTest extends TestCase
     /**
      * Ensure visitor cannot access editor routes.
      */
-    public function test_visitorCannotGetWrite()
+    public function testVisitorCannotGetWrite()
     {
         $response = $this
             ->get('/language/lexicon/create')
@@ -82,7 +82,7 @@ class AccessTest extends TestCase
     /**
      * Ensure visitor cannot access admin routes.
      */
-    public function test_visitorCannotGetAdminIndex()
+    public function testVisitorCannotGetAdminIndex()
     {
         $response = $this
             ->get('/admin')
@@ -92,7 +92,7 @@ class AccessTest extends TestCase
     /**
      * Ensure user can access member-only routes.
      */
-    public function test_userCanGetUserSettings()
+    public function testUserCanGetUserSettings()
     {
         // Make a temporary user
         $user = User::factory()->make();
@@ -105,7 +105,7 @@ class AccessTest extends TestCase
     /**
      * Ensure user cannot access editor routes.
      */
-    public function test_userCannotGetWrite()
+    public function testUserCannotGetWrite()
     {
         // Make a temporary user
         $user = User::factory()->make();
@@ -118,7 +118,7 @@ class AccessTest extends TestCase
     /**
      * Ensure user cannot access admin routes.
      */
-    public function test_userCannotGetAdminIndex()
+    public function testUserCannotGetAdminIndex()
     {
         // Make a temporary user
         $user = User::factory()->make();
@@ -131,7 +131,7 @@ class AccessTest extends TestCase
     /**
      * Ensure editor can access editor routes.
      */
-    public function test_editorCanGetWrite()
+    public function testEditorCanGetWrite()
     {
         // Make a temporary user
         $user = User::factory()->editor()->make();
@@ -144,7 +144,7 @@ class AccessTest extends TestCase
     /**
      * Ensure editor cannot access admin routes.
      */
-    public function test_editorCannotGetAdminIndex()
+    public function testEditorCannotGetAdminIndex()
     {
         // Make a temporary user
         $user = User::factory()->editor()->make();
@@ -157,7 +157,7 @@ class AccessTest extends TestCase
     /**
      * Ensure admin can access editor routes.
      */
-    public function test_adminCanGetWrite()
+    public function testAdminCanGetWrite()
     {
         // Make a temporary user
         $user = User::factory()->admin()->make();
@@ -170,7 +170,7 @@ class AccessTest extends TestCase
     /**
      * Ensure admin can access admin routes.
      */
-    public function test_adminCanGetAdminIndex()
+    public function testAdminCanGetAdminIndex()
     {
         // Make a temporary user
         $user = User::factory()->admin()->make();

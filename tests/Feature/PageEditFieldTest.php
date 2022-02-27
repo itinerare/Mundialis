@@ -16,7 +16,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with an infobox text field.
      */
-    public function test_canPostCreatePageWithInfoboxTextField()
+    public function testCanPostCreatePageWithInfoboxTextField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -55,7 +55,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with an infobox text field.
      */
-    public function test_canPostEditPageWithInfoboxTextField()
+    public function testCanPostEditPageWithInfoboxTextField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -93,7 +93,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with an infobox number field.
      */
-    public function test_canPostCreatePageWithInfoboxNumberField()
+    public function testCanPostCreatePageWithInfoboxNumberField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -132,7 +132,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with an infobox number field.
      */
-    public function test_canPostEditPageWithInfoboxNumberField()
+    public function testCanPostEditPageWithInfoboxNumberField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -170,7 +170,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with an infobox checkbox field.
      */
-    public function test_canPostCreatePageWithInfoboxCheckboxField()
+    public function testCanPostCreatePageWithInfoboxCheckboxField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -209,7 +209,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with an infobox checkbox field.
      */
-    public function test_canPostEditPageWithInfoboxCheckboxField()
+    public function testCanPostEditPageWithInfoboxCheckboxField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -247,7 +247,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with an infobox choose one field.
      */
-    public function test_canPostCreatePageWithInfoboxChooseOneField()
+    public function testCanPostCreatePageWithInfoboxChooseOneField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -288,7 +288,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with an infobox choose one field.
      */
-    public function test_canPostEditPageWithInfoboxChooseOneField()
+    public function testCanPostEditPageWithInfoboxChooseOneField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -328,7 +328,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with an infobox choose multiple field.
      */
-    public function test_canPostCreatePageWithInfoboxChooseMultipleField()
+    public function testCanPostCreatePageWithInfoboxChooseMultipleField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -371,7 +371,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with an infobox choose multiple field.
      */
-    public function test_canPostEditPageWithInfoboxChooseMultipleField()
+    public function testCanPostEditPageWithInfoboxChooseMultipleField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -413,7 +413,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with a text field.
      */
-    public function test_canPostCreatePageWithTextField()
+    public function testCanPostCreatePageWithTextField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -452,7 +452,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with a text field.
      */
-    public function test_canPostEditPageWithTextField()
+    public function testCanPostEditPageWithTextField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -490,7 +490,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with a number field.
      */
-    public function test_canPostCreatePageWithumberField()
+    public function testCanPostCreatePageWithumberField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -529,7 +529,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with a number field.
      */
-    public function test_canPostEditPageWithNumberField()
+    public function testCanPostEditPageWithNumberField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -567,7 +567,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with a checkbox field.
      */
-    public function test_canPostCreatePageWithCheckboxField()
+    public function testCanPostCreatePageWithCheckboxField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -606,7 +606,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with a checkbox field.
      */
-    public function test_canPostEditPageWithCheckboxField()
+    public function testCanPostEditPageWithCheckboxField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -644,7 +644,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with a choose one field.
      */
-    public function test_canPostCreatePageWithChooseOneField()
+    public function testCanPostCreatePageWithChooseOneField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -685,7 +685,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with a choose one field.
      */
-    public function test_canPostEditPageWithChooseOneField()
+    public function testCanPostEditPageWithChooseOneField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -725,7 +725,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with a choose multiple field.
      */
-    public function test_canPostCreatePageWithChooseMultipleField()
+    public function testCanPostCreatePageWithChooseMultipleField()
     {
         // Generate some data for the field
         $fieldData = [
@@ -768,7 +768,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with a choose multiple field.
      */
-    public function test_canPostEditPageWithChooseMultipleField()
+    public function testCanPostEditPageWithChooseMultipleField()
     {
         // Generate some data for the field
         $fieldData = [

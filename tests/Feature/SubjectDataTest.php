@@ -21,7 +21,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test people category index access.
      */
-    public function test_canGetPeopleData()
+    public function testCanGetPeopleData()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -34,7 +34,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test places category index access.
      */
-    public function test_canGetPlacesData()
+    public function testCanGetPlacesData()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -47,7 +47,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test flora & fauna category index access.
      */
-    public function test_canGetFloraAndFaunaData()
+    public function testCanGetFloraAndFaunaData()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -60,7 +60,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test things category index access.
      */
-    public function test_canGetThingsData()
+    public function testCanGetThingsData()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -73,7 +73,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test concepts category index access.
      */
-    public function test_canGetConceptsData()
+    public function testCanGetConceptsData()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -86,7 +86,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test time & events category index access.
      */
-    public function test_canGetTimeData()
+    public function testCanGetTimeData()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -99,7 +99,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test language category index access.
      */
-    public function test_canGetLanguageData()
+    public function testCanGetLanguageData()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -112,7 +112,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test miscellaneous category index access.
      */
-    public function test_canGetMiscellaneousData()
+    public function testCanGetMiscellaneousData()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -129,7 +129,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject template access.
      */
-    public function test_canGetEditSubjectTemplate()
+    public function testCanGetEditSubjectTemplate()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -142,7 +142,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject template clearing.
      */
-    public function test_canPostEditEmptySubjectTemplate()
+    public function testCanPostEditEmptySubjectTemplate()
     {
         // Define some basic template data
         $data = [];
@@ -165,7 +165,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject template creation/editing.
      */
-    public function test_canPostEditSubjectTemplate()
+    public function testCanPostEditSubjectTemplate()
     {
         // Define some basic template data
         $data = [
@@ -198,7 +198,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject template creation/editing and cascading.
      */
-    public function test_canPostEditSubjectTemplateAndCascade()
+    public function testCanPostEditSubjectTemplateAndCascade()
     {
         // Create a category to cascade changes to
         $category = SubjectCategory::factory()->subject('concepts')->testData()->create();
@@ -255,7 +255,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject category create access.
      */
-    public function test_canGetCreateSubjectCategory()
+    public function testCanGetCreateSubjectCategory()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -268,7 +268,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject category edit access.
      */
-    public function test_canGetEditSubjectCategory()
+    public function testCanGetEditSubjectCategory()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -282,7 +282,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject category creation with minimal data.
      */
-    public function test_canPostCreateEmptySubjectCategory()
+    public function testCanPostCreateEmptySubjectCategory()
     {
         // Define some basic data
         $data = [
@@ -308,7 +308,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject category editing with minimal data.
      */
-    public function test_canPostEditEmptySubjectCategory()
+    public function testCanPostEditEmptySubjectCategory()
     {
         $category = SubjectCategory::factory()->testData()->create();
 
@@ -336,7 +336,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject category creation with basic data.
      */
-    public function test_canPostCreateSubjectCategory()
+    public function testCanPostCreateSubjectCategory()
     {
         // Define some basic template data
         $data = [
@@ -371,7 +371,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject category editing with basic data.
      */
-    public function test_canPostEditSubjectCategory()
+    public function testCanPostEditSubjectCategory()
     {
         $category = SubjectCategory::factory()->create();
 
@@ -408,7 +408,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject category creating with template population.
      */
-    public function test_canPostCreateSubjectCategoryWithPopulatedTemplate()
+    public function testCanPostCreateSubjectCategoryWithPopulatedTemplate()
     {
         // Ensure 'things' has specific template data to use
         if (DB::table('subject_templates')->where('subject', 'things')->first()) {
@@ -451,7 +451,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject category editing with template population.
      */
-    public function test_canPostEditSubjectCategoryWithPopulatedTemplate()
+    public function testCanPostEditSubjectCategoryWithPopulatedTemplate()
     {
         // Ensure 'things' has specific template data to use
         if (DB::table('subject_templates')->where('subject', 'things')->first()) {
@@ -496,7 +496,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject category creation with a parent.
      */
-    public function test_canPostCreateSubjectCategoryWithParent()
+    public function testCanPostCreateSubjectCategoryWithParent()
     {
         $parent = SubjectCategory::factory()->subject('places')->create();
 
@@ -525,7 +525,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject category editing with a parent.
      */
-    public function test_canPostEditSubjectCategoryWithParent()
+    public function testCanPostEditSubjectCategoryWithParent()
     {
         $category = SubjectCategory::factory()->subject('places')->create();
         $parent = SubjectCategory::factory()->subject('places')->create();
@@ -555,7 +555,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject template editing and cascading.
      */
-    public function test_canPostEditSubjectCategoryAndCascade()
+    public function testCanPostEditSubjectCategoryAndCascade()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -597,7 +597,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject template editing and cascading recursively.
      */
-    public function test_canPostEditSubjectCategoryAndCascadeRecursively()
+    public function testCanPostEditSubjectCategoryAndCascadeRecursively()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -642,7 +642,7 @@ class SubjectDataTest extends TestCase
     /**
      * Test subject category delete access.
      */
-    public function test_canGetDeleteSubjectCategory()
+    public function testCanGetDeleteSubjectCategory()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -657,7 +657,7 @@ class SubjectDataTest extends TestCase
      * Test subject category deletion.
      * This should work.
      */
-    public function test_canPostDeleteSubjectCategory()
+    public function testCanPostDeleteSubjectCategory()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -681,7 +681,7 @@ class SubjectDataTest extends TestCase
      * Test subject category deletion with a page.
      * This shouldn't work.
      */
-    public function test_cannotPostDeleteSubjectCategoryWithPage()
+    public function testCannotPostDeleteSubjectCategoryWithPage()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
@@ -706,7 +706,7 @@ class SubjectDataTest extends TestCase
      * Test subject category deletion with a sub-category.
      * This shouldn't work.
      */
-    public function test_cannotPostDeleteSubjectCategoryWithSubcategory()
+    public function testCannotPostDeleteSubjectCategoryWithSubcategory()
     {
         // Make a temporary admin
         $user = User::factory()->admin()->make();

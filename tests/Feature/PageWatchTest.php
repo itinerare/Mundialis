@@ -16,7 +16,7 @@ class PageWatchTest extends TestCase
     /**
      * Test watched pages access.
      */
-    public function test_canGetWatchedPages()
+    public function testCanGetWatchedPages()
     {
         // Make a temporary user
         $user = User::factory()->make();
@@ -29,7 +29,7 @@ class PageWatchTest extends TestCase
     /**
      * Test watched pages access with a watched page.
      */
-    public function test_canGetWatchedPagesWithPage()
+    public function testCanGetWatchedPagesWithPage()
     {
         // Make a persistent user
         $user = User::factory()->create();
@@ -50,7 +50,7 @@ class PageWatchTest extends TestCase
     /**
      * Test watching a page.
      */
-    public function test_canPostWatchPage()
+    public function testCanPostWatchPage()
     {
         // Make a persistent user
         $user = User::factory()->create();
@@ -73,7 +73,7 @@ class PageWatchTest extends TestCase
     /**
      * Test unwatching a page.
      */
-    public function test_canPostUnwatchPage()
+    public function testCanPostUnwatchPage()
     {
         // Make a persistent user
         $user = User::factory()->create();

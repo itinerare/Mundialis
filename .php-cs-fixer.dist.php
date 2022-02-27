@@ -172,6 +172,7 @@ $rules = [
     ],
     'whitespace_after_comma_in_array' => true,
     'no_unused_imports' => true,
+    'php_unit_method_casing' => ['case' => 'camel_case'],
 ];
 
 $finder = Finder::create()

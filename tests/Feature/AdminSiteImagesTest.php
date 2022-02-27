@@ -19,7 +19,7 @@ class AdminSiteImagesTest extends TestCase
     /**
      * Test site image index access.
      */
-    public function test_canGetSiteImagesIndex()
+    public function testCanGetSiteImagesIndex()
     {
         // Make a temporary user
         $user = User::factory()->admin()->make();
@@ -33,7 +33,7 @@ class AdminSiteImagesTest extends TestCase
     /**
      * Test site image uploading.
      */
-    public function test_canPostEditSiteImage()
+    public function testCanPostEditSiteImage()
     {
         // Make a temporary user
         $user = User::factory()->admin()->make();
@@ -65,7 +65,7 @@ class AdminSiteImagesTest extends TestCase
     /**
      * Test custom css uploading.
      */
-    public function test_canPostEditSiteCss()
+    public function testCanPostEditSiteCss()
     {
         // Make a temporary user
         $user = User::factory()->admin()->make();

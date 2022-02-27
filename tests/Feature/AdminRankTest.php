@@ -18,7 +18,7 @@ class AdminRankTest extends TestCase
     /**
      * Test rank index access.
      */
-    public function test_canGetRankIndex()
+    public function testCanGetRankIndex()
     {
         // Make a temporary user
         $user = User::factory()->admin()->make();
@@ -32,7 +32,7 @@ class AdminRankTest extends TestCase
     /**
      * Test rank edit access.
      */
-    public function test_canGetEditRank()
+    public function testCanGetEditRank()
     {
         // Make a temporary user
         $user = User::factory()->admin()->make();
@@ -47,7 +47,7 @@ class AdminRankTest extends TestCase
     /**
      * Test rank editing.
      */
-    public function test_canPostEditRank()
+    public function testCanPostEditRank()
     {
         // Make a temporary user
         $user = User::factory()->admin()->make();
