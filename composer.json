@@ -8,7 +8,7 @@
         "benjamincrozat/laravel-dropbox-driver": "^3.0",
         "doctrine/dbal": "2.2",
         "fideloper/proxy": "^4.4",
-        "fruitcake/laravel-cors": "^2.0",
+        "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "illuminate/database": "^5.6|^6.0|^7.0|^8.0",
         "illuminate/http": "^5.6|^6.0|^7.0|^8.0",
