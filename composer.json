@@ -4,7 +4,7 @@
     "description": "A web app framework for managing story, character, and world information.",
     "license": "Parity-7.0",
     "require": {
-        "php": "^7.4",
+        "php": "^8.0",
         "benjamincrozat/laravel-dropbox-driver": "^3.0",
         "doctrine/dbal": "2.2",
         "fideloper/proxy": "^4.4",

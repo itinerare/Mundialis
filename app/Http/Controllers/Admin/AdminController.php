@@ -58,7 +58,7 @@ class AdminController extends Controller
         if (!$request->get('value')) {
             $value = 0;
         }
-        if (DB::table('site_settings')->where('key', $key)->update(['value' => isset($value) ? $value : $request->get('value')])) {
+        if (DB::table('site_settings')->where('key', $key)->update(['value' => $value ?? $request->get('value')])) {
             flash('Setting updated successfully.')->success();
         } else {
             flash('Invalid setting selected.')->error();
