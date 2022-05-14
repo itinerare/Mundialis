@@ -500,7 +500,7 @@ class LexiconEntryTest extends TestCase
             ->post('/language/lexicon/delete/'.$entry->id);
 
         // Verify that the appropriate change has occurred
-        $this->assertDeleted($entry);
+        $this->assertModelMissing($entry);
     }
 
     /**
@@ -563,7 +563,7 @@ class LexiconEntryTest extends TestCase
             ->post('/language/lexicon/delete/'.$entry->id);
 
         // Verify that the appropriate change has occurred
-        $this->assertDeleted($etymology);
-        $this->assertDeleted($entry);
+        $this->assertModelMissing($etymology);
+        $this->assertModelMissing($entry);
     }
 }

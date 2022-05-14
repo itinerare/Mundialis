@@ -579,7 +579,7 @@ class PageRelationshipTest extends TestCase
             ->post('/pages/'.$page[1]->id.'/relationships/delete/'.$relationship->id);
 
         // Verify that the appropriate change has occurred
-        $this->assertDeleted($relationship);
+        $this->assertModelMissing($relationship);
     }
 
     /******************************************************************************
