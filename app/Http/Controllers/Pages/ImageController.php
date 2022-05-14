@@ -147,7 +147,7 @@ class ImageController extends Controller
         }
 
         return view('pages.images._info_popup', [
-            'page'  => isset($page) ? $page : null,
+            'page'  => $page ?? null,
             'image' => $image,
         ]);
     }

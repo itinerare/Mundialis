@@ -308,12 +308,12 @@ class ImageManager extends Service
             $version = PageImageVersion::create([
                 'page_image_id' => $imageId,
                 'user_id'       => $userId,
-                'hash'          => isset($imageData['hash']) ? $imageData['hash'] : null,
-                'extension'     => isset($imageData['extension']) ? $imageData['extension'] : null,
-                'x0'            => isset($imageData['x0']) ? $imageData['x0'] : null,
-                'x1'            => isset($imageData['x1']) ? $imageData['x1'] : null,
-                'y0'            => isset($imageData['y0']) ? $imageData['y0'] : null,
-                'y1'            => isset($imageData['y1']) ? $imageData['y1'] : null,
+                'hash'          => $imageData['hash'] ?? null,
+                'extension'     => $imageData['extension'] ?? null,
+                'x0'            => $imageData['x0'] ?? null,
+                'x1'            => $imageData['x1'] ?? null,
+                'y0'            => $imageData['y0'] ?? null,
+                'y1'            => $imageData['y1'] ?? null,
                 'type'          => $type,
                 'reason'        => $reason,
                 'is_minor'      => $isMinor,
@@ -364,7 +364,7 @@ class ImageManager extends Service
     {
         try {
             // Process data stored on the image
-            $imageData['description'] = isset($data['description']) ? $data['description'] : null;
+            $imageData['description'] = $data['description'] ?? null;
             $imageData['is_visible'] = isset($data['is_visible']);
 
             // If there's no preexisting image, create one
@@ -388,7 +388,7 @@ class ImageManager extends Service
                 }
 
                 // Create version
-                $version = $this->logImageVersion($image->id, $user->id, $imageData, $data['version_type'], isset($data['reason']) ? $data['reason'] : null, null, false);
+                $version = $this->logImageVersion($image->id, $user->id, $imageData, $data['version_type'], $data['reason'] ?? null, null, false);
                 if (!$version) {
                     throw new \Exception('An error occurred while creating the image version.');
                 }
@@ -428,7 +428,7 @@ class ImageManager extends Service
                 $processImage->save($image->imagePath.'/'.$version->imageFileName, 100, $image->extension);
             } else {
                 // Otherwise, just create a new version
-                $version = $this->logImageVersion($image->id, $user->id, null, 'Image Info Updated', isset($data['reason']) ? $data['reason'] : null, null, isset($data['is_minor']) ? $data['is_minor'] : 0);
+                $version = $this->logImageVersion($image->id, $user->id, null, 'Image Info Updated', $data['reason'] ?? null, null, $data['is_minor'] ?? 0);
                 if (!$version) {
                     throw new \Exception('An error occurred while creating the image version.');
                 }
@@ -657,7 +657,7 @@ class ImageManager extends Service
         // Record creator information
         if (isset($data['creator_id'])) {
             foreach ($data['creator_id'] as $key=>$creator) {
-                $versionData['creators'][] = isset($creator) ? $creator : (isset($data['creator_url']) ? $data['creator_url'] : null);
+                $versionData['creators'][] = $creator ?? ($data['creator_url'] ?? null);
             }
         }
 

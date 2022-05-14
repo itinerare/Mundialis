@@ -329,8 +329,8 @@ class SubjectService extends Service
                     // Assemble data
                     $data[$key] = [
                         'name'          => $data['name'][$key],
-                        'abbreviation'  => isset($data['abbreviation'][$key]) ? $data['abbreviation'][$key] : null,
-                        'unit'          => isset($data['unit'][$key]) ? $data['unit'][$key] : null,
+                        'abbreviation'  => $data['abbreviation'][$key] ?? null,
+                        'unit'          => $data['unit'][$key] ?? null,
                         'use_for_dates' => $division && (isset($data['use_for_dates'][$division->id]) && $data['use_for_dates'][$division->id]) ? 1 : 0,
                     ];
 
@@ -512,7 +512,7 @@ class SubjectService extends Service
                     // Assemble data
                     $data[$key] = [
                         'name'         => $data['name'][$key],
-                        'abbreviation' => isset($data['abbreviation'][$key]) ? $data['abbreviation'][$key] : null,
+                        'abbreviation' => $data['abbreviation'][$key] ?? null,
                     ];
 
                     // Create or update division data
@@ -710,10 +710,10 @@ class SubjectService extends Service
                 $data['data']['infobox'][$fieldKey] = [
                 'label'   => $data['infobox_label'][$key],
                 'type'    => $data['infobox_type'][$key],
-                'rules'   => isset($data['infobox_rules'][$key]) ? $data['infobox_rules'][$key] : null,
-                'choices' => isset($data['infobox_choices'][$key]) ? $data['infobox_choices'][$key] : null,
-                'value'   => isset($data['infobox_value'][$key]) ? $data['infobox_value'][$key] : null,
-                'help'    => isset($data['infobox_help'][$key]) ? $data['infobox_help'][$key] : null,
+                'rules'   => $data['infobox_rules'][$key] ?? null,
+                'choices' => $data['infobox_choices'][$key] ?? null,
+                'value'   => $data['infobox_value'][$key] ?? null,
+                'help'    => $data['infobox_help'][$key] ?? null,
             ];
             }
         }
@@ -728,10 +728,10 @@ class SubjectService extends Service
                 $data['data']['fields'][$data['field_section'][$key]][$fieldKey] = [
                 'label'         => $data['field_label'][$key],
                 'type'          => $data['field_type'][$key],
-                'rules'         => isset($data['field_rules'][$key]) ? $data['field_rules'][$key] : null,
-                'choices'       => isset($data['field_choices'][$key]) ? $data['field_choices'][$key] : null,
-                'value'         => isset($data['field_value'][$key]) ? $data['field_value'][$key] : null,
-                'help'          => isset($data['field_help'][$key]) ? $data['field_help'][$key] : null,
+                'rules'         => $data['field_rules'][$key] ?? null,
+                'choices'       => $data['field_choices'][$key] ?? null,
+                'value'         => $data['field_value'][$key] ?? null,
+                'help'          => $data['field_help'][$key] ?? null,
                 'is_subsection' => $data['field_is_subsection'][$key],
             ];
             }

@@ -480,7 +480,7 @@ class Page extends Model
             }
         }
 
-        $familyMembers = collect(isset($familyMembers) ? $familyMembers : null);
+        $familyMembers = collect($familyMembers ?? null);
 
         if ($familyMembers->count()) {
             return $familyMembers;
