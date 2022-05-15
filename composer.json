@@ -59,6 +59,9 @@
         ],
         "lint": [
             "./vendor/bin/php-cs-fixer fix -vvv --show-progress=dots"
+        ],
+        "changelog": [
+            "./vendor/marcocesarato/php-conventional-changelog/conventional-changelog"
         ]
     },
     "extra": {
@@ -73,5 +76,5 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "version": "1.3.4"
+    "version": "2.0.0"
 }
