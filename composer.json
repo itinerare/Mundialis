@@ -59,6 +59,9 @@
         ],
         "lint": [
             "./vendor/bin/php-cs-fixer fix -vvv --show-progress=dots"
+        ],
+        "changelog": [
+            "./vendor/marcocesarato/php-conventional-changelog/conventional-changelog"
         ]
     },
     "extra": {
