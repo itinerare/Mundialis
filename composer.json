@@ -60,6 +60,9 @@
         "lint": [
             "./vendor/bin/php-cs-fixer fix -vvv --show-progress=dots"
         ],
+        "test-coverage": [
+            "./vendor/bin/phpunit --coverage-text"
+        ],
         "changelog": [
             "./vendor/marcocesarato/php-conventional-changelog/conventional-changelog"
         ]
