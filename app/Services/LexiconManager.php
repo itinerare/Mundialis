@@ -51,7 +51,7 @@ class LexiconManager extends Service
                             $link = PageLink::create([
                             'parent_id'   => $entry->id,
                             'parent_type' => 'entry',
-                            'link_id'     => isset($link['link_id']) ? $link['link_id'] : null,
+                            'link_id'     => $link['link_id'] ?? null,
                             'title'       => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null,
                         ]);
                             if (!$link) {
@@ -114,7 +114,7 @@ class LexiconManager extends Service
                             $link = PageLink::create([
                             'parent_id'   => $entry->id,
                             'parent_type' => 'entry',
-                            'link_id'     => isset($link['link_id']) ? $link['link_id'] : null,
+                            'link_id'     => $link['link_id'] ?? null,
                             'title'       => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null,
                         ]);
                             if (!$link) {
@@ -215,7 +215,7 @@ class LexiconManager extends Service
                     if ($parent || $data['parent'][$key]) {
                         $etymology = LexiconEtymology::create([
                             'entry_id'  => $entry->id,
-                            'parent_id' => isset($parent) ? $parent : null,
+                            'parent_id' => $parent ?? null,
                             'parent'    => !isset($parent) && isset($data['parent'][$key]) ? $data['parent'][$key] : null,
                         ]);
                         if (!$etymology) {
@@ -249,7 +249,7 @@ class LexiconManager extends Service
 
         // Auto-conjugation/declension
         if ($data['autoconj']) {
-            $conjData = isset($entry->category->data[$entry->lexicalClass->id]['conjugation']) ? $entry->category->data[$entry->lexicalClass->id]['conjugation'] : null;
+            $conjData = $entry->category->data[$entry->lexicalClass->id]['conjugation'] ?? null;
 
             // This option should only be offered in the first place if the data exists,
             // but as a safeguard, double-check

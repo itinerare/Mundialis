@@ -4,6 +4,15 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.0.0](https://github.com/itinerare/Mundialis/compare/v1.3.5...v2.0.0) (2022-05-15)
+### ⚠ BREAKING CHANGES
+
+* Update to Laravel 9 ([60f70d](https://github.com/itinerare/Mundialis/commit/60f70dc0bc8dfa1db708e0539e687749766e33a2))
+* Update to PHP 8 ([e1947c](https://github.com/itinerare/Mundialis/commit/e1947c4629a923d718da4b59f72eae491e5d78cd))
+
+
+---
+
 ## [1.3.3](https://github.com/itinerare/Mundialis/compare/v1.3.2...v1.3.3) (2022-02-06)
 ### Bug Fixes
 

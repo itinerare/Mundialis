@@ -289,7 +289,7 @@ class PageDeleteTest extends TestCase
             ->post('/admin/data/categories/delete/'.$category->id);
 
         // Verify that the appropriate change has occurred
-        $this->assertDeleted($page);
+        $this->assertModelMissing($page);
     }
 
     /**
@@ -322,7 +322,7 @@ class PageDeleteTest extends TestCase
 
         // Verify that the appropriate change has occurred
         // In this case, we check the image, as it should also be force-deleted
-        $this->assertDeleted($image);
+        $this->assertModelMissing($image);
     }
 
     /**
@@ -355,7 +355,7 @@ class PageDeleteTest extends TestCase
 
         // Verify that the appropriate change has occurred
         // In this case, we check the relationship, as it should also be deleted
-        $this->assertDeleted($relationship);
+        $this->assertModelMissing($relationship);
     }
 
     /**

@@ -77,7 +77,7 @@ class UserNotificationTest extends TestCase
             ->post('/notifications/clear');
 
         // Verify that the notification has been deleted
-        $this->assertDeleted($notification);
+        $this->assertModelMissing($notification);
     }
 
     /**
@@ -108,7 +108,7 @@ class UserNotificationTest extends TestCase
             ->post('/notifications/clear/0');
 
         // Verify that the notification has been deleted
-        $this->assertDeleted($notification);
+        $this->assertModelMissing($notification);
     }
 
     /**

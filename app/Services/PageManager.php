@@ -114,7 +114,7 @@ class PageManager extends Service
             }
 
             // Create version
-            $version = $this->logPageVersion($page->id, $user->id, 'Page Created', isset($data['reason']) ? $data['reason'] : null, $data['version'], false);
+            $version = $this->logPageVersion($page->id, $user->id, 'Page Created', $data['reason'] ?? null, $data['version'], false);
             if (!$version) {
                 throw new \Exception('An error occurred while saving page version.');
             }
@@ -195,7 +195,7 @@ class PageManager extends Service
             }
 
             // Create version
-            $version = $this->logPageVersion($page->id, $user->id, $versionType, isset($data['reason']) ? $data['reason'] : null, $data['version'], isset($data['is_minor']) ? $data['is_minor'] : false);
+            $version = $this->logPageVersion($page->id, $user->id, $versionType, $data['reason'] ?? null, $data['version'], $data['is_minor'] ?? false);
             if (!$version) {
                 throw new \Exception('An error occurred while saving page version.');
             }
@@ -543,7 +543,7 @@ class PageManager extends Service
         $category = $page ? $page->category : SubjectCategory::where('id', $data['category_id'])->first();
 
         // Record the introduction as necessary
-        $data['data']['description'] = isset($data['description']) ? $data['description'] : null;
+        $data['data']['description'] = $data['description'] ?? null;
         if (!isset($data['is_visible'])) {
             $data['is_visible'] = 0;
         }
@@ -553,7 +553,7 @@ class PageManager extends Service
         // be duplicated in a template, and the template accounts for form building as well
         // as page formatting
         foreach ($category->formFields as $key=>$field) {
-            $data['data'][$key] = isset($data[$key]) ? $data[$key] : null;
+            $data['data'][$key] = $data[$key] ?? null;
         }
 
         if (isset($data['page_tag'])) {
@@ -564,35 +564,35 @@ class PageManager extends Service
         switch ($category->subject['key']) {
             case 'people':
                 // Record name
-                $data['data']['people_name'] = isset($data['people_name']) ? $data['people_name'] : null;
+                $data['data']['people_name'] = $data['people_name'] ?? null;
 
                 // Record birth and death data
                 foreach (['birth', 'death'] as $segment) {
                     if (isset($data[$segment.'_place_id']) || isset($data[$segment.'_chronology_id'])) {
                         $data['data'][$segment] = [
-                        'place'      => isset($data[$segment.'_place_id']) ? $data[$segment.'_place_id'] : null,
-                        'chronology' => isset($data[$segment.'_chronology_id']) ? $data[$segment.'_chronology_id'] : null,
+                        'place'      => $data[$segment.'_place_id'] ?? null,
+                        'chronology' => $data[$segment.'_chronology_id'] ?? null,
                     ];
                     }
                     foreach ((new TimeDivision)->dateFields() as $key=>$field) {
                         if (isset($data[$segment.'_'.$key])) {
-                            $data['data'][$segment]['date'][$key] = isset($data[$segment.'_'.$key]) ? $data[$segment.'_'.$key] : null;
+                            $data['data'][$segment]['date'][$key] = $data[$segment.'_'.$key] ?? null;
                         }
                     }
                 }
                 break;
             case 'places':
                 // Record parent location
-                $data['parent_id'] = isset($data['parent_id']) ? $data['parent_id'] : null;
+                $data['parent_id'] = $data['parent_id'] ?? null;
                 break;
             case 'time':
                 // Record chronology
-                $data['parent_id'] = isset($data['parent_id']) ? $data['parent_id'] : null;
+                $data['parent_id'] = $data['parent_id'] ?? null;
                 // Record dates
                 foreach (['start', 'end'] as $segment) {
                     foreach ((new TimeDivision)->dateFields() as $key=>$field) {
                         if (isset($data['date_'.$segment.'_'.$key])) {
-                            $data['data']['date'][$segment][$key] = isset($data['date_'.$segment.'_'.$key]) ? $data['date_'.$segment.'_'.$key] : null;
+                            $data['data']['date'][$segment][$key] = $data['date_'.$segment.'_'.$key] ?? null;
                         }
                     }
                 }
@@ -624,7 +624,7 @@ class PageManager extends Service
                 if ((isset($link['link_id']) && !$page->links()->where('link_id', $link['link_id'])->first()) || (isset($link['title']) && !$page->links()->where('title', $link['title'])->first())) {
                     $link = PageLink::create([
                         'parent_id' => $page->id,
-                        'link_id'   => isset($link['link_id']) ? $link['link_id'] : null,
+                        'link_id'   => $link['link_id'] ?? null,
                         'title'     => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null,
                     ]);
                     if (!$link) {
@@ -803,8 +803,8 @@ class PageManager extends Service
             'title'       => $data['title'],
             'is_visible'  => $data['is_visible'],
             'summary'     => $data['summary'],
-            'utility_tag' => isset($data['utility_tag']) ? $data['utility_tag'] : null,
-            'page_tag'    => isset($data['page_tag']) ? $data['page_tag'] : null,
+            'utility_tag' => $data['utility_tag'] ?? null,
+            'page_tag'    => $data['page_tag'] ?? null,
         ];
         if (isset($data['parent_id'])) {
             $versionData = $versionData + ['parent_id' => $data['parent_id']];
