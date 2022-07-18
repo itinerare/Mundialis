@@ -59,7 +59,7 @@ class PageLink extends Model
     {
         switch ($this->linked_type) {
             case 'page':
-            return $this->belongsTo('App\Models\Page\Page', 'link_id');
+                return $this->belongsTo('App\Models\Page\Page', 'link_id');
                 break;
             case 'entry':
                 return $this->belongsTo('App\Models\Lexicon\LexiconEntry');
