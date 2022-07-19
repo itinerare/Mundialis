@@ -11,9 +11,12 @@
     },
     "devDependencies": {
         "axios": "^0.27",
+        "bootstrap": "^5.2.0",
+        "jquery": "^3.6.0",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
-        "postcss": "^8.1.14"
+        "postcss": "^8.1.14",
+        "sass": "^1.53.0"
     },
     "version": "2.0.0"
 }
