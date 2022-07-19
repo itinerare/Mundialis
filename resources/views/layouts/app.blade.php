@@ -1,6 +1,7 @@
-<?php header("Permissions-Policy: interest-cohort=()");?>
+<?php header('Permissions-Policy: interest-cohort=()'); ?>
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,21 +13,27 @@
 
     <!-- Primary Meta Tags -->
     <meta name="title" content="{{ config('mundialis.settings.site_name', 'Mundialis') }} -@yield('title')">
-    <meta name="description" content="@if(View::hasSection('meta-desc')) @yield('meta-desc') @else {{ config('mundialis.settings.site_desc', 'A Mundialis site') }} @endif">
+    <meta name="description"
+        content="@if (View::hasSection('meta-desc')) @yield('meta-desc') @else {{ config('mundialis.settings.site_desc', 'A Mundialis site') }} @endif">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ config('app.url', 'http://localhost') }}">
-    <meta property="og:image" content="@if(View::hasSection('meta-img')) @yield('meta-img') @else {{ asset('images/meta-image.png') }} @endif">
+    <meta property="og:image"
+        content="@if (View::hasSection('meta-img')) @yield('meta-img') @else {{ asset('images/meta-image.png') }} @endif">
     <meta property="og:title" content="{{ config('mundialis.settings.site_name', 'Mundialis') }} -@yield('title')">
-    <meta property="og:description" content="@if(View::hasSection('meta-desc')) @yield('meta-desc') @else {{ config('mundialis.settings.site_desc', 'A Mundialis site') }} @endif">
+    <meta property="og:description"
+        content="@if (View::hasSection('meta-desc')) @yield('meta-desc') @else {{ config('mundialis.settings.site_desc', 'A Mundialis site') }} @endif">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ config('app.url', 'http://localhost') }}">
-    <meta property="twitter:image" content="@if(View::hasSection('meta-img')) @yield('meta-img') @else {{ asset('images/meta-image.png') }} @endif">
-    <meta property="twitter:title" content="{{ config('mundialis.settings.site_name', 'Mundialis') }} -@yield('title')">
-    <meta property="twitter:description" content="@if(View::hasSection('meta-desc')) @yield('meta-desc') @else {{ config('mundialis.settings.site_desc', 'A Mundialis site') }} @endif">
+    <meta property="twitter:image"
+        content="@if (View::hasSection('meta-img')) @yield('meta-img') @else {{ asset('images/meta-image.png') }} @endif">
+    <meta property="twitter:title"
+        content="{{ config('mundialis.settings.site_name', 'Mundialis') }} -@yield('title')">
+    <meta property="twitter:description"
+        content="@if (View::hasSection('meta-desc')) @yield('meta-desc') @else {{ config('mundialis.settings.site_desc', 'A Mundialis site') }} @endif">
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
@@ -67,23 +74,26 @@
     <link href="{{ asset('css/magnific.css') }}" rel="stylesheet">
     <link href="{{ asset('css/selectize.bootstrap4.css') }}" rel="stylesheet">
 
-    @if(file_exists(public_path(). '/css/custom.css'))
+    @if (file_exists(public_path() . '/css/custom.css'))
         <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     @endif
 
 </head>
+
 <body>
     <div id="app">
         @include('layouts._nav')
-        @if ( View::hasSection('sidebar') )
-			<div class="site-mobile-header bg-secondary"><a href="#" class="btn btn-sm btn-outline-light" id="mobileMenuButton">Menu <i class="fas fa-caret-right ml-1"></i></a></div>
-		@endif
+        @if (View::hasSection('sidebar'))
+            <div class="site-mobile-header bg-secondary"><a href="#" class="btn btn-sm btn-outline-light"
+                    id="mobileMenuButton">Menu <i class="fas fa-caret-right ml-1"></i></a></div>
+        @endif
 
         <main class="container-fluid">
             <div class="row">
-                @if(Settings::get('visitors_can_read') || Auth::check())
+                @if (Settings::get('visitors_can_read') || Auth::check())
                     <div class="sidebar col-lg-2" id="sidebar">
-                        <a href="{{ url('/') }}" class="py-2"><img src="{{ asset('images/logo.png') }}" class="mw-100 mobile-hide rounded" /></a>
+                        <a href="{{ url('/') }}" class="py-2"><img src="{{ asset('images/logo.png') }}"
+                                class="mw-100 mobile-hide rounded" /></a>
                         @yield('sidebar')
                     </div>
                 @endif
@@ -96,7 +106,7 @@
                         </div>
 
                         <div class="site-footer mt-4" id="footer">
-                                @include('layouts._footer')
+                            @include('layouts._footer')
                         </div>
                     </div>
                 </div>
@@ -121,7 +131,9 @@
         @yield('scripts')
         <script>
             $(function() {
-                $('[data-toggle="tooltip"]').tooltip({html: true});
+                $('[data-toggle="tooltip"]').tooltip({
+                    html: true
+                });
                 $('.cp').colorpicker();
                 tinymce.init({
                     selector: '.wysiwyg',
@@ -147,8 +159,9 @@
                     $sidebar.toggleClass('active');
                 });
 
-                });
+            });
         </script>
     </div>
 </body>
+
 </html>

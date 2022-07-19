@@ -1,5 +1,5 @@
-@if($rank)
-    {!! Form::open(['url' => 'admin/ranks/edit/'.$rank->id]) !!}
+@if ($rank)
+    {!! Form::open(['url' => 'admin/ranks/edit/' . $rank->id]) !!}
 
     <div class="form-group">
         {!! Form::label('Rank Name') !!}

@@ -12,6 +12,7 @@
             e.preventDefault();
             removeInfoboxRow($(this));
         })
+
         function addInfoboxRow() {
             var $clone = $('.infobox-row').clone();
             $('#infoboxList').append($clone);
@@ -22,6 +23,7 @@
             });
             attachFieldTypeListener($clone.find('.form-field-type'));
         }
+
         function removeInfoboxRow($trigger) {
             $trigger.parent().parent().remove();
         }
@@ -29,18 +31,22 @@
         $('.handle').on('click', function(e) {
             e.preventDefault();
         });
-        $( ".sortable" ).sortable({
+        $(".sortable").sortable({
             items: '.sort-item',
             handle: ".handle",
             placeholder: "sortable-placeholder",
-            stop: function( event, ui ) {
-                $('#sortableOrder').val($(this).sortable("toArray", {attribute:"data-id"}));
+            stop: function(event, ui) {
+                $('#sortableOrder').val($(this).sortable("toArray", {
+                    attribute: "data-id"
+                }));
             },
             create: function() {
-                $('#sortableOrder').val($(this).sortable("toArray", {attribute:"data-id"}));
+                $('#sortableOrder').val($(this).sortable("toArray", {
+                    attribute: "data-id"
+                }));
             }
         });
-        $( ".sortable" ).disableSelection();
+        $(".sortable").disableSelection();
 
         $('#add-section').on('click', function(e) {
             e.preventDefault();
@@ -50,6 +56,7 @@
             e.preventDefault();
             removeSectionRow($(this));
         })
+
         function addSectionRow() {
             var $clone = $('.section-row').clone();
             $('#sectionList').append($clone);
@@ -60,6 +67,7 @@
             });
             attachListeners($clone);
         }
+
         function removeSectionRow($trigger) {
             $trigger.parent().remove();
         }
@@ -87,6 +95,7 @@
             e.preventDefault();
             removeFieldRow($(this));
         })
+
         function removeFieldRow($trigger) {
             $trigger.parent().parent().remove();
         }
@@ -99,13 +108,12 @@
                 $cell.children().addClass('hide');
                 $cell.children().children().val(null);
 
-                if (val == 'choice' || val == 'multiple'){
+                if (val == 'choice' || val == 'multiple') {
                     $cell.children('.choiceOptions').addClass('show');
                     $cell.children('.choiceOptions').removeClass('hide');
                     $cell.children('.valueOptions').removeClass('show');
                     $cell.children('.valueOptions').addClass('hide');
-                }
-                else {
+                } else {
                     $cell.children('.choiceOptions').addClass('hide');
                     $cell.children('.choiceOptions').removeClass('show');
                     $cell.children('.valueOptions').removeClass('hide');

@@ -18,26 +18,23 @@
             setTimeCategoryView('timeCategoryList');
         });
 
-        function initTimeCategoryView()
-        {
+        function initTimeCategoryView() {
             timeCategoryView = window.localStorage.getItem('mundialis_time_category_view');
-            if(!timeCategoryView) timeCategoryView = 'timeCategoryList';
+            if (!timeCategoryView) timeCategoryView = 'timeCategoryList';
             setTimeCategoryView(timeCategoryView);
             console.log(timeCategoryView);
         }
 
-        function setTimeCategoryView(status)
-        {
+        function setTimeCategoryView(status) {
             timeCategoryView = status;
 
-            if(timeCategoryView == 'timeCategoryGrid') {
+            if (timeCategoryView == 'timeCategoryGrid') {
                 $timeCategoryGridView.removeClass('hide');
                 $timeCategoryGridButton.addClass('active');
                 $timeCategoryListView.addClass('hide');
                 $timeCategoryListButton.removeClass('active');
                 window.localStorage.setItem('mundialis_time_category_view', 'timeCategoryGrid');
-            }
-            else if (timeCategoryView == 'timeCategoryList') {
+            } else if (timeCategoryView == 'timeCategoryList') {
                 $timeCategoryListView.removeClass('hide');
                 $timeCategoryListButton.addClass('active');
                 $timeCategoryGridView.addClass('hide');

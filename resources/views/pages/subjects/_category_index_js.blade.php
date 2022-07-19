@@ -18,25 +18,22 @@
             setCategoryView('categoryList');
         });
 
-        function initCategoryView()
-        {
+        function initCategoryView() {
             categoryView = window.localStorage.getItem('mundialis_category_view');
-            if(!categoryView) categoryView = 'categoryList';
+            if (!categoryView) categoryView = 'categoryList';
             setCategoryView(categoryView);
         }
 
-        function setCategoryView(status)
-        {
+        function setCategoryView(status) {
             categoryView = status;
 
-            if(categoryView == 'categoryGrid') {
+            if (categoryView == 'categoryGrid') {
                 $categoryGridView.removeClass('hide');
                 $categoryGridButton.addClass('active');
                 $categoryListView.addClass('hide');
                 $categoryListButton.removeClass('active');
                 window.localStorage.setItem('mundialis_category_view', 'categoryGrid');
-            }
-            else if (categoryView == 'categoryList') {
+            } else if (categoryView == 'categoryList') {
                 $categoryListView.removeClass('hide');
                 $categoryListButton.addClass('active');
                 $categoryGridView.addClass('hide');
