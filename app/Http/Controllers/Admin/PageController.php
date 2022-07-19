@@ -8,8 +8,7 @@ use App\Services\SitePageService;
 use Auth;
 use Illuminate\Http\Request;
 
-class PageController extends Controller
-{
+class PageController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Admin / Text Page Controller
@@ -24,8 +23,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getIndex()
-    {
+    public function getIndex() {
         return view('admin.pages.index', [
             'pages' => SitePage::orderBy('key')->paginate(20),
         ]);
@@ -38,8 +36,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditPage($id)
-    {
+    public function getEditPage($id) {
         $page = SitePage::find($id);
         if (!$page) {
             abort(404);
@@ -58,8 +55,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEditPage(Request $request, SitePageService $service, $id = null)
-    {
+    public function postEditPage(Request $request, SitePageService $service, $id = null) {
         $data = $request->only(['text']);
 
         if ($service->updatePage(SitePage::find($id), $data, Auth::user())) {

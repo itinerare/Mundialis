@@ -7,8 +7,7 @@ use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AdminSitePageTest extends TestCase
-{
+class AdminSitePageTest extends TestCase {
     use RefreshDatabase;
 
     /******************************************************************************
@@ -18,8 +17,7 @@ class AdminSitePageTest extends TestCase
     /**
      * Test site page index access.
      */
-    public function testCanGetSitePageIndex()
-    {
+    public function testCanGetSitePageIndex() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
 
@@ -32,8 +30,7 @@ class AdminSitePageTest extends TestCase
     /**
      * Test site page editing.
      */
-    public function testCanPostEditSitePage()
-    {
+    public function testCanPostEditSitePage() {
         // Ensure site pages are present to modify
         $this->artisan('add-site-pages');
 

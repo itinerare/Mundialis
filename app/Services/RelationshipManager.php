@@ -8,8 +8,7 @@ use App\Models\User\User;
 use DB;
 use Image;
 
-class RelationshipManager extends Service
-{
+class RelationshipManager extends Service {
     /*
     |--------------------------------------------------------------------------
     | Image Manager
@@ -28,8 +27,7 @@ class RelationshipManager extends Service
      *
      * @return \App\Models\Page\PageImage|bool
      */
-    public function createPageRelationship($data, $page, $user)
-    {
+    public function createPageRelationship($data, $page, $user) {
         DB::beginTransaction();
 
         try {
@@ -68,8 +66,7 @@ class RelationshipManager extends Service
      *
      * @return \App\Models\Page\Page|bool
      */
-    public function updatePageRelationship($relationship, $data, $user)
-    {
+    public function updatePageRelationship($relationship, $data, $user) {
         DB::beginTransaction();
 
         try {
@@ -97,8 +94,7 @@ class RelationshipManager extends Service
      *
      * @return bool
      */
-    public function deletePageRelationship($relationship, $user)
-    {
+    public function deletePageRelationship($relationship, $user) {
         DB::beginTransaction();
 
         try {

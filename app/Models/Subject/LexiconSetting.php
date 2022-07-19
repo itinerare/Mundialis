@@ -4,8 +4,7 @@ namespace App\Models\Subject;
 
 use App\Models\Model;
 
-class LexiconSetting extends Model
-{
+class LexiconSetting extends Model {
     /**
      * The attributes that are mass assignable.
      *

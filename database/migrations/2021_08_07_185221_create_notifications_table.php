@@ -4,13 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateNotificationsTable extends Migration
-{
+class CreateNotificationsTable extends Migration {
     /**
      * Run the migrations.
      */
-    public function up()
-    {
+    public function up() {
         Schema::create('notifications', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
@@ -33,8 +31,7 @@ class CreateNotificationsTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('notifications');
 
         Schema::table('users', function (Blueprint $table) {

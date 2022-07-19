@@ -15,8 +15,7 @@ use Auth;
 use Config;
 use Illuminate\Http\Request;
 
-class PageController extends Controller
-{
+class PageController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Subject Page Controller
@@ -33,8 +32,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getPage($id)
-    {
+    public function getPage($id) {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
@@ -54,8 +52,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getPageHistory(Request $request, $id)
-    {
+    public function getPageHistory(Request $request, $id) {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
@@ -97,8 +94,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getLinksHere(Request $request, $id)
-    {
+    public function getLinksHere(Request $request, $id) {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
@@ -128,8 +124,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getPageVersion($pageId, $id)
-    {
+    public function getPageVersion($pageId, $id) {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $pageId)->first();
         if (!$page) {
             abort(404);
@@ -151,8 +146,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCreatePage($category)
-    {
+    public function getCreatePage($category) {
         $category = SubjectCategory::where('id', $category)->first();
         if (!$category) {
             abort(404);
@@ -178,8 +172,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditPage($id)
-    {
+    public function getEditPage($id) {
         $page = Page::find($id);
         if (!$page) {
             abort(404);
@@ -209,8 +202,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCreateEditPage(Request $request, PageManager $service, $id = null)
-    {
+    public function postCreateEditPage(Request $request, PageManager $service, $id = null) {
         if (!$id) {
             $category = SubjectCategory::where('id', $request->get('category_id'))->first();
         } else {
@@ -221,7 +213,7 @@ class PageController extends Controller
         // Set any un-set toggles (since Laravel does not pass anything on for them),
         // and collect any custom validation rules for the configured fields
         $answerArray = ['title', 'summary', 'description', 'category_id', 'is_visible',
-        'parent_id', 'page_tag', 'utility_tag', 'reason', 'is_minor', ];
+            'parent_id', 'page_tag', 'utility_tag', 'reason', 'is_minor', ];
         $validationRules = ($id ? Page::$updateRules : Page::$createRules);
         foreach ($category->formFields as $key=>$field) {
             $answerArray[] = $key;
@@ -281,8 +273,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getProtectPage(Request $request, $id)
-    {
+    public function getProtectPage(Request $request, $id) {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
@@ -325,8 +316,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postProtectPage(Request $request, PageManager $service, $id)
-    {
+    public function postProtectPage(Request $request, PageManager $service, $id) {
         if ($id && $service->protectPage(Page::find($id), Auth::user(), $request->only(['reason', 'is_protected']))) {
             flash('Page protection updated successfully.')->success();
         } else {
@@ -347,8 +337,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getMovePage($id)
-    {
+    public function getMovePage($id) {
         $page = Page::find($id);
         if (!Auth::user()->canEdit($page)) {
             abort(404);
@@ -393,8 +382,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postMovePage(Request $request, PageManager $service, $id)
-    {
+    public function postMovePage(Request $request, PageManager $service, $id) {
         if ($id && $service->movePage(Page::find($id), SubjectCategory::find($request->get('category_id')), Auth::user(), $request->get('reason'))) {
             flash('Page moved successfully.')->success();
         } else {
@@ -416,8 +404,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getResetPage($pageId, $id)
-    {
+    public function getResetPage($pageId, $id) {
         $page = Page::find($pageId);
         $version = $page->versions()->where('id', $id)->first();
         if (!Auth::user()->canEdit($page)) {
@@ -439,8 +426,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postResetPage(Request $request, PageManager $service, $pageId, $id)
-    {
+    public function postResetPage(Request $request, PageManager $service, $pageId, $id) {
         if ($id && $service->resetPage(Page::find($pageId), PageVersion::find($id), Auth::user(), $request->get('reason'))) {
             flash('Page reset successfully.')->success();
         } else {
@@ -461,8 +447,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getDeletePage($id)
-    {
+    public function getDeletePage($id) {
         $page = Page::find($id);
         if (!Auth::user()->canEdit($page)) {
             abort(404);
@@ -481,8 +466,7 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postDeletePage(Request $request, PageManager $service, $id)
-    {
+    public function postDeletePage(Request $request, PageManager $service, $id) {
         if ($id && $service->deletePage(Page::find($id), Auth::user(), $request->get('reason'))) {
             flash('Page deleted successfully.')->success();
         } else {

@@ -9,15 +9,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class PageEditFieldTest extends TestCase
-{
+class PageEditFieldTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /**
      * Test page creation with an infobox text field.
      */
-    public function testCanPostCreatePageWithInfoboxTextField()
-    {
+    public function testCanPostCreatePageWithInfoboxTextField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -55,8 +53,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with an infobox text field.
      */
-    public function testCanPostEditPageWithInfoboxTextField()
-    {
+    public function testCanPostEditPageWithInfoboxTextField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -93,8 +90,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with an infobox number field.
      */
-    public function testCanPostCreatePageWithInfoboxNumberField()
-    {
+    public function testCanPostCreatePageWithInfoboxNumberField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -132,8 +128,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with an infobox number field.
      */
-    public function testCanPostEditPageWithInfoboxNumberField()
-    {
+    public function testCanPostEditPageWithInfoboxNumberField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -170,8 +165,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with an infobox checkbox field.
      */
-    public function testCanPostCreatePageWithInfoboxCheckboxField()
-    {
+    public function testCanPostCreatePageWithInfoboxCheckboxField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -209,8 +203,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with an infobox checkbox field.
      */
-    public function testCanPostEditPageWithInfoboxCheckboxField()
-    {
+    public function testCanPostEditPageWithInfoboxCheckboxField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -247,8 +240,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with an infobox choose one field.
      */
-    public function testCanPostCreatePageWithInfoboxChooseOneField()
-    {
+    public function testCanPostCreatePageWithInfoboxChooseOneField() {
         // Generate some data for the field
         $fieldData = [
             'key'     => $this->faker->unique()->domainWord(),
@@ -288,8 +280,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with an infobox choose one field.
      */
-    public function testCanPostEditPageWithInfoboxChooseOneField()
-    {
+    public function testCanPostEditPageWithInfoboxChooseOneField() {
         // Generate some data for the field
         $fieldData = [
             'key'     => $this->faker->unique()->domainWord(),
@@ -328,8 +319,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with an infobox choose multiple field.
      */
-    public function testCanPostCreatePageWithInfoboxChooseMultipleField()
-    {
+    public function testCanPostCreatePageWithInfoboxChooseMultipleField() {
         // Generate some data for the field
         $fieldData = [
             'key'     => $this->faker->unique()->domainWord(),
@@ -371,8 +361,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with an infobox choose multiple field.
      */
-    public function testCanPostEditPageWithInfoboxChooseMultipleField()
-    {
+    public function testCanPostEditPageWithInfoboxChooseMultipleField() {
         // Generate some data for the field
         $fieldData = [
             'key'     => $this->faker->unique()->domainWord(),
@@ -413,8 +402,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with a text field.
      */
-    public function testCanPostCreatePageWithTextField()
-    {
+    public function testCanPostCreatePageWithTextField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -452,8 +440,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with a text field.
      */
-    public function testCanPostEditPageWithTextField()
-    {
+    public function testCanPostEditPageWithTextField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -490,8 +477,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with a number field.
      */
-    public function testCanPostCreatePageWithumberField()
-    {
+    public function testCanPostCreatePageWithumberField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -529,8 +515,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with a number field.
      */
-    public function testCanPostEditPageWithNumberField()
-    {
+    public function testCanPostEditPageWithNumberField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -567,8 +552,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with a checkbox field.
      */
-    public function testCanPostCreatePageWithCheckboxField()
-    {
+    public function testCanPostCreatePageWithCheckboxField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -606,8 +590,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with a checkbox field.
      */
-    public function testCanPostEditPageWithCheckboxField()
-    {
+    public function testCanPostEditPageWithCheckboxField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -644,8 +627,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with a choose one field.
      */
-    public function testCanPostCreatePageWithChooseOneField()
-    {
+    public function testCanPostCreatePageWithChooseOneField() {
         // Generate some data for the field
         $fieldData = [
             'key'     => $this->faker->unique()->domainWord(),
@@ -685,8 +667,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with a choose one field.
      */
-    public function testCanPostEditPageWithChooseOneField()
-    {
+    public function testCanPostEditPageWithChooseOneField() {
         // Generate some data for the field
         $fieldData = [
             'key'     => $this->faker->unique()->domainWord(),
@@ -725,8 +706,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page creation with a choose multiple field.
      */
-    public function testCanPostCreatePageWithChooseMultipleField()
-    {
+    public function testCanPostCreatePageWithChooseMultipleField() {
         // Generate some data for the field
         $fieldData = [
             'key'     => $this->faker->unique()->domainWord(),
@@ -768,8 +748,7 @@ class PageEditFieldTest extends TestCase
     /**
      * Test page editing with a choose multiple field.
      */
-    public function testCanPostEditPageWithChooseMultipleField()
-    {
+    public function testCanPostEditPageWithChooseMultipleField() {
         // Generate some data for the field
         $fieldData = [
             'key'     => $this->faker->unique()->domainWord(),

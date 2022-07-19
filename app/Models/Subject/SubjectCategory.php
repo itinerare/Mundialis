@@ -6,8 +6,7 @@ use App\Models\Model;
 use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class SubjectCategory extends Model
-{
+class SubjectCategory extends Model {
     use HasFactory;
 
     /**
@@ -62,24 +61,21 @@ class SubjectCategory extends Model
     /**
      * Get parent category of this category.
      */
-    public function parent()
-    {
+    public function parent() {
         return $this->belongsTo('App\Models\Subject\SubjectCategory', 'parent_id');
     }
 
     /**
      * Get child categories of this category.
      */
-    public function children()
-    {
+    public function children() {
         return $this->hasMany('App\Models\Subject\SubjectCategory', 'parent_id');
     }
 
     /**
      * Get pages in this category.
      */
-    public function pages()
-    {
+    public function pages() {
         return $this->hasMany('App\Models\Page\Page', 'category_id');
     }
 
@@ -94,8 +90,7 @@ class SubjectCategory extends Model
      *
      * @return array
      */
-    public function getDataAttribute()
-    {
+    public function getDataAttribute() {
         if (!isset($this->attributes['data'])) {
             return null;
         }
@@ -108,8 +103,7 @@ class SubjectCategory extends Model
      *
      * @return string
      */
-    public function getUrlAttribute()
-    {
+    public function getUrlAttribute() {
         return url($this->attributes['subject'].'/categories/'.$this->id);
     }
 
@@ -118,8 +112,7 @@ class SubjectCategory extends Model
      *
      * @return string
      */
-    public function getDisplayNameAttribute()
-    {
+    public function getDisplayNameAttribute() {
         return '<a href="'.$this->url.'">'.$this->name.'</a>';
     }
 
@@ -128,8 +121,7 @@ class SubjectCategory extends Model
      *
      * @return string
      */
-    public function getImageDirectoryAttribute()
-    {
+    public function getImageDirectoryAttribute() {
         return 'images/data/categories';
     }
 
@@ -138,8 +130,7 @@ class SubjectCategory extends Model
      *
      * @return string
      */
-    public function getImageFileNameAttribute()
-    {
+    public function getImageFileNameAttribute() {
         return $this->id.'-image.png';
     }
 
@@ -148,8 +139,7 @@ class SubjectCategory extends Model
      *
      * @return string
      */
-    public function getImagePathAttribute()
-    {
+    public function getImagePathAttribute() {
         return public_path($this->imageDirectory);
     }
 
@@ -158,8 +148,7 @@ class SubjectCategory extends Model
      *
      * @return string
      */
-    public function getImageUrlAttribute()
-    {
+    public function getImageUrlAttribute() {
         if (!$this->has_image) {
             return null;
         }
@@ -172,8 +161,7 @@ class SubjectCategory extends Model
      *
      * @return array
      */
-    public function getSubjectAttribute()
-    {
+    public function getSubjectAttribute() {
         // Fetch config information for the recorded subject
         $subject = Config::get('mundialis.subjects.'.$this->attributes['subject']);
         // Then add its key to the array
@@ -187,8 +175,7 @@ class SubjectCategory extends Model
      *
      * @return App\Models\Subject\SubjectTemplate
      */
-    public function getSubjectTemplateAttribute()
-    {
+    public function getSubjectTemplateAttribute() {
         return SubjectTemplate::where('subject', $this->attributes['subject'])->first();
     }
 
@@ -197,8 +184,7 @@ class SubjectCategory extends Model
      *
      * @return array
      */
-    public function getTemplateAttribute()
-    {
+    public function getTemplateAttribute() {
         // Check to see if this category's data is set,
         if (isset($this->data) && $this->data) {
             return $this->data;
@@ -229,8 +215,7 @@ class SubjectCategory extends Model
      *
      * @return array
      */
-    public function getFormFieldsAttribute()
-    {
+    public function getFormFieldsAttribute() {
         $fields = [];
 
         if (isset($this->template['infobox'])) {
@@ -247,8 +232,7 @@ class SubjectCategory extends Model
         return $fields;
     }
 
-    private function fetchTemplateRecursive($parent)
-    {
+    private function fetchTemplateRecursive($parent) {
         if (isset($parent->data) && $parent->data) {
             return $parent->data;
         }

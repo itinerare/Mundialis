@@ -8,15 +8,13 @@ use App\Services\RankService;
 use Auth;
 use Illuminate\Http\Request;
 
-class RankController extends Controller
-{
+class RankController extends Controller {
     /**
      * Show the rank index.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getIndex()
-    {
+    public function getIndex() {
         return view('admin.users.ranks', [
             'ranks' => Rank::orderBy('sort', 'DESC')->get(),
         ]);
@@ -29,8 +27,7 @@ class RankController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditRank($id)
-    {
+    public function getEditRank($id) {
         $rank = Rank::find($id);
 
         return view('admin.users._edit_rank', [
@@ -38,8 +35,7 @@ class RankController extends Controller
         ]);
     }
 
-    public function postEditRank(Request $request, RankService $service, $id = null)
-    {
+    public function postEditRank(Request $request, RankService $service, $id = null) {
         $request->validate(Rank::$rules);
         $data = $request->only(['name', 'description']);
 

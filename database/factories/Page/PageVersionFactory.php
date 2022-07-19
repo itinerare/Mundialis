@@ -5,8 +5,7 @@ namespace Database\Factories\Page;
 use App\Models\Page\PageVersion;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PageVersionFactory extends Factory
-{
+class PageVersionFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -19,8 +18,7 @@ class PageVersionFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
         return [
             //
             'type'     => 'Page Created',
@@ -37,8 +35,7 @@ class PageVersionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function page($page)
-    {
+    public function page($page) {
         return $this->state(function (array $attributes) use ($page) {
             return [
                 'page_id' => $page,
@@ -54,8 +51,7 @@ class PageVersionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function user($user)
-    {
+    public function user($user) {
         return $this->state(function (array $attributes) use ($user) {
             return [
                 'user_id' => $user,
@@ -70,8 +66,7 @@ class PageVersionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function type($type)
-    {
+    public function type($type) {
         return $this->state(function (array $attributes) use ($type) {
             return [
                 'type' => $type,
@@ -86,8 +81,7 @@ class PageVersionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function reason($reason)
-    {
+    public function reason($reason) {
         return $this->state(function (array $attributes) use ($reason) {
             return [
                 'reason' => $reason,
@@ -100,8 +94,7 @@ class PageVersionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function minor()
-    {
+    public function minor() {
         return $this->state(function (array $attributes) {
             return [
                 'is_minor' => 1,
@@ -114,8 +107,7 @@ class PageVersionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function deleted()
-    {
+    public function deleted() {
         return $this->state(function (array $attributes) {
             return [
                 'type' => 'Page Deleted',
@@ -134,8 +126,7 @@ class PageVersionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function testData($title = 'Test', $summary = null, $utilityTags = null, $pageTags = null, $division = null)
-    {
+    public function testData($title = 'Test', $summary = null, $utilityTags = null, $pageTags = null, $division = null) {
         return $this->state(function (array $attributes) use ($title, $summary, $utilityTags, $pageTags, $division) {
             return [
                 'data' => '{"data":{"description":null,"test_category_field":"test field answer",'.($division ? '"date":{"start":{"'.$division.'":"'.mt_rand(1, 50).'"},"end":{"'.$division.'":"'.mt_rand(50, 100).'"}},' : '').'"parsed":{"description":null,'.($division ? '"date":{"start":{"'.$division.'":"'.mt_rand(1, 50).'"},"end":{"'.$division.'":"'.mt_rand(50, 100).'"}},' : '').'"test_category_field":"test field answer"}},"title":"'.$title.'","is_visible":"1","summary":'.($summary ? '"'.$summary.'"' : null).',"utility_tag":'.($utilityTags ? '"['.$utilityTags.']"' : null).',"page_tag":'.($pageTags ? '"['.$pageTags.']"' : null).'}',

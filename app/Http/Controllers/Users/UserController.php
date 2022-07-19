@@ -10,8 +10,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Route;
 
-class UserController extends Controller
-{
+class UserController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | User Controller
@@ -24,8 +23,7 @@ class UserController extends Controller
     /**
      * Create a new controller instance.
      */
-    public function __construct()
-    {
+    public function __construct() {
         $name = Route::current()->parameter('name');
         $this->user = User::where('name', $name)->first();
         if (!$this->user) {
@@ -40,8 +38,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getUser($name)
-    {
+    public function getUser($name) {
         $pageVersions = PageVersion::orderBy('created_at', 'DESC')->where('user_id', $this->user->id)->get()->filter(function ($version) {
             if (!$version->page || isset($version->page->deleted_at)) {
                 return 0;
@@ -78,8 +75,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getUserPageRevisions(Request $request, $name)
-    {
+    public function getUserPageRevisions(Request $request, $name) {
         $query = PageVersion::orderBy('created_at', 'DESC')->where('user_id', $this->user->id)->get()->filter(function ($version) {
             if (!$version->page || isset($version->page->deleted_at)) {
                 return 0;
@@ -104,8 +100,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getUserImageRevisions(Request $request, $name)
-    {
+    public function getUserImageRevisions(Request $request, $name) {
         $query = PageImageVersion::orderBy('updated_at', 'DESC')->where('user_id', $this->user->id)->get()->filter(function ($version) {
             if (!$version->image || isset($version->image->deleted_at)) {
                 return 0;

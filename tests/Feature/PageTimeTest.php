@@ -11,15 +11,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class PageTimeTest extends TestCase
-{
+class PageTimeTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /**
      * Test page creation with a date.
      */
-    public function testCanPostCreatePageWithDate()
-    {
+    public function testCanPostCreatePageWithDate() {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('time')->create();
 
@@ -55,8 +53,7 @@ class PageTimeTest extends TestCase
     /**
      * Test page editing with a date.
      */
-    public function testCanPostEditPageWithDate()
-    {
+    public function testCanPostEditPageWithDate() {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('time')->create();
 
@@ -97,8 +94,7 @@ class PageTimeTest extends TestCase
     /**
      * Tests timeline access.
      */
-    public function testCanGetTimeline()
-    {
+    public function testCanGetTimeline() {
         $user = User::factory()->make();
 
         // Create a date-enabled time division
@@ -113,8 +109,7 @@ class PageTimeTest extends TestCase
     /**
      * Tests timeline access with an event.
      */
-    public function testCanGetTimelineWithEvent()
-    {
+    public function testCanGetTimelineWithEvent() {
         $user = User::factory()->make();
 
         // Create a category for the page to go into
@@ -139,8 +134,7 @@ class PageTimeTest extends TestCase
     /**
      * Tests timeline access.
      */
-    public function testCannotGetTimelineWithNoDateDivisions()
-    {
+    public function testCannotGetTimelineWithNoDateDivisions() {
         $user = User::factory()->make();
 
         // Create a time division

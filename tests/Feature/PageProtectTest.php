@@ -9,15 +9,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class PageProtectTest extends TestCase
-{
+class PageProtectTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /**
      * Test page protection access.
      */
-    public function testCanGetProtectPage()
-    {
+    public function testCanGetProtectPage() {
         // Create a temporary admin
         $user = User::factory()->admin()->make();
         // Create a page to protect
@@ -32,8 +30,7 @@ class PageProtectTest extends TestCase
     /**
      * Test page protection.
      */
-    public function testCanPostProtectPage()
-    {
+    public function testCanPostProtectPage() {
         // Make a page to protect
         $page = Page::factory()->create();
 
@@ -61,8 +58,7 @@ class PageProtectTest extends TestCase
     /**
      * Test page protection with a reason.
      */
-    public function testCanPostProtectPageWithReason()
-    {
+    public function testCanPostProtectPageWithReason() {
         // Make a page to protect
         $page = Page::factory()->create();
 
@@ -91,8 +87,7 @@ class PageProtectTest extends TestCase
     /**
      * Test page unprotection.
      */
-    public function testCanPostUnprotectPage()
-    {
+    public function testCanPostUnprotectPage() {
         // Make a page to protect
         $page = Page::factory()->create();
 
@@ -123,8 +118,7 @@ class PageProtectTest extends TestCase
     /**
      * Test page unprotection with a reason.
      */
-    public function testCanPostUnprotectPageWithReason()
-    {
+    public function testCanPostUnprotectPageWithReason() {
         // Make a page to protect
         $page = Page::factory()->create();
 

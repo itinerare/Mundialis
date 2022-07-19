@@ -5,8 +5,7 @@ namespace Database\Factories\Page;
 use App\Models\Page\PageRelationship;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PageRelationshipFactory extends Factory
-{
+class PageRelationshipFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -19,8 +18,7 @@ class PageRelationshipFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
         return [
             //
             'type_one' => 'platonic_friend',
@@ -36,8 +34,7 @@ class PageRelationshipFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function pageOne($page)
-    {
+    public function pageOne($page) {
         return $this->state(function (array $attributes) use ($page) {
             return [
                 'page_one_id' => $page,
@@ -53,8 +50,7 @@ class PageRelationshipFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function pageTwo($page)
-    {
+    public function pageTwo($page) {
         return $this->state(function (array $attributes) use ($page) {
             return [
                 'page_two_id' => $page,
@@ -67,8 +63,7 @@ class PageRelationshipFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function familial()
-    {
+    public function familial() {
         return $this->state(function (array $attributes) {
             return [
                 'type_one' => 'familial_parent',

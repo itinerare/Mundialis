@@ -10,15 +10,13 @@ use App\Services\UserService;
 use Auth;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
-{
+class UserController extends Controller {
     /**
      * Show the user index.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getUserIndex(Request $request)
-    {
+    public function getUserIndex(Request $request) {
         $query = User::join('ranks', 'users.rank_id', '=', 'ranks.id')->select('ranks.name AS rank_name', 'users.*');
         $sort = $request->only(['sort']);
 
@@ -72,8 +70,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getUser($name)
-    {
+    public function getUser($name) {
         $user = User::where('name', $name)->first();
 
         if (!$user) {
@@ -86,8 +83,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function postUserBasicInfo(Request $request, $name)
-    {
+    public function postUserBasicInfo(Request $request, $name) {
         $user = User::where('name', $name)->first();
         if (!$user) {
             flash('Invalid user.')->error();
@@ -111,8 +107,7 @@ class UserController extends Controller
         return redirect()->to($user->adminUrl);
     }
 
-    public function postUserAccount(Request $request, $name)
-    {
+    public function postUserAccount(Request $request, $name) {
         $user = User::where('name', $name)->first();
 
         if (!$user) {
@@ -131,8 +126,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getUserUpdates($name)
-    {
+    public function getUserUpdates($name) {
         $user = User::where('name', $name)->first();
 
         if (!$user) {
@@ -152,8 +146,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getBan($name)
-    {
+    public function getBan($name) {
         $user = User::where('name', $name)->first();
 
         if (!$user) {
@@ -172,8 +165,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getBanConfirmation($name)
-    {
+    public function getBanConfirmation($name) {
         $user = User::where('name', $name)->first();
 
         if (!$user) {
@@ -185,8 +177,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function postBan(Request $request, UserService $service, $name)
-    {
+    public function postBan(Request $request, UserService $service, $name) {
         $user = User::where('name', $name)->first();
         $wasBanned = $user->is_banned;
         if (!$user) {
@@ -211,8 +202,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getUnbanConfirmation($name)
-    {
+    public function getUnbanConfirmation($name) {
         $user = User::where('name', $name)->first();
 
         if (!$user) {
@@ -224,8 +214,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function postUnban(Request $request, UserService $service, $name)
-    {
+    public function postUnban(Request $request, UserService $service, $name) {
         $user = User::where('name', $name)->first();
 
         if (!$user) {

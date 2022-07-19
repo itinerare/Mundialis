@@ -7,15 +7,13 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 
-class UpdateUserProfileInformation implements UpdatesUserProfileInformation
-{
+class UpdateUserProfileInformation implements UpdatesUserProfileInformation {
     /**
      * Validate and update the given user's profile information.
      *
      * @param mixed $user
      */
-    public function update($user, array $input)
-    {
+    public function update($user, array $input) {
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
 
@@ -44,8 +42,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      *
      * @param mixed $user
      */
-    protected function updateVerifiedUser($user, array $input)
-    {
+    protected function updateVerifiedUser($user, array $input) {
         $user->forceFill([
             'name'              => $input['name'],
             'email'             => $input['email'],

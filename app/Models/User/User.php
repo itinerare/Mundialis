@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements MustVerifyEmail
-{
+class User extends Authenticatable implements MustVerifyEmail {
     use HasFactory, Notifiable;
 
     /**
@@ -56,40 +55,35 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get user settings.
      */
-    public function settings()
-    {
+    public function settings() {
         return $this->hasOne('App\Models\User\UserSettings');
     }
 
     /**
      * Get user-editable profile data.
      */
-    public function profile()
-    {
+    public function profile() {
         return $this->hasOne('App\Models\User\UserProfile');
     }
 
     /**
      * Get the user's notifications.
      */
-    public function notifications()
-    {
+    public function notifications() {
         return $this->hasMany('App\Models\Notification');
     }
 
     /**
      * Get the user's rank data.
      */
-    public function rank()
-    {
+    public function rank() {
         return $this->belongsTo('App\Models\User\Rank');
     }
 
     /**
      * Get the user's watched pages.
      */
-    public function watched()
-    {
+    public function watched() {
         return $this->hasManyThrough(
             'App\Models\Page\Page',
             'App\Models\User\WatchedPage',
@@ -111,8 +105,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return bool
      */
-    public function getIsAdminAttribute()
-    {
+    public function getIsAdminAttribute() {
         if ($this->is_banned) {
             return false;
         }
@@ -125,8 +118,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return bool
      */
-    public function getCanWriteAttribute()
-    {
+    public function getCanWriteAttribute() {
         if ($this->is_banned) {
             return false;
         }
@@ -139,8 +131,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return string
      */
-    public function getUrlAttribute()
-    {
+    public function getUrlAttribute() {
         return url('user/'.$this->name);
     }
 
@@ -149,8 +140,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return string
      */
-    public function getAdminUrlAttribute()
-    {
+    public function getAdminUrlAttribute() {
         return url('admin/users/'.$this->name.'/edit');
     }
 
@@ -159,8 +149,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return string
      */
-    public function getDisplayNameAttribute()
-    {
+    public function getDisplayNameAttribute() {
         return ($this->is_banned ? '<strike>' : '').'<a href="'.$this->url.'" class="display-user">'.$this->name.'</a>'.($this->is_banned ? '</strike>' : '');
     }
 
@@ -169,8 +158,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return string
      */
-    public function getAvatar()
-    {
+    public function getAvatar() {
         return $this->avatar;
     }
 
@@ -187,8 +175,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return bool
      */
-    public function canEdit($page)
-    {
+    public function canEdit($page) {
         // Admins can always edit pages, so just return true
         if ($this->isAdmin) {
             return true;

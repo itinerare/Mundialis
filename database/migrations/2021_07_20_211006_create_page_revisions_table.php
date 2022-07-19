@@ -4,13 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePageRevisionsTable extends Migration
-{
+class CreatePageRevisionsTable extends Migration {
     /**
      * Run the migrations.
      */
-    public function up()
-    {
+    public function up() {
         Schema::create('page_versions', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
@@ -80,8 +78,7 @@ class CreatePageRevisionsTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('page_versions');
         Schema::dropIfExists('page_image_versions');
 

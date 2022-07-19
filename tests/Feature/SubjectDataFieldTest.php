@@ -7,15 +7,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class SubjectDataFieldTest extends TestCase
-{
+class SubjectDataFieldTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /**
      * Test subject template editing with an infobox text field.
      */
-    public function testCanPostEditTemplateWithInfoboxTextField()
-    {
+    public function testCanPostEditTemplateWithInfoboxTextField() {
         // Define some basic template data
         $data = [
             'section_key'     => [0 => $this->faker->unique()->domainWord()],
@@ -47,8 +45,7 @@ class SubjectDataFieldTest extends TestCase
     /**
      * Test subject template editing with an infobox text field with a validation rule.
      */
-    public function testCanPostEditTemplateWithInfoboxTextFieldWithRule()
-    {
+    public function testCanPostEditTemplateWithInfoboxTextFieldWithRule() {
         // Define some basic template data
         $data = [
             'section_key'     => [0 => $this->faker->unique()->domainWord()],
@@ -80,8 +77,7 @@ class SubjectDataFieldTest extends TestCase
     /**
      * Test subject template editing with an infobox text field with a default value.
      */
-    public function testCanPostEditTemplateWithInfoboxTextFieldWithValue()
-    {
+    public function testCanPostEditTemplateWithInfoboxTextFieldWithValue() {
         // Define some basic template data
         $data = [
             'section_key'     => [0 => $this->faker->unique()->domainWord()],
@@ -113,8 +109,7 @@ class SubjectDataFieldTest extends TestCase
     /**
      * Test subject template editing with an infobox text field with a tooltip.
      */
-    public function testCanPostEditTemplateWithInfoboxTextFieldWithHelp()
-    {
+    public function testCanPostEditTemplateWithInfoboxTextFieldWithHelp() {
         // Define some basic template data
         $data = [
             'section_key'     => [0 => $this->faker->unique()->domainWord()],
@@ -146,8 +141,7 @@ class SubjectDataFieldTest extends TestCase
     /**
      * Test subject template editing with an infobox number field.
      */
-    public function testCanPostEditTemplateWithInfoboxNumberField()
-    {
+    public function testCanPostEditTemplateWithInfoboxNumberField() {
         // Define some basic template data
         $data = [
             'section_key'     => [0 => $this->faker->unique()->domainWord()],
@@ -179,8 +173,7 @@ class SubjectDataFieldTest extends TestCase
     /**
      * Test subject template editing with an infobox checkbox field.
      */
-    public function testCanPostEditTemplateWithInfoboxCheckboxField()
-    {
+    public function testCanPostEditTemplateWithInfoboxCheckboxField() {
         // Define some basic template data
         $data = [
             'section_key'     => [0 => $this->faker->unique()->domainWord()],
@@ -212,8 +205,7 @@ class SubjectDataFieldTest extends TestCase
     /**
      * Test subject template editing with an infobox choose one field.
      */
-    public function testCanPostEditTemplateWithInfoboxChooseOneField()
-    {
+    public function testCanPostEditTemplateWithInfoboxChooseOneField() {
         for ($i = 1; $i <= 2; $i++) {
             $option[$i] = $this->faker->unique()->domainWord();
         }
@@ -249,8 +241,7 @@ class SubjectDataFieldTest extends TestCase
     /**
      * Test subject template editing with an infobox choose multiple field.
      */
-    public function testCanPostEditTemplateWithInfoboxChooseMultipleField()
-    {
+    public function testCanPostEditTemplateWithInfoboxChooseMultipleField() {
         for ($i = 1; $i <= 2; $i++) {
             $option[$i] = $this->faker->unique()->domainWord();
         }
@@ -286,8 +277,7 @@ class SubjectDataFieldTest extends TestCase
     /**
      * Test subject template editing with a text field.
      */
-    public function testCanPostEditTemplateWithTextField()
-    {
+    public function testCanPostEditTemplateWithTextField() {
         // Define some basic template data
         $data = [
             'section_key'         => [0 => 'test_section'],
@@ -321,8 +311,7 @@ class SubjectDataFieldTest extends TestCase
     /**
      * Test subject template editing with a text field with a validation rule.
      */
-    public function testCanPostEditTemplateWithTextFieldWithRule()
-    {
+    public function testCanPostEditTemplateWithTextFieldWithRule() {
         // Define some basic template data
         $data = [
             'section_key'         => [0 => 'test_section'],
@@ -356,8 +345,7 @@ class SubjectDataFieldTest extends TestCase
     /**
      * Test subject template editing with a text field with a default value.
      */
-    public function testCanPostEditTemplateWithTextFieldWithValue()
-    {
+    public function testCanPostEditTemplateWithTextFieldWithValue() {
         // Define some basic template data
         $data = [
             'section_key'         => [0 => 'test_section'],
@@ -391,8 +379,7 @@ class SubjectDataFieldTest extends TestCase
     /**
      * Test subject template editing with a text field with a tooltip.
      */
-    public function testCanPostEditTemplateWithTextFieldWithHelp()
-    {
+    public function testCanPostEditTemplateWithTextFieldWithHelp() {
         // Define some basic template data
         $data = [
             'section_key'         => [0 => 'test_section'],
@@ -426,8 +413,7 @@ class SubjectDataFieldTest extends TestCase
     /**
      * Test subject template editing with a number field.
      */
-    public function testCanPostEditTemplateWithNumberField()
-    {
+    public function testCanPostEditTemplateWithNumberField() {
         // Define some basic template data
         $data = [
             'section_key'         => [0 => 'test_section'],
@@ -461,8 +447,7 @@ class SubjectDataFieldTest extends TestCase
     /**
      * Test subject template editing with a checkbox field.
      */
-    public function testCanPostEditTemplateWithCheckboxField()
-    {
+    public function testCanPostEditTemplateWithCheckboxField() {
         // Define some basic template data
         $data = [
             'section_key'         => [0 => 'test_section'],
@@ -496,8 +481,7 @@ class SubjectDataFieldTest extends TestCase
     /**
      * Test subject template editing with a choose one field.
      */
-    public function testCanPostEditTemplateWithChooseOneField()
-    {
+    public function testCanPostEditTemplateWithChooseOneField() {
         for ($i = 1; $i <= 2; $i++) {
             $option[$i] = $this->faker->unique()->domainWord();
         }
@@ -535,8 +519,7 @@ class SubjectDataFieldTest extends TestCase
     /**
      * Test subject template editing with a choose multiple field.
      */
-    public function testCanPostEditTemplateWithChooseMultipleField()
-    {
+    public function testCanPostEditTemplateWithChooseMultipleField() {
         for ($i = 1; $i <= 2; $i++) {
             $option[$i] = $this->faker->unique()->domainWord();
         }

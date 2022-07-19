@@ -5,8 +5,7 @@ namespace App\Models\Subject;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class LexiconCategory extends Model
-{
+class LexiconCategory extends Model {
     use HasFactory;
 
     /**
@@ -53,24 +52,21 @@ class LexiconCategory extends Model
     /**
      * Get parent category of this category.
      */
-    public function parent()
-    {
+    public function parent() {
         return $this->belongsTo('App\Models\Subject\LexiconCategory', 'parent_id');
     }
 
     /**
      * Get child categories of this category.
      */
-    public function children()
-    {
+    public function children() {
         return $this->hasMany('App\Models\Subject\LexiconCategory', 'parent_id');
     }
 
     /**
      * Get entries in this category.
      */
-    public function entries()
-    {
+    public function entries() {
         return $this->hasMany('App\Models\Lexicon\LexiconEntry', 'category_id');
     }
 
@@ -85,8 +81,7 @@ class LexiconCategory extends Model
      *
      * @return array
      */
-    public function getDataAttribute()
-    {
+    public function getDataAttribute() {
         if (!isset($this->attributes['data'])) {
             return null;
         }
@@ -99,8 +94,7 @@ class LexiconCategory extends Model
      *
      * @return string
      */
-    public function getUrlAttribute()
-    {
+    public function getUrlAttribute() {
         return url('language/lexicon/'.$this->id);
     }
 
@@ -109,8 +103,7 @@ class LexiconCategory extends Model
      *
      * @return string
      */
-    public function getDisplayNameAttribute()
-    {
+    public function getDisplayNameAttribute() {
         return '<a href="'.$this->url.'">'.$this->name.'</a>';
     }
 
@@ -128,8 +121,7 @@ class LexiconCategory extends Model
      *
      * @return array
      */
-    public function classCombinations($class)
-    {
+    public function classCombinations($class) {
         if (!isset($this->data) || !isset($this->data[$class]['properties'])) {
             return null;
         }
@@ -166,8 +158,7 @@ class LexiconCategory extends Model
      *
      * @return array
      */
-    private function combinations($arrays, $i = 0)
-    {
+    private function combinations($arrays, $i = 0) {
         if (!isset($arrays[$i])) {
             return [];
         }

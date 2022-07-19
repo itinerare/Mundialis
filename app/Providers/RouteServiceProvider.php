@@ -8,8 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
-class RouteServiceProvider extends ServiceProvider
-{
+class RouteServiceProvider extends ServiceProvider {
     /**
      * The controller namespace for the application.
      *
@@ -22,8 +21,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define your route model bindings, pattern filters, etc.
      */
-    public function boot()
-    {
+    public function boot() {
         $this->configureRateLimiting();
 
         $this->routes(function () {
@@ -41,8 +39,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Configure the rate limiters for the application.
      */
-    protected function configureRateLimiting()
-    {
+    protected function configureRateLimiting() {
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });

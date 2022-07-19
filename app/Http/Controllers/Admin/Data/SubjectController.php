@@ -14,8 +14,7 @@ use Auth;
 use Config;
 use Illuminate\Http\Request;
 
-class SubjectController extends Controller
-{
+class SubjectController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Admin / Gallery Data Controller
@@ -36,8 +35,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSubjectIndex($subject)
-    {
+    public function getSubjectIndex($subject) {
         $subjectKey = $subject;
         $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
@@ -55,8 +53,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditTemplate($subject)
-    {
+    public function getEditTemplate($subject) {
         $subjectKey = $subject;
         $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
@@ -78,8 +75,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEditTemplate(Request $request, SubjectService $service, $subject, $id = null)
-    {
+    public function postEditTemplate(Request $request, SubjectService $service, $subject, $id = null) {
         $request->validate(SubjectTemplate::$rules);
 
         $data = $request->only([
@@ -105,8 +101,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCreateCategory($subject)
-    {
+    public function getCreateCategory($subject) {
         $subjectKey = $subject;
         $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
@@ -125,8 +120,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditCategory($id)
-    {
+    public function getEditCategory($id) {
         $category = SubjectCategory::find($id);
         if (!$category) {
             abort(404);
@@ -149,8 +143,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCreateEditCategory(Request $request, SubjectService $service, $subject)
-    {
+    public function postCreateEditCategory(Request $request, SubjectService $service, $subject) {
         is_numeric($subject) ? $request->validate(SubjectCategory::$updateRules + SubjectTemplate::$rules) : $request->validate(SubjectCategory::$createRules + SubjectTemplate::$rules);
         $data = $request->only([
             'name', 'description', 'image', 'remove_image', 'summary', 'parent_id', 'populate_template', 'cascade_template', 'cascade_recursively',
@@ -180,8 +173,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getDeleteCategory($id)
-    {
+    public function getDeleteCategory($id) {
         $category = SubjectCategory::find($id);
 
         return view('admin.subjects._delete_category', [
@@ -197,8 +189,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postDeleteCategory(Request $request, SubjectService $service, $id)
-    {
+    public function postDeleteCategory(Request $request, SubjectService $service, $id) {
         $category = SubjectCategory::find($id);
         $subject = $category->subject;
         if ($id && $service->deleteCategory($category, Auth::user())) {
@@ -222,8 +213,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postSortCategory(Request $request, SubjectService $service, $subject)
-    {
+    public function postSortCategory(Request $request, SubjectService $service, $subject) {
         if ($service->sortCategory($request->get('sort'), $subject)) {
             flash('Category order updated successfully.')->success();
         } else {
@@ -244,8 +234,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getTimeDivisions()
-    {
+    public function getTimeDivisions() {
         return view('admin.subjects.time_divisions', [
             'divisions' => TimeDivision::orderBy('sort', 'DESC')->get(),
         ]);
@@ -258,8 +247,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEditDivisions(Request $request, SubjectService $service)
-    {
+    public function postEditDivisions(Request $request, SubjectService $service) {
         $request->validate(TimeDivision::$rules);
 
         $data = $request->only([
@@ -281,8 +269,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getTimeChronology()
-    {
+    public function getTimeChronology() {
         return view('admin.subjects.time_chronology', [
             'chronologies' => TimeChronology::orderBy('sort', 'DESC')->get(),
         ]);
@@ -293,8 +280,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCreateChronology()
-    {
+    public function getCreateChronology() {
         return view('admin.subjects.create_edit_chronology', [
             'chronology'        => new TimeChronology,
             'chronologyOptions' => TimeChronology::pluck('name', 'id')->toArray(),
@@ -308,8 +294,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditChronology($id)
-    {
+    public function getEditChronology($id) {
         $chronology = TimeChronology::find($id);
         if (!$chronology) {
             abort(404);
@@ -329,8 +314,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCreateEditChronology(Request $request, SubjectService $service, $id = null)
-    {
+    public function postCreateEditChronology(Request $request, SubjectService $service, $id = null) {
         $id ? $request->validate(TimeChronology::$updateRules) : $request->validate(TimeChronology::$createRules);
         $data = $request->only([
             'name', 'abbreviation', 'description', 'parent_id',
@@ -357,8 +341,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getDeleteChronology($id)
-    {
+    public function getDeleteChronology($id) {
         $chronology = TimeChronology::find($id);
 
         return view('admin.subjects._delete_chronology', [
@@ -374,8 +357,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postDeleteChronology(Request $request, SubjectService $service, $id)
-    {
+    public function postDeleteChronology(Request $request, SubjectService $service, $id) {
         if ($id && $service->deleteChronology(TimeChronology::find($id))) {
             flash('Chronology deleted successfully.')->success();
         } else {
@@ -394,8 +376,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postSortChronology(Request $request, SubjectService $service)
-    {
+    public function postSortChronology(Request $request, SubjectService $service) {
         if ($service->sortChronology($request->get('sort'))) {
             flash('Chronology order updated successfully.')->success();
         } else {
@@ -416,8 +397,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getLexiconSettings()
-    {
+    public function getLexiconSettings() {
         return view('admin.subjects.lang_settings', [
             'parts' => LexiconSetting::orderBy('sort', 'DESC')->get(),
         ]);
@@ -430,8 +410,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEditLexiconSettings(Request $request, SubjectService $service)
-    {
+    public function postEditLexiconSettings(Request $request, SubjectService $service) {
         $request->validate(LexiconSetting::$rules);
 
         $data = $request->only([
@@ -453,8 +432,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getLexiconCategories()
-    {
+    public function getLexiconCategories() {
         return view('admin.subjects.lang_categories', [
             'categories' => LexiconCategory::orderBy('sort', 'DESC')->get(),
         ]);
@@ -465,8 +443,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCreateLexiconCategory()
-    {
+    public function getCreateLexiconCategory() {
         return view('admin.subjects.create_edit_lang_category', [
             'category'        => new LexiconCategory,
             'categoryOptions' => LexiconCategory::pluck('name', 'id')->toArray(),
@@ -481,8 +458,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditLexiconCategory($id)
-    {
+    public function getEditLexiconCategory($id) {
         $category = LexiconCategory::find($id);
         if (!$category) {
             abort(404);
@@ -503,8 +479,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCreateEditLexiconCategory(Request $request, SubjectService $service, $id = null)
-    {
+    public function postCreateEditLexiconCategory(Request $request, SubjectService $service, $id = null) {
         $id ? $request->validate(LexiconCategory::$updateRules) : $request->validate(LexiconCategory::$createRules);
         $data = $request->only([
             'name', 'description', 'parent_id',
@@ -534,8 +509,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getDeleteLexiconCategory($id)
-    {
+    public function getDeleteLexiconCategory($id) {
         $category = LexiconCategory::find($id);
 
         return view('admin.subjects._delete_lang_category', [
@@ -551,8 +525,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postDeleteLexiconCategory(Request $request, SubjectService $service, $id)
-    {
+    public function postDeleteLexiconCategory(Request $request, SubjectService $service, $id) {
         if ($id && $service->deleteLexiconCategory(LexiconCategory::find($id))) {
             flash('Category deleted successfully.')->success();
         } else {
@@ -571,8 +544,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postSortLexiconCategory(Request $request, SubjectService $service)
-    {
+    public function postSortLexiconCategory(Request $request, SubjectService $service) {
         if ($service->sortLexiconCategory($request->get('sort'))) {
             flash('Lexicon category order updated successfully.')->success();
         } else {

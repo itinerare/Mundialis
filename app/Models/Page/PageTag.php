@@ -5,8 +5,7 @@ namespace App\Models\Page;
 use App\Models\Model;
 use Config;
 
-class PageTag extends Model
-{
+class PageTag extends Model {
     /**
      * The attributes that are mass assignable.
      *
@@ -38,8 +37,7 @@ class PageTag extends Model
     /**
      * Get the page this tag belongs to.
      */
-    public function page()
-    {
+    public function page() {
         return $this->belongsTo('App\Models\Page\Page');
     }
 
@@ -56,8 +54,7 @@ class PageTag extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeTag($query)
-    {
+    public function scopeTag($query) {
         return $query->where('type', 'page_tag');
     }
 
@@ -68,8 +65,7 @@ class PageTag extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeUtilityTag($query)
-    {
+    public function scopeUtilityTag($query) {
         return $query->where('type', 'utility');
     }
 
@@ -81,8 +77,7 @@ class PageTag extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeTagSearch($query, $tag)
-    {
+    public function scopeTagSearch($query, $tag) {
         return $query->where(function ($query) use ($tag) {
             $i = 0;
             foreach (Config::get('mundialis.page_tags') as $prefix) {
@@ -104,8 +99,7 @@ class PageTag extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopePrefixedTags($query)
-    {
+    public function scopePrefixedTags($query) {
         return $query->where(function ($query) {
             $i = 0;
             foreach (Config::get('mundialis.page_tags') as $prefix) {
@@ -131,8 +125,7 @@ class PageTag extends Model
      *
      * @return string
      */
-    public function getPrefixAttribute()
-    {
+    public function getPrefixAttribute() {
         // Check the tag name against prefixes
         $matches = [];
         foreach (Config::get('mundialis.page_tags') as $prefix) {
@@ -154,8 +147,7 @@ class PageTag extends Model
      *
      * @return string
      */
-    public function getBaseTagAttribute()
-    {
+    public function getBaseTagAttribute() {
         // Check the tag name against prefixes
         $matches = [];
         foreach (Config::get('mundialis.page_tags') as $prefix) {
@@ -177,8 +169,7 @@ class PageTag extends Model
      *
      * @return string
      */
-    public function getUrlAttribute()
-    {
+    public function getUrlAttribute() {
         return url('pages/tags/'.str_replace(' ', '_', $this->baseTag));
     }
 
@@ -187,8 +178,7 @@ class PageTag extends Model
      *
      * @return string
      */
-    public function getDisplayNameAttribute()
-    {
+    public function getDisplayNameAttribute() {
         return '<a href="'.$this->url.'">'.$this->tag.'</a>';
     }
 
@@ -197,8 +187,7 @@ class PageTag extends Model
      *
      * @return string
      */
-    public function getDisplayNameBaseAttribute()
-    {
+    public function getDisplayNameBaseAttribute() {
         return '<a href="'.$this->url.'">'.$this->baseTag.'</a>';
     }
 
@@ -207,8 +196,7 @@ class PageTag extends Model
      *
      * @return bool
      */
-    public function getHasNavboxAttribute()
-    {
+    public function getHasNavboxAttribute() {
         // If the tag itself has a prefix, this is true by default
         if ($this->prefix) {
             return true;
@@ -226,8 +214,7 @@ class PageTag extends Model
      *
      * @return bool
      */
-    public function getHasTimelineAttribute()
-    {
+    public function getHasTimelineAttribute() {
         $timePages = $this->page->subject('time')->whereIn('id', $this->tagSearch($this->baseTag)->tag()->pluck('page_id')->toArray())->get()->filter(function ($page) {
             if (isset($page->parent_id) || isset($page->data['date']['start'])) {
                 return true;
@@ -255,8 +242,7 @@ class PageTag extends Model
      *
      * @return array
      */
-    public function listTags()
-    {
+    public function listTags() {
         // Find all tags with prefixes
         $filter = $this->tag()->prefixedTags();
 
@@ -294,8 +280,7 @@ class PageTag extends Model
      *
      * @return array
      */
-    public function navboxInfo($user = null)
-    {
+    public function navboxInfo($user = null) {
         $info = [];
         // Check for/get hub tag
         if ($this->tagSearch('Hub:'.$this->baseTag)->first() && $this->tagSearch('Hub:'.$this->baseTag)->first()->page) {

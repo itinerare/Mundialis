@@ -6,8 +6,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\ResetsUserPasswords;
 
-class ResetUserPassword implements ResetsUserPasswords
-{
+class ResetUserPassword implements ResetsUserPasswords {
     use PasswordValidationRules;
 
     /**
@@ -15,8 +14,7 @@ class ResetUserPassword implements ResetsUserPasswords
      *
      * @param mixed $user
      */
-    public function reset($user, array $input)
-    {
+    public function reset($user, array $input) {
         Validator::make($input, [
             'password' => $this->passwordRules(),
         ])->validate();

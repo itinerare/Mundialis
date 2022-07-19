@@ -13,21 +13,18 @@ use League\Flysystem\Filesystem;
 use Spatie\Dropbox\Client as DropboxClient;
 use Spatie\FlysystemDropbox\DropboxAdapter;
 
-class AppServiceProvider extends ServiceProvider
-{
+class AppServiceProvider extends ServiceProvider {
     /**
      * Register any application services.
      */
-    public function register()
-    {
+    public function register() {
         //
     }
 
     /**
      * Bootstrap any application services.
      */
-    public function boot()
-    {
+    public function boot() {
         //
         Schema::defaultStringLength(191);
         Paginator::useBootstrap();

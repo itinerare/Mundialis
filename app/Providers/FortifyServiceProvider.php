@@ -14,21 +14,18 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
 use Route;
 
-class FortifyServiceProvider extends ServiceProvider
-{
+class FortifyServiceProvider extends ServiceProvider {
     /**
      * Register any application services.
      */
-    public function register()
-    {
+    public function register() {
         //
     }
 
     /**
      * Bootstrap any application services.
      */
-    public function boot()
-    {
+    public function boot() {
         $this->configureRoutes();
 
         Fortify::createUsersUsing(CreateNewUser::class);
@@ -59,8 +56,7 @@ class FortifyServiceProvider extends ServiceProvider
     /**
      * Configure the routes offered by the application.
      */
-    protected function configureRoutes()
-    {
+    protected function configureRoutes() {
         if (Fortify::$registersRoutes) {
             Route::group([
                 'namespace' => 'Laravel\Fortify\Http\Controllers',

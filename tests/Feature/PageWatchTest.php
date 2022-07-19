@@ -9,15 +9,13 @@ use App\Models\User\WatchedPage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class PageWatchTest extends TestCase
-{
+class PageWatchTest extends TestCase {
     use RefreshDatabase;
 
     /**
      * Test watched pages access.
      */
-    public function testCanGetWatchedPages()
-    {
+    public function testCanGetWatchedPages() {
         // Make a temporary user
         $user = User::factory()->make();
 
@@ -29,8 +27,7 @@ class PageWatchTest extends TestCase
     /**
      * Test watched pages access with a watched page.
      */
-    public function testCanGetWatchedPagesWithPage()
-    {
+    public function testCanGetWatchedPagesWithPage() {
         // Make a persistent user
         $user = User::factory()->create();
 
@@ -50,8 +47,7 @@ class PageWatchTest extends TestCase
     /**
      * Test watching a page.
      */
-    public function testCanPostWatchPage()
-    {
+    public function testCanPostWatchPage() {
         // Make a persistent user
         $user = User::factory()->create();
 
@@ -73,8 +69,7 @@ class PageWatchTest extends TestCase
     /**
      * Test unwatching a page.
      */
-    public function testCanPostUnwatchPage()
-    {
+    public function testCanPostUnwatchPage() {
         // Make a persistent user
         $user = User::factory()->create();
 

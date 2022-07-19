@@ -9,15 +9,13 @@ use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class PageViewTest extends TestCase
-{
+class PageViewTest extends TestCase {
     use RefreshDatabase;
 
     /**
      * Test page access.
      */
-    public function testCanGetPage()
-    {
+    public function testCanGetPage() {
         // Create a temporary user
         $user = User::factory()->make();
 
@@ -35,8 +33,7 @@ class PageViewTest extends TestCase
     /**
      * Test page history access.
      */
-    public function testCanGetPageHistory()
-    {
+    public function testCanGetPageHistory() {
         // Create a temporary user
         $user = User::factory()->make();
 
@@ -54,8 +51,7 @@ class PageViewTest extends TestCase
     /**
      * Test page gallery access.
      */
-    public function testCanGetPageGallery()
-    {
+    public function testCanGetPageGallery() {
         // Create a temporary user
         $user = User::factory()->make();
 
@@ -73,8 +69,7 @@ class PageViewTest extends TestCase
     /**
      * Test page "what links here" access.
      */
-    public function testCanGetPageLinks()
-    {
+    public function testCanGetPageLinks() {
         // Create a temporary user
         $user = User::factory()->make();
 
@@ -92,8 +87,7 @@ class PageViewTest extends TestCase
     /**
      * Test page access in the "people" subject.
      */
-    public function testCanGetPeoplePage()
-    {
+    public function testCanGetPeoplePage() {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('people')->create();
 
@@ -112,8 +106,7 @@ class PageViewTest extends TestCase
     /**
      * Test page access in the "places" subject.
      */
-    public function testCanGetPlacesPage()
-    {
+    public function testCanGetPlacesPage() {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('places')->create();
 
@@ -132,8 +125,7 @@ class PageViewTest extends TestCase
     /**
      * Test page access in the "flora and fauna" subject.
      */
-    public function testCanGetSpeciesPage()
-    {
+    public function testCanGetSpeciesPage() {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('species')->create();
 
@@ -152,8 +144,7 @@ class PageViewTest extends TestCase
     /**
      * Test page access in the "things" subject.
      */
-    public function testCanGetThingsPage()
-    {
+    public function testCanGetThingsPage() {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('things')->create();
 
@@ -172,8 +163,7 @@ class PageViewTest extends TestCase
     /**
      * Test page access in the "concepts" subject.
      */
-    public function testCanGetConceptsPage()
-    {
+    public function testCanGetConceptsPage() {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('concepts')->create();
 
@@ -192,8 +182,7 @@ class PageViewTest extends TestCase
     /**
      * Test page access in the "time" subject.
      */
-    public function testCanGetTimePage()
-    {
+    public function testCanGetTimePage() {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('time')->create();
 
@@ -212,8 +201,7 @@ class PageViewTest extends TestCase
     /**
      * Test page access in the "language" subject.
      */
-    public function testCanGetLanguagePage()
-    {
+    public function testCanGetLanguagePage() {
         // Create a category for the page to go into
         $category = SubjectCategory::factory()->subject('language')->create();
 

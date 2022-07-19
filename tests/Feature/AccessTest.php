@@ -7,8 +7,7 @@ use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AccessTest extends TestCase
-{
+class AccessTest extends TestCase {
     use RefreshDatabase;
 
     // These tests check that visitor/user access to different routes is as expected
@@ -17,8 +16,7 @@ class AccessTest extends TestCase
     /**
      * Test most basic site access.
      */
-    public function testCanAccessSite()
-    {
+    public function testCanAccessSite() {
         // Attempt to access the site on the most basic level
         $response = $this
             ->get('/')
@@ -28,8 +26,7 @@ class AccessTest extends TestCase
     /**
      * Test visitor access when the site is closed.
      */
-    public function testVisitorCannotReadWhenClosed()
-    {
+    public function testVisitorCannotReadWhenClosed() {
         // Ensure site settings are present to modify
         $this->artisan('add-site-settings');
 
@@ -45,8 +42,7 @@ class AccessTest extends TestCase
     /**
      * Test visitor access when the site is open.
      */
-    public function testVisitorCanReadWhenOpen()
-    {
+    public function testVisitorCanReadWhenOpen() {
         // Ensure site settings are present to modify
         $this->artisan('add-site-settings');
 
@@ -62,8 +58,7 @@ class AccessTest extends TestCase
     /**
      * Ensure visitor cannot access member-only routes.
      */
-    public function testVisitorCannotGetAccountSettings()
-    {
+    public function testVisitorCannotGetAccountSettings() {
         $response = $this
             ->get('/account/settings')
             ->assertStatus(302);
@@ -72,8 +67,7 @@ class AccessTest extends TestCase
     /**
      * Ensure visitor cannot access editor routes.
      */
-    public function testVisitorCannotGetWrite()
-    {
+    public function testVisitorCannotGetWrite() {
         $response = $this
             ->get('/language/lexicon/create')
             ->assertStatus(302);
@@ -82,8 +76,7 @@ class AccessTest extends TestCase
     /**
      * Ensure visitor cannot access admin routes.
      */
-    public function testVisitorCannotGetAdminIndex()
-    {
+    public function testVisitorCannotGetAdminIndex() {
         $response = $this
             ->get('/admin')
             ->assertStatus(302);
@@ -92,8 +85,7 @@ class AccessTest extends TestCase
     /**
      * Ensure user can access member-only routes.
      */
-    public function testUserCanGetUserSettings()
-    {
+    public function testUserCanGetUserSettings() {
         // Make a temporary user
         $user = User::factory()->make();
 
@@ -105,8 +97,7 @@ class AccessTest extends TestCase
     /**
      * Ensure user cannot access editor routes.
      */
-    public function testUserCannotGetWrite()
-    {
+    public function testUserCannotGetWrite() {
         // Make a temporary user
         $user = User::factory()->make();
 
@@ -118,8 +109,7 @@ class AccessTest extends TestCase
     /**
      * Ensure user cannot access admin routes.
      */
-    public function testUserCannotGetAdminIndex()
-    {
+    public function testUserCannotGetAdminIndex() {
         // Make a temporary user
         $user = User::factory()->make();
 
@@ -131,8 +121,7 @@ class AccessTest extends TestCase
     /**
      * Ensure editor can access editor routes.
      */
-    public function testEditorCanGetWrite()
-    {
+    public function testEditorCanGetWrite() {
         // Make a temporary user
         $user = User::factory()->editor()->make();
 
@@ -144,8 +133,7 @@ class AccessTest extends TestCase
     /**
      * Ensure editor cannot access admin routes.
      */
-    public function testEditorCannotGetAdminIndex()
-    {
+    public function testEditorCannotGetAdminIndex() {
         // Make a temporary user
         $user = User::factory()->editor()->make();
 
@@ -157,8 +145,7 @@ class AccessTest extends TestCase
     /**
      * Ensure admin can access editor routes.
      */
-    public function testAdminCanGetWrite()
-    {
+    public function testAdminCanGetWrite() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
 
@@ -170,8 +157,7 @@ class AccessTest extends TestCase
     /**
      * Ensure admin can access admin routes.
      */
-    public function testAdminCanGetAdminIndex()
-    {
+    public function testAdminCanGetAdminIndex() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
 

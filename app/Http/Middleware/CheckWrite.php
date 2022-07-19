@@ -4,8 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class CheckWrite
-{
+class CheckWrite {
     /**
      * Redirect users without write permissions to the home page.
      *
@@ -13,8 +12,7 @@ class CheckWrite
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
-    {
+    public function handle($request, Closure $next) {
         if (!$request->user()->canWrite) {
             flash('You do not have the permission to access this page.')->error();
 

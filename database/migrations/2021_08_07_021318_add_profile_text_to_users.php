@@ -4,13 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddProfileTextToUsers extends Migration
-{
+class AddProfileTextToUsers extends Migration {
     /**
      * Run the migrations.
      */
-    public function up()
-    {
+    public function up() {
         Schema::table('users', function (Blueprint $table) {
             //
             $table->text('profile_text')->nullable()->default(null);
@@ -21,8 +19,7 @@ class AddProfileTextToUsers extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
-    {
+    public function down() {
         Schema::table('users', function (Blueprint $table) {
             //
             $table->dropColumn('profile_text');

@@ -18,8 +18,7 @@ use Carbon\Carbon;
 use Config;
 use Illuminate\Http\Request;
 
-class SpecialController extends Controller
-{
+class SpecialController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Special Page Controller
@@ -34,8 +33,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSpecialIndex()
-    {
+    public function getSpecialIndex() {
         return view('pages.special.special');
     }
 
@@ -44,8 +42,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getRandomPage()
-    {
+    public function getRandomPage() {
         if (!Page::visible(Auth::check() ? Auth::user() : null)->count()) {
             return redirect('/');
         }
@@ -59,8 +56,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getAllPages(Request $request)
-    {
+    public function getAllPages(Request $request) {
         $query = Page::visible(Auth::check() ? Auth::user() : null);
         $sort = $request->only(['sort']);
 
@@ -110,8 +106,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getAllTags(Request $request)
-    {
+    public function getAllTags(Request $request) {
         $query = PageTag::tag()->get()
         ->filter(function ($tag) {
             if (Auth::check() && Auth::user()->canWrite) {
@@ -134,8 +129,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getAllImages(Request $request)
-    {
+    public function getAllImages(Request $request) {
         $query = PageImage::visible(Auth::check() ? Auth::user() : null);
 
         if ($request->get('creator_url')) {
@@ -175,8 +169,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getUntaggedPages(Request $request)
-    {
+    public function getUntaggedPages(Request $request) {
         $query = Page::visible(Auth::check() ? Auth::user() : null)->get()
         ->filter(function ($page) {
             return $page->tags->count() == 0;
@@ -192,8 +185,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getMostTaggedPages(Request $request)
-    {
+    public function getMostTaggedPages(Request $request) {
         $query = Page::visible(Auth::check() ? Auth::user() : null)->get()
         ->filter(function ($page) {
             return $page->tags->count() > 0;
@@ -214,8 +206,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getRevisedPages(Request $request, $mode)
-    {
+    public function getRevisedPages(Request $request, $mode) {
         $query = Page::visible(Auth::check() ? Auth::user() : null)->get();
 
         if ($mode == 'least') {
@@ -239,8 +230,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getMostLinkedPages(Request $request)
-    {
+    public function getMostLinkedPages(Request $request) {
         $query = PageLink::whereNotNull('link_id')->get()->filter(function ($value) {
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
@@ -261,8 +251,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getRecentPages(Request $request)
-    {
+    public function getRecentPages(Request $request) {
         $query = PageVersion::orderBy('created_at', 'DESC')->get()->filter(function ($version) {
             if (!$version->page || isset($version->page->deleted_at)) {
                 return 0;
@@ -295,8 +284,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getRecentImages(Request $request)
-    {
+    public function getRecentImages(Request $request) {
         $query = PageImageVersion::orderBy('updated_at', 'DESC')->get()->filter(function ($version) {
             if (!$version->image || isset($version->image->deleted_at)) {
                 return 0;
@@ -329,8 +317,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getProtectedPages(Request $request)
-    {
+    public function getProtectedPages(Request $request) {
         $query = Page::visible(Auth::check() ? Auth::user() : null)->get()->filter(function ($page) {
             if ($page->protection && $page->protection->is_protected) {
                 return 1;
@@ -351,8 +338,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getUtilityTagPages(Request $request, $tag)
-    {
+    public function getUtilityTagPages(Request $request, $tag) {
         $query = Page::visible(Auth::check() ? Auth::user() : null)->whereIn('id', PageTag::utilityTag()->tagSearch($tag)->pluck('page_id')->toArray());
         $sort = $request->only(['sort']);
 
@@ -403,8 +389,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getWantedPages(Request $request)
-    {
+    public function getWantedPages(Request $request) {
         $query = PageLink::whereNotNull('title')->get()->filter(function ($value) {
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
@@ -427,8 +412,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCreateWantedPage($title)
-    {
+    public function getCreateWantedPage($title) {
         // Collect categories and information and group them
         $groupedCategories = SubjectCategory::orderBy('sort', 'DESC')->get()->keyBy('id')->groupBy(function ($category) {
             return $category->subject['name'];
@@ -465,8 +449,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCreateWantedPage(Request $request)
-    {
+    public function postCreateWantedPage(Request $request) {
         return redirect()->to('pages/create/'.$request->get('category_id').'?title='.$request->get('title'));
     }
 
@@ -475,8 +458,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getUserList(Request $request)
-    {
+    public function getUserList(Request $request) {
         $query = User::join('ranks', 'users.rank_id', '=', 'ranks.id')->select('ranks.name AS rank_name', 'users.*');
         $sort = $request->only(['sort']);
 

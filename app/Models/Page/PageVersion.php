@@ -5,8 +5,7 @@ namespace App\Models\Page;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class PageVersion extends Model
-{
+class PageVersion extends Model {
     use HasFactory;
 
     /**
@@ -41,16 +40,14 @@ class PageVersion extends Model
     /**
      * Get the page this version belongs to.
      */
-    public function page()
-    {
+    public function page() {
         return $this->belongsTo('App\Models\Page\Page')->withTrashed();
     }
 
     /**
      * Get the user this version belongs to.
      */
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo('App\Models\User\User');
     }
 
@@ -65,8 +62,7 @@ class PageVersion extends Model
      *
      * @return array
      */
-    public function getDataAttribute()
-    {
+    public function getDataAttribute() {
         if (!isset($this->attributes['data'])) {
             return null;
         }
@@ -79,8 +75,7 @@ class PageVersion extends Model
      *
      * @return int
      */
-    public function getLengthAttribute()
-    {
+    public function getLengthAttribute() {
         if (!isset($this->attributes['data'])) {
             return null;
         }
@@ -93,8 +88,7 @@ class PageVersion extends Model
      *
      * @return string
      */
-    public function getLengthStringAttribute()
-    {
+    public function getLengthStringAttribute() {
         // Attempt to fetch the prior version
         $version = $this->all()->where('page_id', $this->page_id)->sortByDesc('created_at')->where('created_at', '<', $this->created_at)->first();
 
