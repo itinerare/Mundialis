@@ -29,7 +29,8 @@
     @endif
 
     <div class="text-right mb-3">
-        <a class="btn btn-primary" href="{{ url('admin/data/' . $subject['key'] . '/edit') }}"><i class="fas fa-edit"></i> Edit
+        <a class="btn btn-primary" href="{{ url('admin/data/' . $subject['key'] . '/edit') }}"><i class="fas fa-edit"></i>
+            Edit
             Template</a>
         <a class="btn btn-primary" href="{{ url('admin/data/' . $subject['key'] . '/create') }}"><i class="fas fa-plus"></i>
             Create New Category</a>

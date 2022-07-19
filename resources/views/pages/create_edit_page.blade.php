@@ -51,7 +51,8 @@
         in fact is encouraged; not only is it convenient, links created this way are tracked by the site for various
         purposes, not the least of which is tracking wanted pages (pages which have been linked to using this system but
         which do not yet exist). Links can be created like so, using the title with disambiguation for affected pages (e.g.
-        <span class="alert-secondary">Link (Place)</span>):</p>
+        <span class="alert-secondary">Link (Place)</span>):
+    </p>
 
     <ul>
         <li>[[Page Title Here]]</li>

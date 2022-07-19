@@ -24,7 +24,8 @@
 
 <p>To add fields, first add at least one section. Sections are overall headers for portions of a page. Note that
     <strong>changing a section's key will cause all fields for it to be deleted</strong>. Sections can also be
-    reordered; however, note that moving sections does not cascade due to how change detection is handled.</p>
+    reordered; however, note that moving sections does not cascade due to how change detection is handled.
+</p>
 
 <div id="sectionList" class="sortable">
     @if (isset($template->data['sections']))

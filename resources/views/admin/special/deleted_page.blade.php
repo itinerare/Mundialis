@@ -13,7 +13,8 @@
 
     <div class="alert alert-danger">
         This page was deleted at {!! format_date($page->version->created_at) !!} by
-        {!! $page->version->user->displayName !!}{{ $page->version->reason ? ' for the reason: ' . $page->version->reason : '' }}. As long as
+        {!! $page->version->user->displayName !!}{{ $page->version->reason ? ' for the reason: ' . $page->version->reason : '' }}. As long
+        as
         its parent category is not deleted, it can be restored at any time.
     </div>
 
