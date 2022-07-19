@@ -5,21 +5,31 @@
         <div class="col-md">
             <div class="form-group">
                 {!! Form::label('Section Key') !!}
-                {!! Form::text('section_key[]', $key, ['class' => 'form-control', 'placeholder' => 'Internal key. Can\'t be duplicated in a template']) !!}
+                {!! Form::text('section_key[]', $key, [
+                    'class' => 'form-control',
+                    'placeholder' => 'Internal key. Can\'t be duplicated in a template',
+                ]) !!}
             </div>
         </div>
         <div class="col-md">
             <div class="form-group">
                 {!! Form::label('Section Name') !!}
-                {!! Form::text('section_name[]', $section['name'], ['class' => 'form-control', 'placeholder' => 'Section name/header']) !!}
+                {!! Form::text('section_name[]', $section['name'], [
+                    'class' => 'form-control',
+                    'placeholder' => 'Section name/header',
+                ]) !!}
             </div>
         </div>
     </div>
     <div>
         <div class="field-list">
-            @if(isset($template->data['fields'][$key]))
-                @foreach($template->data['fields'][$key] as $fieldKey=>$field)
-                    @include('admin.form_builder._field_builder_entry', ['key' => $fieldKey, 'field' => $field, 'section' => $key])
+            @if (isset($template->data['fields'][$key]))
+                @foreach ($template->data['fields'][$key] as $fieldKey => $field)
+                    @include('admin.form_builder._field_builder_entry', [
+                        'key' => $fieldKey,
+                        'field' => $field,
+                        'section' => $key,
+                    ])
                 @endforeach
             @endif
         </div>
@@ -27,5 +37,5 @@
             <a href="#" class="btn btn-outline-info add-field" value="{{ $key }}">Add Field</a>
         </div>
     </div>
-    <hr/>
+    <hr />
 </div>

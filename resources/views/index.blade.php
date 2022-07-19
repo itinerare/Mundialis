@@ -1,13 +1,15 @@
 @extends('layouts.app')
 
-@section('title') Home @endsection
+@section('title')
+    Home
+@endsection
 
 @section('sidebar')
     @include('pages._sidebar', ['page' => null])
 @endsection
 
 @section('content')
-    @if(Settings::get('visitors_can_read') || Auth::check())
+    @if (Settings::get('visitors_can_read') || Auth::check())
         <div class="row">
             <div class="col-md">
                 <div class="mb-4">
@@ -16,8 +18,9 @@
 
                 <p>
                     Select a subject from the side- or navigation bar to browse!
-                    @if(Auth::user() && Auth::user()->canWrite)
-                        Or consider contributing by making a <a href="{{ url('special/wanted-pages') }}">wanted page</a> or working on pages flagged for maintenance.
+                    @if (Auth::user() && Auth::user()->canWrite)
+                        Or consider contributing by making a <a href="{{ url('special/wanted-pages') }}">wanted page</a> or
+                        working on pages flagged for maintenance.
                     @endif
                 </p>
 
@@ -33,9 +36,9 @@
 @endsection
 
 @section('scripts')
-@parent
+    @parent
 
-@if(Settings::get('visitors_can_read') || Auth::check())
-    @include('pages.images._info_popup_js')
-@endif
+    @if (Settings::get('visitors_can_read') || Auth::check())
+        @include('pages.images._info_popup_js')
+    @endif
 @endsection
