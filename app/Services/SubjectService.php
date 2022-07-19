@@ -11,8 +11,7 @@ use App\Models\Subject\TimeChronology;
 use App\Models\Subject\TimeDivision;
 use DB;
 
-class SubjectService extends Service
-{
+class SubjectService extends Service {
     /*
     |--------------------------------------------------------------------------
     | Subject Service
@@ -31,8 +30,7 @@ class SubjectService extends Service
      *
      * @return \App\Models\SubjectTemplate|bool
      */
-    public function editTemplate($subject, $data, $user)
-    {
+    public function editTemplate($subject, $data, $user) {
         DB::beginTransaction();
 
         try {
@@ -87,8 +85,7 @@ class SubjectService extends Service
      *
      * @return \App\Models\Subject\SubjectCategory|bool
      */
-    public function createCategory($data, $user, $subject)
-    {
+    public function createCategory($data, $user, $subject) {
         DB::beginTransaction();
 
         try {
@@ -148,8 +145,7 @@ class SubjectService extends Service
      *
      * @return \App\Models\Subject\SubjectCategory|bool
      */
-    public function updateCategory($category, $data, $user)
-    {
+    public function updateCategory($category, $data, $user) {
         DB::beginTransaction();
 
         try {
@@ -232,8 +228,7 @@ class SubjectService extends Service
      *
      * @return bool
      */
-    public function deleteCategory($category, $user)
-    {
+    public function deleteCategory($category, $user) {
         DB::beginTransaction();
 
         try {
@@ -273,8 +268,7 @@ class SubjectService extends Service
      *
      * @return bool
      */
-    public function sortCategory($data, $subject)
-    {
+    public function sortCategory($data, $subject) {
         DB::beginTransaction();
 
         try {
@@ -305,8 +299,7 @@ class SubjectService extends Service
      *
      * @return \App\Models\TimeDivision|bool
      */
-    public function editTimeDivisions($data, $user)
-    {
+    public function editTimeDivisions($data, $user) {
         DB::beginTransaction();
 
         try {
@@ -375,8 +368,7 @@ class SubjectService extends Service
      *
      * @return \App\Models\TimeChronology|bool
      */
-    public function createChronology($data, $user)
-    {
+    public function createChronology($data, $user) {
         DB::beginTransaction();
 
         try {
@@ -400,8 +392,7 @@ class SubjectService extends Service
      *
      * @return \App\Models\Subject\TimeChronology|bool
      */
-    public function updateChronology($chronology, $data, $user)
-    {
+    public function updateChronology($chronology, $data, $user) {
         DB::beginTransaction();
 
         try {
@@ -428,8 +419,7 @@ class SubjectService extends Service
      *
      * @return bool
      */
-    public function deleteChronology($chronology)
-    {
+    public function deleteChronology($chronology) {
         DB::beginTransaction();
 
         try {
@@ -456,8 +446,7 @@ class SubjectService extends Service
      *
      * @return bool
      */
-    public function sortChronology($data)
-    {
+    public function sortChronology($data) {
         DB::beginTransaction();
 
         try {
@@ -488,8 +477,7 @@ class SubjectService extends Service
      *
      * @return \App\Models\LexiconSetting|bool
      */
-    public function editLexiconSettings($data, $user)
-    {
+    public function editLexiconSettings($data, $user) {
         DB::beginTransaction();
 
         try {
@@ -556,8 +544,7 @@ class SubjectService extends Service
      *
      * @return \App\Models\LexiconCategory|bool
      */
-    public function createLexiconCategory($data, $user)
-    {
+    public function createLexiconCategory($data, $user) {
         DB::beginTransaction();
 
         try {
@@ -591,8 +578,7 @@ class SubjectService extends Service
      *
      * @return \App\Models\Subject\LexiconCategory|bool
      */
-    public function updateLexiconCategory($category, $data, $user)
-    {
+    public function updateLexiconCategory($category, $data, $user) {
         DB::beginTransaction();
 
         try {
@@ -634,8 +620,7 @@ class SubjectService extends Service
      *
      * @return bool
      */
-    public function deleteLexiconCategory($category)
-    {
+    public function deleteLexiconCategory($category) {
         DB::beginTransaction();
 
         try {
@@ -662,8 +647,7 @@ class SubjectService extends Service
      *
      * @return bool
      */
-    public function sortLexiconCategory($data)
-    {
+    public function sortLexiconCategory($data) {
         DB::beginTransaction();
 
         try {
@@ -689,14 +673,13 @@ class SubjectService extends Service
      *
      * @return array
      */
-    private function processTemplateData($data)
-    {
+    private function processTemplateData($data) {
         // Collect and record sections if present
         if (isset($data['section_key'])) {
             foreach ($data['section_key'] as $key=>$section) {
                 $data['data']['sections'][strtolower($section)] = [
-                'name' => $data['section_name'][$key],
-            ];
+                    'name' => $data['section_name'][$key],
+                ];
             }
         }
 
@@ -708,13 +691,13 @@ class SubjectService extends Service
                 }
 
                 $data['data']['infobox'][$fieldKey] = [
-                'label'   => $data['infobox_label'][$key],
-                'type'    => $data['infobox_type'][$key],
-                'rules'   => $data['infobox_rules'][$key] ?? null,
-                'choices' => $data['infobox_choices'][$key] ?? null,
-                'value'   => $data['infobox_value'][$key] ?? null,
-                'help'    => $data['infobox_help'][$key] ?? null,
-            ];
+                    'label'   => $data['infobox_label'][$key],
+                    'type'    => $data['infobox_type'][$key],
+                    'rules'   => $data['infobox_rules'][$key] ?? null,
+                    'choices' => $data['infobox_choices'][$key] ?? null,
+                    'value'   => $data['infobox_value'][$key] ?? null,
+                    'help'    => $data['infobox_help'][$key] ?? null,
+                ];
             }
         }
 
@@ -726,14 +709,14 @@ class SubjectService extends Service
                 }
 
                 $data['data']['fields'][$data['field_section'][$key]][$fieldKey] = [
-                'label'         => $data['field_label'][$key],
-                'type'          => $data['field_type'][$key],
-                'rules'         => $data['field_rules'][$key] ?? null,
-                'choices'       => $data['field_choices'][$key] ?? null,
-                'value'         => $data['field_value'][$key] ?? null,
-                'help'          => $data['field_help'][$key] ?? null,
-                'is_subsection' => $data['field_is_subsection'][$key],
-            ];
+                    'label'         => $data['field_label'][$key],
+                    'type'          => $data['field_type'][$key],
+                    'rules'         => $data['field_rules'][$key] ?? null,
+                    'choices'       => $data['field_choices'][$key] ?? null,
+                    'value'         => $data['field_value'][$key] ?? null,
+                    'help'          => $data['field_help'][$key] ?? null,
+                    'is_subsection' => $data['field_is_subsection'][$key],
+                ];
             }
         }
 
@@ -748,8 +731,7 @@ class SubjectService extends Service
      *
      * @return array
      */
-    private function cascadeTemplateChangesRecursively($categories, $data)
-    {
+    private function cascadeTemplateChangesRecursively($categories, $data) {
         $this->cascadeTemplateChanges($categories, $data);
 
         foreach ($categories as $category) {
@@ -773,8 +755,7 @@ class SubjectService extends Service
      *
      * @return array
      */
-    private function cascadeTemplateChanges($categories, $data)
-    {
+    private function cascadeTemplateChanges($categories, $data) {
         // Recursively compare arrays
         $data['changes']['added'] = $this->diff_recursive((array) $data['data'], (array) $data['old']);
         $data['changes']['removed'] = $this->diff_recursive((array) $data['old'], (array) $data['data']);
@@ -833,17 +814,16 @@ class SubjectService extends Service
      *
      * @return array
      */
-    private function processLexiconData($data, $category = null)
-    {
+    private function processLexiconData($data, $category = null) {
         // Collect and record property and dimension information
         if (isset($data['property_name'])) {
             foreach ($data['property_name'] as $key=>$property) {
                 $propertyKey[$key] = str_replace(' ', '_', strtolower($property));
                 $data['data'][$data['property_class'][$key]]['properties'][$propertyKey[$key]] = [
-                'name'            => $property,
-                'non_dimensional' => isset($data['property_dimensions'][$key]) ? 0 : 1,
-                'dimensions'      => isset($data['property_dimensions'][$key]) ? explode(',', $data['property_dimensions'][$key]) : null,
-            ];
+                    'name'            => $property,
+                    'non_dimensional' => isset($data['property_dimensions'][$key]) ? 0 : 1,
+                    'dimensions'      => isset($data['property_dimensions'][$key]) ? explode(',', $data['property_dimensions'][$key]) : null,
+                ];
             }
         }
 
@@ -873,10 +853,10 @@ class SubjectService extends Service
                             // Assemble data itself, including exploding the selectize outputs
                             // as it's easiest to perform final checks on arrays
                             $data['data'][$class->id]['conjugation'][$key] = [
-                            'criteria'    => explode(';', $criteria),
-                            'regex'       => explode(';', $data['declension_regex'][$class->id][$key]),
-                            'replacement' => explode(';', $data['declension_replacement'][$class->id][$key]),
-                        ];
+                                'criteria'    => explode(';', $criteria),
+                                'regex'       => explode(';', $data['declension_regex'][$class->id][$key]),
+                                'replacement' => explode(';', $data['declension_replacement'][$class->id][$key]),
+                            ];
 
                             // Perform final check to see that criteria and replacements are 1:1
                             if (count($data['data'][$class->id]['conjugation'][$key]['criteria']) != count($data['data'][$class->id]['conjugation'][$key]['replacement'])) {

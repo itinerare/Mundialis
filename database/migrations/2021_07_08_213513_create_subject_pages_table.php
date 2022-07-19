@@ -4,13 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSubjectPagesTable extends Migration
-{
+class CreateSubjectPagesTable extends Migration {
     /**
      * Run the migrations.
      */
-    public function up()
-    {
+    public function up() {
         Schema::create('pages', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
@@ -30,8 +28,7 @@ class CreateSubjectPagesTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('pages');
     }
 }

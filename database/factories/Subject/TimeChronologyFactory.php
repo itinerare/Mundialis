@@ -5,8 +5,7 @@ namespace Database\Factories\Subject;
 use App\Models\Subject\TimeChronology;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class TimeChronologyFactory extends Factory
-{
+class TimeChronologyFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -19,8 +18,7 @@ class TimeChronologyFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
         return [
             'name' => $this->faker->unique()->domainWord().$this->faker->unique()->domainWord(),
         ];

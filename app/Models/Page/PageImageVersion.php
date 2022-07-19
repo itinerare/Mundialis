@@ -5,8 +5,7 @@ namespace App\Models\Page;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class PageImageVersion extends Model
-{
+class PageImageVersion extends Model {
     use HasFactory;
 
     /**
@@ -43,16 +42,14 @@ class PageImageVersion extends Model
     /**
      * Get the user this version belongs to.
      */
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo('App\Models\User\User');
     }
 
     /**
      * Get the image this version belongs to.
      */
-    public function image()
-    {
+    public function image() {
         return $this->belongsTo('App\Models\Page\PageImage', 'page_image_id')->withTrashed();
     }
 
@@ -67,8 +64,7 @@ class PageImageVersion extends Model
      *
      * @return array
      */
-    public function getDataAttribute()
-    {
+    public function getDataAttribute() {
         if (!isset($this->attributes['data'])) {
             return null;
         }
@@ -81,8 +77,7 @@ class PageImageVersion extends Model
      *
      * @return string
      */
-    public function getImageFileNameAttribute()
-    {
+    public function getImageFileNameAttribute() {
         return $this->image->id.'_'.$this->id.'_'.$this->hash.'.'.$this->extension;
     }
 
@@ -91,8 +86,7 @@ class PageImageVersion extends Model
      *
      * @return string
      */
-    public function getImageUrlAttribute()
-    {
+    public function getImageUrlAttribute() {
         if (!isset($this->hash)) {
             return null;
         }
@@ -105,8 +99,7 @@ class PageImageVersion extends Model
      *
      * @return string
      */
-    public function getThumbnailFileNameAttribute()
-    {
+    public function getThumbnailFileNameAttribute() {
         return $this->image->id.'_'.$this->id.'_'.$this->hash.'_th.'.$this->extension;
     }
 
@@ -115,8 +108,7 @@ class PageImageVersion extends Model
      *
      * @return string
      */
-    public function getThumbnailUrlAttribute()
-    {
+    public function getThumbnailUrlAttribute() {
         if (!isset($this->hash)) {
             return null;
         }

@@ -4,13 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLexiconEntriesTable extends Migration
-{
+class CreateLexiconEntriesTable extends Migration {
     /**
      * Run the migrations.
      */
-    public function up()
-    {
+    public function up() {
         Schema::create('lexicon_entries', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
@@ -50,8 +48,7 @@ class CreateLexiconEntriesTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('lexicon_entries');
         Schema::dropIfExists('lexicon_etymologies');
 

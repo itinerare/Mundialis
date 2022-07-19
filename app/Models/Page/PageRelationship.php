@@ -6,8 +6,7 @@ use App\Models\Model;
 use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class PageRelationship extends Model
-{
+class PageRelationship extends Model {
     use HasFactory;
 
     /**
@@ -60,16 +59,14 @@ class PageRelationship extends Model
     /**
      * Get one of the pages this relationship belongs to.
      */
-    public function pageOne()
-    {
+    public function pageOne() {
         return $this->belongsTo('App\Models\Page\Page', 'page_one_id');
     }
 
     /**
      * Get one of the pages this relationship belongs to.
      */
-    public function pageTwo()
-    {
+    public function pageTwo() {
         return $this->belongsTo('App\Models\Page\Page', 'page_two_id');
     }
 
@@ -84,8 +81,7 @@ class PageRelationship extends Model
      *
      * @return string
      */
-    public function getDisplayTypeOneAttribute()
-    {
+    public function getDisplayTypeOneAttribute() {
         // First check to see if the set type is a "custom" one, and if so,
         // just return the information provided
         if ($this->type_one == 'custom' || $this->type_one == 'romantic_custom') {
@@ -110,8 +106,7 @@ class PageRelationship extends Model
      *
      * @return string
      */
-    public function getDisplayTypeTwoAttribute()
-    {
+    public function getDisplayTypeTwoAttribute() {
         // First check to see if the set type is a "custom" one, and if so,
         // just return the information provided
         if ($this->type_two == 'custom' || $this->type_two == 'romantic_custom') {

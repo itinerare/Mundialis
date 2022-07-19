@@ -13,8 +13,7 @@ use Auth;
 use Config;
 use Illuminate\Http\Request;
 
-class ImageController extends Controller
-{
+class ImageController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Image Controller
@@ -31,8 +30,7 @@ class ImageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getPageGallery(Request $request, $id)
-    {
+    public function getPageGallery(Request $request, $id) {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
@@ -84,8 +82,7 @@ class ImageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getPageImage(Request $request, $pageId, $id)
-    {
+    public function getPageImage(Request $request, $pageId, $id) {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $pageId)->first();
         if (!$page) {
             abort(404);
@@ -131,8 +128,7 @@ class ImageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getPageImagePopup($id, $imageId = null)
-    {
+    public function getPageImagePopup($id, $imageId = null) {
         if (isset($id) && isset($imageId)) {
             $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
             if (!$page) {
@@ -159,8 +155,7 @@ class ImageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCreateImage($id)
-    {
+    public function getCreateImage($id) {
         $page = Page::where('id', $id)->first();
         if (!$page) {
             abort(404);
@@ -212,8 +207,7 @@ class ImageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditImage($pageId, $id)
-    {
+    public function getEditImage($pageId, $id) {
         $page = Page::where('id', $pageId)->first();
         if (!$page) {
             abort(404);
@@ -270,8 +264,7 @@ class ImageController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCreateEditImage(Request $request, ImageManager $service, $pageId, $id = null)
-    {
+    public function postCreateEditImage(Request $request, ImageManager $service, $pageId, $id = null) {
         $id ? $request->validate(PageImage::$updateRules) : $request->validate(PageImage::$createRules);
         $data = $request->only([
             'image', 'thumbnail', 'x0', 'x1', 'y0', 'y1', 'use_cropper',
@@ -311,8 +304,7 @@ class ImageController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getDeleteImage($pageId, $id)
-    {
+    public function getDeleteImage($pageId, $id) {
         $page = Page::where('id', $pageId)->first();
         if (!$page) {
             abort(404);
@@ -340,8 +332,7 @@ class ImageController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postDeleteImage(Request $request, ImageManager $service, $pageId, $id)
-    {
+    public function postDeleteImage(Request $request, ImageManager $service, $pageId, $id) {
         if ($id && $service->deletePageImage(PageImage::find($id), Auth::user(), $request->get('reason'))) {
             flash('Image deleted successfully.')->success();
         } else {

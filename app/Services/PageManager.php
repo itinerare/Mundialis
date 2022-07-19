@@ -14,8 +14,7 @@ use Config;
 use DB;
 use Notifications;
 
-class PageManager extends Service
-{
+class PageManager extends Service {
     /*
     |--------------------------------------------------------------------------
     | Page Manager
@@ -33,8 +32,7 @@ class PageManager extends Service
      *
      * @return \App\Models\Page\Page|bool
      */
-    public function createPage($data, $user)
-    {
+    public function createPage($data, $user) {
         DB::beginTransaction();
 
         try {
@@ -136,8 +134,7 @@ class PageManager extends Service
      *
      * @return \App\Models\Page\Page|bool
      */
-    public function updatePage($page, $data, $user)
-    {
+    public function updatePage($page, $data, $user) {
         DB::beginTransaction();
 
         try {
@@ -234,8 +231,7 @@ class PageManager extends Service
      *
      * @return bool
      */
-    public function protectPage($page, $user, $data)
-    {
+    public function protectPage($page, $user, $data) {
         DB::beginTransaction();
 
         try {
@@ -273,8 +269,7 @@ class PageManager extends Service
      *
      * @return bool
      */
-    public function movePage($page, $category, $user, $reason)
-    {
+    public function movePage($page, $category, $user, $reason) {
         DB::beginTransaction();
 
         try {
@@ -318,8 +313,7 @@ class PageManager extends Service
      *
      * @return bool
      */
-    public function resetPage($page, $version, $user, $reason)
-    {
+    public function resetPage($page, $version, $user, $reason) {
         DB::beginTransaction();
 
         try {
@@ -360,8 +354,7 @@ class PageManager extends Service
      *
      * @return bool
      */
-    public function deletePage($page, $user, $reason, $forceDelete = false)
-    {
+    public function deletePage($page, $user, $reason, $forceDelete = false) {
         DB::beginTransaction();
 
         try {
@@ -379,7 +372,7 @@ class PageManager extends Service
             if (Page::where('parent_id', $page->id)->count()) {
                 Page::where('parent_id', $page->id)->update([
                     'parent_id' => null,
-            ]);
+                ]);
             }
 
             if ($forceDelete) {
@@ -465,8 +458,7 @@ class PageManager extends Service
      *
      * @return bool
      */
-    public function restorePage($page, $user, $reason)
-    {
+    public function restorePage($page, $user, $reason) {
         DB::beginTransaction();
 
         try {
@@ -509,8 +501,7 @@ class PageManager extends Service
      *
      * @return \App\Models\Page\PageVersion|bool
      */
-    public function logPageVersion($pageId, $userId, $type, $reason, $data, $isMinor = false)
-    {
+    public function logPageVersion($pageId, $userId, $type, $reason, $data, $isMinor = false) {
         try {
             $version = PageVersion::create([
                 'page_id'  => $pageId,
@@ -537,8 +528,7 @@ class PageManager extends Service
      *
      * @return array
      */
-    private function processPageData($data, $page = null)
-    {
+    private function processPageData($data, $page = null) {
         // Fetch category-- either from the page if it already exists, or from the category ID
         $category = $page ? $page->category : SubjectCategory::where('id', $data['category_id'])->first();
 
@@ -570,9 +560,9 @@ class PageManager extends Service
                 foreach (['birth', 'death'] as $segment) {
                     if (isset($data[$segment.'_place_id']) || isset($data[$segment.'_chronology_id'])) {
                         $data['data'][$segment] = [
-                        'place'      => $data[$segment.'_place_id'] ?? null,
-                        'chronology' => $data[$segment.'_chronology_id'] ?? null,
-                    ];
+                            'place'      => $data[$segment.'_place_id'] ?? null,
+                            'chronology' => $data[$segment.'_chronology_id'] ?? null,
+                        ];
                     }
                     foreach ((new TimeDivision)->dateFields() as $key=>$field) {
                         if (isset($data[$segment.'_'.$key])) {
@@ -610,8 +600,7 @@ class PageManager extends Service
      *
      * @return array
      */
-    private function processLinks($page, $data)
-    {
+    private function processLinks($page, $data) {
         DB::beginTransaction();
 
         try {
@@ -649,8 +638,7 @@ class PageManager extends Service
      *
      * @return array
      */
-    private function processTags($page, $data)
-    {
+    private function processTags($page, $data) {
         DB::beginTransaction();
 
         try {
@@ -791,8 +779,7 @@ class PageManager extends Service
      *
      * @return array
      */
-    private function processVersionData($data)
-    {
+    private function processVersionData($data) {
         $versionData = [];
 
         // Gather the general data for recording

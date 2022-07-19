@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-class SitePage extends Model
-{
+class SitePage extends Model {
     /**
      * The attributes that are mass assignable.
      *

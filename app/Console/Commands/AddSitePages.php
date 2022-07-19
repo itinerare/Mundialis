@@ -6,8 +6,7 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
 
-class AddSitePages extends Command
-{
+class AddSitePages extends Command {
     /**
      * The name and signature of the console command.
      *
@@ -25,16 +24,14 @@ class AddSitePages extends Command
     /**
      * Create a new command instance.
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
     }
 
     /**
      * Execute the console command.
      */
-    public function handle()
-    {
+    public function handle() {
         //
         $this->info('******************');
         $this->info('* ADD SITE PAGES *');
@@ -56,8 +53,7 @@ class AddSitePages extends Command
      * @param string $title
      * @param string $text
      */
-    private function addSitePage($key, $title, $text)
-    {
+    private function addSitePage($key, $title, $text) {
         if (!DB::table('site_pages')->where('key', $key)->exists()) {
             DB::table('site_pages')->insert([
                 [

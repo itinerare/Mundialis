@@ -5,8 +5,7 @@ namespace App\Console\Commands;
 use DB;
 use Illuminate\Console\Command;
 
-class AddLexiconSettings extends Command
-{
+class AddLexiconSettings extends Command {
     /**
      * The name and signature of the console command.
      *
@@ -24,16 +23,14 @@ class AddLexiconSettings extends Command
     /**
      * Create a new command instance.
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
     }
 
     /**
      * Execute the console command.
      */
-    public function handle()
-    {
+    public function handle() {
         //
         $this->info('************************');
         $this->info('* ADD LEXICON SETTINGS *');
@@ -60,8 +57,7 @@ class AddLexiconSettings extends Command
      * @param string|null $abbreviation
      * @param int         $sort
      */
-    private function addLexiconSetting($name, $abbreviation, $sort)
-    {
+    private function addLexiconSetting($name, $abbreviation, $sort) {
         if (!DB::table('lexicon_settings')->where('name', $name)->exists()) {
             DB::table('lexicon_settings')->insert([
                 [

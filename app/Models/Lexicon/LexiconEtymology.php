@@ -4,8 +4,7 @@ namespace App\Models\Lexicon;
 
 use App\Models\Model;
 
-class LexiconEtymology extends Model
-{
+class LexiconEtymology extends Model {
     /**
      * The attributes that are mass assignable.
      *
@@ -46,16 +45,14 @@ class LexiconEtymology extends Model
     /**
      * Get the entry this etymology belongs to.
      */
-    public function entry()
-    {
+    public function entry() {
         return $this->belongsTo('App\Models\Lexicon\LexiconEntry');
     }
 
     /**
      * Get the entry this etymology refers to.
      */
-    public function parentEntry()
-    {
+    public function parentEntry() {
         return $this->belongsTo('App\Models\Lexicon\LexiconEntry', 'parent_id');
     }
 }

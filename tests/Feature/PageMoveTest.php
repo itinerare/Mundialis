@@ -10,15 +10,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class PageMoveTest extends TestCase
-{
+class PageMoveTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /**
      * Test page move access.
      */
-    public function testCanGetMovePage()
-    {
+    public function testCanGetMovePage() {
         // Create a temporary editor
         $user = User::factory()->editor()->make();
         // Create a page to move
@@ -33,8 +31,7 @@ class PageMoveTest extends TestCase
     /**
      * Test page moving.
      */
-    public function testCanPostMovePage()
-    {
+    public function testCanPostMovePage() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -65,8 +62,7 @@ class PageMoveTest extends TestCase
     /**
      * Test page moving with a reason.
      */
-    public function testCanPostMovePageWithReason()
-    {
+    public function testCanPostMovePageWithReason() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 

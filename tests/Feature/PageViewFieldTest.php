@@ -10,15 +10,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class PageViewFieldTest extends TestCase
-{
+class PageViewFieldTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /**
      * Test page access with an infobox text field.
      */
-    public function testCanGetPageWithInfoboxTextField()
-    {
+    public function testCanGetPageWithInfoboxTextField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -51,8 +49,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with an infobox number field.
      */
-    public function testCanGetPageWithInfoboxNumberField()
-    {
+    public function testCanGetPageWithInfoboxNumberField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -85,8 +82,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with an infobox checkbox field.
      */
-    public function testCanGetPageWithInfoboxCheckboxField()
-    {
+    public function testCanGetPageWithInfoboxCheckboxField() {
         // Generate some data for the field
         $fieldData = [
             'key'     => $this->faker->unique()->domainWord(),
@@ -121,8 +117,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with an infobox choose one field.
      */
-    public function testCanGetPageWithInfoboxChooseOneField()
-    {
+    public function testCanGetPageWithInfoboxChooseOneField() {
         // Generate some data for the field
         $fieldData = [
             'key'     => $this->faker->unique()->domainWord(),
@@ -157,8 +152,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with an infobox choose multiple field.
      */
-    public function testCanGetPageWithInfoboxChooseMultipleField()
-    {
+    public function testCanGetPageWithInfoboxChooseMultipleField() {
         // Generate some data for the field
         $fieldData = [
             'key'     => $this->faker->unique()->domainWord(),
@@ -195,8 +189,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with a text field.
      */
-    public function testCanGetPageWithTextField()
-    {
+    public function testCanGetPageWithTextField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -229,8 +222,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with a number field.
      */
-    public function testCanGetPageWithNumberField()
-    {
+    public function testCanGetPageWithNumberField() {
         // Generate some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
@@ -263,8 +255,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with a checkbox field.
      */
-    public function testCanGetPageWithCheckboxField()
-    {
+    public function testCanGetPageWithCheckboxField() {
         // Generate some data for the field
         $fieldData = [
             'key'     => $this->faker->unique()->domainWord(),
@@ -299,8 +290,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with a choose one field.
      */
-    public function testCanGetPageWithChooseOneField()
-    {
+    public function testCanGetPageWithChooseOneField() {
         // Generate some data for the field
         $fieldData = [
             'key'     => $this->faker->unique()->domainWord(),
@@ -335,8 +325,7 @@ class PageViewFieldTest extends TestCase
     /**
      * Test page access with a choose multiple field.
      */
-    public function testCanGetPageWithChooseMultipleField()
-    {
+    public function testCanGetPageWithChooseMultipleField() {
         // Generate some data for the field
         $fieldData = [
             'key'     => $this->faker->unique()->domainWord(),

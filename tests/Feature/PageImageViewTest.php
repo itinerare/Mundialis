@@ -12,15 +12,13 @@ use App\Services\ImageManager;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class PageImageViewTest extends TestCase
-{
+class PageImageViewTest extends TestCase {
     use RefreshDatabase;
 
     /**
      * Test image modal access.
      */
-    public function testCanGetImageModal()
-    {
+    public function testCanGetImageModal() {
         // Create a temporary user
         $user = User::factory()->make();
 
@@ -50,8 +48,7 @@ class PageImageViewTest extends TestCase
      * Test hidden image modal access.
      * This shouldn't work.
      */
-    public function testCannotGetHiddenImageModal()
-    {
+    public function testCannotGetHiddenImageModal() {
         // Create a temporary user
         $user = User::factory()->make();
 
@@ -81,8 +78,7 @@ class PageImageViewTest extends TestCase
      * Test hidden image modal access.
      * This should work.
      */
-    public function testCanGetHiddenImageModalAsEditor()
-    {
+    public function testCanGetHiddenImageModalAsEditor() {
         // Create a persistent editor
         $editor = User::factory()->editor()->create();
         // Create a page for the image to belong to
@@ -108,8 +104,7 @@ class PageImageViewTest extends TestCase
     /**
      * Test image page access.
      */
-    public function testCanGetImagePage()
-    {
+    public function testCanGetImagePage() {
         // Create a temporary user
         $user = User::factory()->make();
 
@@ -139,8 +134,7 @@ class PageImageViewTest extends TestCase
      * Test hidden image page access.
      * This shouldn't work.
      */
-    public function testCannotGetHiddenImagePage()
-    {
+    public function testCannotGetHiddenImagePage() {
         // Create a temporary user
         $user = User::factory()->make();
 
@@ -170,8 +164,7 @@ class PageImageViewTest extends TestCase
      * Test hidden image page access.
      * This should work.
      */
-    public function testCanGetHiddenImagePageAsEditor()
-    {
+    public function testCanGetHiddenImagePageAsEditor() {
         // Create a persistent editor
         $editor = User::factory()->editor()->create();
         // Create a page for the image to belong to

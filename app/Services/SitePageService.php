@@ -4,8 +4,7 @@ namespace App\Services;
 
 use DB;
 
-class SitePageService extends Service
-{
+class SitePageService extends Service {
     /*
     |--------------------------------------------------------------------------
     | Text Page Service
@@ -25,8 +24,7 @@ class SitePageService extends Service
      *
      * @return \App\Models\TextPage|bool
      */
-    public function updatePage($page, $data, $user)
-    {
+    public function updatePage($page, $data, $user) {
         DB::beginTransaction();
 
         try {

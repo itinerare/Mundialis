@@ -5,8 +5,7 @@ namespace App\Models\Subject;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class TimeChronology extends Model
-{
+class TimeChronology extends Model {
     use HasFactory;
 
     /**
@@ -60,24 +59,21 @@ class TimeChronology extends Model
     /**
      * Get parent category of this category.
      */
-    public function parent()
-    {
+    public function parent() {
         return $this->belongsTo('App\Models\Subject\TimeChronology', 'parent_id');
     }
 
     /**
      * Get child categories of this category.
      */
-    public function children()
-    {
+    public function children() {
         return $this->hasMany('App\Models\Subject\TimeChronology', 'parent_id');
     }
 
     /**
      * Get pages in this category.
      */
-    public function pages()
-    {
+    public function pages() {
         return $this->hasMany('App\Models\Page\Page', 'parent_id')->whereIn('category_id', SubjectCategory::where('subject', 'time')->pluck('id')->toArray());
     }
 
@@ -92,8 +88,7 @@ class TimeChronology extends Model
      *
      * @return string
      */
-    public function getDisplayNameAttribute()
-    {
+    public function getDisplayNameAttribute() {
         if (isset($this->abbreviation)) {
             return '<a href="'.$this->url.'"><abbr data-toggle="tooltip" title="'.$this->name.'">'.$this->abbreviation.'</abbr></a>';
         }
@@ -106,8 +101,7 @@ class TimeChronology extends Model
      *
      * @return string
      */
-    public function getDisplayNameFullAttribute()
-    {
+    public function getDisplayNameFullAttribute() {
         return '<a href="'.$this->url.'">'.$this->name.'</a>';
     }
 
@@ -116,8 +110,7 @@ class TimeChronology extends Model
      *
      * @return string
      */
-    public function getUrlAttribute()
-    {
+    public function getUrlAttribute() {
         return url('time/chronologies/'.$this->id);
     }
 }

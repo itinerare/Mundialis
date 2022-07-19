@@ -14,15 +14,13 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
-class PageImageEditTest extends TestCase
-{
+class PageImageEditTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /**
      * Test image creation access.
      */
-    public function testCanGetCreateImage()
-    {
+    public function testCanGetCreateImage() {
         // Create a temporary editor
         $user = User::factory()->editor()->make();
         // Create a page to upload the image for
@@ -37,8 +35,7 @@ class PageImageEditTest extends TestCase
     /**
      * Test image editing access.
      */
-    public function testCanGetEditImage()
-    {
+    public function testCanGetEditImage() {
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
@@ -64,8 +61,7 @@ class PageImageEditTest extends TestCase
     /**
      * Test basic image editing.
      */
-    public function testCanPostEditImage()
-    {
+    public function testCanPostEditImage() {
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
@@ -104,8 +100,7 @@ class PageImageEditTest extends TestCase
     /**
      * Test image visibility editing.
      */
-    public function testCanPostEditImageVisibility()
-    {
+    public function testCanPostEditImageVisibility() {
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
@@ -145,8 +140,7 @@ class PageImageEditTest extends TestCase
     /**
      * Test image validity editing.
      */
-    public function testCanPostEditImageValidity()
-    {
+    public function testCanPostEditImageValidity() {
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
@@ -187,8 +181,7 @@ class PageImageEditTest extends TestCase
     /**
      * Test active image editing.
      */
-    public function testCanPostEditActiveImage()
-    {
+    public function testCanPostEditActiveImage() {
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
@@ -229,8 +222,7 @@ class PageImageEditTest extends TestCase
     /**
      * Test image creator editing, replacing the creator.
      */
-    public function testCanPostEditImageCreatorWithUser()
-    {
+    public function testCanPostEditImageCreatorWithUser() {
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
@@ -276,8 +268,7 @@ class PageImageEditTest extends TestCase
     /**
      * Test image creator editing, replacing the creator.
      */
-    public function testCanPostEditImageCreatorWithUrl()
-    {
+    public function testCanPostEditImageCreatorWithUrl() {
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
@@ -324,8 +315,7 @@ class PageImageEditTest extends TestCase
     /**
      * Test image creator editing, adding a creator.
      */
-    public function testCanPostEditImageAddCreatorWithUsers()
-    {
+    public function testCanPostEditImageAddCreatorWithUsers() {
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
@@ -378,8 +368,7 @@ class PageImageEditTest extends TestCase
     /**
      * Test image creator editing, adding a creator.
      */
-    public function testCanPostEditImageAddCreatorWithUrls()
-    {
+    public function testCanPostEditImageAddCreatorWithUrls() {
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
@@ -435,8 +424,7 @@ class PageImageEditTest extends TestCase
     /**
      * Test image creator editing, adding a creator.
      */
-    public function testCanPostEditImageAddCreatorMixed()
-    {
+    public function testCanPostEditImageAddCreatorMixed() {
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
@@ -491,8 +479,7 @@ class PageImageEditTest extends TestCase
     /**
      * Test image page attachment.
      */
-    public function testCanPostEditAttachImagePage()
-    {
+    public function testCanPostEditAttachImagePage() {
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
@@ -534,8 +521,7 @@ class PageImageEditTest extends TestCase
     /**
      * Test image page retention through editing via a different page.
      */
-    public function testCanPostEditRetainImagePage()
-    {
+    public function testCanPostEditRetainImagePage() {
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
@@ -584,8 +570,7 @@ class PageImageEditTest extends TestCase
     /**
      * Test image page detachment.
      */
-    public function testCanPostEditDetachImagePage()
-    {
+    public function testCanPostEditDetachImagePage() {
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
@@ -628,8 +613,7 @@ class PageImageEditTest extends TestCase
     /**
      * Test image page detachment unsetting the detached page's active image.
      */
-    public function testCanPostEditDetachingImagePageUnsetsActiveImage()
-    {
+    public function testCanPostEditDetachingImagePageUnsetsActiveImage() {
         // Create a persistent editor
         $user = User::factory()->editor()->create();
         // Create a page to attach the image to
@@ -677,8 +661,7 @@ class PageImageEditTest extends TestCase
      * This does not work due to Intervention not cooperating in a test environment,
      * but remains here for posterity.
      */
-    public function canPostCreateImage()
-    {
+    public function canPostCreateImage() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 

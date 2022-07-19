@@ -5,8 +5,7 @@ namespace Database\Factories\Subject;
 use App\Models\Subject\TimeDivision;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class TimeDivisionFactory extends Factory
-{
+class TimeDivisionFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -19,8 +18,7 @@ class TimeDivisionFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
         return [
             //
             'name'         => $this->faker->unique()->domainWord(),
@@ -34,8 +32,7 @@ class TimeDivisionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function date()
-    {
+    public function date() {
         return $this->state(function (array $attributes) {
             return [
                 'use_for_dates' => 1,

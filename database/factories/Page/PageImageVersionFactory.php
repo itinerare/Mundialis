@@ -5,8 +5,7 @@ namespace Database\Factories\Page;
 use App\Models\Page\PageImageVersion;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PageImageVersionFactory extends Factory
-{
+class PageImageVersionFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -19,8 +18,7 @@ class PageImageVersionFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
         return [
             //
             'hash'        => randomString(15),
@@ -42,8 +40,7 @@ class PageImageVersionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function image($image)
-    {
+    public function image($image) {
         return $this->state(function (array $attributes) use ($image) {
             return [
                 'page_image_id' => $image,
@@ -59,8 +56,7 @@ class PageImageVersionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function user($user)
-    {
+    public function user($user) {
         return $this->state(function (array $attributes) use ($user) {
             return [
                 'user_id' => $user,
@@ -75,8 +71,7 @@ class PageImageVersionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function type($type)
-    {
+    public function type($type) {
         return $this->state(function (array $attributes) use ($type) {
             return [
                 'type' => $type,
@@ -91,8 +86,7 @@ class PageImageVersionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function reason($reason)
-    {
+    public function reason($reason) {
         return $this->state(function (array $attributes) use ($reason) {
             return [
                 'reason' => $reason,
@@ -105,8 +99,7 @@ class PageImageVersionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function minor()
-    {
+    public function minor() {
         return $this->state(function (array $attributes) {
             return [
                 'is_minor' => 1,
@@ -119,8 +112,7 @@ class PageImageVersionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function deleted()
-    {
+    public function deleted() {
         return $this->state(function (array $attributes) {
             return [
                 'type' => 'Image Deleted',
@@ -138,8 +130,7 @@ class PageImageVersionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function testData($isVisible = 1, $description = null, $creators = '1', $pages = '1')
-    {
+    public function testData($isVisible = 1, $description = null, $creators = '1', $pages = '1') {
         return $this->state(function (array $attributes) use ($isVisible, $description, $creators, $pages) {
             return [
                 'data' => '{"is_visible":"'.$isVisible.'","description":'.($description ? '"'.$description.'"' : null).',"creators":['.$creators.'],"pages":['.$pages.']}',

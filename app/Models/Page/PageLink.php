@@ -5,8 +5,7 @@ namespace App\Models\Page;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class PageLink extends Model
-{
+class PageLink extends Model {
     use HasFactory;
 
     /**
@@ -41,8 +40,7 @@ class PageLink extends Model
     /**
      * Get the parent this link belongs to.
      */
-    public function parent()
-    {
+    public function parent() {
         switch ($this->parent_type) {
             case 'page':
                 return $this->belongsTo('App\Models\Page\Page');
@@ -55,8 +53,7 @@ class PageLink extends Model
     /**
      * Get the object this link goes to.
      */
-    public function linked()
-    {
+    public function linked() {
         switch ($this->linked_type) {
             case 'page':
             return $this->belongsTo('App\Models\Page\Page', 'link_id');

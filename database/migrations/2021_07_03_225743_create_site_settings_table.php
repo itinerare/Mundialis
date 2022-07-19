@@ -4,13 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSiteSettingsTable extends Migration
-{
+class CreateSiteSettingsTable extends Migration {
     /**
      * Run the migrations.
      */
-    public function up()
-    {
+    public function up() {
         Schema::create('site_settings', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
@@ -24,8 +22,7 @@ class CreateSiteSettingsTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('site_settings');
     }
 }

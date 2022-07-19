@@ -5,8 +5,7 @@ namespace App\Models;
 use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Notification extends Model
-{
+class Notification extends Model {
     use HasFactory;
 
     /**
@@ -41,8 +40,7 @@ class Notification extends Model
     /**
      * Get the user who owns notification.
      */
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo('App\Models\User\User');
     }
 
@@ -57,8 +55,7 @@ class Notification extends Model
      *
      * @return array
      */
-    public function getDataAttribute()
-    {
+    public function getDataAttribute() {
         return json_decode($this->attributes['data'], true);
     }
 
@@ -67,8 +64,7 @@ class Notification extends Model
      *
      * @return array
      */
-    public function getMessageAttribute()
-    {
+    public function getMessageAttribute() {
         $notification = Config::get('mundialis.notifications.'.$this->notification_type_id);
 
         $message = $notification['message'];
@@ -94,8 +90,7 @@ class Notification extends Model
      *
      * @return array
      */
-    public static function getNotificationId($type)
-    {
+    public static function getNotificationId($type) {
         return constant('self::'.$type);
     }
 
@@ -105,7 +100,7 @@ class Notification extends Model
 
     **********************************************************************************************/
 
-    const WATCHED_PAGE_UPDATED = 0;
-    const WATCHED_PAGE_IMAGE_UPDATED = 1;
-    const WATCHED_PAGE_DELETED = 2;
+    public const WATCHED_PAGE_UPDATED = 0;
+    public const WATCHED_PAGE_IMAGE_UPDATED = 1;
+    public const WATCHED_PAGE_DELETED = 2;
 }

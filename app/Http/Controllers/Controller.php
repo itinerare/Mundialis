@@ -11,8 +11,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
-class Controller extends BaseController
-{
+class Controller extends BaseController {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
@@ -20,8 +19,7 @@ class Controller extends BaseController
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getIndex()
-    {
+    public function getIndex() {
         $pageVersions = PageVersion::orderBy('created_at', 'DESC')->get()->filter(function ($version) {
             if (!$version->page || isset($version->page->deleted_at)) {
                 return 0;
@@ -56,8 +54,7 @@ class Controller extends BaseController
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getTermsOfService()
-    {
+    public function getTermsOfService() {
         $page = SitePage::where('key', 'terms')->first();
         if (!$page) {
             abort(404);
@@ -73,8 +70,7 @@ class Controller extends BaseController
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getPrivacyPolicy()
-    {
+    public function getPrivacyPolicy() {
         $page = SitePage::where('key', 'privacy')->first();
         if (!$page) {
             abort(404);

@@ -5,8 +5,7 @@ namespace Database\Factories\Page;
 use App\Models\Page\PageLink;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PageLinkFactory extends Factory
-{
+class PageLinkFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -20,8 +19,7 @@ class PageLinkFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
         return [
             //
             'parent_type' => 'page',
@@ -37,8 +35,7 @@ class PageLinkFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function parent($parent)
-    {
+    public function parent($parent) {
         return $this->state(function (array $attributes) use ($parent) {
             return [
                 'parent_id' => $parent,
@@ -53,8 +50,7 @@ class PageLinkFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function link($link)
-    {
+    public function link($link) {
         return $this->state(function (array $attributes) use ($link) {
             return [
                 'link_id' => $link,
@@ -67,8 +63,7 @@ class PageLinkFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function entry()
-    {
+    public function entry() {
         return $this->state(function (array $attributes) {
             return [
                 'parent_type' => 'entry',
@@ -81,8 +76,7 @@ class PageLinkFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function wanted()
-    {
+    public function wanted() {
         return $this->state(function (array $attributes) {
             return [
                 'title' => $this->faker->unique()->domainWord(),

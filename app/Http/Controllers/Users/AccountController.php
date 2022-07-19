@@ -21,8 +21,7 @@ use Illuminate\Support\Collection;
 use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
 use Laravel\Fortify\RecoveryCode;
 
-class AccountController extends Controller
-{
+class AccountController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Account Controller
@@ -37,8 +36,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable|\Illuminate\Http\RedirectResponse
      */
-    public function getBanned()
-    {
+    public function getBanned() {
         if (Auth::user()->is_banned) {
             return view('account.banned');
         } else {
@@ -51,8 +49,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSettings()
-    {
+    public function getSettings() {
         return view('account.settings');
     }
 
@@ -61,8 +58,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postProfile(Request $request)
-    {
+    public function postProfile(Request $request) {
         Auth::user()->update([
             'profile_text' => $request->get('profile_text'),
         ]);
@@ -76,8 +72,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postAvatar(Request $request, UserService $service)
-    {
+    public function postAvatar(Request $request, UserService $service) {
         if ($service->updateAvatar($request->file('avatar'), Auth::user())) {
             flash('Avatar updated successfully.')->success();
         } else {
@@ -96,8 +91,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postPassword(Request $request, UserService $service)
-    {
+    public function postPassword(Request $request, UserService $service) {
         $request->validate([
             'old_password' => 'required|string',
             'new_password' => 'required|string|min:8|confirmed',
@@ -120,8 +114,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEmail(Request $request, UserService $service)
-    {
+    public function postEmail(Request $request, UserService $service) {
         $request->validate([
             'email' => 'required|string|email|max:255|unique:users',
         ]);
@@ -143,10 +136,9 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEnableTwoFactor(Request $request, UserService $service)
-    {
+    public function postEnableTwoFactor(Request $request, UserService $service) {
         if (!$request->session()->put([
-            'two_factor_secret' => encrypt(app(TwoFactorAuthenticationProvider::class)->generateSecretKey()),
+            'two_factor_secret'         => encrypt(app(TwoFactorAuthenticationProvider::class)->generateSecretKey()),
             'two_factor_recovery_codes' => encrypt(json_encode(Collection::times(8, function () {
                 return RecoveryCode::generate();
             })->all())),
@@ -166,8 +158,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getConfirmTwoFactor(Request $request)
-    {
+    public function getConfirmTwoFactor(Request $request) {
         // Assemble URL and QR Code svg from session information
         $qrUrl = app(TwoFactorAuthenticationProvider::class)->qrCodeUrl(config('app.name'), Auth::user()->email, decrypt($request->session()->get('two_factor_secret')));
         $qrCode = (new Writer(
@@ -191,8 +182,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postConfirmTwoFactor(Request $request, UserService $service)
-    {
+    public function postConfirmTwoFactor(Request $request, UserService $service) {
         $request->validate([
             'code' => 'required',
         ]);
@@ -215,8 +205,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postDisableTwoFactor(Request $request, UserService $service)
-    {
+    public function postDisableTwoFactor(Request $request, UserService $service) {
         $request->validate([
             'code' => 'required',
         ]);
@@ -236,8 +225,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getWatchedPages(Request $request)
-    {
+    public function getWatchedPages(Request $request) {
         $query = Auth::user()->watched()->visible(Auth::user());
         $sort = $request->only(['sort']);
 
@@ -289,8 +277,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postWatchPage(Request $request, UserService $service, $id)
-    {
+    public function postWatchPage(Request $request, UserService $service, $id) {
         if ($service->watchPage(Page::find($id), Auth::user())) {
             flash('Page watch status updated successfully.')->success();
         } else {
@@ -307,8 +294,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getNotifications()
-    {
+    public function getNotifications() {
         $notifications = Auth::user()->notifications()->orderBy('id', 'DESC')->paginate(30);
         Auth::user()->notifications()->update(['is_unread' => 0]);
         Auth::user()->notifications_unread = 0;
@@ -326,8 +312,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getDeleteNotification($id)
-    {
+    public function getDeleteNotification($id) {
         $notification = Notification::where('id', $id)->where('user_id', Auth::user()->id)->first();
         if ($notification) {
             $notification->delete();
@@ -343,8 +328,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postClearNotifications($type = null)
-    {
+    public function postClearNotifications($type = null) {
         if (isset($type)) {
             Auth::user()->notifications()->where('notification_type_id', $type)->delete();
         } else {

@@ -9,15 +9,13 @@ use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class SubjectTest extends TestCase
-{
+class SubjectTest extends TestCase {
     use RefreshDatabase;
 
     /**
      * Test people access.
      */
-    public function testCanGetPeople()
-    {
+    public function testCanGetPeople() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -29,8 +27,7 @@ class SubjectTest extends TestCase
     /**
      * Test places access.
      */
-    public function testCanGetPlaces()
-    {
+    public function testCanGetPlaces() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -42,8 +39,7 @@ class SubjectTest extends TestCase
     /**
      * Test flora & fauna access.
      */
-    public function testCanGetFloraAndFauna()
-    {
+    public function testCanGetFloraAndFauna() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -55,8 +51,7 @@ class SubjectTest extends TestCase
     /**
      * Test things access.
      */
-    public function testCanGetThings()
-    {
+    public function testCanGetThings() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -68,8 +63,7 @@ class SubjectTest extends TestCase
     /**
      * Test concepts access.
      */
-    public function testCanGetConcepts()
-    {
+    public function testCanGetConcepts() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -81,8 +75,7 @@ class SubjectTest extends TestCase
     /**
      * Test time & events access.
      */
-    public function testCanGetTime()
-    {
+    public function testCanGetTime() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -94,8 +87,7 @@ class SubjectTest extends TestCase
     /**
      * Test time & events access with a chronology.
      */
-    public function testCanGetTimeWithChronology()
-    {
+    public function testCanGetTimeWithChronology() {
         $user = User::factory()->make();
 
         TimeChronology::factory()->create();
@@ -109,8 +101,7 @@ class SubjectTest extends TestCase
     /**
      * Test time chronology access.
      */
-    public function testCanGetTimeChronology()
-    {
+    public function testCanGetTimeChronology() {
         $user = User::factory()->make();
 
         $chronology = TimeChronology::factory()->create();
@@ -124,8 +115,7 @@ class SubjectTest extends TestCase
     /**
      * Test time chronology access with a child.
      */
-    public function testCanGetTimeChronologyWithChild()
-    {
+    public function testCanGetTimeChronologyWithChild() {
         $user = User::factory()->make();
 
         for ($i = 1; $i <= 2; $i++) {
@@ -143,8 +133,7 @@ class SubjectTest extends TestCase
     /**
      * Test language access.
      */
-    public function testCanGetLanguage()
-    {
+    public function testCanGetLanguage() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -156,8 +145,7 @@ class SubjectTest extends TestCase
     /**
      * Test miscellaneous access with a category.
      */
-    public function testCanGetLanguageWithLexiconCategory()
-    {
+    public function testCanGetLanguageWithLexiconCategory() {
         $user = User::factory()->make();
 
         LexiconCategory::factory()->create();
@@ -171,8 +159,7 @@ class SubjectTest extends TestCase
     /**
      * Test miscellaneous category access.
      */
-    public function testCanGetLexiconCategory()
-    {
+    public function testCanGetLexiconCategory() {
         $user = User::factory()->make();
 
         $category = LexiconCategory::factory()->create();
@@ -186,8 +173,7 @@ class SubjectTest extends TestCase
     /**
      * Test miscellaneous category access with a child.
      */
-    public function testCanGetLexiconCategoryWithChild()
-    {
+    public function testCanGetLexiconCategoryWithChild() {
         $user = User::factory()->make();
 
         for ($i = 1; $i <= 2; $i++) {
@@ -205,8 +191,7 @@ class SubjectTest extends TestCase
     /**
      * Test miscellaneous access.
      */
-    public function testCanGetMiscellaneous()
-    {
+    public function testCanGetMiscellaneous() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -218,8 +203,7 @@ class SubjectTest extends TestCase
     /**
      * Test miscellaneous access with a category.
      */
-    public function testCanGetMiscellaneousWithCategory()
-    {
+    public function testCanGetMiscellaneousWithCategory() {
         $user = User::factory()->make();
 
         SubjectCategory::factory()->create();
@@ -233,8 +217,7 @@ class SubjectTest extends TestCase
     /**
      * Test miscellaneous category access.
      */
-    public function testCanGetMiscellaneousCategory()
-    {
+    public function testCanGetMiscellaneousCategory() {
         $user = User::factory()->make();
 
         $category = SubjectCategory::factory()->create();
@@ -248,8 +231,7 @@ class SubjectTest extends TestCase
     /**
      * Test miscellaneous category access with a child.
      */
-    public function testCanGetMiscellaneousCategoryWithChild()
-    {
+    public function testCanGetMiscellaneousCategoryWithChild() {
         $user = User::factory()->make();
 
         for ($i = 1; $i <= 2; $i++) {

@@ -5,8 +5,7 @@ namespace App\Models\Subject;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class TimeDivision extends Model
-{
+class TimeDivision extends Model {
     use HasFactory;
 
     /**
@@ -54,8 +53,7 @@ class TimeDivision extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeDateEnabled($query)
-    {
+    public function scopeDateEnabled($query) {
         return $query->where('use_for_dates', 1);
     }
 
@@ -70,8 +68,7 @@ class TimeDivision extends Model
      *
      * @return string
      */
-    public function getDisplayNameAttribute()
-    {
+    public function getDisplayNameAttribute() {
         if (isset($this->abbreviation)) {
             return '<abbr data-toggle="tooltip" title="'.$this->name.'">'.$this->abbreviation.'.</abbr>';
         }
@@ -90,8 +87,7 @@ class TimeDivision extends Model
      *
      * @return array
      */
-    public function dateFields()
-    {
+    public function dateFields() {
         $fields = [];
         foreach ($this->dateEnabled()->orderBy('sort')->get() as $division) {
             $fields[$division->id] = [
@@ -114,8 +110,7 @@ class TimeDivision extends Model
      *
      * @return string
      */
-    public function formatTimeDate($data)
-    {
+    public function formatTimeDate($data) {
         // Cycle through date-enabled divisions and add a formatted string to the array
         foreach ($this->dateEnabled()->orderBy('sort')->get() as $division) {
             if (isset($data[$division->id])) {

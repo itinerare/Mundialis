@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class UserFunctionTest extends TestCase
-{
+class UserFunctionTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /******************************************************************************
@@ -22,8 +21,7 @@ class UserFunctionTest extends TestCase
     /**
      * Test profile editing.
      */
-    public function testCanPostEditProfile()
-    {
+    public function testCanPostEditProfile() {
         // Make a persistent user
         $user = User::factory()->create();
 
@@ -43,8 +41,7 @@ class UserFunctionTest extends TestCase
     /**
      * Test avatar editing.
      */
-    public function testCanPostEditAvatar()
-    {
+    public function testCanPostEditAvatar() {
         // Make a temporary user
         $user = User::factory()->create();
 
@@ -74,8 +71,7 @@ class UserFunctionTest extends TestCase
     /**
      * Test email editing.
      */
-    public function testCanPostEditEmail()
-    {
+    public function testCanPostEditEmail() {
         // Make a persistent user
         $user = User::factory()->create();
 
@@ -99,8 +95,7 @@ class UserFunctionTest extends TestCase
      * Test password editing with a valid password.
      * This should work.
      */
-    public function testCanPostEditValidPassword()
-    {
+    public function testCanPostEditValidPassword() {
         // Make a persistent user
         $user = User::factory()->simplePass()->create();
 
@@ -120,8 +115,7 @@ class UserFunctionTest extends TestCase
      * Test password editing with an invalid password.
      * This shouldn't work.
      */
-    public function testCannotPostEditInvalidPassword()
-    {
+    public function testCannotPostEditInvalidPassword() {
         // Make a persistent user
         $user = User::factory()->simplePass()->create();
 

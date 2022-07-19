@@ -10,8 +10,7 @@ use App\Models\Subject\TimeDivision;
 use Auth;
 use Illuminate\Http\Request;
 
-class TagController extends Controller
-{
+class TagController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Page Tag Controller
@@ -28,8 +27,7 @@ class TagController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getTag(Request $request, $tag)
-    {
+    public function getTag(Request $request, $tag) {
         $tag = str_replace('_', ' ', $tag);
 
         $query = Page::visible(Auth::check() ? Auth::user() : null)->whereIn('id', PageTag::tag()->tagSearch($tag)->pluck('page_id')->toArray());
@@ -82,8 +80,7 @@ class TagController extends Controller
      *
      * @return array
      */
-    public function getAllTags()
-    {
+    public function getAllTags() {
         $query = PageTag::tag()->pluck('tag')->unique();
 
         $tags = [];

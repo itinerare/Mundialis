@@ -6,8 +6,7 @@ use App\Models\Page\PageImage;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PageImageFactory extends Factory
-{
+class PageImageFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -20,8 +19,7 @@ class PageImageFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
         return [
             //
             'description' => null,
@@ -34,8 +32,7 @@ class PageImageFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function hidden()
-    {
+    public function hidden() {
         return $this->state(function (array $attributes) {
             return [
                 'is_visible' => 0,
@@ -48,8 +45,7 @@ class PageImageFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function deleted()
-    {
+    public function deleted() {
         return $this->state(function (array $attributes) {
             return [
                 'deleted_at' => Carbon::now(),

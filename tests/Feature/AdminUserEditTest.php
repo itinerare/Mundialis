@@ -6,8 +6,7 @@ use App\Models\User\Rank;
 use App\Models\User\User;
 use Tests\TestCase;
 
-class AdminUserEditTest extends TestCase
-{
+class AdminUserEditTest extends TestCase {
     // These tests center on user editing and ban handling
 
     /******************************************************************************
@@ -17,8 +16,7 @@ class AdminUserEditTest extends TestCase
     /**
      * Test user index access.
      */
-    public function testCanGetAdminUserIndex()
-    {
+    public function testCanGetAdminUserIndex() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
 
@@ -31,8 +29,7 @@ class AdminUserEditTest extends TestCase
     /**
      * Test user edit page access.
      */
-    public function testCanGetEditUser()
-    {
+    public function testCanGetEditUser() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
 
@@ -49,8 +46,7 @@ class AdminUserEditTest extends TestCase
      * Test user editing, admin > regular user.
      * This should work.
      */
-    public function testCanPostEditUserBasic()
-    {
+    public function testCanPostEditUserBasic() {
         // Make a persistent user
         $user = User::factory()->admin()->create();
         // Make a persistent user to be the subject
@@ -78,8 +74,7 @@ class AdminUserEditTest extends TestCase
      * Test user editing, admin > editor.
      * This should work.
      */
-    public function testCanPostEditEditorBasic()
-    {
+    public function testCanPostEditEditorBasic() {
         // Make a persistent user
         $user = User::factory()->admin()->create();
         // Make a persistent user to be the subject
@@ -107,8 +102,7 @@ class AdminUserEditTest extends TestCase
      * Test user editing, admin > admin.
      * This should not work.
      */
-    public function testCannotPostEditAdminBasic()
-    {
+    public function testCannotPostEditAdminBasic() {
         // Make a persistent user
         $user = User::factory()->admin()->create();
         // Make a persistent user to be the subject
@@ -137,8 +131,7 @@ class AdminUserEditTest extends TestCase
     /**
      * Test user updates access.
      */
-    public function testCanGetUserUpdates()
-    {
+    public function testCanGetUserUpdates() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
 
@@ -158,8 +151,7 @@ class AdminUserEditTest extends TestCase
     /**
      * Test ban user page access.
      */
-    public function testCanGetBanUser()
-    {
+    public function testCanGetBanUser() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
 
@@ -175,8 +167,7 @@ class AdminUserEditTest extends TestCase
     /**
      * Test ban confirmation access.
      */
-    public function testCanGetConfirmBanUser()
-    {
+    public function testCanGetConfirmBanUser() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
 
@@ -193,8 +184,7 @@ class AdminUserEditTest extends TestCase
      * Test user banning, admin > regular user.
      * This should work.
      */
-    public function testCanPostBanUser()
-    {
+    public function testCanPostBanUser() {
         // Make a persistent user
         $user = User::factory()->admin()->create();
         // Make a persistent user to be the subject
@@ -218,8 +208,7 @@ class AdminUserEditTest extends TestCase
      * Test user banning, admin > editor.
      * This should work.
      */
-    public function testCanPostBanEditor()
-    {
+    public function testCanPostBanEditor() {
         // Make a persistent user
         $user = User::factory()->admin()->create();
         // Make a persistent user to be the subject
@@ -243,8 +232,7 @@ class AdminUserEditTest extends TestCase
      * Test user banning, admin > admin.
      * This should not work.
      */
-    public function testCannotPostBanAdmin()
-    {
+    public function testCannotPostBanAdmin() {
         // Make a persistent user
         $user = User::factory()->admin()->create();
         // Make a persistent user to be the subject
@@ -267,8 +255,7 @@ class AdminUserEditTest extends TestCase
      * Test ban message editing, admin > regular user.
      * This should work.
      */
-    public function testCanPostEditUserBan()
-    {
+    public function testCanPostEditUserBan() {
         // Make a persistent user
         $user = User::factory()->admin()->create();
         // Make a persistent, pre-banned user to be the subject
@@ -292,8 +279,7 @@ class AdminUserEditTest extends TestCase
      * Test ban message editing, admin > editor.
      * This should work.
      */
-    public function testCanPostEditEditorBan()
-    {
+    public function testCanPostEditEditorBan() {
         // Make a persistent user
         $user = User::factory()->admin()->create();
         // Make a persistent, pre-banned user to be the subject
@@ -317,8 +303,7 @@ class AdminUserEditTest extends TestCase
      * Test ban message editing, admin > admin.
      * This should not work.
      */
-    public function testCannotPostEditAdminBan()
-    {
+    public function testCannotPostEditAdminBan() {
         // Make a persistent user
         $user = User::factory()->admin()->create();
         // Make a persistent, pre-banned user to be the subject
@@ -341,8 +326,7 @@ class AdminUserEditTest extends TestCase
     /**
      * Test unban user access.
      */
-    public function testCanGetUnbanUser()
-    {
+    public function testCanGetUnbanUser() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
 
@@ -359,8 +343,7 @@ class AdminUserEditTest extends TestCase
      * Test user unbanning, admin > regular user.
      * This should work.
      */
-    public function testCanPostUnbanUser()
-    {
+    public function testCanPostUnbanUser() {
         // Make a persistent user
         $user = User::factory()->admin()->create();
         // Make a persistent user to be the subject
@@ -381,8 +364,7 @@ class AdminUserEditTest extends TestCase
      * Test user unbanning, admin > editor.
      * This should work.
      */
-    public function testCanPostUnbanEditor()
-    {
+    public function testCanPostUnbanEditor() {
         // Make a persistent user
         $user = User::factory()->admin()->create();
         // Make a persistent user to be the subject
@@ -403,8 +385,7 @@ class AdminUserEditTest extends TestCase
      * Test user unbanning, admin > admin.
      * This shouldn't work.
      */
-    public function testCannotPostUnbanAdmin()
-    {
+    public function testCannotPostUnbanAdmin() {
         // Make a persistent user
         $user = User::factory()->admin()->create();
         // Make a persistent user to be the subject

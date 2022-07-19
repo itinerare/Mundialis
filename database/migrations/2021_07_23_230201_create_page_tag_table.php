@@ -4,13 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePageTagTable extends Migration
-{
+class CreatePageTagTable extends Migration {
     /**
      * Run the migrations.
      */
-    public function up()
-    {
+    public function up() {
         // Tags will be able to be created on the fly,
         // so this is a relatively straightforward affair
         Schema::create('page_tags', function (Blueprint $table) {
@@ -30,8 +28,7 @@ class CreatePageTagTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('page_tags');
     }
 }

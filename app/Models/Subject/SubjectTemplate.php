@@ -4,8 +4,7 @@ namespace App\Models\Subject;
 
 use App\Models\Model;
 
-class SubjectTemplate extends Model
-{
+class SubjectTemplate extends Model {
     /**
      * The attributes that are mass assignable.
      *
@@ -60,8 +59,7 @@ class SubjectTemplate extends Model
     /**
      * Get the categories for this subject.
      */
-    public function categories()
-    {
+    public function categories() {
         return $this->hasMany('App\Models\Subject\SubjectCategory', 'subject', 'subject');
     }
 
@@ -76,8 +74,7 @@ class SubjectTemplate extends Model
      *
      * @return array
      */
-    public function getDataAttribute()
-    {
+    public function getDataAttribute() {
         if (!isset($this->attributes['data'])) {
             return null;
         }

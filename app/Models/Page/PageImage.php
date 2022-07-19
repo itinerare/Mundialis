@@ -6,8 +6,7 @@ use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PageImage extends Model
-{
+class PageImage extends Model {
     use HasFactory, SoftDeletes;
 
     /**
@@ -62,24 +61,21 @@ class PageImage extends Model
     /**
      * Get the page this image belongs to.
      */
-    public function creators()
-    {
+    public function creators() {
         return $this->hasMany('App\Models\Page\PageImageCreator');
     }
 
     /**
      * Get the page this image belongs to.
      */
-    public function pages()
-    {
+    public function pages() {
         return $this->belongsToMany('App\Models\Page\Page')->using('App\Models\Page\PagePageImage')->withPivot('is_valid');
     }
 
     /**
      * Get this image's versions.
      */
-    public function versions()
-    {
+    public function versions() {
         return $this->hasMany('App\Models\Page\PageImageVersion');
     }
 
@@ -97,8 +93,7 @@ class PageImage extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeVisible($query, $user = null)
-    {
+    public function scopeVisible($query, $user = null) {
         if ($user && $user->canWrite) {
             return $query;
         }
@@ -117,8 +112,7 @@ class PageImage extends Model
      *
      * @return \App\Models\Page\PageImageVersion
      */
-    public function getVersionAttribute()
-    {
+    public function getVersionAttribute() {
         return $this->versions()->orderBy('created_at', 'DESC')->first();
     }
 
@@ -127,8 +121,7 @@ class PageImage extends Model
      *
      * @return \App\Models\Page\PageImageVersion
      */
-    public function getImageVersionAttribute()
-    {
+    public function getImageVersionAttribute() {
         return $this->versions()->whereNotNull('hash')->orderBy('created_at', 'DESC')->first();
     }
 
@@ -137,8 +130,7 @@ class PageImage extends Model
      *
      * @return string
      */
-    public function getImageDirectoryAttribute()
-    {
+    public function getImageDirectoryAttribute() {
         return 'images/pages/'.floor($this->id / 1000);
     }
 
@@ -147,8 +139,7 @@ class PageImage extends Model
      *
      * @return string
      */
-    public function getImagePathAttribute()
-    {
+    public function getImagePathAttribute() {
         return public_path($this->imageDirectory);
     }
 
@@ -157,8 +148,7 @@ class PageImage extends Model
      *
      * @return string
      */
-    public function getImageUrlAttribute()
-    {
+    public function getImageUrlAttribute() {
         return $this->imageVersion->imageUrl;
     }
 
@@ -167,8 +157,7 @@ class PageImage extends Model
      *
      * @return string
      */
-    public function getThumbnailPathAttribute()
-    {
+    public function getThumbnailPathAttribute() {
         return $this->imagePath;
     }
 
@@ -177,8 +166,7 @@ class PageImage extends Model
      *
      * @return string
      */
-    public function getThumbnailUrlAttribute()
-    {
+    public function getThumbnailUrlAttribute() {
         return $this->imageVersion->thumbnailUrl;
     }
 }

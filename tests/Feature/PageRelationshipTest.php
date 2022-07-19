@@ -10,15 +10,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class PageRelationshipTest extends TestCase
-{
+class PageRelationshipTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /**
      * Test page relationships access.
      */
-    public function testCanGetRelationships()
-    {
+    public function testCanGetRelationships() {
         // Create a temporary user
         $user = User::factory()->make();
 
@@ -37,8 +35,7 @@ class PageRelationshipTest extends TestCase
     /**
      * Test page relationships access.
      */
-    public function testCanGetRelationshipsWithRelationship()
-    {
+    public function testCanGetRelationshipsWithRelationship() {
         // Create a temporary user
         $user = User::factory()->make();
 
@@ -62,8 +59,7 @@ class PageRelationshipTest extends TestCase
     /**
      * Test page relationship creation access.
      */
-    public function testCanGetCreateRelationship()
-    {
+    public function testCanGetCreateRelationship() {
         // Create a temporary editor
         $user = User::factory()->editor()->make();
 
@@ -82,8 +78,7 @@ class PageRelationshipTest extends TestCase
     /**
      * Test page relationship editing access.
      */
-    public function testCanGetEditRelationship()
-    {
+    public function testCanGetEditRelationship() {
         // Create a temporary editor
         $user = User::factory()->editor()->make();
 
@@ -107,8 +102,7 @@ class PageRelationshipTest extends TestCase
     /**
      * Test relationship creation with minimal data.
      */
-    public function testCanPostCreateRelationship()
-    {
+    public function testCanPostCreateRelationship() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -145,8 +139,7 @@ class PageRelationshipTest extends TestCase
     /**
      * Test relationship editing with minimal data.
      */
-    public function testCanPostEditRelationship()
-    {
+    public function testCanPostEditRelationship() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -186,8 +179,7 @@ class PageRelationshipTest extends TestCase
     /**
      * Test relationship creation with type info.
      */
-    public function testCanPostCreateRelationshipWithTypeInfo()
-    {
+    public function testCanPostCreateRelationshipWithTypeInfo() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -228,8 +220,7 @@ class PageRelationshipTest extends TestCase
     /**
      * Test relationship editing with type info.
      */
-    public function testCanPostEditRelationshipWithTypeInfo()
-    {
+    public function testCanPostEditRelationshipWithTypeInfo() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -273,8 +264,7 @@ class PageRelationshipTest extends TestCase
     /**
      * Test relationship creation with details.
      */
-    public function testCanPostCreateRelationshipWithDetails()
-    {
+    public function testCanPostCreateRelationshipWithDetails() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -315,8 +305,7 @@ class PageRelationshipTest extends TestCase
     /**
      * Test relationship editing with details.
      */
-    public function testCanPostEditRelationshipWithDetails()
-    {
+    public function testCanPostEditRelationshipWithDetails() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -360,8 +349,7 @@ class PageRelationshipTest extends TestCase
     /**
      * Test relationship creation with a custom type and info.
      */
-    public function testCanPostCreateRelationshipWithCustomType()
-    {
+    public function testCanPostCreateRelationshipWithCustomType() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -402,8 +390,7 @@ class PageRelationshipTest extends TestCase
     /**
      * Test relationship editing with a custom type and info.
      */
-    public function testCanPostEditRelationshipWithCustomType()
-    {
+    public function testCanPostEditRelationshipWithCustomType() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -448,8 +435,7 @@ class PageRelationshipTest extends TestCase
      * Test relationship creation with a custom type but no info.
      * This shouldn't work.
      */
-    public function testCannotPostCreateRelationshipWithCustomTypeWithoutInfo()
-    {
+    public function testCannotPostCreateRelationshipWithCustomTypeWithoutInfo() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -487,8 +473,7 @@ class PageRelationshipTest extends TestCase
      * Test relationship creation with a custom type but no info.
      * This shouldn't work.
      */
-    public function testCannotPostEditRelationshipWithCustomTypeWithoutInfo()
-    {
+    public function testCannotPostEditRelationshipWithCustomTypeWithoutInfo() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -532,8 +517,7 @@ class PageRelationshipTest extends TestCase
     /**
      * Test page relationship editing access.
      */
-    public function testCanGetDeleteRelationship()
-    {
+    public function testCanGetDeleteRelationship() {
         // Create a temporary editor
         $user = User::factory()->editor()->make();
 
@@ -557,8 +541,7 @@ class PageRelationshipTest extends TestCase
     /**
      * Test relationship deletion.
      */
-    public function testCanPostDeleteRelationship()
-    {
+    public function testCanPostDeleteRelationship() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -589,8 +572,7 @@ class PageRelationshipTest extends TestCase
     /**
      * Test page family tree access.
      */
-    public function testCanGetFamilyTree()
-    {
+    public function testCanGetFamilyTree() {
         // Create a temporary user
         $user = User::factory()->make();
 
@@ -615,8 +597,7 @@ class PageRelationshipTest extends TestCase
      * Test page family tree access without relationships.
      * This shouldn't work.
      */
-    public function testCannotGetFamilyTreeWithoutRelationships()
-    {
+    public function testCannotGetFamilyTreeWithoutRelationships() {
         // Create a temporary user
         $user = User::factory()->make();
 
@@ -636,8 +617,7 @@ class PageRelationshipTest extends TestCase
      * Test page family tree access without any familial relationships.
      * This shouldn't work.
      */
-    public function testCannotGetFamilyTreeWithoutFamily()
-    {
+    public function testCannotGetFamilyTreeWithoutFamily() {
         // Create a temporary user
         $user = User::factory()->make();
 

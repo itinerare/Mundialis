@@ -11,8 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class SubjectDataTimeTest extends TestCase
-{
+class SubjectDataTimeTest extends TestCase {
     use RefreshDatabase, withFaker;
 
     /******************************************************************************
@@ -22,8 +21,7 @@ class SubjectDataTimeTest extends TestCase
     /**
      * Test time divisions access.
      */
-    public function testCanGetEditTimeDivisions()
-    {
+    public function testCanGetEditTimeDivisions() {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
 
@@ -35,8 +33,7 @@ class SubjectDataTimeTest extends TestCase
     /**
      * Test time division creation.
      */
-    public function testCanPostCreateTimeDivision()
-    {
+    public function testCanPostCreateTimeDivision() {
         // Define some basic template data
         $data = [
             'name'         => [0 => $this->faker->unique()->domainWord()],
@@ -63,8 +60,7 @@ class SubjectDataTimeTest extends TestCase
     /**
      * Test time division editing.
      */
-    public function testCanPostEditTimeDivisions()
-    {
+    public function testCanPostEditTimeDivisions() {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
 
@@ -95,8 +91,7 @@ class SubjectDataTimeTest extends TestCase
     /**
      * Test time chronologies access.
      */
-    public function testCanGetTimeChronologies()
-    {
+    public function testCanGetTimeChronologies() {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
 
@@ -108,8 +103,7 @@ class SubjectDataTimeTest extends TestCase
     /**
      * Test time chronology create access.
      */
-    public function testCanGetCreateTimeChronology()
-    {
+    public function testCanGetCreateTimeChronology() {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
 
@@ -121,8 +115,7 @@ class SubjectDataTimeTest extends TestCase
     /**
      * Test time chronology edit access.
      */
-    public function testCanGetEditTimeChronology()
-    {
+    public function testCanGetEditTimeChronology() {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
         $chronology = TimeChronology::factory()->create();
@@ -135,8 +128,7 @@ class SubjectDataTimeTest extends TestCase
     /**
      * Test time chronology creation.
      */
-    public function testCanPostCreateTimeChronology()
-    {
+    public function testCanPostCreateTimeChronology() {
         // Define some basic template data
         $data = [
             'name'        => $this->faker->unique()->domainWord(),
@@ -161,8 +153,7 @@ class SubjectDataTimeTest extends TestCase
     /**
      * Test time chronology editing.
      */
-    public function testCanPostEditTimeChronology()
-    {
+    public function testCanPostEditTimeChronology() {
         $chronology = TimeChronology::factory()->create();
 
         // Define some basic template data
@@ -188,8 +179,7 @@ class SubjectDataTimeTest extends TestCase
     /**
      * Test time chronology creation with a parent.
      */
-    public function testCanPostCreateTimeChronologyWithParent()
-    {
+    public function testCanPostCreateTimeChronologyWithParent() {
         $parent = TimeChronology::factory()->create();
 
         // Define some basic template data
@@ -216,8 +206,7 @@ class SubjectDataTimeTest extends TestCase
     /**
      * Test time chronology editing with a parent.
      */
-    public function testCanPostEditTimeChronologyWithParent()
-    {
+    public function testCanPostEditTimeChronologyWithParent() {
         $chronology = TimeChronology::factory()->create();
         $parent = TimeChronology::factory()->create();
 
@@ -246,8 +235,7 @@ class SubjectDataTimeTest extends TestCase
     /**
      * Test chronology delete access.
      */
-    public function testCanGetDeleteTimeChronology()
-    {
+    public function testCanGetDeleteTimeChronology() {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
         $chronology = TimeChronology::factory()->create();
@@ -261,8 +249,7 @@ class SubjectDataTimeTest extends TestCase
      * Test chronology deletion.
      * This should work.
      */
-    public function testCanPostDeleteTimeChronology()
-    {
+    public function testCanPostDeleteTimeChronology() {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
 
@@ -285,8 +272,7 @@ class SubjectDataTimeTest extends TestCase
      * Test chronology deletion with a page.
      * This shouldn't work.
      */
-    public function testCannotPostDeleteTimeChronologyWithPage()
-    {
+    public function testCannotPostDeleteTimeChronologyWithPage() {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
 
@@ -312,8 +298,7 @@ class SubjectDataTimeTest extends TestCase
      * Test chronology deletion with a sub-category.
      * This shouldn't work.
      */
-    public function testCannotPostDeleteTimeChronologyWithSubchronology()
-    {
+    public function testCannotPostDeleteTimeChronologyWithSubchronology() {
         // Make a temporary admin
         $user = User::factory()->admin()->make();
 

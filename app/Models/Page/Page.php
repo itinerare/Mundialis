@@ -9,8 +9,7 @@ use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Page extends Model
-{
+class Page extends Model {
     use HasFactory, SoftDeletes;
 
     /**
@@ -63,16 +62,14 @@ class Page extends Model
     /**
      * Get the category this page belongs to.
      */
-    public function category()
-    {
+    public function category() {
         return $this->belongsTo('App\Models\Subject\SubjectCategory', 'category_id');
     }
 
     /**
      * Get the parent this page belongs to.
      */
-    public function parent()
-    {
+    public function parent() {
         if ($this->category->subject['key'] == 'time') {
             return $this->belongsTo('App\Models\Subject\TimeChronology', 'parent_id');
         }
@@ -83,88 +80,77 @@ class Page extends Model
     /**
      * Get this page's primary image.
      */
-    public function image()
-    {
+    public function image() {
         return $this->hasOne('App\Models\Page\PageImage', 'id', 'image_id');
     }
 
     /**
      * Get this page's images.
      */
-    public function images()
-    {
+    public function images() {
         return $this->belongsToMany('App\Models\Page\PageImage')->using('App\Models\Page\PagePageImage')->withPivot('is_valid');
     }
 
     /**
      * Get this page's versions.
      */
-    public function versions()
-    {
+    public function versions() {
         return $this->hasMany('App\Models\Page\PageVersion');
     }
 
     /**
      * Get this page's protection records.
      */
-    public function protections()
-    {
+    public function protections() {
         return $this->hasMany('App\Models\Page\PageProtection');
     }
 
     /**
      * Get this page's tags.
      */
-    public function tags()
-    {
+    public function tags() {
         return $this->hasMany('App\Models\Page\PageTag')->where('type', '!=', 'utility');
     }
 
     /**
      * Get this page's utility tags.
      */
-    public function utilityTags()
-    {
+    public function utilityTags() {
         return $this->hasMany('App\Models\Page\PageTag')->where('type', 'utility');
     }
 
     /**
      * Get this page's associated links.
      */
-    public function links()
-    {
+    public function links() {
         return $this->hasMany('App\Models\Page\PageLink', 'parent_id')->where('parent_type', 'page');
     }
 
     /**
      * Get this page's associated links.
      */
-    public function linked()
-    {
+    public function linked() {
         return $this->hasMany('App\Models\Page\PageLink', 'link_id');
     }
 
     /**
      * Get this page's relationships.
      */
-    public function relationships()
-    {
+    public function relationships() {
         return $this->hasMany('App\Models\Page\PageRelationship', 'page_one_id', 'id');
     }
 
     /**
      * Get this page's relationships.
      */
-    public function related()
-    {
+    public function related() {
         return $this->hasMany('App\Models\Page\PageRelationship', 'page_two_id', 'id');
     }
 
     /**
      * Get the page's watchers.
      */
-    public function watchers()
-    {
+    public function watchers() {
         return $this->hasManyThrough(
             'App\Models\User\User',
             'App\Models\User\WatchedPage',
@@ -189,8 +175,7 @@ class Page extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeVisible($query, $user = null)
-    {
+    public function scopeVisible($query, $user = null) {
         if ($user && $user->canWrite) {
             return $query;
         }
@@ -206,8 +191,7 @@ class Page extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeSubject($query, $subject)
-    {
+    public function scopeSubject($query, $subject) {
         return $query->whereIn(
             'category_id',
             SubjectCategory::where('subject', $subject)->pluck('id')->toArray()
@@ -222,8 +206,7 @@ class Page extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeTitleSearch($query, $title)
-    {
+    public function scopeTitleSearch($query, $title) {
         return $query->where('title', $title);
     }
 
@@ -238,8 +221,7 @@ class Page extends Model
      *
      * @return \App\Models\Page\PageVersion
      */
-    public function getVersionAttribute()
-    {
+    public function getVersionAttribute() {
         return $this->versions()->orderBy('created_at', 'DESC')->first();
     }
 
@@ -248,8 +230,7 @@ class Page extends Model
      *
      * @return \App\Models\Page\PageProtection
      */
-    public function getProtectionAttribute()
-    {
+    public function getProtectionAttribute() {
         if (!$this->protections->count()) {
             return null;
         }
@@ -262,8 +243,7 @@ class Page extends Model
      *
      * @return array
      */
-    public function getDataAttribute()
-    {
+    public function getDataAttribute() {
         if (!$this->versions->count() || !isset($this->version->data['data'])) {
             return null;
         }
@@ -276,8 +256,7 @@ class Page extends Model
      *
      * @return array
      */
-    public function getParsedDataAttribute()
-    {
+    public function getParsedDataAttribute() {
         if (!$this->versions->count() || !isset($this->version->data['data']['parsed'])) {
             return null;
         }
@@ -290,8 +269,7 @@ class Page extends Model
      *
      * @return string
      */
-    public function getSlugAttribute()
-    {
+    public function getSlugAttribute() {
         return str_replace(' ', '_', $this->title);
     }
 
@@ -300,8 +278,7 @@ class Page extends Model
      *
      * @return string
      */
-    public function getUrlAttribute()
-    {
+    public function getUrlAttribute() {
         return url('pages/'.$this->id.'.'.$this->slug);
     }
 
@@ -310,8 +287,7 @@ class Page extends Model
      *
      * @return string
      */
-    public function getDisplayTitleAttribute()
-    {
+    public function getDisplayTitleAttribute() {
         // Check if there is more than one page with this title
         if ($this->titleSearch($this->title)->count() > 1) {
             $titlePages = $this->titleSearch($this->title);
@@ -333,8 +309,7 @@ class Page extends Model
      *
      * @return string
      */
-    public function getDisplayNameAttribute()
-    {
+    public function getDisplayNameAttribute() {
         // Check to see if this page is currently being viewed/the link would be redundant
         if (url()->current() == $this->url) {
             return $this->displayTitle.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
@@ -348,8 +323,7 @@ class Page extends Model
      *
      * @return string
      */
-    public function getEntryTagsAttribute()
-    {
+    public function getEntryTagsAttribute() {
         $tags = [];
         foreach ($this->tags()->pluck('tag') as $tag) {
             $tags[] = ['tag' => $tag];
@@ -372,8 +346,7 @@ class Page extends Model
      *
      * @return string
      */
-    public function personAge($birth, $current)
-    {
+    public function personAge($birth, $current) {
         if ((isset($birth['date']) && isset($birth['date'][
             str_replace(' ', '_', strtolower(TimeDivision::dateEnabled()->orderBy('sort', 'DESC')->first()->name))
             ])) &&
@@ -425,8 +398,7 @@ class Page extends Model
      *
      * @return array
      */
-    public function personRelations($type = null)
-    {
+    public function personRelations($type = null) {
         // Gather family types depending on the type
         switch ($type) {
             case 'parents':
@@ -498,8 +470,7 @@ class Page extends Model
      *
      * @return \Illuminate\Support\Collection
      */
-    public function timeOrderedEvents($user = null, $chronology = null, $tags = null)
-    {
+    public function timeOrderedEvents($user = null, $chronology = null, $tags = null) {
         // Gather relevant pages
         $timePages = $this->subject('time')->visible($user ? $user : null);
         if ($chronology) {
@@ -546,8 +517,7 @@ class Page extends Model
      *
      * @return \Illuminate\Support\Collection
      */
-    public function timeGroupEvents($group, $divisionKeys, $i = 0)
-    {
+    public function timeGroupEvents($group, $divisionKeys, $i = 0) {
         // Group the pages by the current division
         $group = $group->groupBy(function ($page) use ($divisionKeys, $i) {
             if (isset($page->data['date']['start'][$divisionKeys[$i]])) {

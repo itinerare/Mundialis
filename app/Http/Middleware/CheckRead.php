@@ -5,8 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Settings;
 
-class CheckRead
-{
+class CheckRead {
     /**
      * Redirect visitors to the homepage if site is private.
      *
@@ -14,8 +13,7 @@ class CheckRead
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
-    {
+    public function handle($request, Closure $next) {
         if ($request->user() && $request->user()->is_banned) {
             return redirect('/banned');
         }
