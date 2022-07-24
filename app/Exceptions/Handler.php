@@ -6,8 +6,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
-class Handler extends ExceptionHandler
-{
+class Handler extends ExceptionHandler {
     /**
      * A list of the exception types that are not reported.
      *
@@ -35,8 +34,7 @@ class Handler extends ExceptionHandler
      *
      * @throws \Exception
      */
-    public function report(Throwable $exception)
-    {
+    public function report(Throwable $exception) {
         if ($exception instanceof ValidationException) {
             foreach ($exception->validator->errors()->all() as $message) {
                 flash($message)->error();
@@ -54,8 +52,7 @@ class Handler extends ExceptionHandler
      *
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Throwable $exception)
-    {
+    public function render($request, Throwable $exception) {
         return parent::render($request, $exception);
     }
 }

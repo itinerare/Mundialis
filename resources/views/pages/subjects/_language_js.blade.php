@@ -18,26 +18,23 @@
             setLangCategoryView('langCategoryList');
         });
 
-        function initLangCategoryView()
-        {
+        function initLangCategoryView() {
             langCategoryView = window.localStorage.getItem('mundialis_lang_category_view');
-            if(!langCategoryView) langCategoryView = 'langCategoryList';
+            if (!langCategoryView) langCategoryView = 'langCategoryList';
             setLangCategoryView(langCategoryView);
             console.log(langCategoryView);
         }
 
-        function setLangCategoryView(status)
-        {
+        function setLangCategoryView(status) {
             langCategoryView = status;
 
-            if(langCategoryView == 'langCategoryGrid') {
+            if (langCategoryView == 'langCategoryGrid') {
                 $langCategoryGridView.removeClass('hide');
                 $langCategoryGridButton.addClass('active');
                 $langCategoryListView.addClass('hide');
                 $langCategoryListButton.removeClass('active');
                 window.localStorage.setItem('mundialis_lang_category_view', 'langCategoryGrid');
-            }
-            else if (langCategoryView == 'langCategoryList') {
+            } else if (langCategoryView == 'langCategoryList') {
                 $langCategoryListView.removeClass('hide');
                 $langCategoryListButton.addClass('active');
                 $langCategoryGridView.addClass('hide');

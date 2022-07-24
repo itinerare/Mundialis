@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Tests\TestCase;
 
-class AuthPasswordResetTest extends TestCase
-{
+class AuthPasswordResetTest extends TestCase {
     use RefreshDatabase;
 
     // These tests center on basic user authentication
@@ -23,8 +22,7 @@ class AuthPasswordResetTest extends TestCase
     /**
      * Test password reset access.
      */
-    public function testCanGetPasswordReset()
-    {
+    public function testCanGetPasswordReset() {
         $response = $this->get('forgot-password');
 
         $response->assertStatus(200);
@@ -34,8 +32,7 @@ class AuthPasswordResetTest extends TestCase
      * Test password reset email with a valid user.
      * This should work.
      */
-    public function testCanPostValidPasswordResetEmail()
-    {
+    public function testCanPostValidPasswordResetEmail() {
         $user = User::factory()->create();
 
         $this->expectsNotification($user, ResetPassword::class);
@@ -51,8 +48,7 @@ class AuthPasswordResetTest extends TestCase
      * Test password reset email with an invalid user.
      * This shouldn't work.
      */
-    public function testCannotPostInvalidPasswordResetEmail()
-    {
+    public function testCannotPostInvalidPasswordResetEmail() {
         $this->doesntExpectJobs(ResetPassword::class);
 
         $this->post('forgot-password', [
@@ -63,8 +59,7 @@ class AuthPasswordResetTest extends TestCase
     /**
      * Test password reset form access.
      */
-    public function testCanGetPasswordResetForm()
-    {
+    public function testCanGetPasswordResetForm() {
         $user = User::factory()->create();
 
         $token = Password::createToken($user);
@@ -77,8 +72,7 @@ class AuthPasswordResetTest extends TestCase
     /**
      * Test password resetting.
      */
-    public function testCanResetUserPassword()
-    {
+    public function testCanResetUserPassword() {
         $user = User::factory()->create();
 
         $token = Password::createToken($user);

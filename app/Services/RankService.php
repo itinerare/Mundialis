@@ -6,8 +6,7 @@ use App\Models\User\Rank;
 use App\Models\User\User;
 use DB;
 
-class RankService extends Service
-{
+class RankService extends Service {
     /*
     |--------------------------------------------------------------------------
     | Rank Service
@@ -26,8 +25,7 @@ class RankService extends Service
      *
      * @return bool
      */
-    public function updateRank($rank, $data, $user)
-    {
+    public function updateRank($rank, $data, $user) {
         DB::beginTransaction();
 
         try {

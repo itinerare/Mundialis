@@ -4,13 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddDisplayDetailsToSubjectCategoriesTable extends Migration
-{
+class AddDisplayDetailsToSubjectCategoriesTable extends Migration {
     /**
      * Run the migrations.
      */
-    public function up()
-    {
+    public function up() {
         Schema::table('subject_categories', function (Blueprint $table) {
             //
             $table->string('summary', 255)->nullable()->default(null);
@@ -21,8 +19,7 @@ class AddDisplayDetailsToSubjectCategoriesTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
-    {
+    public function down() {
         Schema::table('subject_categories', function (Blueprint $table) {
             //
             $table->dropColumn('summary');

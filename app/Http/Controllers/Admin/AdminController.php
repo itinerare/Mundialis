@@ -9,8 +9,7 @@ use DB;
 use Illuminate\Http\Request;
 use Settings;
 
-class AdminController extends Controller
-{
+class AdminController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Admin Controller
@@ -25,8 +24,7 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getIndex()
-    {
+    public function getIndex() {
         return view('admin.index');
     }
 
@@ -39,8 +37,7 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSettings()
-    {
+    public function getSettings() {
         return view('admin.settings', [
             'settings' => DB::table('site_settings')->orderBy('key')->get(),
         ]);
@@ -53,8 +50,7 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEditSetting(Request $request, $key)
-    {
+    public function postEditSetting(Request $request, $key) {
         if (!$request->get('value')) {
             $value = 0;
         }
@@ -76,8 +72,7 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSiteImages()
-    {
+    public function getSiteImages() {
         return view('admin.images', [
             'images' => Config::get('mundialis.image_files'),
         ]);
@@ -90,8 +85,7 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postUploadImage(Request $request, FileManager $service)
-    {
+    public function postUploadImage(Request $request, FileManager $service) {
         $request->validate(['file' => 'required|file']);
         $file = $request->file('file');
         $key = $request->get('key');
@@ -115,8 +109,7 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postUploadCss(Request $request, FileManager $service)
-    {
+    public function postUploadCss(Request $request, FileManager $service) {
         $request->validate(['file' => 'required|file']);
         $file = $request->file('file');
 

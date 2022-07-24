@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Settings;
 
-class CreateNewUser implements CreatesNewUsers
-{
+class CreateNewUser implements CreatesNewUsers {
     use PasswordValidationRules;
 
     /**
@@ -20,8 +19,7 @@ class CreateNewUser implements CreatesNewUsers
      *
      * @return \App\Models\User\User
      */
-    public function create(array $input)
-    {
+    public function create(array $input) {
         if (!Settings::get('is_registration_open')) {
             throw new \Exception('Registration is currently closed.');
         }

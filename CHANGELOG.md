@@ -4,6 +4,15 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.1.0](https://github.com/itinerare/Mundialis/compare/v2.0.0...v2.1.0) (2022-07-24)
+
+### Features
+
+* Add code coverage test to composer scripts ([643c8b](https://github.com/itinerare/Mundialis/commit/643c8b0fb40bbbecff66b64e1358067388c92cc9))
+
+
+---
+
 ## [2.0.0](https://github.com/itinerare/Mundialis/compare/v1.3.5...v2.0.0) (2022-05-15)
 ### ⚠ BREAKING CHANGES
 

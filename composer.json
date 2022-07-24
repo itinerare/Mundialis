@@ -19,14 +19,14 @@
         "spatie/laravel-backup": "^8.0"
     },
     "require-dev": {
-        "spatie/laravel-ignition": "^1.0",
         "fakerphp/faker": "^1.9.1",
-        "friendsofphp/php-cs-fixer": "^3.5",
+        "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",
         "marcocesarato/php-conventional-changelog": "^1.10",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.3.3"
+        "phpunit/phpunit": "^9.3.3",
+        "spatie/laravel-ignition": "^1.0"
     },
     "autoload": {
         "psr-4": {
@@ -55,10 +55,13 @@
             "@php artisan key:generate --ansi"
         ],
         "sniff": [
-            "./vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots"
+            "./vendor/bin/pint --test"
         ],
         "lint": [
-            "./vendor/bin/php-cs-fixer fix -vvv --show-progress=dots"
+            "./vendor/bin/pint"
+        ],
+        "test-coverage": [
+            "./vendor/bin/phpunit --coverage-text"
         ],
         "changelog": [
             "./vendor/marcocesarato/php-conventional-changelog/conventional-changelog"
@@ -76,5 +79,5 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "version": "2.0.0"
+    "version": "2.1.0"
 }

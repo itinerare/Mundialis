@@ -5,8 +5,7 @@ namespace App\Models\Lexicon;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class LexiconEntry extends Model
-{
+class LexiconEntry extends Model {
     use HasFactory;
 
     /**
@@ -63,40 +62,35 @@ class LexiconEntry extends Model
     /**
      * Get the category this entry belongs to.
      */
-    public function category()
-    {
+    public function category() {
         return $this->belongsTo('App\Models\Subject\LexiconCategory', 'category_id');
     }
 
     /**
      * Get the part of speech this entry belongs to.
      */
-    public function lexicalClass()
-    {
+    public function lexicalClass() {
         return $this->belongsTo('App\Models\Subject\LexiconSetting', 'class', 'name');
     }
 
     /**
      * Get this entry's roots.
      */
-    public function etymologies()
-    {
+    public function etymologies() {
         return $this->hasMany('App\Models\Lexicon\LexiconEtymology', 'entry_id');
     }
 
     /**
      * Get this entry's descendants.
      */
-    public function descendants()
-    {
+    public function descendants() {
         return $this->hasMany('App\Models\Lexicon\LexiconEtymology', 'parent_id');
     }
 
     /**
      * Get this entry's associated links.
      */
-    public function links()
-    {
+    public function links() {
         return $this->hasMany('App\Models\Page\PageLink', 'parent_id')->where('parent_type', 'entry');
     }
 
@@ -114,8 +108,7 @@ class LexiconEntry extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeVisible($query, $user = null)
-    {
+    public function scopeVisible($query, $user = null) {
         if ($user && $user->canWrite) {
             return $query;
         }
@@ -134,8 +127,7 @@ class LexiconEntry extends Model
      *
      * @return array
      */
-    public function getDataAttribute()
-    {
+    public function getDataAttribute() {
         if (!isset($this->attributes['data'])) {
             return null;
         }
@@ -148,8 +140,7 @@ class LexiconEntry extends Model
      *
      * @return string
      */
-    public function getDisplayNameAttribute()
-    {
+    public function getDisplayNameAttribute() {
         return '<a href="'.($this->category ? $this->category->url.'?word='.$this->word : 'language/lexicon?word='.$this->word).'">'.$this->word.'</a>';
     }
 
@@ -158,8 +149,7 @@ class LexiconEntry extends Model
      *
      * @return string
      */
-    public function getDisplayWordAttribute()
-    {
+    public function getDisplayWordAttribute() {
         return $this->displayName.($this->lexicalClass->abbreviation ? ' <i>'.$this->lexicalClass->abbreviation.'.</i>' : ', '.$this->lexicalClass->name).', "'.$this->meaning.'"'.($this->category ? ' ('.$this->category->displayName.')' : null);
     }
 
@@ -174,8 +164,7 @@ class LexiconEntry extends Model
      *
      * @return string
      */
-    public function getEtymology()
-    {
+    public function getEtymology() {
         if (!$this->etymologies->count()) {
             return null;
         }
@@ -203,8 +192,7 @@ class LexiconEntry extends Model
      *
      * @return string
      */
-    public function getDescendants()
-    {
+    public function getDescendants() {
         if (!$this->descendants->count()) {
             return null;
         }

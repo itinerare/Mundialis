@@ -5,8 +5,7 @@ namespace Database\Factories\Page;
 use App\Models\Page\PagePageImage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PagePageImageFactory extends Factory
-{
+class PagePageImageFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -19,8 +18,7 @@ class PagePageImageFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
         return [
             //
             'is_valid' => 1,
@@ -35,8 +33,7 @@ class PagePageImageFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function page($page)
-    {
+    public function page($page) {
         return $this->state(function (array $attributes) use ($page) {
             return [
                 'page_id' => $page,
@@ -52,8 +49,7 @@ class PagePageImageFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function image($image)
-    {
+    public function image($image) {
         return $this->state(function (array $attributes) use ($image) {
             return [
                 'page_image_id' => $image,
@@ -66,8 +62,7 @@ class PagePageImageFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function invalid()
-    {
+    public function invalid() {
         return $this->state(function (array $attributes) {
             return [
                 'is_valid' => 0,

@@ -5,8 +5,7 @@ namespace Database\Factories;
 use App\Models\Notification;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class NotificationFactory extends Factory
-{
+class NotificationFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -19,8 +18,7 @@ class NotificationFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
         return [
             //
             'is_unread' => 1,
@@ -35,8 +33,7 @@ class NotificationFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function user($user)
-    {
+    public function user($user) {
         return $this->state(function (array $attributes) use ($user) {
             return [
                 'user_id' => $user,
@@ -52,8 +49,7 @@ class NotificationFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function watchedPageUpdated($page = null, $user = null)
-    {
+    public function watchedPageUpdated($page = null, $user = null) {
         return $this->state(function (array $attributes) use ($page, $user) {
             return [
                 'notification_type_id' => 0,
@@ -75,8 +71,7 @@ class NotificationFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function watchedPageImageUpdated($page = null, $user = null)
-    {
+    public function watchedPageImageUpdated($page = null, $user = null) {
         return $this->state(function (array $attributes) use ($page, $user) {
             return [
                 'notification_type_id' => 1,
@@ -98,8 +93,7 @@ class NotificationFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function watchedPageDeleted($page = null, $user = null)
-    {
+    public function watchedPageDeleted($page = null, $user = null) {
         return $this->state(function (array $attributes) use ($page, $user) {
             return [
                 'notification_type_id' => 2,

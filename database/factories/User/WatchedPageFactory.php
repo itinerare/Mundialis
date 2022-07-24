@@ -5,8 +5,7 @@ namespace Database\Factories\User;
 use App\Models\User\WatchedPage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class WatchedPageFactory extends Factory
-{
+class WatchedPageFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -20,8 +19,7 @@ class WatchedPageFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
         return [
             //
         ];
@@ -35,8 +33,7 @@ class WatchedPageFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function page($page)
-    {
+    public function page($page) {
         return $this->state(function (array $attributes) use ($page) {
             return [
                 'page_id' => $page,
@@ -52,8 +49,7 @@ class WatchedPageFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function user($user)
-    {
+    public function user($user) {
         return $this->state(function (array $attributes) use ($user) {
             return [
                 'user_id' => $user,

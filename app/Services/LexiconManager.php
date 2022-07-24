@@ -7,8 +7,7 @@ use App\Models\Lexicon\LexiconEtymology;
 use App\Models\Page\PageLink;
 use DB;
 
-class LexiconManager extends Service
-{
+class LexiconManager extends Service {
     /*
     |--------------------------------------------------------------------------
     | Lexicon Manager
@@ -26,8 +25,7 @@ class LexiconManager extends Service
      *
      * @return \App\Models\Lexicon\LexiconEntry|bool
      */
-    public function createLexiconEntry($data, $user)
-    {
+    public function createLexiconEntry($data, $user) {
         DB::beginTransaction();
 
         try {
@@ -49,11 +47,11 @@ class LexiconManager extends Service
                     foreach ($parseData['links'] as $link) {
                         if (isset($link['link_id']) || isset($link['title'])) {
                             $link = PageLink::create([
-                            'parent_id'   => $entry->id,
-                            'parent_type' => 'entry',
-                            'link_id'     => $link['link_id'] ?? null,
-                            'title'       => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null,
-                        ]);
+                                'parent_id'   => $entry->id,
+                                'parent_type' => 'entry',
+                                'link_id'     => $link['link_id'] ?? null,
+                                'title'       => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null,
+                            ]);
                             if (!$link) {
                                 throw new \Exception('An error occurred while creating a link.');
                             }
@@ -87,8 +85,7 @@ class LexiconManager extends Service
      *
      * @return \App\Models\Lexicon\LexiconEntry|bool
      */
-    public function updateLexiconEntry($entry, $data, $user)
-    {
+    public function updateLexiconEntry($entry, $data, $user) {
         DB::beginTransaction();
 
         try {
@@ -112,11 +109,11 @@ class LexiconManager extends Service
                     foreach ($parseData['links'] as $link) {
                         if ((isset($link['link_id']) && !$entry->links()->where('link_id', $link['link_id'])->first()) || (isset($link['title']) && !$entry->links()->where('title', $link['title'])->first())) {
                             $link = PageLink::create([
-                            'parent_id'   => $entry->id,
-                            'parent_type' => 'entry',
-                            'link_id'     => $link['link_id'] ?? null,
-                            'title'       => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null,
-                        ]);
+                                'parent_id'   => $entry->id,
+                                'parent_type' => 'entry',
+                                'link_id'     => $link['link_id'] ?? null,
+                                'title'       => isset($link['title']) && !isset($link['link_id']) ? $link['title'] : null,
+                            ]);
                             if (!$link) {
                                 throw new \Exception('An error occurred while creating a link.');
                             }
@@ -158,8 +155,7 @@ class LexiconManager extends Service
      *
      * @return bool
      */
-    public function deleteLexiconEntry($entry, $user)
-    {
+    public function deleteLexiconEntry($entry, $user) {
         DB::beginTransaction();
 
         try {
@@ -189,8 +185,7 @@ class LexiconManager extends Service
      *
      * @return array
      */
-    private function processEtymology($entry, $data)
-    {
+    private function processEtymology($entry, $data) {
         DB::beginTransaction();
 
         try {
@@ -241,8 +236,7 @@ class LexiconManager extends Service
      *
      * @return array
      */
-    private function processConjData($entry, $data)
-    {
+    private function processConjData($entry, $data) {
         if (!isset($data['autoconj'])) {
             $data['autoconj'] = 0;
         }

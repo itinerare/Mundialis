@@ -16,8 +16,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class SpecialPageTest extends TestCase
-{
+class SpecialPageTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /******************************************************************************
@@ -27,8 +26,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests all special pages access.
      */
-    public function testCanGetSpecialPages()
-    {
+    public function testCanGetSpecialPages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -40,8 +38,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests untagged pages access.
      */
-    public function testCanGetUntaggedPages()
-    {
+    public function testCanGetUntaggedPages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -53,8 +50,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests untagged pages access with an untagged page.
      */
-    public function testCanGetUntaggedPagesWithPage()
-    {
+    public function testCanGetUntaggedPagesWithPage() {
         $user = User::factory()->make();
 
         $editor = User::factory()->editor()->create();
@@ -70,8 +66,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests most tagged pages access.
      */
-    public function testCanGetMostTaggedPages()
-    {
+    public function testCanGetMostTaggedPages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -83,8 +78,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests most tagged pages access with a tagged page.
      */
-    public function testCanGetMostTaggedPagesWithPage()
-    {
+    public function testCanGetMostTaggedPagesWithPage() {
         $user = User::factory()->make();
 
         $editor = User::factory()->editor()->create();
@@ -100,8 +94,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests least revised pages access.
      */
-    public function testCanGetLeastRevisedPages()
-    {
+    public function testCanGetLeastRevisedPages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -113,8 +106,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests least revised pages access with a page.
      */
-    public function testCanGetLeastRevisedPagesWithPage()
-    {
+    public function testCanGetLeastRevisedPagesWithPage() {
         $user = User::factory()->make();
 
         $editor = User::factory()->editor()->create();
@@ -130,8 +122,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests most revised pages access.
      */
-    public function testCanGetMostRevisedPages()
-    {
+    public function testCanGetMostRevisedPages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -143,8 +134,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests most revised pages access with a page.
      */
-    public function testCanGetMostRevisedPagesWithPage()
-    {
+    public function testCanGetMostRevisedPagesWithPage() {
         $user = User::factory()->make();
 
         $editor = User::factory()->editor()->create();
@@ -160,8 +150,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests most linked pages access.
      */
-    public function testCanGetMostLinkedPages()
-    {
+    public function testCanGetMostLinkedPages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -174,8 +163,7 @@ class SpecialPageTest extends TestCase
      * Tests most linked pages access with a linked page.
      * Does not work in test environment; retained for posterity.
      */
-    public function canGetMostLinkedPagesWithPage()
-    {
+    public function canGetMostLinkedPagesWithPage() {
         $user = User::factory()->make();
 
         $editor = User::factory()->editor()->create();
@@ -195,8 +183,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests recently edited pages access.
      */
-    public function testCanGetRecentlyEditedPages()
-    {
+    public function testCanGetRecentlyEditedPages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -208,8 +195,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests recently edited pages access with a page.
      */
-    public function testCanGetRecentlyEditedPagesWithPage()
-    {
+    public function testCanGetRecentlyEditedPagesWithPage() {
         $user = User::factory()->make();
 
         $editor = User::factory()->editor()->create();
@@ -225,8 +211,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests recently edited images access.
      */
-    public function testCanGetRecentlyEditedImages()
-    {
+    public function testCanGetRecentlyEditedImages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -238,8 +223,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests recently edited images access with an image.
      */
-    public function testCanGetRecentlyEditedImagesWithImage()
-    {
+    public function testCanGetRecentlyEditedImagesWithImage() {
         $user = User::factory()->make();
 
         // Create a persistent editor
@@ -267,8 +251,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests wanted pages access.
      */
-    public function testCanGetWantedPages()
-    {
+    public function testCanGetWantedPages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -280,8 +263,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests wanted pages access with a wanted page.
      */
-    public function testCanGetWantedPagesWithLinks()
-    {
+    public function testCanGetWantedPagesWithLinks() {
         $user = User::factory()->make();
 
         // Make a page and a wanted page link for it
@@ -297,8 +279,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests create wanted page access.
      */
-    public function testCanGetCreateWantedPage()
-    {
+    public function testCanGetCreateWantedPage() {
         $user = User::factory()->editor()->make();
 
         // Make a page and a wanted page link for it
@@ -314,8 +295,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests protected pages access.
      */
-    public function testCanGetProtectedPages()
-    {
+    public function testCanGetProtectedPages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -327,8 +307,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests protected pages access with a page.
      */
-    public function testCanGetProtectedPagesWithPage()
-    {
+    public function testCanGetProtectedPagesWithPage() {
         $user = User::factory()->make();
 
         $admin = User::factory()->admin()->create();
@@ -345,8 +324,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests WIP pages access.
      */
-    public function testCanGetWipPages()
-    {
+    public function testCanGetWipPages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -358,8 +336,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests WIP pages access with a page.
      */
-    public function testCanGetWipPagesWithPage()
-    {
+    public function testCanGetWipPagesWithPage() {
         $user = User::factory()->make();
 
         $editor = User::factory()->editor()->create();
@@ -375,8 +352,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests stub pages access.
      */
-    public function testCanGetStubPages()
-    {
+    public function testCanGetStubPages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -388,8 +364,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests stub pages access with a page.
      */
-    public function testCanGetStubPagesWithPage()
-    {
+    public function testCanGetStubPagesWithPage() {
         $user = User::factory()->make();
 
         $editor = User::factory()->editor()->create();
@@ -405,8 +380,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests outdated pages access.
      */
-    public function testCanGetOutdatedPages()
-    {
+    public function testCanGetOutdatedPages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -418,8 +392,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests outdated pages access with a page.
      */
-    public function testCanGetOutdatedPagesWithPage()
-    {
+    public function testCanGetOutdatedPagesWithPage() {
         $user = User::factory()->make();
 
         $editor = User::factory()->editor()->create();
@@ -435,8 +408,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests pages needing cleanup access.
      */
-    public function testCanGetCleanupPages()
-    {
+    public function testCanGetCleanupPages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -448,8 +420,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests pages needing cleanup access with a page.
      */
-    public function testCanGetCleanupPagesWithPage()
-    {
+    public function testCanGetCleanupPagesWithPage() {
         $user = User::factory()->make();
 
         $editor = User::factory()->editor()->create();
@@ -465,8 +436,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests unwatched pages access.
      */
-    public function testCanGetUnwatchedPages()
-    {
+    public function testCanGetUnwatchedPages() {
         $user = User::factory()->admin()->make();
 
         $response = $this->actingAs($user)
@@ -478,8 +448,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests unwatched pages access with a page.
      */
-    public function testCanGetUnwatchedPagesWithPage()
-    {
+    public function testCanGetUnwatchedPagesWithPage() {
         $user = User::factory()->admin()->make();
 
         $editor = User::factory()->editor()->create();
@@ -499,8 +468,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests all pages access.
      */
-    public function testCanGetAllPages()
-    {
+    public function testCanGetAllPages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -512,8 +480,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests all pages access with a page.
      */
-    public function testCanGetAllPagesWithPage()
-    {
+    public function testCanGetAllPagesWithPage() {
         $user = User::factory()->make();
 
         $editor = User::factory()->editor()->create();
@@ -529,8 +496,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests all tags access.
      */
-    public function testCanGetAllTags()
-    {
+    public function testCanGetAllTags() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -542,8 +508,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests all tags access with a tag.
      */
-    public function testCanGetAllTagsWithTag()
-    {
+    public function testCanGetAllTagsWithTag() {
         $user = User::factory()->make();
 
         $editor = User::factory()->editor()->create();
@@ -559,8 +524,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests all images access.
      */
-    public function testCanGetAllImages()
-    {
+    public function testCanGetAllImages() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -572,8 +536,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests all images access with an image.
      */
-    public function testCanGetAllImagesWithImage()
-    {
+    public function testCanGetAllImagesWithImage() {
         $user = User::factory()->make();
 
         // Create a persistent editor
@@ -601,8 +564,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests deleted pages access.
      */
-    public function testCanGetDeletedPages()
-    {
+    public function testCanGetDeletedPages() {
         $user = User::factory()->admin()->make();
 
         $response = $this->actingAs($user)
@@ -614,8 +576,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests deleted pages access with a page.
      */
-    public function testCanGetDeletedPagesWithPage()
-    {
+    public function testCanGetDeletedPagesWithPage() {
         $user = User::factory()->admin()->create();
 
         $page = Page::factory()->deleted()->create();
@@ -630,8 +591,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests deleted images access.
      */
-    public function testCanGetDeletedImages()
-    {
+    public function testCanGetDeletedImages() {
         $user = User::factory()->admin()->make();
 
         $response = $this->actingAs($user)
@@ -643,8 +603,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests deleted images access with an image.
      */
-    public function testCanGetDeletedImagesWithImage()
-    {
+    public function testCanGetDeletedImagesWithImage() {
         $user = User::factory()->admin()->create();
 
         // Create a page for the image to belong to
@@ -674,8 +633,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests user list access.
      */
-    public function testCanGetUserList()
-    {
+    public function testCanGetUserList() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)
@@ -687,8 +645,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests user list access with a persistent user.
      */
-    public function testCanGetUserListWithUser()
-    {
+    public function testCanGetUserListWithUser() {
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)
@@ -704,8 +661,7 @@ class SpecialPageTest extends TestCase
     /**
      * Tests random page access.
      */
-    public function testCanGetRandomPage()
-    {
+    public function testCanGetRandomPage() {
         $user = User::factory()->make();
 
         $response = $this->actingAs($user)

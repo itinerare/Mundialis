@@ -16,15 +16,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class PageDeleteTest extends TestCase
-{
+class PageDeleteTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /**
      * Test page deletion access.
      */
-    public function testCanGetDeletePage()
-    {
+    public function testCanGetDeletePage() {
         // Create a temporary editor
         $user = User::factory()->editor()->make();
 
@@ -40,8 +38,7 @@ class PageDeleteTest extends TestCase
     /**
      * Test (soft) page deletion.
      */
-    public function testCanPostSoftDeletePage()
-    {
+    public function testCanPostSoftDeletePage() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -62,8 +59,7 @@ class PageDeleteTest extends TestCase
     /**
      * Test (soft) page deletion with a reason.
      */
-    public function testCanPostSoftDeletePageWithReason()
-    {
+    public function testCanPostSoftDeletePageWithReason() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -94,8 +90,7 @@ class PageDeleteTest extends TestCase
     /**
      * Test (soft) page deletion with page content.
      */
-    public function testCanPostSoftDeletePageWithContent()
-    {
+    public function testCanPostSoftDeletePageWithContent() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -120,8 +115,7 @@ class PageDeleteTest extends TestCase
     /**
      * Test (soft) page deletion with an associated image.
      */
-    public function testCanPostSoftDeletePageWithImage()
-    {
+    public function testCanPostSoftDeletePageWithImage() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -155,8 +149,7 @@ class PageDeleteTest extends TestCase
      * Test (soft) page deletion with associated images.
      * As one image is associated with another page, it should not be deleted.
      */
-    public function testCanPostSoftDeletePageWithImages()
-    {
+    public function testCanPostSoftDeletePageWithImages() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -204,8 +197,7 @@ class PageDeleteTest extends TestCase
     /**
      * Test (soft) page deletion with a relation.
      */
-    public function testCanPostSoftDeletePageWithRelationship()
-    {
+    public function testCanPostSoftDeletePageWithRelationship() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -239,8 +231,7 @@ class PageDeleteTest extends TestCase
      * Test (soft) page deletion with a child page.
      * This shouldn't work.
      */
-    public function testCannotPostSoftDeletePageWithChild()
-    {
+    public function testCannotPostSoftDeletePageWithChild() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -269,8 +260,7 @@ class PageDeleteTest extends TestCase
     /**
      * Test full page deletion.
      */
-    public function testCanPostForceDeletePage()
-    {
+    public function testCanPostForceDeletePage() {
         // Make a persistent admin
         $user = User::factory()->admin()->create();
 
@@ -295,8 +285,7 @@ class PageDeleteTest extends TestCase
     /**
      * Test full page deletion with an image.
      */
-    public function testCanPostForceDeletePageWithImage()
-    {
+    public function testCanPostForceDeletePageWithImage() {
         // Make a persistent admin
         $user = User::factory()->admin()->create();
 
@@ -328,8 +317,7 @@ class PageDeleteTest extends TestCase
     /**
      * Test full page deletion with a relationship.
      */
-    public function testCanPostForceDeletePageWithRelationship()
-    {
+    public function testCanPostForceDeletePageWithRelationship() {
         // Make a persistent admin
         $user = User::factory()->admin()->create();
 
@@ -361,8 +349,7 @@ class PageDeleteTest extends TestCase
     /**
      * Test deleted page access.
      */
-    public function testCanGetDeletedPage()
-    {
+    public function testCanGetDeletedPage() {
         // Make a persistent admin
         $user = User::factory()->admin()->create();
 
@@ -379,8 +366,7 @@ class PageDeleteTest extends TestCase
     /**
      * Test restore page access.
      */
-    public function testCanGetRestorePage()
-    {
+    public function testCanGetRestorePage() {
         // Make a persistent admin
         $user = User::factory()->admin()->create();
 
@@ -397,8 +383,7 @@ class PageDeleteTest extends TestCase
     /**
      * Test page restoration.
      */
-    public function testCanPostRestorePage()
-    {
+    public function testCanPostRestorePage() {
         // Make a persistent admin
         $user = User::factory()->admin()->create();
 
@@ -421,8 +406,7 @@ class PageDeleteTest extends TestCase
     /**
      * Test page restoration with a reason.
      */
-    public function testCanPostRestorePageWithReason()
-    {
+    public function testCanPostRestorePageWithReason() {
         // Make a persistent admin
         $user = User::factory()->admin()->create();
 
@@ -456,8 +440,7 @@ class PageDeleteTest extends TestCase
     /**
      * Test page restoration with an associated image.
      */
-    public function testCanPostRestorePageWithImage()
-    {
+    public function testCanPostRestorePageWithImage() {
         // Make a persistent admin
         $user = User::factory()->admin()->create();
 

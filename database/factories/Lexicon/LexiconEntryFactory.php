@@ -6,8 +6,7 @@ use App\Models\Lexicon\LexiconEntry;
 use App\Models\Subject\LexiconSetting;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class LexiconEntryFactory extends Factory
-{
+class LexiconEntryFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -20,8 +19,7 @@ class LexiconEntryFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
         if (LexiconSetting::all()->first()) {
             $class = LexiconSetting::all()->first();
         } else {
@@ -45,8 +43,7 @@ class LexiconEntryFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function category($category)
-    {
+    public function category($category) {
         return $this->state(function (array $attributes) use ($category) {
             return [
                 'category_id' => $category,
@@ -59,8 +56,7 @@ class LexiconEntryFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function conjugationData()
-    {
+    public function conjugationData() {
         return $this->state(function (array $attributes) {
             return [
                 'data' => '{"Singular Nominative":"'.$this->faker->unique()->domainWord().'","Singular Accusative":null,"Singular Dative":null,"Plural Nominative":null,"Plural Accusative":null,"Plural Dative":null}',
@@ -73,8 +69,7 @@ class LexiconEntryFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function extendedConjugationData()
-    {
+    public function extendedConjugationData() {
         return $this->state(function (array $attributes) {
             return [
                 'data' => '{"Singular Nominative":"test","Singular Accusative":null,"Singular Dative":null,"Plural Nominative":null,"Plural Accusative":null,"Plural Dative":null}',

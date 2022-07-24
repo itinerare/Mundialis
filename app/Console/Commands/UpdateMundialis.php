@@ -4,8 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class UpdateMundialis extends Command
-{
+class UpdateMundialis extends Command {
     /**
      * The name and signature of the console command.
      *
@@ -23,8 +22,7 @@ class UpdateMundialis extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
-    {
+    public function handle() {
         //
         $this->info('********************');
         $this->info('* UPDATE MUNDIALIS *');

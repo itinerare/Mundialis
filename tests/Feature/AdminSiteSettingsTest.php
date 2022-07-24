@@ -7,8 +7,7 @@ use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AdminSiteSettingsTest extends TestCase
-{
+class AdminSiteSettingsTest extends TestCase {
     use RefreshDatabase;
 
     /******************************************************************************
@@ -18,8 +17,7 @@ class AdminSiteSettingsTest extends TestCase
     /**
      * Test site settings access.
      */
-    public function testCanGetSiteSettingsIndex()
-    {
+    public function testCanGetSiteSettingsIndex() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
 
@@ -32,8 +30,7 @@ class AdminSiteSettingsTest extends TestCase
     /**
      * Test site setting editing.
      */
-    public function testCanPostEditSiteSetting()
-    {
+    public function testCanPostEditSiteSetting() {
         // Ensure site settings are present to modify
         $this->artisan('add-site-settings');
 

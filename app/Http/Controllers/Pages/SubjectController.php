@@ -16,8 +16,7 @@ use Auth;
 use Config;
 use Illuminate\Http\Request;
 
-class SubjectController extends Controller
-{
+class SubjectController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Pages/Subject Controller
@@ -34,8 +33,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSubject($subject, Request $request)
-    {
+    public function getSubject($subject, Request $request) {
         $subjectKey = $subject;
         $subject = Config::get('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
@@ -111,8 +109,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSubjectCategory($subject, $id, Request $request)
-    {
+    public function getSubjectCategory($subject, $id, Request $request) {
         $category = SubjectCategory::where('id', $id)->first();
         if (!$category) {
             abort(404);
@@ -174,8 +171,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getTimeChronology($id, Request $request)
-    {
+    public function getTimeChronology($id, Request $request) {
         $chronology = TimeChronology::where('id', $id)->first();
         if (!$chronology) {
             abort(404);
@@ -229,8 +225,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getTimeTimeline()
-    {
+    public function getTimeTimeline() {
         if (!TimeDivision::dateEnabled()->count()) {
             abort(404);
         }
@@ -255,8 +250,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getLexiconCategory(Request $request, $id)
-    {
+    public function getLexiconCategory(Request $request, $id) {
         $category = LexiconCategory::where('id', $id)->first();
         if (!$category) {
             abort(404);
@@ -324,8 +318,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getLexiconEntryModal($id)
-    {
+    public function getLexiconEntryModal($id) {
         $entry = LexiconEntry::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
         if (!$entry) {
             abort(404);
@@ -341,8 +334,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCreateLexiconEntry()
-    {
+    public function getCreateLexiconEntry() {
         return view('pages.subjects.create_edit_lexicon_entry', [
             'entry'           => new LexiconEntry,
             'categoryOptions' => LexiconCategory::pluck('name', 'id'),
@@ -358,8 +350,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditLexiconEntry($id)
-    {
+    public function getEditLexiconEntry($id) {
         $entry = LexiconEntry::where('id', $id)->first();
         if (!$entry) {
             abort(404);
@@ -381,8 +372,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCreateEditLexiconEntry(Request $request, LexiconManager $service, $id = null)
-    {
+    public function postCreateEditLexiconEntry(Request $request, LexiconManager $service, $id = null) {
         $id ? $request->validate(LexiconEntry::$updateRules) : $request->validate(LexiconEntry::$createRules);
 
         $data = $request->only([
@@ -413,8 +403,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getDeleteLexiconEntry($id)
-    {
+    public function getDeleteLexiconEntry($id) {
         $entry = LexiconEntry::where('id', $id)->first();
         if (!$entry) {
             abort(404);
@@ -433,8 +422,7 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postDeleteLexiconEntry(Request $request, LexiconManager $service, $id)
-    {
+    public function postDeleteLexiconEntry(Request $request, LexiconManager $service, $id) {
         if ($id && $service->deleteLexiconEntry(LexiconEntry::find($id), Auth::user())) {
             flash('Lexicon entry deleted successfully.')->success();
         } else {

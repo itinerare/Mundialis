@@ -4,8 +4,7 @@ namespace App\Models\User;
 
 use App\Models\Model;
 
-class Rank extends Model
-{
+class Rank extends Model {
     /**
      * The attributes that are mass assignable.
      *
@@ -42,8 +41,7 @@ class Rank extends Model
      *
      * @return bool
      */
-    public function getIsAdminAttribute()
-    {
+    public function getIsAdminAttribute() {
         if ($this->id == self::orderBy('sort', 'DESC')->first()->id) {
             return true;
         }
@@ -56,8 +54,7 @@ class Rank extends Model
      *
      * @return bool
      */
-    public function getCanWriteAttribute()
-    {
+    public function getCanWriteAttribute() {
         if ($this->id == self::orderBy('sort', 'DESC')->skip(1)->first()->id || $this->isAdmin) {
             return true;
         }

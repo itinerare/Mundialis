@@ -4,13 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePageRelationshipsTable extends Migration
-{
+class CreatePageRelationshipsTable extends Migration {
     /**
      * Run the migrations.
      */
-    public function up()
-    {
+    public function up() {
         Schema::create('page_relationships', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
@@ -31,8 +29,7 @@ class CreatePageRelationshipsTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('page_relationships');
     }
 }

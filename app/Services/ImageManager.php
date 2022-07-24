@@ -15,8 +15,7 @@ use Illuminate\Http\UploadedFile;
 use Image;
 use Notifications;
 
-class ImageManager extends Service
-{
+class ImageManager extends Service {
     /*
     |--------------------------------------------------------------------------
     | Image Manager
@@ -35,8 +34,7 @@ class ImageManager extends Service
      *
      * @return \App\Models\Page\PageImage|bool
      */
-    public function createPageImage($data, $page, $user)
-    {
+    public function createPageImage($data, $page, $user) {
         DB::beginTransaction();
 
         try {
@@ -113,8 +111,7 @@ class ImageManager extends Service
      *
      * @return \App\Models\Page\Page|bool
      */
-    public function updatePageImage($page, $image, $data, $user)
-    {
+    public function updatePageImage($page, $image, $data, $user) {
         DB::beginTransaction();
 
         try {
@@ -210,8 +207,7 @@ class ImageManager extends Service
      *
      * @return bool
      */
-    public function restorePageImage($image, $user, $reason)
-    {
+    public function restorePageImage($image, $user, $reason) {
         DB::beginTransaction();
 
         try {
@@ -242,8 +238,7 @@ class ImageManager extends Service
      *
      * @return bool
      */
-    public function deletePageImage($image, $user, $reason, $forceDelete = false)
-    {
+    public function deletePageImage($image, $user, $reason, $forceDelete = false) {
         DB::beginTransaction();
 
         try {
@@ -302,8 +297,7 @@ class ImageManager extends Service
      *
      * @return \App\Models\Page\PageImageVersion|bool
      */
-    public function logImageVersion($imageId, $userId, $imageData, $type, $reason, $data, $isMinor = false)
-    {
+    public function logImageVersion($imageId, $userId, $imageData, $type, $reason, $data, $isMinor = false) {
         try {
             $version = PageImageVersion::create([
                 'page_image_id' => $imageId,
@@ -337,8 +331,7 @@ class ImageManager extends Service
      *
      * @return bool
      */
-    public function testImages($image, $version)
-    {
+    public function testImages($image, $version) {
         // Generate the fake files to save
         $file['image'] = UploadedFile::fake()->image('test_image.png');
         $file['thumbnail'] = UploadedFile::fake()->image('test_thumb.png');
@@ -360,8 +353,7 @@ class ImageManager extends Service
      *
      * @return \App\Models\Page\PageImage|bool
      */
-    private function handlePageImage($data, $page, $user, $image = null)
-    {
+    private function handlePageImage($data, $page, $user, $image = null) {
         try {
             // Process data stored on the image
             $imageData['description'] = $data['description'] ?? null;
@@ -570,8 +562,7 @@ class ImageManager extends Service
      * @param \App\Models\Page\PageImage        $pageImage
      * @param \App\Models\Page\PageImageVersion $version
      */
-    private function cropThumbnail($points, $pageImage, $version)
-    {
+    private function cropThumbnail($points, $pageImage, $version) {
         $image = Image::make($pageImage->imagePath.'/'.$version->imageFileName);
 
         if (Config::get('mundialis.settings.watermark_image_thumbnails') == 1) {
@@ -604,23 +595,22 @@ class ImageManager extends Service
             $trimOffsetY = $imageHeightOld - $image->height();
 
             // Now shrink the image
-            {
-                $imageWidth = $image->width();
-                $imageHeight = $image->height();
 
-                if ($imageWidth > $imageHeight) {
-                    // Landscape
-                    $image->resize(null, $cropWidth, function ($constraint) {
-                        $constraint->aspectRatio();
-                        $constraint->upsize();
-                    });
-                } else {
-                    // Portrait
-                    $image->resize($cropHeight, null, function ($constraint) {
-                        $constraint->aspectRatio();
-                        $constraint->upsize();
-                    });
-                }
+            $imageWidth = $image->width();
+            $imageHeight = $image->height();
+
+            if ($imageWidth > $imageHeight) {
+                // Landscape
+                $image->resize(null, $cropWidth, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+            } else {
+                // Portrait
+                $image->resize($cropHeight, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
             }
         } else {
             $cropWidth = $points['x1'] - $points['x0'];
@@ -646,8 +636,7 @@ class ImageManager extends Service
      *
      * @return array
      */
-    private function processVersionData($data)
-    {
+    private function processVersionData($data) {
         // Record image information for inclusion in version data
         $versionData = [
             'is_visible'  => $data['is_visible'],

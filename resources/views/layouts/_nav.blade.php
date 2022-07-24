@@ -3,21 +3,23 @@
         <a class="navbar-brand" href="{{ url('/') }}">
             {{ config('mundialis.settings.site_name', 'Mundialis') }}
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
-            @if(Settings::get('visitors_can_read') || Auth::check())
+            @if (Settings::get('visitors_can_read') || Auth::check())
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="{{ url('/') }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="{{ url('/') }}"
+                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             Subjects <span class="caret"></span>
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdown">
-                            @foreach(Config::get('mundialis.subjects') as $subject=>$values)
+                            @foreach (Config::get('mundialis.subjects') as $subject => $values)
                                 <a class="dropdown-item" href="{{ url($subject) }}">
                                     {{ $values['name'] }}
                                 </a>
@@ -26,7 +28,8 @@
                     </li>
 
                     <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="{{ url('/') }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="{{ url('/') }}"
+                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             Special Pages <span class="caret"></span>
                         </a>
 
@@ -40,10 +43,10 @@
                             <a class="dropdown-item" href="{{ url('special/random-page') }}">
                                 Random Page
                             </a>
-                            @if(Auth::check() && Auth::user()->canWrite)
+                            @if (Auth::check() && Auth::user()->canWrite)
                                 <div class="dropdown-divider"></div>
-                                @foreach(Config::get('mundialis.utility_tags') as $key=>$tag)
-                                    <a class="dropdown-item" href="{{ url('special/'.$key.'-pages') }}">
+                                @foreach (Config::get('mundialis.utility_tags') as $key => $tag)
+                                    <a class="dropdown-item" href="{{ url('special/' . $key . '-pages') }}">
                                         {{ $tag['name'] }}
                                     </a>
                                 @endforeach
@@ -69,19 +72,21 @@
                         </li>
                     @endif
                 @else
-                    @if(Auth::user()->isAdmin)
+                    @if (Auth::user()->isAdmin)
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('admin') }}"><i class="fas fa-crown"></i></a>
                         </li>
                     @endif
-                    @if(Auth::user()->notifications_unread)
+                    @if (Auth::user()->notifications_unread)
                         <li class="nav-item">
-                            <a class="nav-link btn btn-secondary btn-sm" href="{{ url('notifications') }}"><span class="fas fa-envelope"></span> {{ Auth::user()->notifications_unread }}</a>
+                            <a class="nav-link btn btn-secondary btn-sm" href="{{ url('notifications') }}"><span
+                                    class="fas fa-envelope"></span> {{ Auth::user()->notifications_unread }}</a>
                         </li>
                     @endif
 
                     <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="{{ Auth::user()->url }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="{{ Auth::user()->url }}"
+                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ Auth::user()->name }} <span class="caret"></span>
                         </a>
 

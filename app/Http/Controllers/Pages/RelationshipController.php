@@ -11,8 +11,7 @@ use Auth;
 use Config;
 use Illuminate\Http\Request;
 
-class RelationshipController extends Controller
-{
+class RelationshipController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Relationship Controller
@@ -29,8 +28,7 @@ class RelationshipController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getPageRelationships(Request $request, $id)
-    {
+    public function getPageRelationships(Request $request, $id) {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
@@ -82,8 +80,7 @@ class RelationshipController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getPageFamilyTree($id)
-    {
+    public function getPageFamilyTree($id) {
         $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
@@ -106,8 +103,7 @@ class RelationshipController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCreateRelationship($id)
-    {
+    public function getCreateRelationship($id) {
         $page = Page::where('id', $id)->first();
         if (!$page) {
             abort(404);
@@ -134,8 +130,7 @@ class RelationshipController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditRelationship($pageId, $id)
-    {
+    public function getEditRelationship($pageId, $id) {
         $page = Page::where('id', $pageId)->first();
         if (!$page) {
             abort(404);
@@ -167,8 +162,7 @@ class RelationshipController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCreateEditRelationship(Request $request, RelationshipManager $service, $pageId, $id = null)
-    {
+    public function postCreateEditRelationship(Request $request, RelationshipManager $service, $pageId, $id = null) {
         $request->validate(PageRelationship::$rules);
 
         $data = $request->only([
@@ -208,8 +202,7 @@ class RelationshipController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getDeleteRelationship($pageId, $id)
-    {
+    public function getDeleteRelationship($pageId, $id) {
         $page = Page::where('id', $pageId)->first();
         if (!$page) {
             abort(404);
@@ -237,8 +230,7 @@ class RelationshipController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postDeleteRelationship(Request $request, RelationshipManager $service, $pageId, $id)
-    {
+    public function postDeleteRelationship(Request $request, RelationshipManager $service, $pageId, $id) {
         if ($id && $service->deletePageRelationship(PageRelationship::find($id), Auth::user())) {
             flash('Image deleted successfully.')->success();
         } else {

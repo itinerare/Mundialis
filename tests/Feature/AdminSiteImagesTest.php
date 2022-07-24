@@ -8,8 +8,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
-class AdminSiteImagesTest extends TestCase
-{
+class AdminSiteImagesTest extends TestCase {
     use RefreshDatabase;
 
     /******************************************************************************
@@ -19,8 +18,7 @@ class AdminSiteImagesTest extends TestCase
     /**
      * Test site image index access.
      */
-    public function testCanGetSiteImagesIndex()
-    {
+    public function testCanGetSiteImagesIndex() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
 
@@ -33,8 +31,7 @@ class AdminSiteImagesTest extends TestCase
     /**
      * Test site image uploading.
      */
-    public function testCanPostEditSiteImage()
-    {
+    public function testCanPostEditSiteImage() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
 
@@ -65,8 +62,7 @@ class AdminSiteImagesTest extends TestCase
     /**
      * Test custom css uploading.
      */
-    public function testCanPostEditSiteCss()
-    {
+    public function testCanPostEditSiteCss() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
 

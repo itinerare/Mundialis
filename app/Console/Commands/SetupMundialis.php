@@ -4,8 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class SetupMundialis extends Command
-{
+class SetupMundialis extends Command {
     /**
      * The name and signature of the console command.
      *
@@ -23,8 +22,7 @@ class SetupMundialis extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
-    {
+    public function handle() {
         //
         $this->info('********************');
         $this->info('* SET UP MUNDIALIS *');

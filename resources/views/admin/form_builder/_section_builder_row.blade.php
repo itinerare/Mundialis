@@ -5,7 +5,10 @@
         <div class="col-md">
             <div class="form-group">
                 {!! Form::label('Section Key') !!}
-                {!! Form::text('section_key[]', null, ['class' => 'form-control', 'placeholder' => 'Internal key. Can\'t be duplicated in a template']) !!}
+                {!! Form::text('section_key[]', null, [
+                    'class' => 'form-control',
+                    'placeholder' => 'Internal key. Can\'t be duplicated in a template',
+                ]) !!}
             </div>
         </div>
         <div class="col-md">
@@ -15,5 +18,5 @@
             </div>
         </div>
     </div>
-    <hr/>
+    <hr />
 </div>

@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Str;
 
-class UserFactory extends Factory
-{
+class UserFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -22,8 +21,7 @@ class UserFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
         // First things first, check if user ranks exist...
         if (!Rank::count()) {
             // Create ranks if not already present.
@@ -64,8 +62,7 @@ class UserFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function safeUsername()
-    {
+    public function safeUsername() {
         return $this->state(function (array $attributes) {
             return [
                 'name' => $this->faker->unique()->domainWord(),
@@ -78,8 +75,7 @@ class UserFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function simplePass()
-    {
+    public function simplePass() {
         return $this->state(function (array $attributes) {
             return [
                 'password' => Hash::make('simple_password'),
@@ -92,8 +88,7 @@ class UserFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function banned()
-    {
+    public function banned() {
         return $this->state(function (array $attributes) {
             return [
                 'is_banned'  => 1,
@@ -108,8 +103,7 @@ class UserFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function editor()
-    {
+    public function editor() {
         return $this->state(function (array $attributes) {
             return [
                 'rank_id' => Rank::orderBy('sort', 'DESC')->skip(1)->first(),
@@ -122,8 +116,7 @@ class UserFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function admin()
-    {
+    public function admin() {
         return $this->state(function (array $attributes) {
             return [
                 'rank_id' => Rank::orderBy('sort', 'DESC')->first(),

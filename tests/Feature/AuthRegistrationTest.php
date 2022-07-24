@@ -8,8 +8,7 @@ use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AuthRegistrationTest extends TestCase
-{
+class AuthRegistrationTest extends TestCase {
     use RefreshDatabase;
 
     // These tests center on basic user authentication
@@ -24,8 +23,7 @@ class AuthRegistrationTest extends TestCase
      * This should always return positive regardless of
      * whether registration is currently open or not.
      */
-    public function testCanGetRegisterForm()
-    {
+    public function testCanGetRegisterForm() {
         $response = $this->get('/register');
 
         $response->assertStatus(200);
@@ -35,8 +33,7 @@ class AuthRegistrationTest extends TestCase
      * Test registration.
      * A valid user cannot be registered when registration is closed.
      */
-    public function testCannotPostValidRegistrationWhenClosed()
-    {
+    public function testCannotPostValidRegistrationWhenClosed() {
         // Ensure site settings are present to modify
         $this->artisan('add-site-settings');
 
@@ -65,8 +62,7 @@ class AuthRegistrationTest extends TestCase
      * Test registration.
      * Registration requires an invitation code.
      */
-    public function testCannotPostValidRegistrationWhenOpenWithoutCode()
-    {
+    public function testCannotPostValidRegistrationWhenOpenWithoutCode() {
         // Ensure site settings are present to modify
         $this->artisan('add-site-settings');
 
@@ -93,8 +89,7 @@ class AuthRegistrationTest extends TestCase
      * Test registration.
      * Registration requires a valid invitation code.
      */
-    public function testCannotPostValidRegistrationWhenOpenWithInvalidCode()
-    {
+    public function testCannotPostValidRegistrationWhenOpenWithInvalidCode() {
         // Ensure site settings are present to modify
         $this->artisan('add-site-settings');
 
@@ -121,8 +116,7 @@ class AuthRegistrationTest extends TestCase
      * Test registration.
      * Registration requires a valid, unused invitation code.
      */
-    public function testCannotPostValidRegistrationWhenOpenWithUsedCode()
-    {
+    public function testCannotPostValidRegistrationWhenOpenWithUsedCode() {
         // Ensure site settings are present to modify
         $this->artisan('add-site-settings');
 
@@ -158,8 +152,7 @@ class AuthRegistrationTest extends TestCase
      * Test registration.
      * Ensure valid user (with unused invitation code) can be registered.
      */
-    public function testCanPostValidRegistrationWhenOpenWithCode()
-    {
+    public function testCanPostValidRegistrationWhenOpenWithCode() {
         // Ensure site settings are present to modify
         $this->artisan('add-site-settings');
 
@@ -190,8 +183,7 @@ class AuthRegistrationTest extends TestCase
      * Test registration.
      * Ensure an invalid user cannot be registered.
      */
-    public function testCannotPostInvalidRegistration()
-    {
+    public function testCannotPostInvalidRegistration() {
         // Ensure site settings are present
         $this->artisan('add-site-settings');
 

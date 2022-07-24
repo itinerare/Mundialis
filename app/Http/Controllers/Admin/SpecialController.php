@@ -12,8 +12,7 @@ use App\Services\PageManager;
 use Auth;
 use Illuminate\Http\Request;
 
-class SpecialController extends Controller
-{
+class SpecialController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Admin/Special Controller
@@ -28,8 +27,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getUnwatchedPages(Request $request)
-    {
+    public function getUnwatchedPages(Request $request) {
         $query = Page::visible(Auth::check() ? Auth::user() : null)->get()
         ->filter(function ($page) {
             return $page->watchers->count() == 0;
@@ -45,8 +43,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getDeletedPages(Request $request)
-    {
+    public function getDeletedPages(Request $request) {
         // Fetch deleted pages with their most recent version
         $query = Page::withTrashed()->whereNotNull('deleted_at');
         $sort = $request->only(['sort']);
@@ -81,8 +78,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getDeletedPage($id)
-    {
+    public function getDeletedPage($id) {
         $page = Page::withTrashed()->where('id', $id)->first();
         if (!$page) {
             abort(404);
@@ -102,8 +98,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getRestorePage($id)
-    {
+    public function getRestorePage($id) {
         $page = Page::withTrashed()->find($id);
 
         return view('admin.special._restore_page', [
@@ -119,8 +114,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postRestorePage(Request $request, PageManager $service, $id)
-    {
+    public function postRestorePage(Request $request, PageManager $service, $id) {
         if ($id && $service->restorePage(Page::withTrashed()->find($id), Auth::user(), $request->get('reason'))) {
             flash('Page restored successfully.')->success();
         } else {
@@ -139,8 +133,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getDeletedImages(Request $request)
-    {
+    public function getDeletedImages(Request $request) {
         // Fetch deleted images with their most recent version
         $query = PageImage::withTrashed()->whereNotNull('deleted_at');
         $sort = $request->only(['sort']);
@@ -175,8 +168,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getDeletedImage(Request $request, $id)
-    {
+    public function getDeletedImage(Request $request, $id) {
         $image = PageImage::withTrashed()->where('id', $id)->first();
         if (!$image) {
             abort(404);
@@ -216,8 +208,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getRestoreImage($id)
-    {
+    public function getRestoreImage($id) {
         $image = PageImage::withTrashed()->find($id);
         if (!$image->pages->count()) {
             abort(404);
@@ -236,8 +227,7 @@ class SpecialController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postRestoreImage(Request $request, ImageManager $service, $id)
-    {
+    public function postRestoreImage(Request $request, ImageManager $service, $id) {
         $image = PageImage::withTrashed()->find($id);
         if (!$image->pages->count()) {
             abort(404);

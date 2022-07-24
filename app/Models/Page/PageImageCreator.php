@@ -5,8 +5,7 @@ namespace App\Models\Page;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class PageImageCreator extends Model
-{
+class PageImageCreator extends Model {
     use HasFactory;
 
     /**
@@ -50,16 +49,14 @@ class PageImageCreator extends Model
     /**
      * Get the image this creator belongs to.
      */
-    public function image()
-    {
+    public function image() {
         return $this->belongsTo('App\Models\Page\PageImage');
     }
 
     /**
      * Get the user this creator belongs to.
      */
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo('App\Models\User\User');
     }
 
@@ -74,8 +71,7 @@ class PageImageCreator extends Model
      *
      * @return string
      */
-    public function getDisplayNameAttribute()
-    {
+    public function getDisplayNameAttribute() {
         if (isset($this->user_id) && $this->user) {
             return $this->user->displayName;
         } elseif (isset($this->url)) {

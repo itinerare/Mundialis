@@ -5,8 +5,7 @@ namespace App\Models\Page;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class PageProtection extends Model
-{
+class PageProtection extends Model {
     use HasFactory;
 
     /**
@@ -41,16 +40,14 @@ class PageProtection extends Model
     /**
      * Get the page this version belongs to.
      */
-    public function page()
-    {
+    public function page() {
         return $this->belongsTo('App\Models\Page\Page');
     }
 
     /**
      * Get the user this version belongs to.
      */
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo('App\Models\User\User');
     }
 }

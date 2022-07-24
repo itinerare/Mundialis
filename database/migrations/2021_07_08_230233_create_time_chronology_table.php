@@ -4,13 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTimeChronologyTable extends Migration
-{
+class CreateTimeChronologyTable extends Migration {
     /**
      * Run the migrations.
      */
-    public function up()
-    {
+    public function up() {
         // Add chronologies table
         Schema::create('time_chronology', function (Blueprint $table) {
             $table->engine = 'InnoDB';
@@ -44,8 +42,7 @@ class CreateTimeChronologyTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('time_chronology');
         Schema::dropIfExists('time_divisions');
     }

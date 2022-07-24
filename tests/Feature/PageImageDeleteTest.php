@@ -13,15 +13,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class PageImageDeleteTest extends TestCase
-{
+class PageImageDeleteTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /**
      * Test image deletion access.
      */
-    public function testCanGetDeleteImage()
-    {
+    public function testCanGetDeleteImage() {
         // Create a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -48,8 +46,7 @@ class PageImageDeleteTest extends TestCase
     /**
      * Test (soft) image deletion.
      */
-    public function testCanPostSoftDeleteImage()
-    {
+    public function testCanPostSoftDeleteImage() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -79,8 +76,7 @@ class PageImageDeleteTest extends TestCase
     /**
      * Test (soft) image deletion with a reason.
      */
-    public function testCanPostSoftDeleteImageWithReason()
-    {
+    public function testCanPostSoftDeleteImageWithReason() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -119,8 +115,7 @@ class PageImageDeleteTest extends TestCase
     /**
      * Test (soft) active image deletion.
      */
-    public function testCanPostSoftDeleteActiveImage()
-    {
+    public function testCanPostSoftDeleteActiveImage() {
         // Make a persistent editor
         $user = User::factory()->editor()->create();
 
@@ -158,8 +153,7 @@ class PageImageDeleteTest extends TestCase
     /**
      * Test deleted image access.
      */
-    public function testCanGetDeletedImage()
-    {
+    public function testCanGetDeletedImage() {
         // Make a persistent admin
         $user = User::factory()->admin()->create();
 
@@ -186,8 +180,7 @@ class PageImageDeleteTest extends TestCase
     /**
      * Test image restoration.
      */
-    public function testCanPostRestoreImage()
-    {
+    public function testCanPostRestoreImage() {
         // Make a persistent admin
         $user = User::factory()->admin()->create();
 
@@ -220,8 +213,7 @@ class PageImageDeleteTest extends TestCase
     /**
      * Test page restoration with a reason.
      */
-    public function testCanPostRestoreImageWithReason()
-    {
+    public function testCanPostRestoreImageWithReason() {
         // Make a persistent admin
         $user = User::factory()->admin()->create();
 
@@ -266,8 +258,7 @@ class PageImageDeleteTest extends TestCase
      * Test image restoration for a deleted page.
      * This shouldn't work.
      */
-    public function testCannotPostRestoreDeletedPageImage()
-    {
+    public function testCannotPostRestoreDeletedPageImage() {
         // Make a persistent admin
         $user = User::factory()->admin()->create();
 

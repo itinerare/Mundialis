@@ -5,8 +5,7 @@ namespace Database\Factories\Page;
 use App\Models\Page\PageProtection;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PageProtectionFactory extends Factory
-{
+class PageProtectionFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -19,8 +18,7 @@ class PageProtectionFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
         return [
             //
             'is_protected' => 1,
@@ -36,8 +34,7 @@ class PageProtectionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function page($page)
-    {
+    public function page($page) {
         return $this->state(function (array $attributes) use ($page) {
             return [
                 'page_id' => $page,
@@ -53,8 +50,7 @@ class PageProtectionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function user($user)
-    {
+    public function user($user) {
         return $this->state(function (array $attributes) use ($user) {
             return [
                 'user_id' => $user,
@@ -67,8 +63,7 @@ class PageProtectionFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function unprotected()
-    {
+    public function unprotected() {
         return $this->state(function (array $attributes) {
             return [
                 'is_protected' => 0,

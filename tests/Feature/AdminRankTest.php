@@ -7,8 +7,7 @@ use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AdminRankTest extends TestCase
-{
+class AdminRankTest extends TestCase {
     use RefreshDatabase;
 
     /******************************************************************************
@@ -18,8 +17,7 @@ class AdminRankTest extends TestCase
     /**
      * Test rank index access.
      */
-    public function testCanGetRankIndex()
-    {
+    public function testCanGetRankIndex() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
 
@@ -32,8 +30,7 @@ class AdminRankTest extends TestCase
     /**
      * Test rank edit access.
      */
-    public function testCanGetEditRank()
-    {
+    public function testCanGetEditRank() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
         $rank = Rank::orderBy('sort', 'ASC')->first();
@@ -47,8 +44,7 @@ class AdminRankTest extends TestCase
     /**
      * Test rank editing.
      */
-    public function testCanPostEditRank()
-    {
+    public function testCanPostEditRank() {
         // Make a temporary user
         $user = User::factory()->admin()->make();
         // Get the information for the lowest rank

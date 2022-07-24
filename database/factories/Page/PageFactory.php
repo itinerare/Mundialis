@@ -7,8 +7,7 @@ use App\Models\Subject\SubjectCategory;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PageFactory extends Factory
-{
+class PageFactory extends Factory {
     /**
      * The name of the factory's corresponding model.
      *
@@ -21,8 +20,7 @@ class PageFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition() {
         $category = SubjectCategory::factory()->create();
 
         return [
@@ -39,8 +37,7 @@ class PageFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function category($category)
-    {
+    public function category($category) {
         return $this->state(function (array $attributes) use ($category) {
             return [
                 'category_id' => $category,
@@ -53,8 +50,7 @@ class PageFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function hidden()
-    {
+    public function hidden() {
         return $this->state(function (array $attributes) {
             return [
                 'is_visible' => 0,
@@ -67,8 +63,7 @@ class PageFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function deleted()
-    {
+    public function deleted() {
         return $this->state(function (array $attributes) {
             return [
                 'deleted_at' => Carbon::now(),
