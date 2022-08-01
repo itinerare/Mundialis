@@ -153,8 +153,7 @@
         ) !!}
         @foreach (collect(Config::get('mundialis.utility_tags'))->map(function ($tag, $key) {
                 return $key = $tag['label'];
-            })->toArray()
-        as $key => $answer)
+            })->toArray() as $key => $answer)
             <div class="choice-wrapper">
                 <label>{{ Form::checkbox('utility_tag[]',$key,$page->utilityTags()->tagSearch($key)->first()? $key: null,['class' => 'mr-1']) }}
                     {{ $answer }}</label>

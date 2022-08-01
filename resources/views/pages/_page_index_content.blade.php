@@ -76,8 +76,7 @@
             <div class="col-md">
                 @foreach ($chunk->groupBy(function ($item, $key) {
         return substr(strtolower($item->title), 0, 1);
-    })
-    as $group)
+    }) as $group)
                     <h4>{{ ucfirst(substr($group->first()->title, 0, 1)) }}</h4>
                     <ul>
                         @foreach ($group as $page)
