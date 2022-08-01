@@ -87,9 +87,8 @@
                         <div class="col-md-2 align-self-center">{!! $version->user->displayName !!}</div>
                         <div class="col-md-2 align-self-center">{{ $version->type }}{!! $version->is_minor ? ' (<abbr data-toggle="tooltip" title="This version is minor">m</abbr>)' : '' !!}</div>
                         <div class="col-md align-self-center">
-                            {!! $version->reason ? 'Reason: <i>' . nl2br(htmlentities($version->reason)) . '</i><br/>' : '' !!}<a class="collapse-toggle collapsed"
-                                href="#version-{{ $version->id }}" data-toggle="collapse">Show Raw Data <i
-                                    class="fas fa-caret-right"></i></a></h3>
+                            {!! $version->reason ? 'Reason: <i>' . nl2br(htmlentities($version->reason)) . '</i><br/>' : '' !!}<a class="collapse-toggle collapsed" href="#version-{{ $version->id }}"
+                                data-toggle="collapse">Show Raw Data <i class="fas fa-caret-right"></i></a></h3>
                             <div class="collapse" id="version-{{ $version->id }}">
                                 {{ $version->getRawOriginal('data') }}
                             </div>

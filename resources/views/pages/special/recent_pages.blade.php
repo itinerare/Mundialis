@@ -20,8 +20,7 @@
             30 => '30 Days',
             50 => '50 Days',
             'all' => 'All Time',
-        ]
-        as $mode => $label)
+        ] as $mode => $label)
             @if (Request::url() . (Request::get('mode') ? '?mode=' . Request::get('mode') : '') ==
                 url('special/recent-pages?mode=' . $mode))
                 {{ $label }}

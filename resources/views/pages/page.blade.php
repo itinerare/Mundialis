@@ -22,8 +22,7 @@
     @include('pages._page_header')
 
     @if ($page->utilityTags)
-        @foreach ($page->utilityTags()->where('tag', '!=', 'stub')->get()
-        as $tag)
+        @foreach ($page->utilityTags()->where('tag', '!=', 'stub')->get() as $tag)
             <div class="alert alert-secondary border-danger" style="border-width:0 0 0 10px;">
                 {{ Config::get('mundialis.utility_tags.' . $tag->tag . '.message') }}
                 @if (Auth::check() && Auth::user()->canWrite)
