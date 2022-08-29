@@ -14,7 +14,7 @@
         "axios": "^0.27",
         "blade-formatter": "^1.27.6",
         "bootstrap": "^5.2.0",
-        "jquery": "^3.6.0",
+        "jquery": "^3.6.1",
         "laravel-mix": "^6.0.49",
         "lodash": "^4.17.19",
         "postcss": "^8.4.16",
