@@ -7222,16 +7222,16 @@
         },
         {
             "name": "marcocesarato/php-conventional-changelog",
-            "version": "1.15.4",
+            "version": "1.15.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcocesarato/php-conventional-changelog.git",
-                "reference": "92e3adbe75259f9a88047865324ae8e00cef7c66"
+                "reference": "7dafba3ce8d40ffc82cb2316d812944f17686f31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marcocesarato/php-conventional-changelog/zipball/92e3adbe75259f9a88047865324ae8e00cef7c66",
-                "reference": "92e3adbe75259f9a88047865324ae8e00cef7c66",
+                "url": "https://api.github.com/repos/marcocesarato/php-conventional-changelog/zipball/7dafba3ce8d40ffc82cb2316d812944f17686f31",
+                "reference": "7dafba3ce8d40ffc82cb2316d812944f17686f31",
                 "shasum": ""
             },
             "require": {
@@ -7290,9 +7290,9 @@
             ],
             "support": {
                 "issues": "https://github.com/marcocesarato/php-conventional-changelog/issues",
-                "source": "https://github.com/marcocesarato/php-conventional-changelog/tree/v1.15.4"
+                "source": "https://github.com/marcocesarato/php-conventional-changelog/tree/v1.15.5"
             },
-            "time": "2022-10-27T20:14:09+00:00"
+            "time": "2022-11-04T12:57:02+00:00"
         },
         {
             "name": "mockery/mockery",
