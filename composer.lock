@@ -7220,16 +7220,16 @@
         },
         {
             "name": "marcocesarato/php-conventional-changelog",
-            "version": "1.15.5",
+            "version": "1.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcocesarato/php-conventional-changelog.git",
-                "reference": "7dafba3ce8d40ffc82cb2316d812944f17686f31"
+                "reference": "d901533416515d4f5eaf842ca72130e07bf0834d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marcocesarato/php-conventional-changelog/zipball/7dafba3ce8d40ffc82cb2316d812944f17686f31",
-                "reference": "7dafba3ce8d40ffc82cb2316d812944f17686f31",
+                "url": "https://api.github.com/repos/marcocesarato/php-conventional-changelog/zipball/d901533416515d4f5eaf842ca72130e07bf0834d",
+                "reference": "d901533416515d4f5eaf842ca72130e07bf0834d",
                 "shasum": ""
             },
             "require": {
@@ -7239,7 +7239,10 @@
             },
             "require-dev": {
                 "brainmaestro/composer-git-hooks": "^2.8",
-                "friendsofphp/php-cs-fixer": "^3.8"
+                "friendsofphp/php-cs-fixer": "^3.8",
+                "php-mock/php-mock": "^2.3",
+                "php-mock/php-mock-phpunit": "^2.6",
+                "phpunit/phpunit": "^9.5"
             },
             "bin": [
                 "conventional-changelog"
@@ -7288,9 +7291,9 @@
             ],
             "support": {
                 "issues": "https://github.com/marcocesarato/php-conventional-changelog/issues",
-                "source": "https://github.com/marcocesarato/php-conventional-changelog/tree/v1.15.5"
+                "source": "https://github.com/marcocesarato/php-conventional-changelog/tree/v1.16.0"
             },
-            "time": "2022-11-04T12:57:02+00:00"
+            "time": "2022-11-26T10:26:38+00:00"
         },
         {
             "name": "mockery/mockery",
