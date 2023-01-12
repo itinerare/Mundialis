@@ -113,9 +113,9 @@ class RelationshipController extends Controller {
         }
 
         return view('pages.relationships._create_edit_relationship', [
-            'relationship' => new PageRelationship,
-            'page'         => $page,
-            'pageOptions'  => Page::where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
+            'relationship'        => new PageRelationship,
+            'page'                => $page,
+            'pageOptions'         => Page::where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
                 return $option->category->subject['key'] == $page->category->subject['key'];
             })->pluck('title', 'id'),
             'relationshipOptions' => Config::get('mundialis.'.$page->category->subject['key'].'_relationships'),
@@ -144,9 +144,9 @@ class RelationshipController extends Controller {
         }
 
         return view('pages.relationships._create_edit_relationship', [
-            'relationship' => $relationship,
-            'page'         => $page,
-            'pageOptions'  => Page::where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
+            'relationship'        => $relationship,
+            'page'                => $page,
+            'pageOptions'         => Page::where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
                 return $option->category->subject['key'] == $page->category->subject['key'];
             })->pluck('title', 'id'),
             'relationshipOptions' => Config::get('mundialis.'.$page->category->subject['key'].'_relationships'),

@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'guard' => 'web',
+    'guard'      => 'web',
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'passwords' => 'users',
+    'passwords'  => 'users',
 
     /*
     |--------------------------------------------------------------------------
@@ -46,9 +46,9 @@ return [
     |
     */
 
-    'username' => 'email',
+    'username'   => 'email',
 
-    'email' => 'email',
+    'email'      => 'email',
 
     /*
     |--------------------------------------------------------------------------
@@ -61,7 +61,7 @@ return [
     |
     */
 
-    'home' => RouteServiceProvider::HOME,
+    'home'       => RouteServiceProvider::HOME,
 
     /*
     |--------------------------------------------------------------------------
@@ -74,9 +74,9 @@ return [
     |
     */
 
-    'prefix' => '',
+    'prefix'     => '',
 
-    'domain' => null,
+    'domain'     => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -102,7 +102,7 @@ return [
     |
     */
 
-    'limiters' => [
+    'limiters'   => [
         'login'      => 'login',
         'two-factor' => 'two-factor',
     ],
@@ -118,7 +118,7 @@ return [
     |
     */
 
-    'views' => true,
+    'views'      => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -131,7 +131,7 @@ return [
     |
     */
 
-    'features' => [
+    'features'   => [
         Features::registration(),
         Features::resetPasswords(),
         Features::emailVerification(),
