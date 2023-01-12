@@ -24,7 +24,7 @@ return [
     | site wherever the name needs to be displayed.
     |
     */
-    'site_name' => 'Mundialis',
+    'site_name'                  => 'Mundialis',
 
     /*
     |--------------------------------------------------------------------------
@@ -36,7 +36,7 @@ return [
     | It is not, however, displayed on the site itself. This should be kept short and snappy!
     |
     */
-    'site_desc' => 'A Mundialis site',
+    'site_desc'                  => 'A Mundialis site',
 
     /*
     |--------------------------------------------------------------------------
@@ -47,7 +47,7 @@ return [
     | Do not change this value!
     |
     */
-    'version' => '2.1.0',
+    'version'                    => '2.1.0',
 
     /*
     |--------------------------------------------------------------------------
@@ -62,7 +62,7 @@ return [
     | Expects the whole of the character to be visible in the thumbnail.
     |
     */
-    'image_thumbnails' => [
+    'image_thumbnails'           => [
         'width'  => 300,
         'height' => 300,
     ],
@@ -98,5 +98,5 @@ return [
     | Simply change to "1" to enable, or keep at "0" to disable.
     |
     */
-    'enable_backups' => 0,
+    'enable_backups'             => 0,
 ];

@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'people' => [
+    'people'   => [
         'name'        => 'People',
         'description' => 'Pages for this subject represent people within or relevant to your project. These can include characters, both significant and not, NPCs, etc.',
         'term'        => 'Person',
@@ -24,7 +24,7 @@ return [
             // This is used for documenting special fields included in the subjects' templates
             // as a matter of course.
             'infobox' => [
-                'name' => [
+                'name'        => [
                     'name'        => 'Name (Optional)',
                     'description' => 'This is provided as an optional convenience in the event that you want to have a person\'s name or full name above the birth and death information in a page\'s infobox, as all other infobox fields follow after.',
                 ],
@@ -36,7 +36,7 @@ return [
         ],
     ],
 
-    'places' => [
+    'places'   => [
         'name'        => 'Places',
         'description' => 'Pages for this subject represent locations within or relevant to your project, big and small.',
         'term'        => 'Place',
@@ -50,13 +50,13 @@ return [
         ],
     ],
 
-    'species' => [
+    'species'  => [
         'name'        => 'Flora & Fauna',
         'description' => 'Pages for this subject represent species, plant and/or animal, within or relevant to your project.',
         'term'        => 'Species',
     ],
 
-    'things' => [
+    'things'   => [
         'name'        => 'Things',
         'description' => 'Pages for this subject represent inanimate objects within or relevant to your project. This can include anything from rather mundane things like clothing, tools, and food to objects of great rarity or import.',
         'term'        => 'Thing',
@@ -68,7 +68,7 @@ return [
         'term'        => 'Concept',
     ],
 
-    'time' => [
+    'time'     => [
         'name'        => 'Time & Events',
         'description' => 'Pages for this subject correspond to individual events. While categories are used much like other subjects, this subject also has separate chronology settings that are used to order large spans of time (and events within them) as well as settings for divisions of time.',
         'term'        => 'Event',
@@ -78,13 +78,13 @@ return [
             'divisions'  => '<i class="fas fa-stopwatch"></i> Divisions of Time',
             'chronology' => '<i class="far fa-clock"></i> Chronology',
         ],
-        'segments' => [
+        'segments'    => [
             'general properties' => [
                 'chronology' => [
                     'name'        => 'Chronology (Optional)',
                     'description' => 'The chronological group that the event is in.',
                 ],
-                'date' => [
+                'date'       => [
                     'name'        => 'Date (Optional)',
                     'description' => 'The date of the event. Uses either a generic year field or the divisions of time enabled for use for dates. This isn\'t required, but if no date is provided, events will be assumed to take place at the beginning of their chronology. Depending on how your configure the latter, this may be fine or it may make it impossible to generate coherent timelines.',
                 ],
@@ -102,7 +102,7 @@ return [
         ],
     ],
 
-    'misc' => [
+    'misc'     => [
         'name'        => 'Miscellaneous',
         'term'        => 'Misc. Page',
         'description' => 'While the other subjects should be broad enough to cover most if not all use cases, this subject-of-sorts is here in the event that some content falls outside the others nonetheless.',

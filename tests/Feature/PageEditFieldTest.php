@@ -253,9 +253,9 @@ class PageEditFieldTest extends TestCase {
 
         // Define some basic data
         $data = [
-            'title'       => $this->faker->unique()->domainWord(),
-            'summary'     => null,
-            'category_id' => $category->id,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
+            'category_id'     => $category->id,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
         ];
@@ -295,8 +295,8 @@ class PageEditFieldTest extends TestCase {
 
         // Define some basic data
         $data = [
-            'title'   => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
         ];
@@ -640,9 +640,9 @@ class PageEditFieldTest extends TestCase {
 
         // Define some basic data
         $data = [
-            'title'       => $this->faker->unique()->domainWord(),
-            'summary'     => null,
-            'category_id' => $category->id,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
+            'category_id'     => $category->id,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
         ];
@@ -682,8 +682,8 @@ class PageEditFieldTest extends TestCase {
 
         // Define some basic data
         $data = [
-            'title'   => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
         ];
