@@ -1650,20 +1650,20 @@
         },
         {
             "name": "laracasts/flash",
-            "version": "3.2.1",
+            "version": "3.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laracasts/flash.git",
-                "reference": "f64a8d97f901fdb3ce8eb9b28c5308a726455467"
+                "reference": "6330bc3c027d3c03188b41c58133016f8226b8fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laracasts/flash/zipball/f64a8d97f901fdb3ce8eb9b28c5308a726455467",
-                "reference": "f64a8d97f901fdb3ce8eb9b28c5308a726455467",
+                "url": "https://api.github.com/repos/laracasts/flash/zipball/6330bc3c027d3c03188b41c58133016f8226b8fb",
+                "reference": "6330bc3c027d3c03188b41c58133016f8226b8fb",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "~5.0|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/support": "~5.0|^6.0|^7.0|^8.0|^9.0|^10.0",
                 "php": ">=5.4.0"
             },
             "require-dev": {
@@ -1701,10 +1701,9 @@
             ],
             "description": "Easy flash notifications",
             "support": {
-                "issues": "https://github.com/laracasts/flash/issues",
-                "source": "https://github.com/laracasts/flash/tree/3.2.1"
+                "source": "https://github.com/laracasts/flash/tree/3.2.2"
             },
-            "time": "2022-01-31T16:01:37+00:00"
+            "time": "2023-01-30T20:31:40+00:00"
         },
         {
             "name": "laravel/fortify",
@@ -2413,16 +2412,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "3.12.2",
+            "version": "3.12.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "f6377c709d2275ed6feaf63e44be7a7162b0e77f"
+                "reference": "81e87e74dd5213795c7846d65089712d2dda90ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/f6377c709d2275ed6feaf63e44be7a7162b0e77f",
-                "reference": "f6377c709d2275ed6feaf63e44be7a7162b0e77f",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/81e87e74dd5213795c7846d65089712d2dda90ce",
+                "reference": "81e87e74dd5213795c7846d65089712d2dda90ce",
                 "shasum": ""
             },
             "require": {
@@ -2484,7 +2483,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/3.12.2"
+                "source": "https://github.com/thephpleague/flysystem/tree/3.12.3"
             },
             "funding": [
                 {
@@ -2500,7 +2499,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-19T12:02:19+00:00"
+            "time": "2023-02-18T15:32:41+00:00"
         },
         {
             "name": "league/mime-type-detection",
