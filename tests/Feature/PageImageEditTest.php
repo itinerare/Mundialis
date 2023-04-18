@@ -245,7 +245,7 @@ class PageImageEditTest extends TestCase {
                 1 => $creator->id,
             ],
             'creator_url' => [
-                0 => null,
+                1 => null,
             ],
         ];
 
