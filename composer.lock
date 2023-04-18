@@ -7266,16 +7266,16 @@
         },
         {
             "name": "marcocesarato/php-conventional-changelog",
-            "version": "1.16.0",
+            "version": "1.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcocesarato/php-conventional-changelog.git",
-                "reference": "d901533416515d4f5eaf842ca72130e07bf0834d"
+                "reference": "9269b0a3198d2107322f9f9a0fca399719825f67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marcocesarato/php-conventional-changelog/zipball/d901533416515d4f5eaf842ca72130e07bf0834d",
-                "reference": "d901533416515d4f5eaf842ca72130e07bf0834d",
+                "url": "https://api.github.com/repos/marcocesarato/php-conventional-changelog/zipball/9269b0a3198d2107322f9f9a0fca399719825f67",
+                "reference": "9269b0a3198d2107322f9f9a0fca399719825f67",
                 "shasum": ""
             },
             "require": {
@@ -7288,7 +7288,7 @@
                 "friendsofphp/php-cs-fixer": "^3.8",
                 "php-mock/php-mock": "^2.3",
                 "php-mock/php-mock-phpunit": "^2.6",
-                "phpunit/phpunit": "^9.5"
+                "phpunit/phpunit": "^9.6"
             },
             "bin": [
                 "conventional-changelog"
@@ -7337,9 +7337,9 @@
             ],
             "support": {
                 "issues": "https://github.com/marcocesarato/php-conventional-changelog/issues",
-                "source": "https://github.com/marcocesarato/php-conventional-changelog/tree/v1.16.0"
+                "source": "https://github.com/marcocesarato/php-conventional-changelog/tree/v1.17.0"
             },
-            "time": "2022-11-26T10:26:38+00:00"
+            "time": "2023-03-26T16:59:30+00:00"
         },
         {
             "name": "mockery/mockery",
