@@ -38,7 +38,8 @@ class PageImage extends Model {
      * @var array
      */
     public static $createRules = [
-        'creator_url.*' => 'nullable|url',
+        'creator_id.*'  => 'nullable|required_without:creator_url.*',
+        'creator_url.*' => 'nullable|required_without:creator_id.*|url',
         'image'         => 'required|mimes:jpeg,gif,png|max:20000',
     ];
 
@@ -48,7 +49,8 @@ class PageImage extends Model {
      * @var array
      */
     public static $updateRules = [
-        'creator_url.*' => 'nullable|url',
+        'creator_id.*'  => 'nullable|required_without:creator_url.*',
+        'creator_url.*' => 'nullable|required_without:creator_id.*|url',
         'image'         => 'nullable|mimes:jpeg,gif,png|max:20000',
     ];
 
