@@ -18,7 +18,7 @@ return [
     |
     */
 
-    'hub' => [
+    'hub'     => [
         'prefix'    => 'Hub:',
         'regex'     => 'Hub:([A-Za-z0-9_-_\s]+)',
         'regex_alt' => '/\Hub:([A-Za-z0-9_-_\s]+)/',

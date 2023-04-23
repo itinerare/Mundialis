@@ -4,6 +4,23 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.1.1](https://github.com/itinerare/Mundialis/compare/v2.1.0...v2.1.1) (2023-04-23)
+
+### Bug Fixes
+
+
+##### Pages
+
+* Always show image creator fields if no creators are set ([ee3ae4](https://github.com/itinerare/Mundialis/commit/ee3ae4d4d7d507bee71cc4fa79c2776d6b39324f))
+* Properly require one of image creator ID/URL ([006d94](https://github.com/itinerare/Mundialis/commit/006d946439207d0979ac75d46e02acbef56cd3a8))
+
+##### Tests
+
+* Fix sent data in edit image creator with user test ([a5ee9b](https://github.com/itinerare/Mundialis/commit/a5ee9b85ca7551bf6a21cbd90aabeecc39aa510c))
+
+
+---
+
 ## [2.1.0](https://github.com/itinerare/Mundialis/compare/v2.0.0...v2.1.0) (2022-07-24)
 
 ### Features

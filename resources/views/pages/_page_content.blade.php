@@ -40,8 +40,7 @@
                         </div>
                     </div>
                     @foreach ($page->category->template['sections'] as $sectionKey => $section)
-                        {{ $loop->iteration }}. <a
-                            href="#section-{{ $sectionKey }}">{{ $section['name'] }}</a><br />
+                        {{ $loop->iteration }}. <a href="#section-{{ $sectionKey }}">{{ $section['name'] }}</a><br />
                         @if (isset($page->category->template['fields'][$sectionKey]))
                             @php $sectionLoop = $loop; @endphp
                             @php $iteration = 0; @endphp

@@ -97,8 +97,8 @@ class PageViewFieldTest extends TestCase {
 
         // Define some basic data
         $data = [
-            'title'   => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
         ];
@@ -132,8 +132,8 @@ class PageViewFieldTest extends TestCase {
 
         // Define some basic data
         $data = [
-            'title'   => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
         ];
@@ -270,8 +270,8 @@ class PageViewFieldTest extends TestCase {
 
         // Define some basic data
         $data = [
-            'title'   => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
         ];
@@ -305,8 +305,8 @@ class PageViewFieldTest extends TestCase {
 
         // Define some basic data
         $data = [
-            'title'   => $this->faker->unique()->domainWord(),
-            'summary' => null,
+            'title'           => $this->faker->unique()->domainWord(),
+            'summary'         => null,
             // This being passed in as string echoes the form input
             $fieldData['key'] => (string) mt_rand(0, 1),
         ];

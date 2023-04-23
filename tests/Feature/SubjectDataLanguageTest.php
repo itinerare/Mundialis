@@ -246,9 +246,9 @@ class SubjectDataLanguageTest extends TestCase {
 
         // Define some basic template data
         $data = [
-            'name'          => $this->faker->unique()->domainWord(),
-            'description'   => $this->faker->unique()->domainWord(),
-            'property_name' => [
+            'name'                => $this->faker->unique()->domainWord(),
+            'description'         => $this->faker->unique()->domainWord(),
+            'property_name'       => [
                 0 => 'Number',
                 1 => 'Case',
             ],
@@ -256,7 +256,7 @@ class SubjectDataLanguageTest extends TestCase {
                 0 => 'Singular,Plural',
                 1 => 'Nominative,Accusative,Dative',
             ],
-            'property_class' => [
+            'property_class'      => [
                 0 => 1,
                 1 => 1,
             ],
@@ -290,8 +290,8 @@ class SubjectDataLanguageTest extends TestCase {
 
         // Define some basic template data
         $data = [
-            'name'          => $this->faker->unique()->domainWord(),
-            'property_name' => [
+            'name'                => $this->faker->unique()->domainWord(),
+            'property_name'       => [
                 0 => 'Number',
                 1 => 'Case',
             ],
@@ -299,7 +299,7 @@ class SubjectDataLanguageTest extends TestCase {
                 0 => 'Singular,Plural',
                 1 => 'Nominative,Accusative,Dative',
             ],
-            'property_class' => [
+            'property_class'      => [
                 0 => $class->id,
                 1 => $class->id,
             ],
@@ -360,20 +360,20 @@ class SubjectDataLanguageTest extends TestCase {
 
         // Define some basic template data
         $data = [
-            'name'          => $this->faker->unique()->domainWord(),
-            'property_name' => [
+            'name'                   => $this->faker->unique()->domainWord(),
+            'property_name'          => [
                 0 => 'Number',
                 1 => 'Case',
             ],
-            'property_dimensions' => [
+            'property_dimensions'    => [
                 0 => 'Singular,Plural',
                 1 => 'Nominative,Accusative,Dative',
             ],
-            'property_class' => [
+            'property_class'         => [
                 0 => $class->id,
                 1 => $class->id,
             ],
-            'declension_criteria' => [
+            'declension_criteria'    => [
                 $class->id => [
                     0 => 'a',
                     1 => null,
@@ -383,7 +383,7 @@ class SubjectDataLanguageTest extends TestCase {
                     5 => null,
                 ],
             ],
-            'declension_regex' => [
+            'declension_regex'       => [
                 $class->id => [
                     0 => '^',
                     1 => null,

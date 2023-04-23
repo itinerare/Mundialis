@@ -40,8 +40,8 @@ class PageRelationship extends Model {
      * @var array
      */
     public static $rules = [
-        'page_one_id' => 'required',
-        'page_two_id' => 'required',
+        'page_one_id'   => 'required',
+        'page_two_id'   => 'required',
 
         'type_one'      => 'required',
         'type_one_info' => 'required_if:type_one,custom,romantic_custom',

@@ -99,7 +99,7 @@
     <div class="form-group">
         {!! Form::label('Creator(s)') !!} {!! add_help('Either select an on-site user, or enter the URL of an off-site user\'s profile.') !!}
         <div id="creatorList">
-            @if (!$image->id)
+            @if (!$image->id || !$image->creators->count())
                 <div class="mb-2 d-flex">
                     {!! Form::select('creator_id[]', $users, null, [
                         'class' => 'form-control mr-2 selectize',

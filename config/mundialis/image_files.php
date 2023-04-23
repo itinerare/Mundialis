@@ -12,7 +12,7 @@ return [
     |
     */
 
-    'logo' => [
+    'logo'       => [
         'name'        => 'Site Logo',
         'description' => 'Site logo, displayed on the sidebar. Should be square, 200x200px recommended. PNG format.',
         'filename'    => 'logo.png',

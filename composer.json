@@ -5,7 +5,7 @@
     "license": "Parity-7.0",
     "require": {
         "php": "^8.1",
-        "spatie/flysystem-dropbox": "^2.0.6",
+        "spatie/flysystem-dropbox": "^3.0.0",
         "doctrine/dbal": "^2.2",
         "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -79,5 +79,5 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "version": "2.1.0"
+    "version": "2.1.1"
 }

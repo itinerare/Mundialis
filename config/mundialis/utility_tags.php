@@ -20,17 +20,17 @@ return [
     |
     */
 
-    'wip' => [
+    'wip'      => [
         // Used for general site interface
-        'name' => 'WIP Pages',
+        'name'    => 'WIP Pages',
         // Used for selecting tags during page editing
-        'label' => 'WIP Page',
+        'label'   => 'WIP Page',
         // Used for populating the alert on a tagged page
         'message' => 'This page is a work-in-progress! The information present on it may change or be incomplete.',
         'verb'    => 'contributing to',
     ],
 
-    'stub' => [
+    'stub'     => [
         'name'    => 'Stubs',
         'label'   => 'Stub',
         'message' => 'This page is a stub.',
@@ -44,7 +44,7 @@ return [
         'verb'    => 'updating',
     ],
 
-    'cleanup' => [
+    'cleanup'  => [
         'name'    => 'Pages Needing Clean-up',
         'label'   => 'Needs Clean-up',
         'message' => 'This page needs clean-up for formatting or other reasons.',

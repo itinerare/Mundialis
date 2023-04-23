@@ -41,7 +41,6 @@ class SetupAdminUser extends Command {
 
         // First things first, check if user ranks exist...
         if (!Rank::count()) {
-
             // Create ranks if not already present.
             // A light-weight rank system is used here since the site is intended
             // only for individuals or small groups/granular permissions are not
