@@ -697,7 +697,7 @@ class PageManager extends Service {
             }
             // If utility tag data is not set, but the page has existing tags,
             // delete all existing tags
-            elseif (!isset($data['utility_tag']) && $page->tags->count()) {
+            elseif (!isset($data['utility_tag']) && $page->utilityTags->count()) {
                 $page->utilityTags()->delete();
             }
 
