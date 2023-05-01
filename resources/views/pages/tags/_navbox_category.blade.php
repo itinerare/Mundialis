@@ -6,9 +6,10 @@
     </div>
     <div class="col-sm col mb-1 pl-2">
         <div>
-            @if ($navbox['pages']->whereIn(
-                    'category_id',
-                    $group->first()->category->children()->pluck('id')->toArray())->count())
+            @if (
+                $navbox['pages']->whereIn(
+                        'category_id',
+                        $group->first()->category->children()->pluck('id')->toArray())->count())
                 @php
                     $subcatPages = $navbox['pages']->whereIn(
                         'category_id',

@@ -22,7 +22,7 @@
             'all' => 'All Time',
         ] as $mode => $label)
             @if (Request::url() . (Request::get('mode') ? '?mode=' . Request::get('mode') : '') ==
-                url('special/recent-pages?mode=' . $mode))
+                    url('special/recent-pages?mode=' . $mode))
                 {{ $label }}
             @else
                 <a href="{{ url('special/recent-pages?mode=' . $mode) }}">{{ $label }}</a>

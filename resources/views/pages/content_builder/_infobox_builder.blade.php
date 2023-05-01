@@ -7,7 +7,7 @@
             </div>
         @endif
         @if (isset($page->category->subject['segments']['infobox']) &&
-            View::exists('pages.content_builder._' . $page->category->subject['key'] . '_infobox'))
+                View::exists('pages.content_builder._' . $page->category->subject['key'] . '_infobox'))
             @include('pages.content_builder._' . $page->category->subject['key'] . '_infobox')
         @endif
         @if (isset($page->category->template['infobox']))

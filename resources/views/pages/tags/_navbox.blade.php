@@ -24,9 +24,10 @@
                                     @foreach ($navbox['pages']->groupBy('category_id') as $group)
                                         @if (!$group->first()->category->parent_id && $group->first()->category->subject['key'] == $subjectKey)
                                             @include('pages.tags._navbox_category')
-                                        @elseif($group->first()->category->parent_id &&
-                                            !$group->where('category_id', $group->first()->category->parent_id)->count() &&
-                                            $group->first()->category->subject['key'] == $subjectKey)
+                                        @elseif(
+                                            $group->first()->category->parent_id &&
+                                                !$group->where('category_id', $group->first()->category->parent_id)->count() &&
+                                                $group->first()->category->subject['key'] == $subjectKey)
                                             @include('pages.tags._navbox_category')
                                         @endif
                                     @endforeach

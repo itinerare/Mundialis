@@ -1,18 +1,20 @@
 <div class="row">
-    @if ($page->image ||
-        isset($page->category->template['infobox']) ||
-        (isset($page->category->subject['segments']['infobox']) &&
-            View::exists('pages.content_builder._' . $page->category->subject['key'] . '_infobox')))
+    @if (
+        $page->image ||
+            isset($page->category->template['infobox']) ||
+            (isset($page->category->subject['segments']['infobox']) &&
+                View::exists('pages.content_builder._' . $page->category->subject['key'] . '_infobox')))
         <div class="mobile-show col-lg-4 m-2">
             @include('pages.content_builder._infobox_builder')
         </div>
     @endif
     <div class="col-lg-12 col-md">
         <!-- INFOBOX -->
-        @if ($page->image ||
-            isset($page->category->template['infobox']) ||
-            (isset($page->category->subject['segments']['infobox']) &&
-                View::exists('pages.content_builder._' . $page->category->subject['key'] . '_infobox')))
+        @if (
+            $page->image ||
+                isset($page->category->template['infobox']) ||
+                (isset($page->category->subject['segments']['infobox']) &&
+                    View::exists('pages.content_builder._' . $page->category->subject['key'] . '_infobox')))
             <div class="float-right mobile-hide m-2 ml-4" style="width:25vw;">
                 @include('pages.content_builder._infobox_builder')
             </div>
@@ -22,7 +24,7 @@
         {!! isset($data['description']) ? $data['description'] : '' !!}
 
         @if (isset($page->category->subject['segments']['general properties']) &&
-            View::exists('pages.content_builder._' . $page->category->subject['key'] . '_general'))
+                View::exists('pages.content_builder._' . $page->category->subject['key'] . '_general'))
             @include('pages.content_builder._' . $page->category->subject['key'] . '_general')
         @endif
 
@@ -71,7 +73,7 @@
 
         <!-- MAIN CONTENT -->
         @if (isset($page->category->subject['segments']['sections']) &&
-            View::exists('pages.content_builder._' . $category->subject['key'] . '_sections'))
+                View::exists('pages.content_builder._' . $category->subject['key'] . '_sections'))
             @include('pages.content_builder._' . $page->category->subject['key'] . '_sections')
         @endif
 
