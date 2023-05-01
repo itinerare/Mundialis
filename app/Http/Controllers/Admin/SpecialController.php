@@ -29,9 +29,9 @@ class SpecialController extends Controller {
      */
     public function getUnwatchedPages(Request $request) {
         $query = Page::visible(Auth::check() ? Auth::user() : null)->get()
-        ->filter(function ($page) {
-            return $page->watchers->count() == 0;
-        })->sortBy('title');
+            ->filter(function ($page) {
+                return $page->watchers->count() == 0;
+            })->sortBy('title');
 
         return view('pages.special.unwatched', [
             'pages' => $query->paginate(20)->appends($request->query()),
