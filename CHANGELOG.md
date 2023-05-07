@@ -4,6 +4,19 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.1.2](https://github.com/itinerare/Mundialis/compare/v2.1.1...v2.1.2) (2023-05-07)
+
+### Bug Fixes
+
+
+##### Pages
+
+* Allow all utility tags to be removed from a page ([3bb16c](https://github.com/itinerare/Mundialis/commit/3bb16cfbd790aaea7538e327729b6a5685bf8aed))
+* Allow special and accented characters to be correctly parsed by wiki link syntax ([35d5d9](https://github.com/itinerare/Mundialis/commit/35d5d915d3156539a63f4b9176fef173ea31d52f))
+
+
+---
+
 ## [2.1.1](https://github.com/itinerare/Mundialis/compare/v2.1.0...v2.1.1) (2023-04-23)
 
 ### Bug Fixes
