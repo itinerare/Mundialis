@@ -38,9 +38,10 @@
             <div class="col-md-6 mobile-hide">
             </div>
 
-            @if ($eventHelper->timeOrderedEvents(Auth::check() ? Auth::user() : null,
-                $chronology->id,
-                Request::get('tags') ? Request::get('tags') : null))
+            @if (
+                $eventHelper->timeOrderedEvents(Auth::check() ? Auth::user() : null,
+                    $chronology->id,
+                    Request::get('tags') ? Request::get('tags') : null))
                 @foreach ($eventHelper->timeOrderedEvents(Auth::check() ? Auth::user() : null, $chronology->id, Request::get('tags') ? Request::get('tags') : null) as $key => $group)
                     <div
                         class="col-md-6 border-right border-secondary timeline-section-left {{ $loop->even ? 'mobile-hide' : '' }}">
@@ -63,9 +64,10 @@
     </div>
     @endforeach
 
-    @if ($eventHelper->timeOrderedEvents(Auth::check() ? Auth::user() : null,
-        null,
-        Request::get('tags') ? Request::get('tags') : null))
+    @if (
+        $eventHelper->timeOrderedEvents(Auth::check() ? Auth::user() : null,
+            null,
+            Request::get('tags') ? Request::get('tags') : null))
         <div class="row">
             <div class="col-md-6 border-right border-secondary timeline-section-left">
                 <h2>Current Events</h2>

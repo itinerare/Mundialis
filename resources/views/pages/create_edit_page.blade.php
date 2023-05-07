@@ -73,13 +73,13 @@
     @endif
 
     @if (isset($category->subject['segments']['general properties']) &&
-        View::exists('pages.form_builder._' . $category->subject['key'] . '_general'))
+            View::exists('pages.form_builder._' . $category->subject['key'] . '_general'))
         @include('pages.form_builder._' . $category->subject['key'] . '_general')
     @endif
 
     <h2>Infobox</h2>
     @if (isset($category->subject['segments']['infobox']) &&
-        View::exists('pages.form_builder._' . $category->subject['key'] . '_infobox'))
+            View::exists('pages.form_builder._' . $category->subject['key'] . '_infobox'))
         @include('pages.form_builder._' . $category->subject['key'] . '_infobox')
     @endif
 
@@ -93,7 +93,7 @@
 
     <h2>Sections</h2>
     @if (isset($category->subject['segments']['sections']) &&
-        View::exists('pages.form_builder._' . $category->subject['key'] . '_sections'))
+            View::exists('pages.form_builder._' . $category->subject['key'] . '_sections'))
         @include('pages.form_builder._' . $category->subject['key'] . '_sections')
     @endif
 

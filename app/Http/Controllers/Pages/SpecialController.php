@@ -108,16 +108,16 @@ class SpecialController extends Controller {
      */
     public function getAllTags(Request $request) {
         $query = PageTag::tag()->get()
-        ->filter(function ($tag) {
-            if (Auth::check() && Auth::user()->canWrite) {
-                return 1;
-            }
-            if (!$tag->page) {
-                return 0;
-            }
+            ->filter(function ($tag) {
+                if (Auth::check() && Auth::user()->canWrite) {
+                    return 1;
+                }
+                if (!$tag->page) {
+                    return 0;
+                }
 
-            return $tag->page->is_visible;
-        })->groupBy('baseTag');
+                return $tag->page->is_visible;
+            })->groupBy('baseTag');
 
         return view('pages.special.all_tags', [
             'tags' => $query->paginate(20)->appends($request->query()),
@@ -171,9 +171,9 @@ class SpecialController extends Controller {
      */
     public function getUntaggedPages(Request $request) {
         $query = Page::visible(Auth::check() ? Auth::user() : null)->get()
-        ->filter(function ($page) {
-            return $page->tags->count() == 0;
-        })->sortBy('created_at');
+            ->filter(function ($page) {
+                return $page->tags->count() == 0;
+            })->sortBy('created_at');
 
         return view('pages.special.untagged', [
             'pages' => $query->paginate(20)->appends($request->query()),
@@ -187,12 +187,12 @@ class SpecialController extends Controller {
      */
     public function getMostTaggedPages(Request $request) {
         $query = Page::visible(Auth::check() ? Auth::user() : null)->get()
-        ->filter(function ($page) {
-            return $page->tags->count() > 0;
-        })
-        ->sortByDesc(function ($page) {
-            return $page->tags->count();
-        });
+            ->filter(function ($page) {
+                return $page->tags->count() > 0;
+            })
+            ->sortByDesc(function ($page) {
+                return $page->tags->count();
+            });
 
         return view('pages.special.most_tagged', [
             'pages' => $query->paginate(20)->appends($request->query()),
