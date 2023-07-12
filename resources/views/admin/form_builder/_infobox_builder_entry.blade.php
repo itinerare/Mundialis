@@ -77,7 +77,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                     {!! Form::label('Field Help (Optional)') !!}
-                    {!! Form::text('field_help[]', isset($field['help']) ? $field['help'] : null, [
+                    {!! Form::text('infobox_help[]', isset($field['help']) ? $field['help'] : null, [
                         'class' => 'form-control',
                         'placeholder' => 'Help tooltip text displayed when editing',
                     ]) !!}
