@@ -270,7 +270,9 @@ class Page extends Model {
      * @return string
      */
     public function getSlugAttribute() {
-        return str_replace(' ', '_', $this->title);
+        $string = str_replace(' ', '-', $this->title);
+
+        return preg_replace('/[^A-Za-z0-9\-]/', '', $string);
     }
 
     /**
