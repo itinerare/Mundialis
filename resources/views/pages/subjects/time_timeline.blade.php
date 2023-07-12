@@ -54,7 +54,10 @@
                     'group' => $group,
                     'i' => 0,
                 ])
-                @if ($loop->odd)
+                @if ($loop->even)
+        </div>
+    @endif
+    @if ($loop->odd)
         </div>
         <div class="col-md-6 mobile-hide">
         </div>
@@ -62,6 +65,9 @@
     @endforeach
     @endif
     </div>
+    @if ($loop->odd)
+        </div>
+    @endif
     @endforeach
 
     @if (
@@ -77,17 +83,21 @@
 
             @foreach ($eventHelper->timeOrderedEvents(Auth::check() ? Auth::user() : null, null, Request::get('tags') ? Request::get('tags') : null) as $key => $group)
                 <div
-                    class="col-md-6 col-md-6 border-right border-secondary timeline-section-left {{ $loop->even ? 'mobile-hide' : '' }}">
+                    class="col-md-6 border-right border-secondary timeline-section-left {{ $loop->even ? 'mobile-hide' : '' }}">
                     @if ($loop->even)
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 border-right border-secondary timeline-section-right">
             @endif
+            {{ $loop->odd ? 'Odd' : 'Even' }}
             @include('pages.subjects._time_timeline_group', [
                 'key' => $key,
                 'group' => $group,
                 'i' => 0,
             ])
-            @if ($loop->odd)
+            @if ($loop->even)
+        </div>
+    @endif
+    @if ($loop->odd)
         </div>
         <div class="col-md-6 mobile-hide">
         </div>
@@ -95,7 +105,6 @@
     @endforeach
     </div>
     @endif
-
 @endsection
 
 @section('scripts')
