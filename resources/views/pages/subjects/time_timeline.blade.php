@@ -88,7 +88,6 @@
                 </div>
                 <div class="col-md-6 border-right border-secondary timeline-section-right">
             @endif
-            {{ $loop->odd ? 'Odd' : 'Even' }}
             @include('pages.subjects._time_timeline_group', [
                 'key' => $key,
                 'group' => $group,
