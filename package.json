@@ -12,7 +12,7 @@
     },
     "devDependencies": {
         "axios": "^1.4",
-        "blade-formatter": "^1.32.12",
+        "blade-formatter": "^1.33.1",
         "bootstrap": "^5.2",
         "jquery": "^3.7.0",
         "laravel-mix": "^6.0.49",
