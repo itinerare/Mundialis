@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Facades\Notifications;
 use App\Models\Page\Page;
 use App\Models\Page\PageLink;
 use App\Models\Page\PageProtection;
@@ -10,9 +11,8 @@ use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
 use App\Models\User\WatchedPage;
-use Config;
-use DB;
-use Notifications;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
 class PageManager extends Service {
     /*

@@ -2,18 +2,18 @@
 
 namespace App\Services;
 
+use App\Facades\Notifications;
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
 use App\Models\Page\PageImageCreator;
 use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
 use App\Models\User\User;
-use Arr;
-use Config;
-use DB;
 use Illuminate\Http\UploadedFile;
-use Image;
-use Notifications;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Intervention\Image\Facades\Image;
 
 class ImageManager extends Service {
     /*

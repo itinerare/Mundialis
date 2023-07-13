@@ -3,7 +3,7 @@
 namespace App\Models\Page;
 
 use App\Models\Model;
-use Config;
+use Illuminate\Support\Facades\Config;
 
 class PageTag extends Model {
     /**

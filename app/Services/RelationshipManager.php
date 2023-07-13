@@ -5,8 +5,8 @@ namespace App\Services;
 use App\Models\Page\Page;
 use App\Models\Page\PageRelationship;
 use App\Models\User\User;
-use DB;
-use Image;
+use Illuminate\Support\Facades\DB;
+use Intervention\Image\Facades\Image;
 
 class RelationshipManager extends Service {
     /*

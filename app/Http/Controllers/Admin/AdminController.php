@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\FileManager;
-use Config;
-use DB;
 use Illuminate\Http\Request;
-use Settings;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller {
     /*

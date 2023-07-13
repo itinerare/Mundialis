@@ -7,10 +7,10 @@ use App\Models\User\User;
 use App\Models\User\UserUpdateLog;
 use App\Models\User\WatchedPage;
 use Carbon\Carbon;
-use DB;
-use File;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
-use Image;
+use Intervention\Image\Facades\Image;
 use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
 
 class UserService extends Service {

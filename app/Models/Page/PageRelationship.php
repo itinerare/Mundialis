@@ -3,8 +3,8 @@
 namespace App\Models\Page;
 
 use App\Models\Model;
-use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Config;
 
 class PageRelationship extends Model {
     use HasFactory;

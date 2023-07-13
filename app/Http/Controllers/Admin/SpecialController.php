@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Page\Page;
 use App\Models\Page\PageImage;
 use App\Models\Page\PageImageVersion;
+use App\Models\Subject\TimeDivision;
 use App\Models\User\User;
 use App\Services\ImageManager;
 use App\Services\PageManager;
-use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SpecialController extends Controller {
     /*

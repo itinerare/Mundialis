@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Config;
 
 class Notification extends Model {
     use HasFactory;

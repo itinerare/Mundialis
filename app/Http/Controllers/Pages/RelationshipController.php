@@ -7,9 +7,9 @@ use App\Models\Page\Page;
 use App\Models\Page\PageRelationship;
 use App\Models\Subject\TimeDivision;
 use App\Services\RelationshipManager;
-use Auth;
-use Config;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class RelationshipController extends Controller {
     /*

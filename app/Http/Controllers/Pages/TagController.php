@@ -7,8 +7,8 @@ use App\Models\Page\Page;
 use App\Models\Page\PageTag;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
-use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TagController extends Controller {
     /*

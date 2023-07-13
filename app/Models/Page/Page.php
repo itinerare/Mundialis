@@ -5,9 +5,9 @@ namespace App\Models\Page;
 use App\Models\Model;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
-use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Config;
 
 class Page extends Model {
     use HasFactory, SoftDeletes;

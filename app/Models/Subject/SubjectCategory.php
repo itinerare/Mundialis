@@ -3,8 +3,8 @@
 namespace App\Models\Subject;
 
 use App\Models\Model;
-use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Config;
 
 class SubjectCategory extends Model {
     use HasFactory;

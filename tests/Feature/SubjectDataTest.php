@@ -5,9 +5,9 @@ namespace Tests\Feature;
 use App\Models\Page\Page;
 use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
-use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class SubjectDataTest extends TestCase {

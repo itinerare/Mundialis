@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Page\PageImageVersion;
 use App\Models\Page\PageVersion;
 use App\Models\User\User;
-use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Route;
 
 class UserController extends Controller {

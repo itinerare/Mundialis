@@ -4,9 +4,9 @@ namespace App\Services;
 
 use App;
 use App\Models\Page\Page;
-use Auth;
-use DB;
-use File;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\MessageBag;
 
 abstract class Service {
