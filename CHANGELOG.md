@@ -4,6 +4,25 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.1.3](https://github.com/itinerare/Mundialis/compare/v2.1.2...v2.1.3) (2023-07-16)
+
+### Bug Fixes
+
+* Fix adding/editing help tooltips for infobox fields ([d1d527](https://github.com/itinerare/Mundialis/commit/d1d527f2994832db4043c92826e50e2c6e814826))
+* General PHP clean-up to help static analysis ([c8df23](https://github.com/itinerare/Mundialis/commit/c8df23030f5bda5c277b8e4337a2478266a5b82b))
+* Prevent basic page field key overlap ([a14db1](https://github.com/itinerare/Mundialis/commit/a14db1a834072c2b1d6c2d925892b53c33b992ef))
+
+##### Pages
+
+* Route to pages with slugs beginning with numbers; closes #374 ([98f325](https://github.com/itinerare/Mundialis/commit/98f325c2bc53364225db2be9b3a70b3476e26ac8))
+
+##### Time
+
+* Resolve some timeline formatting issues ([396d83](https://github.com/itinerare/Mundialis/commit/396d836e0cf614442e53bbaed9a72451fe527316))
+
+
+---
+
 ## [2.1.2](https://github.com/itinerare/Mundialis/compare/v2.1.1...v2.1.2) (2023-05-07)
 
 ### Bug Fixes
