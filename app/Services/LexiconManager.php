@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\Lexicon\LexiconEntry;
 use App\Models\Lexicon\LexiconEtymology;
 use App\Models\Page\PageLink;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class LexiconManager extends Service {
     /*

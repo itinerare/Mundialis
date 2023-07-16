@@ -13,10 +13,10 @@ use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
 use App\Models\User\Rank;
 use App\Models\User\User;
-use Auth;
 use Carbon\Carbon;
-use Config;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class SpecialController extends Controller {
     /*

@@ -5,9 +5,9 @@ namespace App\Models\Page;
 use App\Models\Model;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
-use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Config;
 
 class Page extends Model {
     use HasFactory, SoftDeletes;
@@ -270,7 +270,9 @@ class Page extends Model {
      * @return string
      */
     public function getSlugAttribute() {
-        return str_replace(' ', '_', $this->title);
+        $string = str_replace(' ', '-', $this->title);
+
+        return preg_replace('/[^A-Za-z0-9\-]/', '', $string);
     }
 
     /**

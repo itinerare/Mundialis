@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use File;
+use Illuminate\Support\Facades\File;
 
 class FileManager extends Service {
     /*
@@ -23,11 +23,11 @@ class FileManager extends Service {
      */
     public function createDirectory($dir) {
         if (file_exists($dir)) {
-            $this->setError('Folder already exists.');
+            $this->setError('error', 'Folder already exists.');
         } else {
             // Create the directory.
             if (!mkdir($dir, 0755, true)) {
-                $this->setError('Failed to create folder.');
+                $this->setError('error', 'Failed to create folder.');
 
                 return false;
             }

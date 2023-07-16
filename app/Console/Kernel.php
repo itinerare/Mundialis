@@ -2,9 +2,9 @@
 
 namespace App\Console;
 
-use Config;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Config;
 
 class Kernel extends ConsoleKernel {
     /**

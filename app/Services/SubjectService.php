@@ -9,7 +9,7 @@ use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\SubjectTemplate;
 use App\Models\Subject\TimeChronology;
 use App\Models\Subject\TimeDivision;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class SubjectService extends Service {
     /*
@@ -263,7 +263,7 @@ class SubjectService extends Service {
     /**
      * Sorts category order.
      *
-     * @param array  $data
+     * @param string $data
      * @param string $subject
      *
      * @return bool
@@ -442,7 +442,7 @@ class SubjectService extends Service {
     /**
      * Sorts chronology order.
      *
-     * @param array $data
+     * @param string $data
      *
      * @return bool
      */
@@ -643,7 +643,7 @@ class SubjectService extends Service {
     /**
      * Sorts lexicon category order.
      *
-     * @param array $data
+     * @param string $data
      *
      * @return bool
      */

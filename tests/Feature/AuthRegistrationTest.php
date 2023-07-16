@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\User\User;
 use App\Services\InvitationService;
-use DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class AuthRegistrationTest extends TestCase {

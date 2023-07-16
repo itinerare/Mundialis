@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\User\InvitationCode;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class InvitationService extends Service {
     /*

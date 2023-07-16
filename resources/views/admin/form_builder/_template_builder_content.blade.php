@@ -1,7 +1,12 @@
 <p>Create or edit template information here. <strong>Note that removing fields and/or sections from this template and/or
         changing their keys will hide them/inputted information from any pages using them, and will cause any inputted
         information to be deleted on the next edit to the page.</strong> Re-adding the field/section with the same key
-    and information will cause it to reappear.</p>
+    and information will cause it to reappear. Please also note that certain keys are used by the site for general page information and may not be used as field keys. These are:</p>
+<ul>
+    <li>title</li>
+    <li>summary</li>
+    <li>description</li>
+</ul>
 
 <h2>Infobox</h2>
 

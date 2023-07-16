@@ -12,9 +12,9 @@ use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeChronology;
 use App\Models\Subject\TimeDivision;
 use App\Services\LexiconManager;
-use Auth;
-use Config;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class SubjectController extends Controller {
     /*

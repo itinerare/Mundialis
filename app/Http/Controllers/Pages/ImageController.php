@@ -9,9 +9,9 @@ use App\Models\Page\PageImageVersion;
 use App\Models\Subject\TimeDivision;
 use App\Models\User\User;
 use App\Services\ImageManager;
-use Auth;
-use Config;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class ImageController extends Controller {
     /*

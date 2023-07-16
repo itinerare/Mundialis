@@ -7,8 +7,8 @@ use App\Models\User\Rank;
 use App\Models\User\User;
 use App\Models\User\UserUpdateLog;
 use App\Services\UserService;
-use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller {
     /**

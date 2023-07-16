@@ -28,7 +28,8 @@ Route::group(['namespace' => 'Pages'], function () {
 
     // PAGES
     Route::group(['prefix' => 'pages'], function () {
-        Route::get('{id}', 'PageController@getPage');
+        Route::get('{id}.', 'PageController@getPage');
+        Route::get('{id}.{slug?}', 'PageController@getPage');
 
         Route::get('{id}/gallery', 'ImageController@getPageGallery')
             ->whereNumber('id');
