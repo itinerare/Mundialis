@@ -4,6 +4,10 @@
     {{ $page->title }}
 @endsection
 
+@section('head-scripts')
+    <script src="{{ asset('js/croppie.min.js') }}"></script>
+@endsection
+
 @section('pages-content')
     {!! breadcrumbs([
         $page->category->subject['name'] => $page->category->subject['key'],

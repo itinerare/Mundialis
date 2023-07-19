@@ -36,48 +36,35 @@
         content="@if (View::hasSection('meta-desc')) @yield('meta-desc') @else {{ config('mundialis.settings.site_desc', 'A Mundialis site') }} @endif">
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/site.js') }}"></script>
-    <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap4-toggle.min.js') }}"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
+    <script defer src="{{ mix('js/app-secondary.js') }}"></script>
+    <script defer src="{{ asset('js/site.js') }}"></script>
     <script src="{{ asset('js/tinymce.min.js') }}"></script>
     <script src="{{ asset('js/jquery.tinymce.min.js') }}"></script>
-    <script src="{{ asset('js/lightbox.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap-colorpicker.min.js') }}"></script>
-    <script src="{{ asset('js/selectize.min.js') }}"></script>
-    <script src="{{ asset('js/jquery-ui-timepicker-addon.js') }}"></script>
-    <script src="{{ asset('js/croppie.min.js') }}"></script>
-    <script src="{{ asset('js/magnific.min.js') }}"></script>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+    @if (View::hasSection('head-scripts'))
+        @yield('head-scripts')
+    @endif
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/mundialis.css') }}" rel="stylesheet">
-
-    {{-- Font Awesome --}}
-    <link href="{{ asset('css/all.min.css') }}" rel="stylesheet">
-
-    {{-- jQuery UI --}}
-    <link href="{{ asset('css/jquery-ui.min.css') }}" rel="stylesheet">
-
-    {{-- Bootstrap Toggle --}}
-    <link href="{{ asset('css/bootstrap4-toggle.min.css') }}" rel="stylesheet">
-
-
-    <link href="{{ asset('css/lightbox.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/jquery-ui-timepicker-addon.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/croppie.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/magnific.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/selectize.bootstrap4.css') }}" rel="stylesheet">
-
     @if (file_exists(public_path() . '/css/custom.css'))
         <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     @endif
 
+    {{-- Font Awesome --}}
+    <link defer href="{{ asset('css/all.min.css') }}" rel="stylesheet">
+
+    {{-- jQuery UI --}}
+    <link defer href="{{ asset('css/jquery-ui.min.css') }}" rel="stylesheet">
+
+    {{-- Bootstrap Toggle --}}
+    <link defer href="{{ asset('css/bootstrap4-toggle.min.css') }}" rel="stylesheet">
+
+    <link defer href="{{ asset('css/lightbox.min.css') }}" rel="stylesheet">
+    <link defer href="{{ asset('css/croppie.css') }}" rel="stylesheet">
+    <link defer href="{{ asset('css/magnific.css') }}" rel="stylesheet">
+    <link defer href="{{ asset('css/selectize.bootstrap4.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -134,7 +121,6 @@
                 $('[data-toggle="tooltip"]').tooltip({
                     html: true
                 });
-                $('.cp').colorpicker();
                 tinymce.init({
                     selector: '.wysiwyg',
                     height: 500,
