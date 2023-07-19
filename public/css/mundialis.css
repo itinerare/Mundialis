@@ -6,11 +6,11 @@
 
 @font-face {
     font-family: Roboto Condensed;
-    src: url(../webfonts/RobotoCondensed-Regular.ttf)
+    src: url(../fonts/RobotoCondensed-Regular.ttf)
 }
 @font-face {
     font-family: Lato;
-    src: url(../webfonts/Lato-Regular.ttf)
+    src: url(../fonts/Lato-Regular.ttf)
 }
 
 /**************************************************************************************************
