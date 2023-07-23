@@ -4,6 +4,15 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.2.0](https://github.com/itinerare/Mundialis/compare/v2.1.3...v2.2.0) (2023-07-23)
+
+### Features
+
+* Set up mix, update bootstrap ([480b87](https://github.com/itinerare/Mundialis/commit/480b875da2cfa0fcab66a917a43a1de1da1c9662))
+
+
+---
+
 ## [2.1.3](https://github.com/itinerare/Mundialis/compare/v2.1.2...v2.1.3) (2023-07-16)
 
 ### Bug Fixes
