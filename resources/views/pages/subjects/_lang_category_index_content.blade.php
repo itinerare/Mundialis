@@ -16,21 +16,10 @@
             <div class="col-md-4 mb-3">
                 <div class="card h-100">
                     <div class="card-header text-center">
-                        @if ($category->has_image)
-                            <a href="{{ $category->url }}"><img src="{{ $category->imageUrl }}"
-                                    class="mw-100 mb-1" /></a>
-                        @endif
                         <h3>
                             {!! $category->displayName !!}
                         </h3>
                     </div>
-                    @if ($category->summary)
-                        <ul class="list-group list-group-flush text-center">
-                            <li class="list-group-item">
-                                {{ $category->summary }}
-                            </li>
-                        </ul>
-                    @endif
                 </div>
             </div>
             {!! $loop->count % 3 != 0 && $loop->last ? '<div class="my-auto col mobile-hide"></div>' : '' !!}
