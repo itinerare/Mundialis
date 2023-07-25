@@ -31,6 +31,16 @@ class Page extends Model {
     protected $table = 'pages';
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'category', 'parent', 'versions',
+        'image', 'tags',
+    ];
+
+    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -73,7 +83,7 @@ class Page extends Model {
      * Get the parent this page belongs to.
      */
     public function parent() {
-        if ($this->category->subject['key'] == 'time') {
+        if ($this->category && $this->category->subject['key'] == 'time') {
             return $this->belongsTo(TimeChronology::class, 'parent_id');
         }
 
