@@ -46,13 +46,13 @@ class LexiconEtymology extends Model {
      * Get the entry this etymology belongs to.
      */
     public function entry() {
-        return $this->belongsTo('App\Models\Lexicon\LexiconEntry');
+        return $this->belongsTo(LexiconEntry::class);
     }
 
     /**
      * Get the entry this etymology refers to.
      */
     public function parentEntry() {
-        return $this->belongsTo('App\Models\Lexicon\LexiconEntry', 'parent_id');
+        return $this->belongsTo(LexiconEntry::class, 'parent_id');
     }
 }

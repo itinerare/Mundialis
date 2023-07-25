@@ -64,21 +64,21 @@ class PageImage extends Model {
      * Get the page this image belongs to.
      */
     public function creators() {
-        return $this->hasMany('App\Models\Page\PageImageCreator');
+        return $this->hasMany(PageImageCreator::class);
     }
 
     /**
      * Get the page this image belongs to.
      */
     public function pages() {
-        return $this->belongsToMany('App\Models\Page\Page')->using('App\Models\Page\PagePageImage')->withPivot('is_valid');
+        return $this->belongsToMany(Page::class)->using(PagePageImage::class)->withPivot('is_valid');
     }
 
     /**
      * Get this image's versions.
      */
     public function versions() {
-        return $this->hasMany('App\Models\Page\PageImageVersion');
+        return $this->hasMany(PageImageVersion::class);
     }
 
     /**********************************************************************************************

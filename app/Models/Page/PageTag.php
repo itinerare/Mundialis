@@ -40,7 +40,7 @@ class PageTag extends Model {
      * Get the page this tag belongs to.
      */
     public function page() {
-        return $this->belongsTo('App\Models\Page\Page');
+        return $this->belongsTo(Page::class);
     }
 
     /**********************************************************************************************

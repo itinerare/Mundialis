@@ -2,6 +2,7 @@
 
 namespace App\Models\Subject;
 
+use App\Models\Lexicon\LexiconEntry;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -68,21 +69,21 @@ class LexiconCategory extends Model {
      * Get parent category of this category.
      */
     public function parent() {
-        return $this->belongsTo('App\Models\Subject\LexiconCategory', 'parent_id');
+        return $this->belongsTo(LexiconCategory::class, 'parent_id');
     }
 
     /**
      * Get child categories of this category.
      */
     public function children() {
-        return $this->hasMany('App\Models\Subject\LexiconCategory', 'parent_id');
+        return $this->hasMany(LexiconCategory::class, 'parent_id');
     }
 
     /**
      * Get entries in this category.
      */
     public function entries() {
-        return $this->hasMany('App\Models\Lexicon\LexiconEntry', 'category_id');
+        return $this->hasMany(LexiconEntry::class, 'category_id');
     }
 
     /**********************************************************************************************
