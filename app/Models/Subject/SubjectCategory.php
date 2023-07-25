@@ -72,14 +72,14 @@ class SubjectCategory extends Model {
      * Get parent category of this category.
      */
     public function parent() {
-        return $this->belongsTo(SubjectCategory::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     /**
      * Get child categories of this category.
      */
     public function children() {
-        return $this->hasMany(SubjectCategory::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     /**
