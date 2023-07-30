@@ -4,6 +4,18 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.2.1](https://github.com/itinerare/Mundialis/compare/v2.2.0...v2.2.1) (2023-07-30)
+
+### Bug Fixes
+
+
+##### Users
+
+* Add extra check for recipient on invitation code page ([aad6f6](https://github.com/itinerare/Mundialis/commit/aad6f6972f69b1ad754a65ef7498c77e28454b84))
+
+
+---
+
 ## [2.2.0](https://github.com/itinerare/Mundialis/compare/v2.1.3...v2.2.0) (2023-07-23)
 
 ### Features
