@@ -32,7 +32,7 @@
                     <div class="col-6 col-md-2">{{ $invitation->code }}</div>
                     <div class="col-6 col-md-2">{!! $invitation->user->displayName !!}</div>
                     <div class="col-6 col-md-2">
-                        @if ($invitation->recipient_id)
+                        @if ($invitation->recipient_id && $invitation->recipient)
                             {!! $invitation->recipient->displayName !!}
                         @else
                             ---
