@@ -187,7 +187,7 @@ class RelationshipController extends Controller {
             return redirect()->to('pages/'.$page->id.'/relationships');
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -235,7 +235,7 @@ class RelationshipController extends Controller {
             flash('Image deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 

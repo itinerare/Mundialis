@@ -289,7 +289,7 @@ class ImageController extends Controller {
             return redirect()->to('pages/'.$page->id.'/gallery');
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -337,7 +337,7 @@ class ImageController extends Controller {
             flash('Image deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 

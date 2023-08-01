@@ -87,7 +87,7 @@ class SubjectController extends Controller {
             flash('Template updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -159,7 +159,7 @@ class SubjectController extends Controller {
             return redirect()->to('admin/data/categories/edit/'.$category->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -196,7 +196,7 @@ class SubjectController extends Controller {
             flash('Category deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();
@@ -218,7 +218,7 @@ class SubjectController extends Controller {
             flash('Category order updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -257,7 +257,7 @@ class SubjectController extends Controller {
             flash('Divisions updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -327,7 +327,7 @@ class SubjectController extends Controller {
             return redirect()->to('admin/data/time/chronology/edit/'.$chronology->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -362,7 +362,7 @@ class SubjectController extends Controller {
             flash('Chronology deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -381,7 +381,7 @@ class SubjectController extends Controller {
             flash('Chronology order updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -420,7 +420,7 @@ class SubjectController extends Controller {
             flash('Lexicon settings updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -495,7 +495,7 @@ class SubjectController extends Controller {
             return redirect()->to('admin/data/language/lexicon-categories/edit/'.$category->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -530,7 +530,7 @@ class SubjectController extends Controller {
             flash('Category deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -549,7 +549,7 @@ class SubjectController extends Controller {
             flash('Lexicon category order updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 

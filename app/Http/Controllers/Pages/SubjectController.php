@@ -389,7 +389,7 @@ class SubjectController extends Controller {
             return redirect()->to('language/lexicon/edit/'.$entry->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -427,7 +427,7 @@ class SubjectController extends Controller {
             flash('Lexicon entry deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();

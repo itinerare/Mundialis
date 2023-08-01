@@ -259,7 +259,7 @@ class PageController extends Controller {
             return redirect()->to($page->url);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -321,7 +321,7 @@ class PageController extends Controller {
             flash('Page protection updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();
@@ -387,7 +387,7 @@ class PageController extends Controller {
             flash('Page moved successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();
@@ -431,7 +431,7 @@ class PageController extends Controller {
             flash('Page reset successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();
@@ -471,7 +471,7 @@ class PageController extends Controller {
             flash('Page deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();

@@ -120,7 +120,7 @@ class SpecialController extends Controller {
             flash('Page restored successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();
@@ -238,7 +238,7 @@ class SpecialController extends Controller {
             flash('Image restored successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();
