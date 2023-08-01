@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App;
+use Illuminate\Support\Facades\App;
 use App\Models\Page\Page;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
