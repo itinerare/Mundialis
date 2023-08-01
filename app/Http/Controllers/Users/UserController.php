@@ -8,7 +8,7 @@ use App\Models\Page\PageVersion;
 use App\Models\User\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Route;
+use Illuminate\Support\Facades\Route;
 
 class UserController extends Controller {
     /*
