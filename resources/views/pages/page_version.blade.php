@@ -47,6 +47,14 @@
                 loadModal("{{ url('pages') }}/{{ $page->id }}/history/{{ $version->id }}/reset",
                     'Reset Page');
             });
+
+            // Taken from https://css-tricks.com/swapping-out-text-five-different-ways/
+            $(".section-collapse").on("click", function() {
+                var el = $(this);
+                el.text() == el.data("text-swap") ?
+                    el.text(el.data("text-original")) :
+                    el.text(el.data("text-swap"));
+            });
         });
     </script>
 @endsection
