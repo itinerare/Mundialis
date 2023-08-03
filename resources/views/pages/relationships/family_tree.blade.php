@@ -27,7 +27,7 @@
         <a href="{{ url('pages/' . $page->id . '/relationships') }}" class="btn btn-secondary mt-4 ml-2">Back to Index</a>
     </div>
 
-    <p>This {{ strtolower($page->category->subject['term']) }}'s ancestroy and immediate relations are listed here based
+    <p>This {{ strtolower($page->category->subject['term']) }}'s ancestry and immediate relations are listed here based
         on their existing relationships.</p>
 
     <h2>Ancestry</h2>
