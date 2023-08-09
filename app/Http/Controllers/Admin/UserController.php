@@ -86,9 +86,9 @@ class UserController extends Controller {
     public function postUserBasicInfo(Request $request, $name) {
         $user = User::where('name', $name)->first();
         if (!$user) {
-            flash('Invalid user.')->error();
+            (new UserService)->addError('Invalid user.');
         } elseif ($user->rank->sort == 2) {
-            flash('You cannot edit the information of an admin.')->error();
+            (new UserService)->addError('You cannot edit the information of an admin.');
         } else {
             $request->validate([
                 'name' => 'required|between:3,25',
@@ -100,7 +100,7 @@ class UserController extends Controller {
                 UserUpdateLog::create(['staff_id' => Auth::user()->id, 'user_id' => $user->id, 'data' => json_encode($logData), 'type' => 'Name/Rank Change']);
                 flash('Updated user\'s information successfully.')->success();
             } else {
-                flash('Failed to update user\'s information.')->error();
+                (new UserService)->addError('Failed to update user\'s information.');
             }
         }
 
@@ -111,9 +111,9 @@ class UserController extends Controller {
         $user = User::where('name', $name)->first();
 
         if (!$user) {
-            flash('Invalid user.')->error();
+            (new UserService)->addError('Invalid user.');
         } else {
-            flash('Failed to update user\'s account information.')->error();
+            (new UserService)->addError('Failed to update user\'s account information.');
         }
 
         return redirect()->back();
@@ -218,9 +218,9 @@ class UserController extends Controller {
         $user = User::where('name', $name)->first();
 
         if (!$user) {
-            flash('Invalid user.')->error();
+            (new UserService)->addError('Invalid user.');
         } elseif ($user->rank->sort == 2) {
-            flash('You cannot unban an admin.')->error();
+            (new UserService)->addError('You cannot unban an admin.');
         } elseif ($service->unban($user, Auth::user())) {
             flash('User unbanned successfully.')->success();
         } else {
