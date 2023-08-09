@@ -40,7 +40,7 @@ class AdminInvitationTest extends TestCase {
             ->post('/admin/invitations/create');
 
         $response->assertSessionHasNoErrors();
-        $this->assertTrue(InvitationCode::all()->count() == 1);
+        $this->assertDatabaseCount('invitation_codes', 1);
     }
 
     /**
