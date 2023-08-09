@@ -5,54 +5,64 @@ namespace Tests\Feature;
 use App\Models\SitePage;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AdminSitePageTest extends TestCase {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     /******************************************************************************
-        SITE PAGES
+        ADMIN / SITE PAGES
     *******************************************************************************/
+
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->user = User::factory()->admin()->create();
+    }
 
     /**
      * Test site page index access.
      */
-    public function testCanGetSitePageIndex() {
-        // Make a temporary user
-        $user = User::factory()->admin()->make();
-
-        // Attempt page access
-        $response = $this->actingAs($user)
+    public function testGetSitePageIndex() {
+        $this->actingAs($this->user)
             ->get('/admin/pages')
             ->assertStatus(200);
     }
 
     /**
      * Test site page editing.
+     *
+     * @dataProvider sitePageProvider
+     *
+     * @param string $key
      */
-    public function testCanPostEditSitePage() {
-        // Ensure site pages are present to modify
-        $this->artisan('add-site-pages');
+    public function testPostEditSitePage($key) {
+        // Get the information for the page
+        $page = SitePage::where('key', $key)->first();
 
-        // Make a temporary user
-        $user = User::factory()->admin()->make();
-        // Get the information for the 'about' page
-        $page = SitePage::where('key', 'about')->first();
-
-        // Make sure the setting is default so as to consistently test
-        $page->update(['text' => 'Info about your site goes here. This can be edited from the site\'s admin panel!']);
+        // Generate some test data
+        $text = '<p>'.$this->faker->unique()->domainWord().'</p>';
 
         // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->post('/admin/pages/edit/'.$page->id, [
-                'text' => 'TEST SUCCESS',
+                'text' => $text,
             ]);
 
-        // Directly verify that the appropriate change has occurred
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('site_pages', [
-            'key'  => 'about',
-            'text' => 'TEST SUCCESS',
+            'key'  => $key,
+            'text' => $text,
         ]);
+    }
+
+    public function sitePageProvider() {
+        return [
+            'about'            => ['about'],
+            'privacy policy'   => ['privacy'],
+            'terms of service' => ['terms'],
+        ];
     }
 }
