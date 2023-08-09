@@ -11,18 +11,20 @@ class AdminSiteSettingsTest extends TestCase {
     use RefreshDatabase;
 
     /******************************************************************************
-        SITE SETTINGS
+        ADMIN / SITE SETTINGS
     *******************************************************************************/
+
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->user = User::factory()->admin()->make();
+    }
 
     /**
      * Test site settings access.
      */
     public function testCanGetSiteSettingsIndex() {
-        // Make a temporary user
-        $user = User::factory()->admin()->make();
-
-        // Attempt page access
-        $response = $this->actingAs($user)
+        $this->actingAs($this->user)
             ->get('/admin/site-settings')
             ->assertStatus(200);
     }
@@ -50,5 +52,39 @@ class AdminSiteSettingsTest extends TestCase {
             'key'   => 'is_registration_open',
             'value' => 0,
         ]);
+    }
+
+    /**
+     * Test site setting editing.
+     *
+     * @dataProvider settingsProvider
+     *
+     * @param string $key
+     * @param bool   $value
+     * @param bool   $expected
+     */
+    public function testPostEditSiteSetting($key, $value, $expected) {
+        // Try to post data
+        $response = $this
+            ->actingAs($this->user)
+            ->post('/admin/site-settings/'.$key, [$key.'_value' => $value]);
+
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('site_settings', [
+                'key'   => $key,
+                'value' => $value,
+            ]);
+        } else {
+            $response->assertSessionHasErrors();
+        }
+    }
+
+    public function settingsProvider() {
+        return [
+            'open site'         => ['visitors_can_read', 0, 1],
+            'open registration' => ['is_registration_open', 0, 1],
+            'invalid setting'   => ['invalid', 1, 0],
+        ];
     }
 }
