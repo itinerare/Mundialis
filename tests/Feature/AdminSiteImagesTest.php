@@ -18,7 +18,7 @@ class AdminSiteImagesTest extends TestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->user = User::factory()->admin()->create();
+        $this->user = User::factory()->admin()->make();
     }
 
     /**
