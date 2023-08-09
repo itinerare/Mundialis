@@ -16,7 +16,7 @@ abstract class TestCase extends BaseTestCase {
         $this->artisan('add-site-pages');
         $this->artisan('copy-default-images');
 
-        // Create a user to assist with general testing
+        // Create a temporary user to assist with general testing
         $this->user = User::factory()->make();
     }
 
