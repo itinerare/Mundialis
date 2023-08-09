@@ -218,7 +218,7 @@ class UserController extends Controller {
 
         if (!$user) {
             (new UserService)->addError('Invalid user.');
-        } elseif(!$user->is_banned) {
+        } elseif (!$user->is_banned) {
             (new UserService)->addError('This user is not banned.');
         } elseif ($user->rank->sort == 2) {
             (new UserService)->addError('You cannot unban an admin.');
