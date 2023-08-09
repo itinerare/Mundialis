@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\User\InvitationCode;
 use App\Models\User\User;
 use App\Services\InvitationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,7 +11,7 @@ class AdminInvitationTest extends TestCase {
     use RefreshDatabase;
 
     /******************************************************************************
-        INVITATIONS
+        ADMIN / INVITATIONS
     *******************************************************************************/
 
     protected function setUp(): void {

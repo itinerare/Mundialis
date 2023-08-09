@@ -5,24 +5,27 @@ namespace Tests\Feature;
 use App\Models\User\Rank;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AdminRankTest extends TestCase {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     /******************************************************************************
-        RANKS
+        ADMIN / RANKS
     *******************************************************************************/
+
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->user = User::factory()->admin()->create();
+    }
 
     /**
      * Test rank index access.
      */
-    public function testCanGetRankIndex() {
-        // Make a temporary user
-        $user = User::factory()->admin()->make();
-
-        // Attempt page access
-        $response = $this->actingAs($user)
+    public function testGetRankIndex() {
+        $this->actingAs($this->user)
             ->get('/admin/ranks')
             ->assertStatus(200);
     }
@@ -30,41 +33,57 @@ class AdminRankTest extends TestCase {
     /**
      * Test rank edit access.
      */
-    public function testCanGetEditRank() {
-        // Make a temporary user
-        $user = User::factory()->admin()->make();
+    public function testGetEditRank() {
         $rank = Rank::orderBy('sort', 'ASC')->first();
 
         // Attempt page access
-        $response = $this->actingAs($user)
+        $this->actingAs($this->user)
             ->get('/admin/ranks/edit/'.$rank->id)
             ->assertStatus(200);
     }
 
     /**
      * Test rank editing.
+     *
+     * @dataProvider rankEditProvider
+     *
+     * @param bool $withName
+     * @param bool $withDesc
+     * @param bool $expected
      */
-    public function testCanPostEditRank() {
-        // Make a temporary user
-        $user = User::factory()->admin()->make();
-        // Get the information for the lowest rank
+    public function testPostEditRank($withName, $withDesc, $expected) {
+        // Get the the lowest/member rank
         $rank = Rank::orderBy('sort', 'ASC')->first();
 
-        // Make sure the setting is default so as to consistently test
-        $rank->update(['description' => 'A regular member of the site.']);
+        // Generate some testing data
+        $name = $this->faker->unique()->domainWord();
+        $description = $this->faker->unique()->domainWord();
 
-        // Try to post data
         $response = $this
-            ->actingAs($user)
-            ->post('/admin/ranks/edit/'.$rank->id, [
-                'name'        => 'Member',
-                'description' => 'TEST SUCCESS',
+            ->actingAs($this->user)
+            ->post('/admin/ranks/edit/'.($expected ? $rank->id : 5), [
+                'name'        => $withName ? $name : $rank->name,
+                'description' => $withDesc ? $description : $rank->description,
             ]);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('ranks', [
-            'name'        => 'Member',
-            'description' => 'TEST SUCCESS',
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('ranks', [
+                'id'          => $rank->id,
+                'name'        => $withName ? $name : 'Member',
+                'description' => $withDesc ? $description : 'A regular member of the site.',
+            ]);
+        } else {
+            $response->assertSessionHasErrors();
+        }
+    }
+
+    public function rankEditProvider() {
+        return [
+            'with name'        => [1, 0, 1],
+            'with description' => [0, 1, 1],
+            'with both'        => [1, 1, 1],
+            'invalid rank'     => [1, 0, 0],
+        ];
     }
 }
