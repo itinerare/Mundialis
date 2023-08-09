@@ -179,13 +179,12 @@ class UserController extends Controller {
 
     public function postBan(Request $request, UserService $service, $name) {
         $user = User::where('name', $name)->first();
-        $wasBanned = $user->is_banned;
         if (!$user) {
             (new UserService)->addError('Invalid user.');
         } elseif ($user->rank->sort == 2) {
             (new UserService)->addError('You cannot ban an admin.');
         } elseif ($service->ban(['ban_reason' => $request->get('ban_reason')], $user, Auth::user())) {
-            flash($wasBanned ? 'User ban reason edited successfully.' : 'User banned successfully.')->success();
+            flash($user->is_banned ? 'User ban reason edited successfully.' : 'User banned successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 $service->addError($error);
