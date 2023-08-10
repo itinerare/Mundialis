@@ -23,9 +23,8 @@ class AuthPasswordResetTest extends TestCase {
      * Test password reset access.
      */
     public function testCanGetPasswordReset() {
-        $response = $this->get('forgot-password');
-
-        $response->assertStatus(200);
+        $response = $this->get('forgot-password')
+            ->assertStatus(200);
     }
 
     /**
@@ -37,11 +36,9 @@ class AuthPasswordResetTest extends TestCase {
 
         $this->expectsNotification($user, ResetPassword::class);
 
-        $response = $this->post('forgot-password', [
+        $this->post('forgot-password', [
             'email' => $user->email,
-        ]);
-
-        $response->assertStatus(302);
+        ])->assertStatus(302);
     }
 
     /**
@@ -61,12 +58,10 @@ class AuthPasswordResetTest extends TestCase {
      */
     public function testCanGetPasswordResetForm() {
         $user = User::factory()->create();
-
         $token = Password::createToken($user);
 
-        $response = $this->get('reset-password/'.$token);
-
-        $response->assertStatus(200);
+        $this->get('reset-password/'.$token)
+            ->assertStatus(200);
     }
 
     /**
@@ -74,10 +69,9 @@ class AuthPasswordResetTest extends TestCase {
      */
     public function testCanResetUserPassword() {
         $user = User::factory()->create();
-
         $token = Password::createToken($user);
 
-        $response = $this->post('reset-password', [
+        $this->post('reset-password', [
             'token'                 => $token,
             'email'                 => $user->email,
             'password'              => 'password',
