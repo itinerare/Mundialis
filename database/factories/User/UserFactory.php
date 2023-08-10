@@ -48,7 +48,7 @@ class UserFactory extends Factory {
         }
 
         return [
-            'name'              => $this->faker->unique()->userName(),
+            'name'              => $this->faker->unique()->domainWord(),
             'email'             => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'rank_id'           => Rank::orderBy('sort', 'ASC')->first(),
