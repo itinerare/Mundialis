@@ -9,7 +9,7 @@ use App\Services\InvitationService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
-use Settings;
+use App\Facades\Settings;
 
 class CreateNewUser implements CreatesNewUsers {
     use PasswordValidationRules;
