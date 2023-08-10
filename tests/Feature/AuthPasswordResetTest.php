@@ -26,43 +26,51 @@ class AuthPasswordResetTest extends TestCase {
     /**
      * Test password reset access.
      */
-    public function testCanGetPasswordReset() {
-        $response = $this->get('forgot-password')
+    public function testGetPasswordReset() {
+        $this->get('forgot-password')
             ->assertStatus(200);
     }
 
     /**
-     * Test password reset email with a valid user.
-     * This should work.
+     * Test password reset email.
+     *
+     * @dataProvider passwordResetProvider
+     *
+     * @param bool $isValid
+     * @param bool $expected
      */
-    public function testCanPostValidPasswordResetEmail() {
-        $user = User::factory()->create();
+    public function testPostPasswordResetEmail($isValid, $expected) {
+        if ($isValid) {
+            $user = User::factory()->create();
+            $this->expectsNotification($user, ResetPassword::class);
+        } else {
+            $this->doesntExpectJobs(ResetPassword::class);
+        }
 
-        $this->expectsNotification($user, ResetPassword::class);
+        $response = $this->post('forgot-password', [
+            'email' => $isValid ? $user->email : 'invalid@email.com',
+        ]);
 
-        $this->post('forgot-password', [
-            'email' => $user->email,
-        ])->assertStatus(302);
+        if ($expected) {
+            $response->assertStatus(302);
+            $response->assertSessionHasNoErrors();
+        } else {
+            $response->assertSessionHasErrors();
+        }
     }
 
-    /**
-     * Test password reset email with an invalid user.
-     * This shouldn't work.
-     */
-    public function testCannotPostInvalidPasswordResetEmail() {
-        $this->doesntExpectJobs(ResetPassword::class);
-
-        $this->post('forgot-password', [
-            'email' => 'invalid@email.com',
-        ]);
+    public function passwordResetProvider() {
+        return [
+            'valid user'   => [1, 1],
+            'invalid user' => [0, 0],
+        ];
     }
 
     /**
      * Test password reset form access.
      */
-    public function testCanGetPasswordResetForm() {
-        $user = User::factory()->create();
-        $token = Password::createToken($user);
+    public function testGetPasswordResetForm() {
+        $token = Password::createToken($this->user);
 
         $this->get('reset-password/'.$token)
             ->assertStatus(200);
@@ -71,7 +79,7 @@ class AuthPasswordResetTest extends TestCase {
     /**
      * Test password resetting.
      */
-    public function testCanResetUserPassword() {
+    public function testResetUserPassword() {
         $user = User::factory()->create();
         $token = Password::createToken($user);
 

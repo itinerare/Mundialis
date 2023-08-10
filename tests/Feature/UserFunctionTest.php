@@ -15,7 +15,7 @@ class UserFunctionTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /******************************************************************************
-        SETTINGS
+        USER / SETTINGS
     *******************************************************************************/
 
     /**
