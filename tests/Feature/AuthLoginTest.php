@@ -13,8 +13,12 @@ class AuthLoginTest extends TestCase {
     // They are modified from https://github.com/dwightwatson/laravel-auth-tests
 
     /******************************************************************************
-        LOGIN
+        AUTH / LOGIN
     *******************************************************************************/
+
+    protected function setUp(): void {
+        parent::setUp();
+    }
 
     /**
      * Test login form access.

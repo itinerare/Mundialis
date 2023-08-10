@@ -15,8 +15,12 @@ class AuthRegistrationTest extends TestCase {
     // They are modified from https://github.com/dwightwatson/laravel-auth-tests
 
     /******************************************************************************
-        REGISTRATION
+        AUTH / REGISTRATION
     *******************************************************************************/
+
+    protected function setUp(): void {
+        parent::setUp();
+    }
 
     /**
      * Test registration page access.

@@ -16,8 +16,12 @@ class AuthPasswordResetTest extends TestCase {
     // They are modified from https://github.com/dwightwatson/laravel-auth-tests
 
     /******************************************************************************
-        PASSWORD RESET
+        AUTH / PASSWORD RESET
     *******************************************************************************/
+
+    protected function setUp(): void {
+        parent::setUp();
+    }
 
     /**
      * Test password reset access.
