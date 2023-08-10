@@ -45,8 +45,6 @@ class AuthRegistrationTest extends TestCase {
         // Adjust site settings as necessary
         DB::table('site_settings')->where('key', 'is_registration_open')->update(['value' => $isOpen]);
 
-        $user = User::factory()->safeUsername()->make();
-
         if ($code[0] && $code[1]) {
             // Create a persistent admin and generate an invitation code
             $admin = User::factory()->admin()->create();
@@ -65,8 +63,8 @@ class AuthRegistrationTest extends TestCase {
         }
 
         $response = $this->post('register', [
-            'name'                  => $user->name,
-            'email'                 => $user->email,
+            'name'                  => $this->user->name,
+            'email'                 => $this->user->email,
             'password'              => 'password',
             'password_confirmation' => $isValid ? 'password' : 'invalid',
             'agreement'             => $isValid ?? null,
