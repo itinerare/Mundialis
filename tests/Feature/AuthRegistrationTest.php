@@ -20,184 +20,89 @@ class AuthRegistrationTest extends TestCase {
 
     /**
      * Test registration page access.
-     * This should always return positive regardless of
-     * whether registration is currently open or not.
+     * This should always succeed, regardless of if registration is currently open.
      */
     public function testCanGetRegisterForm() {
-        $response = $this->get('/register');
-
-        $response->assertStatus(200);
+        $this->get('/register')
+            ->assertStatus(200);
     }
 
     /**
      * Test registration.
-     * A valid user cannot be registered when registration is closed.
+     *
+     * @dataProvider postRegistrationProvider
+     *
+     * @param bool  $isValid
+     * @param bool  $isOpen
+     * @param array $code
+     * @param bool  $expected
      */
-    public function testCannotPostValidRegistrationWhenClosed() {
-        // Ensure site settings are present to modify
-        $this->artisan('add-site-settings');
-
-        // Set registration to closed to test
-        DB::table('site_settings')->where('key', 'is_registration_open')->update(['value' => 0]);
+    public function testPostRegistration($isValid, $isOpen, $code, $expected) {
+        // Adjust site settings as necessary
+        DB::table('site_settings')->where('key', 'is_registration_open')->update(['value' => $isOpen]);
 
         $user = User::factory()->safeUsername()->make();
 
-        // Create a persistent admin to generate an invitation code
-        $admin = User::factory()->admin()->create();
-        $code = (new InvitationService)->generateInvitation($admin);
+        if ($code[0] && $code[1]) {
+            // Create a persistent admin and generate an invitation code
+            $admin = User::factory()->admin()->create();
+            $invitation = (new InvitationService)->generateInvitation($admin);
+
+            if ($code[2]) {
+                // Mark the code used if relevant
+                $recipient = User::factory()->create();
+                $invitation->update(['recipient_id' => $recipient->id]);
+            }
+
+            $invitationCode = $invitation->code;
+        } elseif ($code[0] && !$code[1]) {
+            // Otherwise generate a fake "code"
+            $invitationCode = randomString(15);
+        }
 
         $response = $this->post('register', [
             'name'                  => $user->name,
             'email'                 => $user->email,
             'password'              => 'password',
-            'password_confirmation' => 'password',
-            'agreement'             => 1,
-            'code'                  => $code->code,
+            'password_confirmation' => $isValid ? 'password' : 'invalid',
+            'agreement'             => $isValid ?? null,
+            'code'                  => $code[0] ? $invitationCode : null,
         ]);
 
-        $this->assertGuest();
+        if ($expected) {
+            $response->assertStatus(302);
+            $response->assertSessionHasNoErrors();
+            $this->assertAuthenticated();
+        } else {
+            if ($isOpen) {
+                // Any errors will only be added to the session if registration is open/
+                // the form is accessible, so only check in that instance
+                $response->assertSessionHasErrors();
+            }
+            $this->assertGuest();
+        }
     }
 
-    /**
-     * Test registration.
-     * Registration requires an invitation code.
-     */
-    public function testCannotPostValidRegistrationWhenOpenWithoutCode() {
-        // Ensure site settings are present to modify
-        $this->artisan('add-site-settings');
+    public function postRegistrationProvider() {
+        // $code = [$withCode, $isValid, $isUsed]
 
-        // Set registration to open to test
-        DB::table('site_settings')->where('key', 'is_registration_open')->update(['value' => 1]);
-
-        $user = User::factory()->safeUsername()->make();
-
-        $response = $this->post('register', [
-            'name'                  => $user->name,
-            'email'                 => $user->email,
-            'password'              => 'password',
-            'password_confirmation' => 'password',
-            'agreement'             => 1,
-            'code'                  => null,
-        ]);
-
-        $response->assertSessionHasErrors();
-
-        $this->assertGuest();
-    }
-
-    /**
-     * Test registration.
-     * Registration requires a valid invitation code.
-     */
-    public function testCannotPostValidRegistrationWhenOpenWithInvalidCode() {
-        // Ensure site settings are present to modify
-        $this->artisan('add-site-settings');
-
-        // Set registration to open to test
-        DB::table('site_settings')->where('key', 'is_registration_open')->update(['value' => 1]);
-
-        $user = User::factory()->safeUsername()->make();
-
-        $response = $this->post('register', [
-            'name'                  => $user->name,
-            'email'                 => $user->email,
-            'password'              => 'password',
-            'password_confirmation' => 'password',
-            'agreement'             => 1,
-            'code'                  => randomString(15),
-        ]);
-
-        $response->assertSessionHasErrors();
-
-        $this->assertGuest();
-    }
-
-    /**
-     * Test registration.
-     * Registration requires a valid, unused invitation code.
-     */
-    public function testCannotPostValidRegistrationWhenOpenWithUsedCode() {
-        // Ensure site settings are present to modify
-        $this->artisan('add-site-settings');
-
-        // Set registration to open to test
-        DB::table('site_settings')->where('key', 'is_registration_open')->update(['value' => 1]);
-
-        $user = User::factory()->safeUsername()->make();
-
-        // Create a persistent admin to generate an invitation code
-        $admin = User::factory()->admin()->create();
-        // Create a code to use,
-        $code = (new InvitationService)->generateInvitation($admin);
-        // a recipient,
-        $recipient = User::factory()->create();
-        // and set the recipient's ID
-        $code->update(['recipient_id' => $recipient->id]);
-
-        $response = $this->post('register', [
-            'name'                  => $user->name,
-            'email'                 => $user->email,
-            'password'              => 'password',
-            'password_confirmation' => 'password',
-            'agreement'             => 1,
-            'code'                  => $code->code,
-        ]);
-
-        $response->assertSessionHasErrors();
-
-        $this->assertGuest();
-    }
-
-    /**
-     * Test registration.
-     * Ensure valid user (with unused invitation code) can be registered.
-     */
-    public function testCanPostValidRegistrationWhenOpenWithCode() {
-        // Ensure site settings are present to modify
-        $this->artisan('add-site-settings');
-
-        // Set registration to open to test
-        DB::table('site_settings')->where('key', 'is_registration_open')->update(['value' => 1]);
-
-        $user = User::factory()->safeUsername()->make();
-
-        // Create a persistent admin to generate an invitation code
-        $admin = User::factory()->admin()->create();
-        $code = (new InvitationService)->generateInvitation($admin);
-
-        $response = $this->post('register', [
-            'name'                  => $user->name,
-            'email'                 => $user->email,
-            'password'              => 'password',
-            'password_confirmation' => 'password',
-            'agreement'             => 1,
-            'code'                  => $code->code,
-        ]);
-
-        $response->assertStatus(302);
-
-        $this->assertAuthenticated();
-    }
-
-    /**
-     * Test registration.
-     * Ensure an invalid user cannot be registered.
-     */
-    public function testCannotPostInvalidRegistration() {
-        // Ensure site settings are present
-        $this->artisan('add-site-settings');
-
-        $user = User::factory()->safeUsername()->make();
-
-        $response = $this->post('register', [
-            'name'                  => $user->name,
-            'email'                 => $user->email,
-            'password'              => 'password',
-            'password_confirmation' => 'invalid',
-        ]);
-
-        $response->assertSessionHasErrors();
-
-        $this->assertGuest();
+        return [
+            'valid, open, with unused code'      => [1, 1, [1, 1, 0], 1],
+            'valid, open, with used code'        => [1, 1, [1, 1, 1], 0],
+            'valid, open, with invalid code'     => [1, 1, [1, 0, 0], 0],
+            'valid, open, without code'          => [1, 1, [0, 0, 0], 0],
+            'valid, closed, with unused code'    => [1, 0, [1, 1, 0], 0],
+            'valid, closed, with used code'      => [1, 0, [1, 1, 1], 0],
+            'valid, closed, with invalid code'   => [1, 0, [1, 0, 0], 0],
+            'valid, closed, without code'        => [1, 0, [0, 0, 0], 0],
+            'invalid, open, with unused code'    => [0, 1, [1, 1, 0], 0],
+            'invalid, open, with used code'      => [0, 1, [1, 1, 1], 0],
+            'invalid, open, with invalid code'   => [0, 1, [1, 0, 0], 0],
+            'invalid, open, without code'        => [0, 1, [0, 0, 0], 0],
+            'invalid, closed, with unused code'  => [0, 0, [1, 1, 0], 0],
+            'invalid, closed, with used code'    => [0, 0, [1, 1, 1], 0],
+            'invalid, closed, with invalid code' => [0, 0, [1, 0, 0], 0],
+            'invalid, closed, without code'      => [0, 0, [0, 0, 0], 0],
+        ];
     }
 }
