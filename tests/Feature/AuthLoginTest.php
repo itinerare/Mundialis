@@ -19,25 +19,24 @@ class AuthLoginTest extends TestCase {
     /**
      * Test login form access.
      */
-    public function testCanGetLoginForm() {
-        $response = $this->get('/login');
-
-        $response->assertStatus(200);
+    public function testGetLoginForm() {
+        $this
+            ->get('/login')
+            ->assertStatus(200);
     }
 
     /**
      * Test login as a valid user.
      * This should work.
      */
-    public function testCanPostValidLogin() {
+    public function testPostValidLogin() {
         $user = User::factory()->create();
 
-        $response = $this->post('/login', [
-            'email'    => $user->email,
-            'password' => 'password',
-        ]);
-
-        $response->assertStatus(302);
+        $this
+            ->post('/login', [
+                'email'    => $user->email,
+                'password' => 'password',
+            ])->assertStatus(302);
 
         $this->assertAuthenticatedAs($user);
     }
@@ -46,15 +45,14 @@ class AuthLoginTest extends TestCase {
      * Test login as an invalid user.
      * This shouldn't work.
      */
-    public function testCannotPostInvalidLogin() {
+    public function testnotPostInvalidLogin() {
         $user = User::factory()->create();
 
-        $response = $this->post('/login', [
-            'email'    => $user->email,
-            'password' => 'invalid',
-        ]);
-
-        $response->assertSessionHasErrors();
+        $this
+            ->post('/login', [
+                'email'    => $user->email,
+                'password' => 'invalid',
+            ])->assertSessionHasErrors();
 
         $this->assertGuest();
     }
@@ -62,14 +60,11 @@ class AuthLoginTest extends TestCase {
     /**
      * Test user logout.
      */
-    public function testCanPostLogout() {
-        $user = User::factory()->create();
-
-        $response = $this
-            ->actingAs($user)
-            ->post('/logout');
-
-        $response->assertStatus(302);
+    public function testPostLogout() {
+        $this
+            ->actingAs(User::factory()->create())
+            ->post('/logout')
+            ->assertStatus(302);
 
         $this->assertGuest();
     }
