@@ -13,7 +13,6 @@ abstract class TestCase extends BaseTestCase {
 
         // Perform basic site setup
         $this->artisan('add-site-settings');
-        $this->artisan('add-site-pages');
         $this->artisan('copy-default-images');
 
         // Create a temporary user to assist with general testing
