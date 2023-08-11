@@ -19,216 +19,225 @@ use Tests\TestCase;
 class UserNotificationTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
+    /******************************************************************************
+        USER / NOTIFICATIONS
+    *******************************************************************************/
+
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->user = User::factory()->create();
+    }
+
     /**
      * Test notifications access.
+     *
+     * @dataProvider getNotificationsProvider
+     *
+     * @param bool $withNotification
+     * @param int  $status
      */
-    public function testCanGetEmptyNotifications() {
-        // Make a temporary user
-        $user = User::factory()->make();
+    public function testGetNotifications($withNotification, $status) {
+        if ($withNotification) {
+            // Create a notification to view
+            Notification::factory()->user($this->user->id)->watchedPageUpdated()->create();
+        }
 
-        $response = $this->actingAs($user)
+        $this->actingAs($this->user)
             ->get('/notifications')
-            ->assertStatus(200);
+            ->assertStatus($status);
+    }
+
+    public function getNotificationsProvider() {
+        return [
+            'empty'             => [0, 200],
+            'with notification' => [1, 200],
+        ];
     }
 
     /**
-     * Test notifications access with a notification.
+     * Test clearing all notifications.
+     *
+     * @dataProvider postClearNotificationsProvider
+     *
+     * @param bool $withNotification
      */
-    public function testCanGetNotificationsWithNotification() {
-        // Make a persistent user
-        $user = User::factory()->create();
+    public function testPostClearAllNotifications($withNotification) {
+        if ($withNotification) {
+            // Create a notification to clear
+            $notification = Notification::factory()->user($this->user->id)->watchedPageUpdated()->create();
+        }
 
-        // Create a notification to view
-        Notification::factory()->user($user->id)->watchedPageUpdated()->create();
-
-        $response = $this->actingAs($user)
-            ->get('/notifications')
-            ->assertStatus(200);
-    }
-
-    /**
-     * Test clearing all notifs without any notifications.
-     */
-    public function testCanPostClearAllNotificationsEmpty() {
-        // Make a temporary user
-        $user = User::factory()->make();
-
-        $response = $this->actingAs($user)
+        // This operation should always result in a redirect
+        $response = $this->actingAs($this->user)
             ->post('/notifications/clear')
             ->assertStatus(302);
+
+        $response->assertSessionHasNoErrors();
+        if ($withNotification) {
+            $this->assertModelMissing($notification);
+        }
+    }
+
+    public function postClearNotificationsProvider() {
+        return [
+            'empty'             => [0],
+            'with notification' => [1],
+        ];
     }
 
     /**
-     * Test clearing all notifs with a notification.
+     * Test clearing notifications of a set type.
+     *
+     * @dataProvider postClearTypedNotificationsProvider
+     *
+     * @param bool $withNotification
+     * @param bool $withUnrelated
      */
-    public function testCanPostClearAllNotificationsWithNotification() {
-        // Make a persistent user
-        $user = User::factory()->create();
+    public function testPostClearTypedNotifications($withNotification, $withUnrelated) {
+        if ($withNotification) {
+            // Create a notification to clear
+            $notification = Notification::factory()->user($this->user->id)->watchedPageUpdated()->create();
+        }
 
-        // Create a notification to clear
-        $notification = Notification::factory()->user($user->id)->watchedPageUpdated()->create();
+        if ($withUnrelated) {
+            // Create an unrelated notification that should not be cleared
+            $unrelatedNotification = Notification::factory()->user($this->user->id)->watchedPageDeleted()->create();
+        }
 
-        $response = $this->actingAs($user)
-            ->post('/notifications/clear');
-
-        // Verify that the notification has been deleted
-        $this->assertModelMissing($notification);
-    }
-
-    /**
-     * Test clearing notifs of a set type without any notifications.
-     */
-    public function testCanPostClearTypedNotificationsEmpty() {
-        // Make a temporary user
-        $user = User::factory()->make();
-
-        $response = $this->actingAs($user)
-            ->post('/notifications/clear/1')
+        // This operation should always result in a redirect
+        $response = $this->actingAs($this->user)
+            ->post('/notifications/clear/0')
             ->assertStatus(302);
+
+        $response->assertSessionHasNoErrors();
+        if ($withNotification) {
+            $this->assertModelMissing($notification);
+        }
+        if ($withUnrelated) {
+            $this->assertModelExists($unrelatedNotification);
+        }
     }
 
-    /**
-     * Test clearing notifs of a set type with a notification.
-     */
-    public function testCanPostClearTypedNotificationsWithNotification() {
-        // Make a persistent user
-        $user = User::factory()->create();
-
-        // Create a notification to clear
-        $notification = Notification::factory()->user($user->id)->watchedPageUpdated()->create();
-
-        $response = $this->actingAs($user)
-            ->post('/notifications/clear/0');
-
-        // Verify that the notification has been deleted
-        $this->assertModelMissing($notification);
-    }
-
-    /**
-     * Test clearing notifs only of a set type, leaving others alone.
-     */
-    public function testCanPostClearOnlyTypedNotifications() {
-        // Make a persistent user
-        $user = User::factory()->create();
-
-        // Create a notification to persist
-        $notification = Notification::factory()->user($user->id)->watchedPageDeleted()->create();
-
-        // Create a notification to clear
-        Notification::factory()->user($user->id)->watchedPageUpdated()->create();
-
-        $response = $this->actingAs($user)
-            ->post('/notifications/clear/0');
-
-        // Verify that the notification has been deleted
-        $this->assertDatabaseHas('notifications', [
-            'id' => $notification->id,
-        ]);
-    }
-
-    /**
-     * Test sending a notification by editing a watched page.
-     */
-    public function testCanSendPageUpdateNotification() {
-        // Make a persistent user to receive the notification
-        $user = User::factory()->create();
-        // Make a persistent editor to make changes
-        $editor = User::factory()->editor()->create();
-
-        // Create a page to watch & version
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->create();
-
-        // Create a page watch record
-        WatchedPage::factory()->user($user->id)->page($page->id)->create();
-
-        // Define some basic data
-        $data = [
-            'title'   => $this->faker->unique()->domainWord(),
-            'summary' => null,
+    public function postClearTypedNotificationsProvider() {
+        return [
+            'empty'                                 => [0, 0],
+            'with notification'                     => [1, 0],
+            'with unrelated notif'                  => [0, 1],
+            'with notification and unrelated notif' => [1, 1],
         ];
-
-        // Edit the page; this should send a notification to the user
-        $response = $this->actingAs($editor)
-            ->post('/pages/'.$page->id.'/edit', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('notifications', [
-            'user_id'              => $user->id,
-            'notification_type_id' => 0,
-        ]);
     }
 
     /**
-     * Test basic image editing.
+     * Test sending notifications.
+     *
+     * @dataProvider sendNotificationsProvider
+     *
+     * @param int  $type
+     * @param bool $userWatched
+     * @param bool $editorWatched
      */
-    public function testCanSendPageImageUpdateNotification() {
-        // Make a persistent user to receive the notification
-        $user = User::factory()->create();
+    public function testSendNotification($type, $userWatched, $editorWatched) {
         // Make a persistent editor to make changes
         $editor = User::factory()->editor()->create();
 
-        // Create a page to watch & attach the image to
+        // Create a page & version
         $page = Page::factory()->create();
         PageVersion::factory()->page($page->id)->user($editor->id)->create();
 
-        // Create a page watch record
-        WatchedPage::factory()->user($user->id)->page($page->id)->create();
+        // Create page watch record(s)
+        if ($userWatched) {
+            WatchedPage::factory()->user($this->user->id)->page($page->id)->create();
+        }
+        if ($editorWatched) {
+            WatchedPage::factory()->user($editor->id)->page($page->id)->create();
+        }
 
-        // Create the image and associated records
-        $image = PageImage::factory()->create();
-        $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
-        PageImageCreator::factory()->image($image->id)->user($editor->id)->create();
-        PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        switch ($type) {
+            case 0:
+                // WATCHED_PAGE_UPDATED
 
-        // Define some basic data
-        $data = [
-            'description' => $this->faker->unique()->domainWord(),
-            'creator_id'  => [0 => $user->id],
-            'creator_url' => [0 => null],
+                // Generate some test data
+                $data = [
+                    'title'   => $this->faker->unique()->domainWord(),
+                    'summary' => null,
+                ];
+
+                // Edit the page; this should prompt a notification if relevant
+                $response = $this->actingAs($editor)
+                    ->post('/pages/'.$page->id.'/edit', $data);
+                break;
+            case 1:
+                // WATCHED_PAGE_IMAGE_UPDATED
+
+                // Create the image and associated records
+                $image = PageImage::factory()->create();
+                $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
+                PageImageCreator::factory()->image($image->id)->user($editor->id)->create();
+                PagePageImage::factory()->page($page->id)->image($image->id)->create();
+                (new ImageManager)->testImages($image, $version);
+
+                // Generate some test data
+                $data = [
+                    'description' => $this->faker->unique()->domainWord(),
+                    'creator_id'  => [0 => $this->user->id],
+                    'creator_url' => [0 => null],
+                ];
+
+                // Edit the image; this should prompt a notification if relevant
+                $response = $this
+                    ->actingAs($editor)
+                    ->post('/pages/'.$page->id.'/gallery/edit/'.$image->id, $data);
+
+                // Clean up the test images
+                unlink($image->imagePath.'/'.$version->thumbnailFileName);
+                unlink($image->imagePath.'/'.$version->imageFileName);
+                break;
+            case 2:
+                // WATCHED_PAGE_DELETED
+                $response = $this->actingAs($editor)
+                    ->post('/pages/'.$page->id.'/delete');
+                break;
+        }
+
+        $response->assertSessionHasNoErrors();
+        if ($userWatched) {
+            $this->assertDatabaseHas('notifications', [
+                'user_id'              => $this->user->id,
+                'notification_type_id' => $type,
+            ]);
+        } else {
+            $this->assertDatabaseMissing('notifications', [
+                'user_id'              => $this->user->id,
+                'notification_type_id' => $type,
+            ]);
+        }
+        if ($editorWatched) {
+            $this->assertDatabaseMissing('notifications', [
+                'user_id'              => $editor,
+                'notification_type_id' => $type,
+            ]);
+        }
+
+        if (!$userWatched && !$editorWatched) {
+            $this->assertDatabaseCount('notifications', 0);
+        }
+    }
+
+    public function sendNotificationsProvider() {
+        return [
+            'watched page updated, no watchers'            => [0, 0, 0],
+            'watched page updated, user watcher'           => [0, 1, 0],
+            'watched page updated by editor watcher'       => [0, 0, 1],
+            'watched page updated, both watchers'          => [0, 1, 1],
+            'watched page image updated, no watchers'      => [1, 0, 0],
+            'watched page image updated, user watcher'     => [1, 1, 0],
+            'watched page image updated by editor watcher' => [1, 0, 1],
+            'watched page image updated, both watchers'    => [1, 1, 1],
+            'watched page deleted, no watchers'            => [2, 0, 0],
+            'watched page deleted, user watcher'           => [2, 1, 0],
+            'watched page deleted by editor watcher'       => [2, 0, 1],
+            'watched page deleted, both watchers'          => [2, 1, 1],
         ];
-
-        // Try to post data
-        $response = $this
-            ->actingAs($editor)
-            ->post('/pages/'.$page->id.'/gallery/edit/'.$image->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('notifications', [
-            'user_id'              => $user->id,
-            'notification_type_id' => 1,
-        ]);
-
-        // Delete the test images, to clean up
-        unlink($image->imagePath.'/'.$version->thumbnailFileName);
-        unlink($image->imagePath.'/'.$version->imageFileName);
-    }
-
-    /**
-     * Test sending a notification by deleting a watched page.
-     */
-    public function testCanSendPageDeleteNotification() {
-        // Make a persistent user to receive the notification
-        $user = User::factory()->create();
-        // Make a persistent editor to make changes
-        $editor = User::factory()->editor()->create();
-
-        // Create a page to watch & version
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->create();
-
-        // Create a page watch record
-        WatchedPage::factory()->user($user->id)->page($page->id)->create();
-
-        // Edit the page; this should send a notification to the user
-        $response = $this->actingAs($editor)
-            ->post('/pages/'.$page->id.'/delete');
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('notifications', [
-            'user_id'              => $user->id,
-            'notification_type_id' => 2,
-        ]);
     }
 }
