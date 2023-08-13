@@ -4,6 +4,18 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.2.3](https://github.com/itinerare/Mundialis/compare/v2.2.2...v2.2.3) (2023-08-13)
+
+### Bug Fixes
+
+
+##### Lang
+
+* Fix uncategorized entry displayName link ([e8646e](https://github.com/itinerare/Mundialis/commit/e8646e5292a287d5d19bb17ca22e83b26f317758))
+
+
+---
+
 ## [2.2.2](https://github.com/itinerare/Mundialis/compare/v2.2.1...v2.2.2) (2023-08-06)
 
 ### Bug Fixes
