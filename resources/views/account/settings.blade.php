@@ -21,8 +21,7 @@
                     <h3>Avatar</h3>
                     <div class="text-left">
                         <div class="alert alert-warning">Please note a hard refresh may be required to see your updated
-                            avatar. Also please note that uploading a .gif will display a 500 error after; the upload should
-                            still work, however.</div>
+                            avatar.</div>
                     </div>
                     <form enctype="multipart/form-data" action="avatar" method="POST">
                         <label>Update Profile Image</label><br>

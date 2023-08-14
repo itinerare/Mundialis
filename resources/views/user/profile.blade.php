@@ -16,17 +16,17 @@
     @endif
 
     <div class="row mb-4">
-        <div class="col-md-3 text-center mobile-show mb-4">
+        <div class="col-md-3 text-center d-block d-md-none mb-4">
             <img src="/images/avatars/{{ $user->avatar }}" class="userAvatar" style="width:200px;height:200px;">
         </div>
         <div class="col-md card my-2">
-            <img src="/images/avatars/{{ $user->avatar }}" class="userAvatar mobile-hide"
+            <img src="/images/avatars/{{ $user->avatar }}" class="userAvatar d-none d-md-block"
                 style="position:absolute;width:200px;height:200px;margin-top:-10px; margin-left:-10px;
         margin-right:25px;">
             <div>
-                <img src="/images/avatars/{{ $user->avatar }}" class="userAvatar float-left mobile-hide"
+                <span class="userAvatar float-left d-none d-md-block"
                     style="width:175px;height:175px;
-            margin-right:25px;">
+            margin-right:25px;"></span>
                 <div class="borderhr my-2">
                     <h1>
                         {!! $user->displayName !!}
