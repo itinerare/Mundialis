@@ -59,20 +59,7 @@ class LexiconEntryFactory extends Factory {
     public function conjugationData() {
         return $this->state(function (array $attributes) {
             return [
-                'data' => '{"Singular Nominative":"'.$this->faker->unique()->domainWord().'","Singular Accusative":null,"Singular Dative":null,"Plural Nominative":null,"Plural Accusative":null,"Plural Dative":null}',
-            ];
-        });
-    }
-
-    /**
-     * Generate an entry with conjugation data. Matches extended category data.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    public function extendedConjugationData() {
-        return $this->state(function (array $attributes) {
-            return [
-                'data' => '{"Singular Nominative":"test","Singular Accusative":null,"Singular Dative":null,"Plural Nominative":null,"Plural Accusative":null,"Plural Dative":null}',
+                'data' => '{"Nominative Singular:"'.$this->faker->unique()->domainWord().'","Nominative Plural":null}',
             ];
         });
     }

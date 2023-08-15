@@ -34,7 +34,7 @@ class LexiconCategoryFactory extends Factory {
     public function testData($class = 1) {
         return $this->state(function (array $attributes) use ($class) {
             return [
-                'data' => '{"'.$class.'":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}}}}',
+                'data' => '{"'.$class.'":{"properties":{"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative"]},"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]}}}}',
             ];
         });
     }
@@ -49,7 +49,7 @@ class LexiconCategoryFactory extends Factory {
     public function extendedData($class = 1) {
         return $this->state(function (array $attributes) use ($class) {
             return [
-                'data' => '{"'.$class.'":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}},"conjugation":[{"criteria":["test"],"regex":["^"],"replacement":["b"]}]}}',
+                'data' => '{"'.$class.'":{"properties":{"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative"]},"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]}},"conjugation":[{"criteria":["[a-zA-Z]+"],"regex":["^"],"replacement":["b"]}]}}',
             ];
         });
     }
