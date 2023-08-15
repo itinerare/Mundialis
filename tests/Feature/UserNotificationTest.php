@@ -220,7 +220,7 @@ class UserNotificationTest extends TestCase {
         }
 
         if (!$userWatched && !$editorWatched) {
-            $this->assertDatabaseCount('notifications', 0);
+            $this->assertDatabaseEmpty('notifications');
         }
     }
 
