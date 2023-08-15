@@ -141,7 +141,7 @@ class LexiconEntry extends Model {
      * @return string
      */
     public function getDisplayNameAttribute() {
-        return '<a href="'.($this->category ? $this->category->url.'?word='.$this->word : 'language/lexicon?word='.$this->word).'">'.$this->word.'</a>';
+        return '<a href="'.($this->category ? $this->category->url.'?word='.$this->word : '/language?word='.$this->word).'">'.$this->word.'</a>';
     }
 
     /**

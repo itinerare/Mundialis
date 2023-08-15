@@ -4,6 +4,38 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.2.3](https://github.com/itinerare/Mundialis/compare/v2.2.2...v2.2.3) (2023-08-13)
+
+### Bug Fixes
+
+
+##### Lang
+
+* Fix uncategorized entry displayName link ([e8646e](https://github.com/itinerare/Mundialis/commit/e8646e5292a287d5d19bb17ca22e83b26f317758))
+
+
+---
+
+## [2.2.2](https://github.com/itinerare/Mundialis/compare/v2.2.1...v2.2.2) (2023-08-06)
+
+### Bug Fixes
+
+
+##### Lang
+
+* Fix descendent link for a non-categorized entry ([2ef9f0](https://github.com/itinerare/Mundialis/commit/2ef9f0858a84d21ccd054d860594993d7ab8a982))
+
+##### Pages
+
+* Add show/hide text swap JS to version view ([9c5c5a](https://github.com/itinerare/Mundialis/commit/9c5c5abf5e03a173b6ee09e6770a8f26cbbed1a6))
+
+##### Users
+
+* More refined deleted user check on invitation page ([3420dd](https://github.com/itinerare/Mundialis/commit/3420ddba96a47e5b15d1579375f132f96b21b54c))
+
+
+---
+
 ## [2.2.1](https://github.com/itinerare/Mundialis/compare/v2.2.0...v2.2.1) (2023-07-30)
 
 ### Bug Fixes
