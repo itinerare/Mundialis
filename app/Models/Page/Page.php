@@ -192,10 +192,7 @@ class Page extends Model {
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeSubject($query, $subject) {
-        return $query->whereIn(
-            'category_id',
-            SubjectCategory::where('subject', $subject)->pluck('id')->toArray()
-        );
+        return $query->whereRelation('category', 'subject', $subject);
     }
 
     /**
