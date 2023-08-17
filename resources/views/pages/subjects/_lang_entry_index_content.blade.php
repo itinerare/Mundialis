@@ -11,9 +11,9 @@
             ]) !!}
         </div>
         <div class="form-group mb-3">
-            {!! Form::text('pronounciation', Request::get('pronounciation'), [
+            {!! Form::text('pronunciation', Request::get('pronunciation'), [
                 'class' => 'form-control',
-                'placeholder' => 'Search Pronounciation',
+                'placeholder' => 'Search Pronunciation',
             ]) !!}
         </div>
     </div>

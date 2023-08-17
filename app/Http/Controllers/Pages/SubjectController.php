@@ -56,9 +56,9 @@ class SubjectController extends Controller {
                     $query->where('lexicon_entries.meaning', 'LIKE', '%'.$request->get('meaning').'%');
                 });
             }
-            if ($request->get('pronounciation')) {
+            if ($request->get('pronunciation')) {
                 $query->where(function ($query) use ($request) {
-                    $query->where('lexicon_entries.pronounciation', 'LIKE', '%'.$request->get('pronounciation').'%');
+                    $query->where('lexicon_entries.pronunciation', 'LIKE', '%'.$request->get('pronunciation').'%');
                 });
             }
             if ($request->get('category_id')) {
@@ -284,9 +284,9 @@ class SubjectController extends Controller {
                 $query->where('lexicon_entries.meaning', 'LIKE', '%'.$request->get('meaning').'%');
             });
         }
-        if ($request->get('pronounciation')) {
+        if ($request->get('pronunciation')) {
             $query->where(function ($query) use ($request) {
-                $query->where('lexicon_entries.pronounciation', 'LIKE', '%'.$request->get('pronounciation').'%');
+                $query->where('lexicon_entries.pronunciation', 'LIKE', '%'.$request->get('pronunciation').'%');
             });
         }
         if ($request->get('category_id')) {
