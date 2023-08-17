@@ -19,7 +19,7 @@
     @if ($chronology->children()->count())
         <h2>Sub-Categories</h2>
         @include('pages.subjects._time_category_index_content', [
-            'categories' => $category->children()->paginate(10),
+            'categories' => $chronology->children()->paginate(10),
         ])
 
         <hr />
