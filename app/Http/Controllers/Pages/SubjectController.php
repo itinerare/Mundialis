@@ -186,6 +186,12 @@ class SubjectController extends Controller {
             });
         }
 
+        if ($request->get('category_id')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('pages.category_id', $request->get('category_id'));
+            });
+        }
+
         if ($request->get('tags')) {
             foreach ($request->get('tags') as $tag) {
                 $query->whereIn('id', PageTag::tagSearch($tag)->tag()->pluck('page_id')->toArray());
