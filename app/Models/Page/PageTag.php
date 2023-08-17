@@ -3,9 +3,12 @@
 namespace App\Models\Page;
 
 use App\Models\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Config;
 
 class PageTag extends Model {
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
