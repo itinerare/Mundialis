@@ -61,6 +61,11 @@ class SubjectController extends Controller {
                     $query->where('lexicon_entries.pronounciation', 'LIKE', '%'.$request->get('pronounciation').'%');
                 });
             }
+            if ($request->get('category_id')) {
+                $query->where(function ($query) use ($request) {
+                    $query->where('lexicon_entries.class', $request->get('category_id'));
+                });
+            }
 
             if (isset($sort['sort'])) {
                 switch ($sort['sort']) {
@@ -282,6 +287,11 @@ class SubjectController extends Controller {
         if ($request->get('pronounciation')) {
             $query->where(function ($query) use ($request) {
                 $query->where('lexicon_entries.pronounciation', 'LIKE', '%'.$request->get('pronounciation').'%');
+            });
+        }
+        if ($request->get('category_id')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('lexicon_entries.class', $request->get('category_id'));
             });
         }
 
