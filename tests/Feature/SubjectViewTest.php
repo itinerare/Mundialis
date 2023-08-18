@@ -34,13 +34,16 @@ class SubjectViewTest extends TestCase {
      *
      * @param string $subject
      * @param bool   $withCategory
+     * @param bool   $withUnrelated
      * @param bool   $withExtra
      */
-    public function testGetSubject($subject, $withCategory, $withExtra) {
+    public function testGetViewSubject($subject, $withCategory, $withUnrelated, $withExtra) {
         if ($withCategory) {
             $category = SubjectCategory::factory()->subject($subject)->create();
         }
-
+        if ($withUnrelated) {
+            $unrelated = SubjectCategory::factory()->subject($subject != 'misc' ? 'misc' : 'people')->create();
+        }
         if ($withExtra) {
             switch ($subject) {
                 case 'time':
@@ -59,6 +62,9 @@ class SubjectViewTest extends TestCase {
         if ($withCategory) {
             $response->assertSee($category->name);
         }
+        if ($withUnrelated) {
+            $response->assertDontSee($unrelated->name);
+        }
         if ($withExtra) {
             switch ($subject) {
                 case 'time':
@@ -73,26 +79,34 @@ class SubjectViewTest extends TestCase {
 
     public function getSubjectProvider() {
         return [
-            'people'                                   => ['people', 0, 0],
-            'people with category'                     => ['people', 1, 0],
-            'places'                                   => ['places', 0, 0],
-            'places with category'                     => ['places', 1, 0],
-            'species'                                  => ['species', 0, 0],
-            'species with category'                    => ['species', 1, 0],
-            'things'                                   => ['things', 0, 0],
-            'things with category'                     => ['things', 1, 0],
-            'concepts'                                 => ['concepts', 0, 0],
-            'concepts with category'                   => ['concepts', 1, 0],
-            'time'                                     => ['time', 0, 0],
-            'time with category'                       => ['time', 1, 0],
-            'time with chronology'                     => ['time', 0, 1],
-            'time with category, chronology'           => ['time', 1, 1],
-            'language'                                 => ['language', 0, 0],
-            'language with category'                   => ['language', 1, 0],
-            'language with lexicon category'           => ['language', 0, 1],
-            'language with category, lexicon category' => ['language', 1, 1],
-            'misc'                                     => ['misc', 0, 0],
-            'misc with category'                       => ['misc', 1, 0],
+            'people'                                   => ['people', 0, 0, 0],
+            'people with category'                     => ['people', 1, 0, 0],
+            'people with unrelated'                    => ['people', 0, 1, 0],
+            'places'                                   => ['places', 0, 0, 0],
+            'places with category'                     => ['places', 1, 0, 0],
+            'places with unrelated'                    => ['places', 0, 1, 0],
+            'species'                                  => ['species', 0, 0, 0],
+            'species with category'                    => ['species', 1, 0, 0],
+            'species with unrelated'                   => ['species', 0, 1, 0],
+            'things'                                   => ['things', 0, 0, 0],
+            'things with category'                     => ['things', 1, 0, 0],
+            'things with unrelated'                    => ['things', 0, 1, 0],
+            'concepts'                                 => ['concepts', 0, 0, 0],
+            'concepts with category'                   => ['concepts', 1, 0, 0],
+            'concepts with unrelated'                  => ['concepts', 0, 1, 0],
+            'time'                                     => ['time', 0, 0, 0],
+            'time with category'                       => ['time', 1, 0, 0],
+            'time with unrelated'                      => ['time', 0, 1, 0],
+            'time with chronology'                     => ['time', 0, 0, 1],
+            'time with category, chronology'           => ['time', 1, 0, 1],
+            'language'                                 => ['language', 0, 0, 0],
+            'language with category'                   => ['language', 1, 0, 0],
+            'language with unrelated'                  => ['language', 0, 1, 0],
+            'language with lexicon category'           => ['language', 0, 0, 1],
+            'language with category, lexicon category' => ['language', 1, 0, 1],
+            'misc'                                     => ['misc', 0, 0, 0],
+            'misc with category'                       => ['misc', 1, 0, 0],
+            'misc with unrelated'                      => ['misc', 0, 1, 0],
         ];
     }
 
