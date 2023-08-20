@@ -68,7 +68,6 @@
                         <td>
                             {!! $category->parent ? $category->parent->name : '-' !!}
                         </td>
-                        <td>
                         <td class="text-right">
                             <a href="{{ url('admin/data/categories/edit/' . $category->id) }}"
                                 class="btn btn-primary">Edit</a>
