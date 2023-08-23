@@ -89,7 +89,7 @@ class PageRelationship extends Model {
         }
 
         // Get relevant config file
-        $config = Config::get('mundialis.'.$this->pageOne->category->subject['key'].'_relationships');
+        $config = config('mundialis.'.$this->pageOne->category->subject['key'].'_relationships');
 
         // Cycle through its groups
         foreach ($config as $group) {
@@ -114,7 +114,7 @@ class PageRelationship extends Model {
         }
 
         // Get relevant config file
-        $config = Config::get('mundialis.'.$this->pageTwo->category->subject['key'].'_relationships');
+        $config = config('mundialis.'.$this->pageTwo->category->subject['key'].'_relationships');
 
         // Cycle through its groups
         foreach ($config as $group) {

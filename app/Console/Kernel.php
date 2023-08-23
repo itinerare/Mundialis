@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel {
      * Define the application's command schedule.
      */
     protected function schedule(Schedule $schedule) {
-        if (Config::get('mundialis.settings.enable_backups')) {
+        if (config('mundialis.settings.enable_backups')) {
             $schedule->command('backup:clean')
                 ->daily()->at('01:30');
             $schedule->command('backup:run')

@@ -400,7 +400,7 @@ class ImageManager extends Service {
                 // Trim transparent parts of image.
                 $processImage = Image::make($image->imagePath.'/'.$version->imageFileName)->trim('transparent');
 
-                if (Config::get('mundialis.settings.image_thumbnail_automation') == 1) {
+                if (config('mundialis.settings.image_thumbnail_automation') == 1) {
                     // Make the image be square
                     $imageWidth = $processImage->width();
                     $imageHeight = $processImage->height();
@@ -565,11 +565,11 @@ class ImageManager extends Service {
     private function cropThumbnail($points, $pageImage, $version) {
         $image = Image::make($pageImage->imagePath.'/'.$version->imageFileName);
 
-        if (Config::get('mundialis.settings.watermark_image_thumbnails') == 1) {
+        if (config('mundialis.settings.watermark_image_thumbnails') == 1) {
             // Trim transparent parts of image
             $image->trim('transparent');
 
-            if (Config::get('mundialis.settings.image_thumbnail_automation') == 1) {
+            if (config('mundialis.settings.image_thumbnail_automation') == 1) {
                 // Make the image be square
                 $imageWidth = $image->width();
                 $imageHeight = $image->height();
@@ -585,8 +585,8 @@ class ImageManager extends Service {
                 }
             }
 
-            $cropWidth = Config::get('mundialis.settings.image_thumbnails.width');
-            $cropHeight = Config::get('mundialis.settings.image_thumbnails.height');
+            $cropWidth = config('mundialis.settings.image_thumbnails.width');
+            $cropHeight = config('mundialis.settings.image_thumbnails.height');
 
             $imageWidthOld = $image->width();
             $imageHeightOld = $image->height();
@@ -616,13 +616,13 @@ class ImageManager extends Service {
             $cropWidth = $points['x1'] - $points['x0'];
             $cropHeight = $points['y1'] - $points['y0'];
 
-            if (Config::get('mundialis.settings.image_thumbnail_automation') == 0) {
+            if (config('mundialis.settings.image_thumbnail_automation') == 0) {
                 // Crop according to the selected area
                 $image->crop($cropWidth, $cropHeight, $points['x0'], $points['y0']);
             }
 
             // Resize to fit the thumbnail size
-            $image->resize(Config::get('mundialis.settings.image_thumbnails.width'), Config::get('mundialis.settings.image_thumbnails.height'));
+            $image->resize(config('mundialis.settings.image_thumbnails.width'), config('mundialis.settings.image_thumbnails.height'));
         }
 
         // Save the thumbnail

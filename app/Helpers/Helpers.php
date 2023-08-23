@@ -145,7 +145,7 @@ function screenshot($url) {
 function prettyProfileLink($url) {
     $matches = [];
     // Check different sites and return site if a match is made, plus username (retreived from the URL)
-    foreach (Config::get('mundialis.sites') as $siteName=>$siteInfo) {
+    foreach (config('mundialis.sites') as $siteName=>$siteInfo) {
         if (preg_match_all($siteInfo['regex'], $url, $matches)) {
             $site = $siteName;
             $name = $matches[1][0];
@@ -156,7 +156,7 @@ function prettyProfileLink($url) {
 
     // Return formatted link if possible; failing that, an unformatted link
     if (isset($name) && isset($site) && isset($link)) {
-        return '<a href="https://'.$link.'">'.$name.'@'.(Config::get('mundialis.sites.'.$site.'.display_name') != null ? Config::get('mundialis.sites.'.$site.'.display_name') : $site).'</a>';
+        return '<a href="https://'.$link.'">'.$name.'@'.(config('mundialis.sites.'.$site.'.display_name') != null ? config('mundialis.sites.'.$site.'.display_name') : $site).'</a>';
     } else {
         return '<a href="'.$url.'">'.$url.'</a>';
     }

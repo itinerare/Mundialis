@@ -349,7 +349,7 @@ class PageController extends Controller {
         }, $preserveKeys = true)->toArray();
 
         // Collect subjects and information
-        $orderedSubjects = collect(Config::get('mundialis.subjects'))->filter(function ($subject) use ($groupedCategories) {
+        $orderedSubjects = collect(config('mundialis.subjects'))->filter(function ($subject) use ($groupedCategories) {
             if (isset($groupedCategories[$subject['name']])) {
                 return 1;
             } else {

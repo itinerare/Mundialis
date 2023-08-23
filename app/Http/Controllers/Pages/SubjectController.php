@@ -35,7 +35,7 @@ class SubjectController extends Controller {
      */
     public function getSubject($subject, Request $request) {
         $subjectKey = $subject;
-        $subject = Config::get('mundialis.subjects.'.$subject);
+        $subject = config('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
         if ($subject['key'] == 'language') {

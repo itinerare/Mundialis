@@ -29,10 +29,10 @@
                         {!! Form::close() !!}
                     </span>
                     <a class="card-title h5 collapse-title mb-2"
-                        href="#{{ str_replace(' ', '_', Config::get('mundialis.notifications.' . $type . '.name')) }}"
-                        data-toggle="collapse">{{ Config::get('mundialis.notifications.' . $type . '.name') }}
+                        href="#{{ str_replace(' ', '_', config('mundialis.notifications.' . $type . '.name')) }}"
+                        data-toggle="collapse">{{ config('mundialis.notifications.' . $type . '.name') }}
                     </a>
-                    <div id="{{ str_replace(' ', '_', Config::get('mundialis.notifications.' . $type . '.name')) }}"
+                    <div id="{{ str_replace(' ', '_', config('mundialis.notifications.' . $type . '.name')) }}"
                         class="collapse {{ $notifications->where('notification_type_id', $type)->count() < 5 ? 'show' : '' }} mt-2">
                         <table class="table notifications-table">
                             <thead>

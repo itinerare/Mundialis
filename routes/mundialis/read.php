@@ -22,9 +22,9 @@ Route::group(['prefix' => 'user', 'namespace' => 'Users'], function () {
 Route::group(['namespace' => 'Pages'], function () {
     // SUBJECTS/CATEGORIES
     Route::get('{subject}', 'SubjectController@getSubject')
-        ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
+        ->where('subject', implode('|', array_keys(config('mundialis.subjects'))));
     Route::get('{subject}/categories/{id}', 'SubjectController@getSubjectCategory')
-        ->where(['subject' => implode('|', array_keys(Config::get('mundialis.subjects'))), 'id' => '[0-9]+']);
+        ->where(['subject' => implode('|', array_keys(config('mundialis.subjects'))), 'id' => '[0-9]+']);
 
     // PAGES
     Route::group(['prefix' => 'pages'], function () {
@@ -87,7 +87,7 @@ Route::group(['namespace' => 'Pages'], function () {
         Route::get('wanted-pages', 'SpecialController@getWantedPages');
         Route::get('protected-pages', 'SpecialController@getProtectedPages');
         Route::get('{tag}-pages', 'SpecialController@getUtilityTagPages')
-            ->where('tag', implode('|', array_keys(Config::get('mundialis.utility_tags'))));
+            ->where('tag', implode('|', array_keys(config('mundialis.utility_tags'))));
 
         // LISTS
         Route::get('all-pages', 'SpecialController@getAllPages');

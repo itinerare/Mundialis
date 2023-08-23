@@ -118,7 +118,7 @@ class RelationshipController extends Controller {
             'pageOptions'         => Page::where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
                 return $option->category->subject['key'] == $page->category->subject['key'];
             })->pluck('title', 'id'),
-            'relationshipOptions' => Config::get('mundialis.'.$page->category->subject['key'].'_relationships'),
+            'relationshipOptions' => config('mundialis.'.$page->category->subject['key'].'_relationships'),
         ]);
     }
 
@@ -149,7 +149,7 @@ class RelationshipController extends Controller {
             'pageOptions'         => Page::where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
                 return $option->category->subject['key'] == $page->category->subject['key'];
             })->pluck('title', 'id'),
-            'relationshipOptions' => Config::get('mundialis.'.$page->category->subject['key'].'_relationships'),
+            'relationshipOptions' => config('mundialis.'.$page->category->subject['key'].'_relationships'),
         ]);
     }
 

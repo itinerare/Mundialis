@@ -418,8 +418,8 @@ class Page extends Model {
                 break;
             default:
                 $familyTypes =
-                    Config::get('mundialis.people_relationships.Familial') +
-                    Config::get('mundialis.people_relationships.Romantic') +
+                    config('mundialis.people_relationships.Familial') +
+                    config('mundialis.people_relationships.Romantic') +
                     ['platonic_partner' => 'Partner (platonic)'];
                 break;
         }

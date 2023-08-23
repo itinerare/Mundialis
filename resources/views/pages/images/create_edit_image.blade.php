@@ -35,7 +35,7 @@
         <div>{!! Form::file('image', ['id' => 'mainImage']) !!}</div>
     </div>
 
-    @if (Config::get('mundialis.settings.image_thumbnail_automation') === 1)
+    @if (config('mundialis.settings.image_thumbnail_automation') === 1)
         <div class="form-group">
             {!! Form::checkbox('use_cropper', 1, 1, [
                 'class' => 'form-check-input',
@@ -82,8 +82,8 @@
                 'This image is shown on page index and in the infobox if the image is the page\'s primary image, or in the page\'s gallery.',
             ) !!}
             <div>{!! Form::file('thumbnail') !!}</div>
-            <div class="text-muted">Recommended size: {{ Config::get('mundialis.settings.image_thumbnails.width') }}px x
-                {{ Config::get('mundialis.settings.image_thumbnails.height') }}px</div>
+            <div class="text-muted">Recommended size: {{ config('mundialis.settings.image_thumbnails.width') }}px x
+                {{ config('mundialis.settings.image_thumbnails.height') }}px</div>
         </div>
     </div>
 

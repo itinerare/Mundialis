@@ -35,7 +35,7 @@
             <ul>
                 <li><a href="{{ url('special/wanted-pages') }}">Wanted Pages</a></li>
                 <li><a href="{{ url('special/protected-pages') }}">Protected Pages</a></li>
-                @foreach (Config::get('mundialis.utility_tags') as $key => $tag)
+                @foreach (config('mundialis.utility_tags') as $key => $tag)
                     <li><a href="{{ url('special/' . $key . '-pages') }}"
                             class="{{ set_active('special/' . $key . '-pages') }}">{{ $tag['name'] }}</a></li>
                 @endforeach

@@ -3,7 +3,7 @@
 
     <li class="sidebar-section">
         <div class="sidebar-section-header">Subjects</div>
-        @foreach (Config::get('mundialis.subjects') as $subject => $values)
+        @foreach (config('mundialis.subjects') as $subject => $values)
             <div class="sidebar-item"><a href="{{ url('admin/data/' . $subject) }}"
                     class="{{ set_active('admin/' . $subject . '*') }}">{{ isset($values['name']) ? $values['name'] : ucfirst($subject) }}</a>
             </div>

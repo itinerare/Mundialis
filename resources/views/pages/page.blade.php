@@ -9,7 +9,7 @@
 @endsection
 
 @section('meta-desc')
-    {{ $page->summary ? $page->summary : Config::get('mundialis.settings.site_desc') }}
+    {{ $page->summary ? $page->summary : config('mundialis.settings.site_desc') }}
 @endsection
 
 @section('pages-content')
@@ -24,10 +24,10 @@
     @if ($page->utilityTags)
         @foreach ($page->utilityTags()->where('tag', '!=', 'stub')->get() as $tag)
             <div class="alert alert-secondary border-danger" style="border-width:0 0 0 10px;">
-                {{ Config::get('mundialis.utility_tags.' . $tag->tag . '.message') }}
+                {{ config('mundialis.utility_tags.' . $tag->tag . '.message') }}
                 @if (Auth::check() && Auth::user()->canWrite)
                     Consider <a
-                        href="{{ url('pages/' . $page->id . '/edit') }}">{{ Config::get('mundialis.utility_tags.' . $tag->tag . '.verb') }}
+                        href="{{ url('pages/' . $page->id . '/edit') }}">{{ config('mundialis.utility_tags.' . $tag->tag . '.verb') }}
                         it</a>.
                 @endif
             </div>
@@ -38,10 +38,10 @@
 
     @if ($page->utilityTags()->where('tag', 'stub')->first())
         <p><i>
-                {{ Config::get('mundialis.utility_tags.stub.message') }}
+                {{ config('mundialis.utility_tags.stub.message') }}
                 @if (Auth::check() && Auth::user()->canEdit($page))
                     Consider <a
-                        href="{{ url('pages/' . $page->id . '/edit') }}">{{ Config::get('mundialis.utility_tags.stub.verb') }}
+                        href="{{ url('pages/' . $page->id . '/edit') }}">{{ config('mundialis.utility_tags.stub.verb') }}
                         it</a>.
                 @endif
             </i></p>

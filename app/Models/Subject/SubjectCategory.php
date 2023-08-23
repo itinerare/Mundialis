@@ -163,7 +163,7 @@ class SubjectCategory extends Model {
      */
     public function getSubjectAttribute() {
         // Fetch config information for the recorded subject
-        $subject = Config::get('mundialis.subjects.'.$this->attributes['subject']);
+        $subject = config('mundialis.subjects.'.$this->attributes['subject']);
         // Then add its key to the array
         $subject['key'] = $this->attributes['subject'];
 

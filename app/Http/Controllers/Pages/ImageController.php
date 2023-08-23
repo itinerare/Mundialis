@@ -170,7 +170,7 @@ class ImageController extends Controller {
         }, $preserveKeys = true)->toArray();
 
         // Collect subjects and information
-        $orderedSubjects = collect(Config::get('mundialis.subjects'))->filter(function ($subject) use ($groupedPages) {
+        $orderedSubjects = collect(config('mundialis.subjects'))->filter(function ($subject) use ($groupedPages) {
             if (isset($groupedPages[$subject['name']])) {
                 return 1;
             } else {
@@ -226,7 +226,7 @@ class ImageController extends Controller {
         }, $preserveKeys = true)->toArray();
 
         // Collect subjects and information
-        $orderedSubjects = collect(Config::get('mundialis.subjects'))->filter(function ($subject) use ($groupedPages) {
+        $orderedSubjects = collect(config('mundialis.subjects'))->filter(function ($subject) use ($groupedPages) {
             if (isset($groupedPages[$subject['name']])) {
                 return 1;
             } else {

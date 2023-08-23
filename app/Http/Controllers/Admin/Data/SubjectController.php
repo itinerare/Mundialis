@@ -37,7 +37,7 @@ class SubjectController extends Controller {
      */
     public function getSubjectIndex($subject) {
         $subjectKey = $subject;
-        $subject = Config::get('mundialis.subjects.'.$subject);
+        $subject = config('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
         return view('admin.subjects.subject', [
@@ -55,7 +55,7 @@ class SubjectController extends Controller {
      */
     public function getEditTemplate($subject) {
         $subjectKey = $subject;
-        $subject = Config::get('mundialis.subjects.'.$subject);
+        $subject = config('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
         $template = SubjectTemplate::where('subject', $subject['key'])->first();
@@ -103,7 +103,7 @@ class SubjectController extends Controller {
      */
     public function getCreateCategory($subject) {
         $subjectKey = $subject;
-        $subject = Config::get('mundialis.subjects.'.$subject);
+        $subject = config('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
         return view('admin.subjects.create_edit_category', [

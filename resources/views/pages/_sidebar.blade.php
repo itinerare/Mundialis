@@ -51,7 +51,7 @@
 
         <li class="sidebar-section">
             <div class="sidebar-section-header">Subjects</div>
-            @foreach (Config::get('mundialis.subjects') as $subject => $values)
+            @foreach (config('mundialis.subjects') as $subject => $values)
                 <div class="sidebar-item"><a href="{{ url($subject) }}"
                         class="{{ set_active($subject . '*') }}">{{ isset($values['name']) ? $values['name'] : ucfirst($subject) }}</a>
                 </div>
@@ -66,7 +66,7 @@
                     class="{{ set_active('special/all-pages') }}">All Pages</a></div>
             <div class="sidebar-item"><a href="{{ url('special/random-page') }}">Random Page</a></div>
             @if (Auth::check() && Auth::user()->canWrite)
-                @foreach (Config::get('mundialis.utility_tags') as $key => $tag)
+                @foreach (config('mundialis.utility_tags') as $key => $tag)
                     <div class="sidebar-item"><a href="{{ url('special/' . $key . '-pages') }}"
                             class="{{ set_active('special/' . $key . '-pages') }}">{{ $tag['name'] }}</a></div>
                 @endforeach

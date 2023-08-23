@@ -647,7 +647,7 @@ class PageManager extends Service {
                 foreach ($data['utility_tag'] as $tag) {
                     // Utility tag options are already set by the config,
                     // but just in case, perform some extra validation
-                    if (Config::get('mundialis.utility_tags.'.$tag) == null) {
+                    if (config('mundialis.utility_tags.'.$tag) == null) {
                         throw new \Exception('One or more of the specified utility tags is invalid.');
                     }
                 }
@@ -707,7 +707,7 @@ class PageManager extends Service {
                 // that a duplicate hub tag is not being added
                 foreach ($data['page_tag'] as $tag) {
                     $matches = [];
-                    preg_match(Config::get('mundialis.page_tags.hub.regex_alt'), $tag, $matches);
+                    preg_match(config('mundialis.page_tags.hub.regex_alt'), $tag, $matches);
                     if ($matches != []) {
                         if (PageTag::tag()->where('tag', $tag)->where('page_id', '!=', $page->id)->exists()) {
                             throw new \Exception('A hub already exists for the tag '.$matches[1].'.');

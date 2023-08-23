@@ -151,7 +151,7 @@
         {{ Form::label('utility_tag', 'Maintenance Tags (Optional)') }} {!! add_help(
             'These help keep track of pages around the site that could use more work. Pages with these tags are added to respective maintenance reports for easy tracking.',
         ) !!}
-        @foreach (collect(Config::get('mundialis.utility_tags'))->map(function ($tag, $key) {
+        @foreach (collect(config('mundialis.utility_tags'))->map(function ($tag, $key) {
                 return $key = $tag['label'];
             })->toArray() as $key => $answer)
             <div class="choice-wrapper">
