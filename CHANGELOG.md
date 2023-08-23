@@ -4,6 +4,23 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.2.4](https://github.com/itinerare/Mundialis/compare/v2.2.3...v2.2.4) (2023-08-20)
+
+### Bug Fixes
+
+* Admin subject category table format/header ([93b561](https://github.com/itinerare/Mundialis/commit/93b561f1fa15df3c01ba689270788a8a9e363644))
+
+##### Time
+
+* Fix viewing chronology with children ([96d207](https://github.com/itinerare/Mundialis/commit/96d207bfeacf5a19a90cc153e3af5d0437d8da9f))
+
+##### Users
+
+* Improve avatar handling ([4e63a0](https://github.com/itinerare/Mundialis/commit/4e63a055a15631573f52e629d1a9b11e3d5b0c6a))
+
+
+---
+
 ## [2.2.3](https://github.com/itinerare/Mundialis/compare/v2.2.2...v2.2.3) (2023-08-13)
 
 ### Bug Fixes
