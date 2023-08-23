@@ -11,7 +11,6 @@ use App\Models\Page\PagePageImage;
 use App\Models\User\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
 

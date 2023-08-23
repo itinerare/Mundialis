@@ -13,7 +13,6 @@ use App\Models\User\User;
 use App\Services\PageManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 
 class PageController extends Controller {
     /*
