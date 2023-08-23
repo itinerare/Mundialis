@@ -43,12 +43,12 @@ class SubjectService extends Service {
 
             // Check if changes should cascade, and if so, perform comparison
             // and make updates as necessary
-            if ($template && (isset($data['cascade_template']) && $data['cascade_template']) && $data['data'] != $template->data) {
+            if ((isset($data['cascade_template']) && $data['cascade_template']) && (!$template || ($template && $data['data'] != $template->data))) {
                 // First find any impacted categories
-                $categories = $template->categories()->whereNotNull('data')->get();
+                $categories = SubjectCategory::where('subject', $subject)->whereNotNull('data')->get();
 
                 // Collect existing template data
-                $data['old'] = $template->data;
+                $data['old'] = ($template ? $template->data : []);
 
                 // Cascade changes to impacted categories
                 $this->cascadeTemplateChanges($categories, $data);
