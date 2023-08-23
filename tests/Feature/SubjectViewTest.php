@@ -58,7 +58,7 @@ class SubjectViewTest extends TestCase {
         $response = $this->actingAs($this->user)
             ->get('/'.$subject);
 
-        $response->assertStatus(200);
+        $response->assertStatus($subject != 'invalid' ? 200 : 404);
         if ($withCategory) {
             $response->assertSee($category->name);
         }
@@ -107,6 +107,7 @@ class SubjectViewTest extends TestCase {
             'misc'                                     => ['misc', 0, 0, 0],
             'misc with category'                       => ['misc', 1, 0, 0],
             'misc with unrelated'                      => ['misc', 0, 1, 0],
+            'invalid'                                  => ['invalid', 0, 0, 0],
         ];
     }
 
