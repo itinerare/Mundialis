@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Page\Page;
 use App\Models\Subject\SubjectCategory;
+use App\Models\Subject\SubjectTemplate;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -13,226 +14,218 @@ use Tests\TestCase;
 class SubjectDataTest extends TestCase {
     use RefreshDatabase, withFaker;
 
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->user = User::factory()->admin()->make();
+    }
+
     /******************************************************************************
-        SUBJECTS
+        SUBJECT / ADMIN INDICES
     *******************************************************************************/
 
     /**
-     * Test people category index access.
+     * Test subject category index access.
+     *
+     * @dataProvider getSubjectIndexProvider
+     *
+     * @param string $subject
+     * @param bool   $withCategory
+     * @param bool   $withUnrelated
      */
-    public function testCanGetPeopleData() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+    public function testGetSubjectIndex($subject, $withCategory, $withUnrelated) {
+        if ($withCategory) {
+            $category = SubjectCategory::factory()->subject($subject)->create();
+        }
+        if ($withUnrelated) {
+            $unrelated = SubjectCategory::factory()->subject($subject != 'misc' ? 'misc' : 'people')->create();
+        }
 
-        $response = $this->actingAs($user)
-            ->get('/admin/data/people')
+        $response = $this->actingAs($this->user)
+            ->get('/admin/data/'.$subject)
             ->assertStatus(200);
+
+        if ($withCategory) {
+            $response->assertSee($category->name);
+        }
+        if ($withUnrelated) {
+            $response->assertDontSee($unrelated->name);
+        }
     }
 
-    /**
-     * Test places category index access.
-     */
-    public function testCanGetPlacesData() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/admin/data/places')
-            ->assertStatus(200);
-    }
-
-    /**
-     * Test flora & fauna category index access.
-     */
-    public function testCanGetFloraAndFaunaData() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/admin/data/species')
-            ->assertStatus(200);
-    }
-
-    /**
-     * Test things category index access.
-     */
-    public function testCanGetThingsData() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/admin/data/things')
-            ->assertStatus(200);
-    }
-
-    /**
-     * Test concepts category index access.
-     */
-    public function testCanGetConceptsData() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/admin/data/concepts')
-            ->assertStatus(200);
-    }
-
-    /**
-     * Test time & events category index access.
-     */
-    public function testCanGetTimeData() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/admin/data/time')
-            ->assertStatus(200);
-    }
-
-    /**
-     * Test language category index access.
-     */
-    public function testCanGetLanguageData() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/admin/data/language')
-            ->assertStatus(200);
-    }
-
-    /**
-     * Test miscellaneous category index access.
-     */
-    public function testCanGetMiscellaneousData() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/admin/data/misc')
-            ->assertStatus(200);
+    public function getSubjectIndexProvider() {
+        return [
+            'people'                  => ['people', 0, 0],
+            'people with category'    => ['people', 1, 0],
+            'people with unrelated'   => ['people', 0, 1],
+            'places'                  => ['places', 0, 0],
+            'places with category'    => ['places', 1, 0],
+            'places with unrelated'   => ['places', 0, 1],
+            'species'                 => ['species', 0, 0],
+            'species with category'   => ['species', 1, 0],
+            'species with unrelated'  => ['species', 0, 1],
+            'things'                  => ['things', 0, 0],
+            'things with category'    => ['things', 1, 0],
+            'things with unrelated'   => ['things', 0, 1],
+            'concepts'                => ['concepts', 0, 0],
+            'concepts with category'  => ['concepts', 1, 0],
+            'concepts with unrelated' => ['concepts', 0, 1],
+            'time'                    => ['time', 0, 0],
+            'time with category'      => ['time', 1, 0],
+            'time with unrelated'     => ['time', 0, 1],
+            'language'                => ['language', 0, 0],
+            'language with category'  => ['language', 1, 0],
+            'language with unrelated' => ['language', 0, 1],
+            'misc'                    => ['misc', 0, 0],
+            'misc with category'      => ['misc', 1, 0],
+            'misc with unrelated'     => ['misc', 0, 1],
+        ];
     }
 
     /******************************************************************************
-        SUBJECT TEMPLATE EDITING
+        SUBJECT / TEMPLATE EDITING
     *******************************************************************************/
 
     /**
      * Test subject template access.
+     *
+     * @dataProvider getEditSubjectTemplateProvider
+     *
+     * @param string $subject
+     * @param bool   $withData
+     * @param int    $status
      */
-    public function testCanGetEditSubjectTemplate() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/admin/data/misc/edit')
-            ->assertStatus(200);
-    }
-
-    /**
-     * Test subject template clearing.
-     */
-    public function testCanPostEditEmptySubjectTemplate() {
-        // Define some basic template data
-        $data = [];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/misc/edit', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('subject_templates', [
-            'subject' => 'misc',
-            'data'    => null,
-        ]);
-    }
-
-    /**
-     * Test subject template creation/editing.
-     */
-    public function testCanPostEditSubjectTemplate() {
-        // Define some basic template data
-        $data = [
-            'section_key'     => [0 => 'test_section'],
-            'section_name'    => [0 => 'Test Section'],
-            'infobox_key'     => [0 => 'test_field'],
-            'infobox_type'    => [0 => 'text'],
-            'infobox_label'   => [0 => 'Test Field'],
-            'infobox_rules'   => [0 => null],
-            'infobox_choices' => [0 => null],
-            'infobox_value'   => [0 => null],
-            'infobox_help'    => [0 => null],
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/misc/edit', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('subject_templates', [
-            'subject' => 'misc',
-            'data'    => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
-        ]);
-    }
-
-    /**
-     * Test subject template creation/editing and cascading.
-     */
-    public function testCanPostEditSubjectTemplateAndCascade() {
-        // Create a category to cascade changes to
-        $category = SubjectCategory::factory()->subject('concepts')->testData()->create();
-
-        // Define some basic template data
-        $data = [
-            'section_key'      => [0 => 'test_section'],
-            'section_name'     => [0 => 'Test Section'],
-            'infobox_key'      => [0 => 'test_field'],
-            'infobox_type'     => [0 => 'text'],
-            'infobox_label'    => [0 => 'Test Field'],
-            'infobox_rules'    => [0 => null],
-            'infobox_choices'  => [0 => null],
-            'infobox_value'    => [0 => null],
-            'infobox_help'     => [0 => null],
-            'cascade_template' => 1,
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // First, ensure the template exists and has empty data
-        if (DB::table('subject_templates')->where('subject', 'concepts')->first()) {
-            DB::table('subject_templates')->where('subject', 'concepts')->update(
-                [
-                    'data' => null,
-                ]
-            );
-        } else {
-            DB::table('subject_templates')->insert([
-                [
-                    'subject' => 'concepts',
-                    'data'    => null,
-                ],
-            ]);
+    public function testGetEditSubjectTemplate($subject, $withData, $status) {
+        if ($withData) {
+            SubjectTemplate::factory()->subject($subject)->create();
         }
 
-        // Then attempt to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/concepts/edit', $data);
+        $response = $this->actingAs($this->user)
+            ->get('/admin/data/'.$subject.'/edit')
+            ->assertStatus($status);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('subject_categories', [
-            'id'   => $category->id,
-            'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
-        ]);
+        if ($withData && $status == 200) {
+            // The template factory supplies some pre-set data,
+            // so just check for one of the field keys
+            $response->assertSee('test_subject_field');
+        }
+    }
+
+    public function getEditSubjectTemplateProvider() {
+        return [
+            'people'             => ['people', 0, 200],
+            'people with data'   => ['people', 1, 200],
+            'places'             => ['places', 0, 200],
+            'places with data'   => ['places', 1, 200],
+            'species'            => ['species', 0, 200],
+            'species with data'  => ['species', 1, 200],
+            'things'             => ['things', 0, 200],
+            'things with data'   => ['things', 1, 200],
+            'concepts'           => ['concepts', 0, 200],
+            'concepts with data' => ['concepts', 1, 200],
+            'time'               => ['time', 0, 200],
+            'time with data'     => ['time', 1, 200],
+            'language'           => ['language', 0, 200],
+            'language with data' => ['language', 1, 200],
+            'misc'               => ['misc', 0, 200],
+            'misc with data'     => ['misc', 1, 200],
+            'invalid'            => ['invalid', 0, 404],
+            'invalid with data'  => ['invalid', 1, 404],
+        ];
+    }
+
+    /**
+     * Test subject template editing.
+     *
+     * @dataProvider postEditSubjectTemplateProvider
+     *
+     * @param string $subject
+     * @param bool   $withData
+     * @param bool   $cascade
+     * @param bool   $expected
+     */
+    public function testPostEditSubjectTemplate($subject, $withData, $cascade, $expected) {
+        if ($withData) {
+            // Supply some test data
+            $data = [
+                //
+                'section_key'      => [0 => 'test_section'],
+                'section_name'     => [0 => 'Test Section'],
+                'infobox_key'      => [0 => 'test_field'],
+                'infobox_type'     => [0 => 'text'],
+                'infobox_label'    => [0 => 'Test Field'],
+                'infobox_rules'    => [0 => null],
+                'infobox_choices'  => [0 => null],
+                'infobox_value'    => [0 => null],
+                'infobox_help'     => [0 => null],
+                'cascade_template' => $cascade,
+            ];
+        } else {
+            // Else supply an empty array
+            $data = [];
+        }
+
+        if ($cascade) {
+            // Create a category to cascade changes to
+            $category = SubjectCategory::factory()->subject($subject)->testData()->create();
+        }
+
+        $response = $this
+            ->actingAs($this->user)
+            ->post('/admin/data/'.$subject.'/edit', $data);
+
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('subject_templates', [
+                'subject' => $subject,
+                'data'    => $withData ? '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}' : null,
+            ]);
+
+            if ($cascade) {
+                // Verify that the data has cascaded to the category
+                $this->assertDatabaseHas('subject_categories', [
+                    'id'   => $category->id,
+                    'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
+                ]);
+            }
+        } else {
+            // The subject-related routes are directly configured
+            // to only accept input provided in the site's subject config file,
+            // so an invalid subject simply results in a 404
+            $response->assertStatus(404);
+        }
+    }
+
+    public function postEditSubjectTemplateProvider() {
+        return [
+            'people'             => ['people', 0, 0, 1],
+            'people with data'   => ['people', 1, 0, 1],
+            'people cascaded'    => ['people', 1, 1, 1],
+            'places'             => ['places', 0, 0, 1],
+            'places with data'   => ['places', 1, 0, 1],
+            'places cascaded'    => ['places', 1, 1, 1],
+            'species'            => ['species', 0, 0, 1],
+            'species with data'  => ['species', 1, 0, 1],
+            'species cascaded'   => ['species', 1, 1, 1],
+            'things'             => ['things', 0, 0, 1],
+            'things with data'   => ['things', 1, 0, 1],
+            'things cascaded'    => ['things', 1, 1, 1],
+            'concepts'           => ['concepts', 0, 0, 1],
+            'concepts with data' => ['concepts', 1, 0, 1],
+            'concepts cascaded'  => ['concepts', 1, 1, 1],
+            'time'               => ['time', 0, 0, 1],
+            'time with data'     => ['time', 1, 0, 1],
+            'time cascaded'      => ['time', 1, 1, 1],
+            'language'           => ['language', 0, 0, 1],
+            'language with data' => ['language', 1, 0, 1],
+            'language cascaded'  => ['language', 1, 1, 1],
+            'misc'               => ['misc', 0, 0, 1],
+            'misc with data'     => ['misc', 1, 0, 1],
+            'misc cascaded'      => ['misc', 1, 1, 1],
+            'invalid'            => ['invalid', 0, 0, 0],
+            'invalid with data'  => ['invalid', 1, 0, 0],
+            'invalid cascaded'   => ['invalid', 1, 1, 0],
+        ];
     }
 
     /******************************************************************************

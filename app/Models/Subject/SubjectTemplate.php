@@ -3,8 +3,11 @@
 namespace App\Models\Subject;
 
 use App\Models\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SubjectTemplate extends Model {
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
