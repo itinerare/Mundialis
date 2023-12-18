@@ -9,7 +9,7 @@
         "doctrine/dbal": "^2.2",
         "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "intervention/image": "^2.5",
+        "intervention/image": "^3.1",
         "laracasts/flash": "^3.2",
         "laravel/fortify": "^1.7",
         "laravel/framework": "^9.0",
