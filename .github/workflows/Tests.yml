@@ -1,0 +1,24 @@
+name: Laravel Tests
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+
+jobs:
+  laravel-tests:
+    strategy:
+      matrix:
+        target: ['8.1', '8.2']
+    uses: itinerare/github-actions/.github/workflows/laravel_tests.yml@main
+    with:
+      php-version: ${{ matrix.target }}
+      db-name: 'mundialis_test'

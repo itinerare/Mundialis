@@ -1,0 +1,23 @@
+name: Lint & Build Vite Assets
+
+on:
+  pull_request:
+    branches:
+      - 'develop'
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+
+jobs:
+  pint:
+    uses: itinerare/github-actions/.github/workflows/pint.yml@main
+    with:
+      php-version: '8.1'
+
+  blade-formatter:
+    uses: itinerare/github-actions/.github/workflows/blade_formatter.yml@main
+
+  rebuild-vite-assets:
+    uses: itinerare/github-actions/.github/workflows/vite_build.yml@main
