@@ -19,5 +19,5 @@ jobs:
   blade-formatter:
     uses: itinerare/github-actions/.github/workflows/blade_formatter.yml@main
 
-  rebuild-vite-assets:
-    uses: itinerare/github-actions/.github/workflows/vite_build.yml@main
+  rebuild-mix-assets:
+    uses: itinerare/github-actions/.github/workflows/mix_build.yml@main
