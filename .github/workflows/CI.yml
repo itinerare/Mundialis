@@ -1,4 +1,4 @@
-name: Lint & Build Vite Assets
+name: Lint & Build Mix Assets
 
 on:
   pull_request:
