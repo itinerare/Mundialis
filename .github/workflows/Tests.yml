@@ -3,7 +3,8 @@ name: Laravel Tests
 on:
   push:
     branches:
-      - '**'
+      - 'main'
+      - 'develop'
   pull_request:
     branches:
       - '**'
@@ -22,3 +23,6 @@ jobs:
     with:
       php-version: ${{ matrix.target }}
       db-name: 'mundialis_test'
+    concurrency:
+      group: tests-${{ matrix.target }}-${{ github.ref }}
+      cancel-in-progress: true

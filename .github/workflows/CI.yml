@@ -3,7 +3,7 @@ name: Lint & Build Mix Assets
 on:
   pull_request:
     branches:
-      - 'develop'
+      - '**'
     types:
       - opened
       - edited
@@ -11,13 +11,14 @@ on:
       - reopened
 
 jobs:
-  pint:
-    uses: itinerare/github-actions/.github/workflows/pint.yml@main
+  lint:
+    uses: itinerare/github-actions/.github/workflows/lint.yml@main
     with:
       php-version: '8.1'
-
-  blade-formatter:
-    uses: itinerare/github-actions/.github/workflows/blade_formatter.yml@main
+    concurrency:
+      group: ci-${{ github.head_ref }}
 
   rebuild-mix-assets:
     uses: itinerare/github-actions/.github/workflows/mix_build.yml@main
+    concurrency:
+      group: ci-${{ github.head_ref }}
