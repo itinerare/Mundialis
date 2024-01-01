@@ -316,6 +316,7 @@ class Page extends Model {
         if (url()->current() == $this->url) {
             return $this->displayTitle.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
         }
+
         // Otherwise, return the link as usual
         return '<a href="'.$this->url.'" class="text-primary"'.($this->summary ? ' data-toggle="tooltip" title="'.$this->summary.'"' : '').'>'.$this->displayTitle.'</a>'.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
     }
