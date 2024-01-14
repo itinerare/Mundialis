@@ -1,0 +1,28 @@
+name: Laravel Tests
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'develop'
+  pull_request:
+    branches:
+      - '**'
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+
+jobs:
+  laravel-tests:
+    strategy:
+      matrix:
+        target: ['8.1', '8.2']
+    uses: itinerare/github-actions/.github/workflows/laravel_tests.yml@main
+    with:
+      php-version: ${{ matrix.target }}
+      db-name: 'mundialis_test'
+    concurrency:
+      group: tests-${{ matrix.target }}-${{ github.ref }}
+      cancel-in-progress: true

@@ -91,7 +91,7 @@
                             }
                         }
                     }
-                    
+
                     if ($length < 3000) {
                         $text['original'] = 'Hide';
                         $text['swap'] = 'Show';

@@ -20,7 +20,7 @@
 
             <div class="col-md-6">
                 <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}"
-                    name="email" value="{{ $email ?? old('email') }}" required autofocus>
+                    name="email" value="{{ request()->email ?? old('email') }}" required autofocus>
 
                 @if ($errors->has('email'))
                     <span class="invalid-feedback" role="alert">
