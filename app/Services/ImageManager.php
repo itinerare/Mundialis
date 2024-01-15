@@ -28,9 +28,9 @@ class ImageManager extends Service {
     /**
      * Creates an image.
      *
-     * @param array                 $data
-     * @param \App\Models\Page\Page $page
-     * @param \App\Models\User\User $user
+     * @param array $data
+     * @param Page  $page
+     * @param User  $user
      *
      * @return \App\Models\Page\PageImage|bool
      */
@@ -104,10 +104,10 @@ class ImageManager extends Service {
     /**
      * Updates an image.
      *
-     * @param \App\Models\Page\Page      $page
-     * @param \App\Models\Page\PageImage $image
-     * @param array                      $data
-     * @param \App\Models\User\User      $user
+     * @param Page      $page
+     * @param PageImage $image
+     * @param array     $data
+     * @param User      $user
      *
      * @return \App\Models\Page\Page|bool
      */
@@ -201,9 +201,9 @@ class ImageManager extends Service {
     /**
      * Restore a deleted image.
      *
-     * @param \App\Models\User\User $user
-     * @param string                $reason
-     * @param mixed                 $image
+     * @param User   $user
+     * @param string $reason
+     * @param mixed  $image
      *
      * @return bool
      */
@@ -231,10 +231,10 @@ class ImageManager extends Service {
     /**
      * Delete an image.
      *
-     * @param \App\Models\Page\PageImage $image
-     * @param bool                       $forceDelete
-     * @param \App\Models\User\User      $user
-     * @param string                     $reason
+     * @param PageImage $image
+     * @param bool      $forceDelete
+     * @param User      $user
+     * @param string    $reason
      *
      * @return bool
      */
@@ -326,8 +326,8 @@ class ImageManager extends Service {
      * Generates and saves test images for page image test purposes.
      * This is a workaround for normal image processing depending on Intervention.
      *
-     * @param \App\Models\Page\PageImage        $image
-     * @param \App\Models\Page\PageImageVersion $version
+     * @param PageImage        $image
+     * @param PageImageVersion $version
      *
      * @return bool
      */
@@ -346,10 +346,10 @@ class ImageManager extends Service {
     /**
      * Handles page image data.
      *
-     * @param array                      $data
-     * @param \App\Models\Page\Page      $page
-     * @param \App\Models\User\User      $user
-     * @param \App\Models\Page\PageImage $image
+     * @param array     $data
+     * @param Page      $page
+     * @param User      $user
+     * @param PageImage $image
      *
      * @return \App\Models\Page\PageImage|bool
      */
@@ -558,9 +558,9 @@ class ImageManager extends Service {
     /**
      * Crops a thumbnail for the given image.
      *
-     * @param array                             $points
-     * @param \App\Models\Page\PageImage        $pageImage
-     * @param \App\Models\Page\PageImageVersion $version
+     * @param array            $points
+     * @param PageImage        $pageImage
+     * @param PageImageVersion $version
      */
     private function cropThumbnail($points, $pageImage, $version) {
         $image = Image::make($pageImage->imagePath.'/'.$version->imageFileName);

@@ -128,7 +128,7 @@ class PageManager extends Service {
     /**
      * Updates a page.
      *
-     * @param \App\Models\Page\Page $page
+     * @param Page                  $page
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
@@ -225,7 +225,7 @@ class PageManager extends Service {
     /**
      * Updates a page's protection information.
      *
-     * @param \App\Models\Page\Page $page
+     * @param Page                  $page
      * @param \App\Models\User\User $user
      * @param array                 $data
      *
@@ -262,10 +262,10 @@ class PageManager extends Service {
     /**
      * Moves a page to a different category.
      *
-     * @param \App\Models\Page\Page               $page
-     * @param \App\Models\Subject\SubjectCategory $category
-     * @param \App\Models\User\User               $user
-     * @param string                              $reason
+     * @param Page                  $page
+     * @param SubjectCategory       $category
+     * @param \App\Models\User\User $user
+     * @param string                $reason
      *
      * @return bool
      */
@@ -306,10 +306,10 @@ class PageManager extends Service {
     /**
      * Resets a page to a given version.
      *
-     * @param \App\Models\Page\Page        $page
-     * @param \App\Models\Page\PageVersion $version
-     * @param \App\Models\User\User        $user
-     * @param string                       $reason
+     * @param Page                  $page
+     * @param PageVersion           $version
+     * @param \App\Models\User\User $user
+     * @param string                $reason
      *
      * @return bool
      */
@@ -347,7 +347,7 @@ class PageManager extends Service {
     /**
      * Delete a page.
      *
-     * @param \App\Models\Page\Page $page
+     * @param Page                  $page
      * @param \App\Models\User\User $user
      * @param string                $reason
      * @param bool                  $forceDelete
@@ -452,7 +452,7 @@ class PageManager extends Service {
     /**
      * Restore a deleted page.
      *
-     * @param \App\Models\Page\Page $page
+     * @param Page                  $page
      * @param \App\Models\User\User $user
      * @param string                $reason
      *
@@ -595,8 +595,8 @@ class PageManager extends Service {
     /**
      * Processes tags.
      *
-     * @param \App\Models\Page\Page $page
-     * @param array                 $data
+     * @param Page  $page
+     * @param array $data
      *
      * @return array
      */
@@ -633,8 +633,8 @@ class PageManager extends Service {
     /**
      * Processes tags.
      *
-     * @param \App\Models\Page\Page $page
-     * @param array                 $data
+     * @param Page  $page
+     * @param array $data
      *
      * @return array
      */

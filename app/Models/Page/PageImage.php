@@ -112,7 +112,7 @@ class PageImage extends Model {
     /**
      * Get the image's most recent version.
      *
-     * @return \App\Models\Page\PageImageVersion
+     * @return PageImageVersion
      */
     public function getVersionAttribute() {
         return $this->versions()->orderBy('created_at', 'DESC')->first();
@@ -121,7 +121,7 @@ class PageImage extends Model {
     /**
      * Get the image's most recent version with image.
      *
-     * @return \App\Models\Page\PageImageVersion
+     * @return PageImageVersion
      */
     public function getImageVersionAttribute() {
         return $this->versions()->whereNotNull('hash')->orderBy('created_at', 'DESC')->first();

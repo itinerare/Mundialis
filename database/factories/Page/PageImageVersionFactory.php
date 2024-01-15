@@ -38,7 +38,7 @@ class PageImageVersionFactory extends Factory {
      *
      * @param int $image
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function image($image) {
         return $this->state(function (array $attributes) use ($image) {
@@ -54,7 +54,7 @@ class PageImageVersionFactory extends Factory {
      *
      * @param int $user
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function user($user) {
         return $this->state(function (array $attributes) use ($user) {
@@ -69,7 +69,7 @@ class PageImageVersionFactory extends Factory {
      *
      * @param string $type
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function type($type) {
         return $this->state(function (array $attributes) use ($type) {
@@ -84,7 +84,7 @@ class PageImageVersionFactory extends Factory {
      *
      * @param string $reason
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function reason($reason) {
         return $this->state(function (array $attributes) use ($reason) {
@@ -97,7 +97,7 @@ class PageImageVersionFactory extends Factory {
     /**
      * Mark a version as minor.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function minor() {
         return $this->state(function (array $attributes) {
@@ -110,7 +110,7 @@ class PageImageVersionFactory extends Factory {
     /**
      * Generate a version for a page deletion.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function deleted() {
         return $this->state(function (array $attributes) {
@@ -128,7 +128,7 @@ class PageImageVersionFactory extends Factory {
      * @param string $creators
      * @param string $pages
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function testData($isVisible = 1, $description = null, $creators = '1', $pages = '1') {
         return $this->state(function (array $attributes) use ($isVisible, $description, $creators, $pages) {
