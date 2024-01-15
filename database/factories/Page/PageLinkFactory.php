@@ -33,7 +33,7 @@ class PageLinkFactory extends Factory {
      *
      * @param int $parent
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function parent($parent) {
         return $this->state(function (array $attributes) use ($parent) {
@@ -48,7 +48,7 @@ class PageLinkFactory extends Factory {
      *
      * @param int $link
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function link($link) {
         return $this->state(function (array $attributes) use ($link) {
@@ -61,7 +61,7 @@ class PageLinkFactory extends Factory {
     /**
      * Generate a link from a lexicon entry.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function entry() {
         return $this->state(function (array $attributes) {
@@ -74,7 +74,7 @@ class PageLinkFactory extends Factory {
     /**
      * Generate a link for a wanted page.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function wanted() {
         return $this->state(function (array $attributes) {

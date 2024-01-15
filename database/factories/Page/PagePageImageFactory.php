@@ -31,7 +31,7 @@ class PagePageImageFactory extends Factory {
      *
      * @param int $page
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function page($page) {
         return $this->state(function (array $attributes) use ($page) {
@@ -47,7 +47,7 @@ class PagePageImageFactory extends Factory {
      *
      * @param int $image
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function image($image) {
         return $this->state(function (array $attributes) use ($image) {
@@ -60,7 +60,7 @@ class PagePageImageFactory extends Factory {
     /**
      * Generate an invalid page-image link.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function invalid() {
         return $this->state(function (array $attributes) {

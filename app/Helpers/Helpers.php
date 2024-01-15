@@ -72,8 +72,8 @@ function breadcrumbs($links) {
 /**
  * Formats the timestamp to a standard format.
  *
- * @param \Illuminate\Support\Carbon\Carbon $timestamp
- * @param bool                              $showTime
+ * @param Illuminate\Support\Carbon\Carbon $timestamp
+ * @param bool                             $showTime
  *
  * @return string
  */
@@ -84,8 +84,8 @@ function format_date($timestamp, $showTime = true) {
 /**
  * Formats the timestamp to a standard format.
  *
- * @param \Illuminate\Support\Carbon\Carbon $timestamp
- * @param bool                              $showTime
+ * @param Illuminate\Support\Carbon\Carbon $timestamp
+ * @param bool                             $showTime
  *
  * @return string
  */

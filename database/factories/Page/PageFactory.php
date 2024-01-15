@@ -35,7 +35,7 @@ class PageFactory extends Factory {
      *
      * @param int $category
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function category($category) {
         return $this->state(function (array $attributes) use ($category) {
@@ -48,7 +48,7 @@ class PageFactory extends Factory {
     /**
      * Generate a hidden page.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function hidden() {
         return $this->state(function (array $attributes) {
@@ -61,7 +61,7 @@ class PageFactory extends Factory {
     /**
      * Generate a deleted page.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function deleted() {
         return $this->state(function (array $attributes) {

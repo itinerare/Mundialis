@@ -33,7 +33,7 @@ class PageVersionFactory extends Factory {
      *
      * @param int $page
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function page($page) {
         return $this->state(function (array $attributes) use ($page) {
@@ -49,7 +49,7 @@ class PageVersionFactory extends Factory {
      *
      * @param int $user
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function user($user) {
         return $this->state(function (array $attributes) use ($user) {
@@ -64,7 +64,7 @@ class PageVersionFactory extends Factory {
      *
      * @param string $type
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function type($type) {
         return $this->state(function (array $attributes) use ($type) {
@@ -79,7 +79,7 @@ class PageVersionFactory extends Factory {
      *
      * @param string $reason
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function reason($reason) {
         return $this->state(function (array $attributes) use ($reason) {
@@ -92,7 +92,7 @@ class PageVersionFactory extends Factory {
     /**
      * Mark a version as minor.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function minor() {
         return $this->state(function (array $attributes) {
@@ -105,7 +105,7 @@ class PageVersionFactory extends Factory {
     /**
      * Generate a version for a page deletion.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function deleted() {
         return $this->state(function (array $attributes) {
@@ -124,7 +124,7 @@ class PageVersionFactory extends Factory {
      * @param string $pageTags
      * @param string $division
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function testData($title = 'Test', $summary = null, $utilityTags = null, $pageTags = null, $division = null) {
         return $this->state(function (array $attributes) use ($title, $summary, $utilityTags, $pageTags, $division) {
