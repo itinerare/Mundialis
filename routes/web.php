@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Users\AccountController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,33 +15,34 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'Controller@getIndex')->name('home');
-Route::get('info/terms', 'Controller@getTermsOfService');
-Route::get('info/privacy', 'Controller@getPrivacyPolicy');
+Route::controller(Controller::class)->group(function () {
+    Route::get('/', 'getIndex')->name('home');
+    Route::prefix('info')->group(function () {
+        Route::get('privacy', 'getPrivacyPolicy');
+        Route::get('terms', 'getTermsOfService');
+    });
+});
 
-Route::group(['middleware' => ['auth']], function () {
-    // BANNED
-    Route::get('banned', 'Users\AccountController@getBanned');
+Route::middleware(['auth'])->controller(AccountController::class)->group(function () {
+    Route::get('banned', 'getBanned');
 });
 
 /***************************************************
     Routes that require read permissions
 ****************************************************/
-Route::group(['middleware' => ['read']], function () {
-    require_once __DIR__.'/mundialis/read.php';
+Route::middleware(['read'])->group(function () {
+    Route::group(__DIR__.'/mundialis/read.php');
 
     /* Routes that require login */
     Route::group(['middleware' => ['auth', 'verified']], function () {
-        require_once __DIR__.'/mundialis/members.php';
+        Route::group(__DIR__.'/mundialis/members.php');
 
         /* Routes that require write permissions */
         Route::group(['middleware' => ['write']], function () {
-            require_once __DIR__.'/mundialis/write.php';
+            Route::group(__DIR__.'/mundialis/write.php');
 
             /* Routes that require admin permissions */
-            Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['admin']], function () {
-                require_once __DIR__.'/mundialis/admin.php';
-            });
+            Route::prefix('admin')->middleware(['admin'])->group(__DIR__.'/mundialis/admin.php');
         });
     });
 });
