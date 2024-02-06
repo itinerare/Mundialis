@@ -60,7 +60,7 @@ class AdminUserEditTest extends TestCase {
             ->assertStatus($status);
     }
 
-    public function getUserProvider() {
+    public static function getUserProvider() {
         return [
             'valid user'   => [1, 200],
             'invalid user' => [0, 404],
@@ -100,7 +100,7 @@ class AdminUserEditTest extends TestCase {
         }
     }
 
-    public function postEditUserProvider() {
+    public static function postEditUserProvider() {
         // $data = [$oldRank, $newRank, $withUsername]
 
         return [
@@ -163,7 +163,7 @@ class AdminUserEditTest extends TestCase {
             ->assertStatus($status);
     }
 
-    public function getUnbanUserProvider() {
+    public static function getUnbanUserProvider() {
         return [
             'banned user'   => [1, 1, 200],
             'unbanned user' => [1, 0, 404],
@@ -251,7 +251,7 @@ class AdminUserEditTest extends TestCase {
         }
     }
 
-    public function postBanUserProvider() {
+    public static function postBanUserProvider() {
         return [
             'user'               => [1, 3, 0, 1],
             'user with reason'   => [1, 3, 1, 1],
@@ -298,7 +298,7 @@ class AdminUserEditTest extends TestCase {
         }
     }
 
-    public function postUnbanUserProvider() {
+    public static function postUnbanUserProvider() {
         return [
             'user'            => [1, 1, 3, 1],
             'unbanned user'   => [1, 0, 3, 0],

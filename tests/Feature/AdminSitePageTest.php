@@ -59,7 +59,7 @@ class AdminSitePageTest extends TestCase {
         ]);
     }
 
-    public function sitePageProvider() {
+    public static function sitePageProvider() {
         return [
             'about'            => ['about'],
             'privacy policy'   => ['privacy'],

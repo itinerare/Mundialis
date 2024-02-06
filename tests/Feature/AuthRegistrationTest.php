@@ -85,7 +85,7 @@ class AuthRegistrationTest extends TestCase {
         }
     }
 
-    public function postRegistrationProvider() {
+    public static function postRegistrationProvider() {
         // $code = [$withCode, $isValid, $isUsed]
 
         return [

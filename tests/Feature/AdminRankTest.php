@@ -78,7 +78,7 @@ class AdminRankTest extends TestCase {
         }
     }
 
-    public function rankEditProvider() {
+    public static function rankEditProvider() {
         return [
             'with name'        => [1, 0, 1],
             'with description' => [0, 1, 1],

@@ -77,7 +77,7 @@ class SubjectViewTest extends TestCase {
         }
     }
 
-    public function getSubjectProvider() {
+    public static function getSubjectProvider() {
         return [
             'people'                                   => ['people', 0, 0, 0],
             'people with category'                     => ['people', 1, 0, 0],
@@ -173,7 +173,7 @@ class SubjectViewTest extends TestCase {
         }
     }
 
-    public function getCategoryProvider() {
+    public static function getCategoryProvider() {
         // $pageData = [$withPage, $isVisible]
 
         return [
@@ -192,7 +192,7 @@ class SubjectViewTest extends TestCase {
         ];
     }
 
-    public function categorySearchProvider() {
+    public static function categorySearchProvider() {
         // $searchData = [$searchType, $expected]
 
         return [
@@ -278,7 +278,7 @@ class SubjectViewTest extends TestCase {
         }
     }
 
-    public function chronologySearchProvider() {
+    public static function chronologySearchProvider() {
         // $searchData = [$searchType, $expected]
 
         return [
@@ -411,7 +411,7 @@ class SubjectViewTest extends TestCase {
         }
     }
 
-    public function lexiconSearchProvider() {
+    public static function lexiconSearchProvider() {
         // $searchData = [$searchType, $expected]
 
         return [

@@ -73,7 +73,7 @@ class AdminInvitationTest extends TestCase {
         }
     }
 
-    public function deleteInvitationProvider() {
+    public static function deleteInvitationProvider() {
         return [
             'unused' => [0, 1],
             'used'   => [1, 0],

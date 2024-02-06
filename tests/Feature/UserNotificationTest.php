@@ -48,7 +48,7 @@ class UserNotificationTest extends TestCase {
             ->assertStatus($status);
     }
 
-    public function getNotificationsProvider() {
+    public static function getNotificationsProvider() {
         return [
             'empty'             => [0, 200],
             'with notification' => [1, 200],
@@ -79,7 +79,7 @@ class UserNotificationTest extends TestCase {
         }
     }
 
-    public function postClearNotificationsProvider() {
+    public static function postClearNotificationsProvider() {
         return [
             'empty'             => [0],
             'with notification' => [1],
@@ -119,7 +119,7 @@ class UserNotificationTest extends TestCase {
         }
     }
 
-    public function postClearTypedNotificationsProvider() {
+    public static function postClearTypedNotificationsProvider() {
         return [
             'empty'                                 => [0, 0],
             'with notification'                     => [1, 0],
@@ -224,7 +224,7 @@ class UserNotificationTest extends TestCase {
         }
     }
 
-    public function sendNotificationsProvider() {
+    public static function sendNotificationsProvider() {
         return [
             'watched page updated, no watchers'            => [0, 0, 0],
             'watched page updated, user watcher'           => [0, 1, 0],

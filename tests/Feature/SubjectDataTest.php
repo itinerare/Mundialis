@@ -53,7 +53,7 @@ class SubjectDataTest extends TestCase {
         }
     }
 
-    public function getSubjectIndexProvider() {
+    public static function getSubjectIndexProvider() {
         return [
             'people'                  => ['people', 0, 0],
             'people with category'    => ['people', 1, 0],
@@ -111,7 +111,7 @@ class SubjectDataTest extends TestCase {
         }
     }
 
-    public function getEditSubjectTemplateProvider() {
+    public static function getEditSubjectTemplateProvider() {
         return [
             'people'             => ['people', 0, 200],
             'people with data'   => ['people', 1, 200],
@@ -196,7 +196,7 @@ class SubjectDataTest extends TestCase {
         }
     }
 
-    public function postEditSubjectTemplateProvider() {
+    public static function postEditSubjectTemplateProvider() {
         return [
             'people'             => ['people', 0, 0, 1],
             'people with data'   => ['people', 1, 0, 1],

@@ -68,7 +68,7 @@ class LexiconEntryTest extends TestCase {
         $response->assertStatus($status);
     }
 
-    public function getEntryProvider() {
+    public static function getEntryProvider() {
         // $data = [$withDefinition, $withParent, $withChild, $withConjugation]
 
         return [
@@ -108,7 +108,7 @@ class LexiconEntryTest extends TestCase {
         $response->assertStatus(200);
     }
 
-    public function getCreateEntryProvider() {
+    public static function getCreateEntryProvider() {
         return [
             'without category' => [0],
             'with category'    => [1],
@@ -135,7 +135,7 @@ class LexiconEntryTest extends TestCase {
         $response->assertStatus($status);
     }
 
-    public function getEditEntryProvider() {
+    public static function getEditEntryProvider() {
         return [
             'valid entry'   => [1, 200],
             'invalid entry' => [0, 404],
@@ -309,7 +309,7 @@ class LexiconEntryTest extends TestCase {
         }
     }
 
-    public function postCreateEditEntryProvider() {
+    public static function postCreateEditEntryProvider() {
         // $parent = [$entry, $word]
 
         return [
@@ -331,7 +331,7 @@ class LexiconEntryTest extends TestCase {
         ];
     }
 
-    public function postConjugationProvider() {
+    public static function postConjugationProvider() {
         // $conjData = [$isAuto, $withConj]
 
         return [
@@ -362,7 +362,7 @@ class LexiconEntryTest extends TestCase {
         $response->assertStatus($status);
     }
 
-    public function getDeleteEntryProvider() {
+    public static function getDeleteEntryProvider() {
         return [
             'valid'   => [1, 200],
             'invalid' => [0, 404],
@@ -424,7 +424,7 @@ class LexiconEntryTest extends TestCase {
         }
     }
 
-    public function postDeleteEntryProvider() {
+    public static function postDeleteEntryProvider() {
         return [
             'basic'                 => [0, 0, 1],
             'with parent'           => [1, 0, 1],

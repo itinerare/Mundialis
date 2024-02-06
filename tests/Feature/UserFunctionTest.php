@@ -127,7 +127,7 @@ class UserFunctionTest extends TestCase {
         }
     }
 
-    public function userEditProvider() {
+    public static function userEditProvider() {
         return [
             'valid'   => [1, 1],
             'invalid' => [0, 0],

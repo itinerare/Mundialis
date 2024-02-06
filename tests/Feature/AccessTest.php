@@ -36,7 +36,7 @@ class AccessTest extends TestCase {
         $response->assertStatus($status);
     }
 
-    public function accessProvider() {
+    public static function accessProvider() {
         return [
             'visitor' => [0, 200],
             'user'    => [1, 200],
@@ -65,7 +65,7 @@ class AccessTest extends TestCase {
         $response->assertStatus($status);
     }
 
-    public function readAccessProvider() {
+    public static function readAccessProvider() {
         return [
             'visitor, site open'   => [0, 1, 200],
             'visitor, site closed' => [0, 0, 302],
@@ -95,7 +95,7 @@ class AccessTest extends TestCase {
         $response->assertStatus($status);
     }
 
-    public function memberAccessProvider() {
+    public static function memberAccessProvider() {
         return [
             'visitor' => [0, 0, 302],
             'user'    => [1, 3, 200],
@@ -125,7 +125,7 @@ class AccessTest extends TestCase {
         $response->assertStatus($status);
     }
 
-    public function editorAccessProvider() {
+    public static function editorAccessProvider() {
         return [
             'visitor' => [0, 0, 302],
             'user'    => [1, 3, 302],
@@ -155,7 +155,7 @@ class AccessTest extends TestCase {
         $response->assertStatus($status);
     }
 
-    public function adminAccessProvider() {
+    public static function adminAccessProvider() {
         return [
             'visitor' => [0, 0, 302],
             'user'    => [1, 3, 302],

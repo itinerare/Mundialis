@@ -80,7 +80,7 @@ class AdminSiteSettingsTest extends TestCase {
         }
     }
 
-    public function settingsProvider() {
+    public static function settingsProvider() {
         return [
             'open site'         => ['visitors_can_read', 0, 1],
             'open registration' => ['is_registration_open', 0, 1],

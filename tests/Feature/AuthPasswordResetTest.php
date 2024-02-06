@@ -59,7 +59,7 @@ class AuthPasswordResetTest extends TestCase {
         }
     }
 
-    public function passwordResetProvider() {
+    public static function passwordResetProvider() {
         return [
             'valid user'   => [1, 1],
             'invalid user' => [0, 0],

@@ -63,7 +63,7 @@ class AdminSiteImagesTest extends TestCase {
         $this->artisan('copy-default-images');
     }
 
-    public function siteImageProvider() {
+    public static function siteImageProvider() {
         return [
             'logo'       => ['logo'],
             'meta-image' => ['meta-image'],
