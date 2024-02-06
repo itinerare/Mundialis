@@ -6,7 +6,7 @@ use App\Models\User\Rank;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Str;
+use Illuminate\Support\Str;
 
 class UserFactory extends Factory {
     /**

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User\Rank;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -86,7 +87,9 @@ class AccessTest extends TestCase {
      */
     public function testMemberRouteAccess($user, $rank, $status) {
         if ($user) {
-            $user = User::factory()->make(['rank_id' => $rank]);
+            $user = User::factory()->make([
+                'rank_id' => Rank::where('sort', $rank)->first()->id,
+            ]);
             $response = $this->actingAs($user)->get('/account/settings');
         } else {
             $response = $this->get('/account/settings');
@@ -98,9 +101,9 @@ class AccessTest extends TestCase {
     public static function memberAccessProvider() {
         return [
             'visitor' => [0, 0, 302],
-            'user'    => [1, 3, 200],
-            'editor'  => [1, 2, 200],
-            'admin'   => [1, 1, 200],
+            'user'    => [1, 0, 200],
+            'editor'  => [1, 1, 200],
+            'admin'   => [1, 2, 200],
         ];
     }
 
@@ -116,7 +119,9 @@ class AccessTest extends TestCase {
      */
     public function testEditorRouteAccess($user, $rank, $status) {
         if ($user) {
-            $user = User::factory()->make(['rank_id' => $rank]);
+            $user = User::factory()->make([
+                'rank_id' => Rank::where('sort', $rank)->first()->id,
+            ]);
             $response = $this->actingAs($user)->get('/language/lexicon/create');
         } else {
             $response = $this->get('/language/lexicon/create');
@@ -128,9 +133,9 @@ class AccessTest extends TestCase {
     public static function editorAccessProvider() {
         return [
             'visitor' => [0, 0, 302],
-            'user'    => [1, 3, 302],
-            'editor'  => [1, 2, 200],
-            'admin'   => [1, 1, 200],
+            'user'    => [1, 0, 302],
+            'editor'  => [1, 1, 200],
+            'admin'   => [1, 2, 200],
         ];
     }
 
@@ -146,7 +151,9 @@ class AccessTest extends TestCase {
      */
     public function testAdminRouteAccess($user, $rank, $status) {
         if ($user) {
-            $user = User::factory()->make(['rank_id' => $rank]);
+            $user = User::factory()->make([
+                'rank_id' => Rank::where('sort', $rank)->first()->id,
+            ]);
             $response = $this->actingAs($user)->get('/admin');
         } else {
             $response = $this->get('/admin');
@@ -158,9 +165,9 @@ class AccessTest extends TestCase {
     public static function adminAccessProvider() {
         return [
             'visitor' => [0, 0, 302],
-            'user'    => [1, 3, 302],
-            'editor'  => [1, 2, 302],
-            'admin'   => [1, 1, 200],
+            'user'    => [1, 0, 302],
+            'editor'  => [1, 1, 302],
+            'admin'   => [1, 2, 200],
         ];
     }
 }
