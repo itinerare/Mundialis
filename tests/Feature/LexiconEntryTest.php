@@ -25,6 +25,10 @@ class LexiconEntryTest extends TestCase {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
         $this->class = LexiconSetting::all()->first();
+
+        // Delete any entries/etymologies to ensure that counts are accurate
+        LexiconEntry::query()->delete();
+        LexiconEtymology::query()->delete();
     }
 
     /**
