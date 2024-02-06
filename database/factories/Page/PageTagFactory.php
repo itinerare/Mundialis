@@ -27,7 +27,7 @@ class PageTagFactory extends Factory {
      *
      * @param int $page
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function page($page) {
         return $this->state(function (array $attributes) use ($page) {
@@ -42,7 +42,7 @@ class PageTagFactory extends Factory {
      *
      * @param string $type
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function type($type) {
         return $this->state(function (array $attributes) use ($type) {

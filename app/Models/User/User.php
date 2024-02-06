@@ -2,7 +2,6 @@
 
 namespace App\Models\User;
 
-use App\Models\Model;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -37,14 +36,8 @@ class User extends Authenticatable implements MustVerifyEmail {
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'banned_at'         => 'datetime',
     ];
-
-    /**
-     * Dates on the model to convert to Carbon instances.
-     *
-     * @var array
-     */
-    protected $dates = ['banned_at'];
 
     /**********************************************************************************************
 

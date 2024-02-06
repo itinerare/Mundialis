@@ -25,7 +25,7 @@ class SubjectTemplateFactory extends Factory {
      *
      * @param string $subject
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function subject($subject) {
         return $this->state(function (array $attributes) use ($subject) {
