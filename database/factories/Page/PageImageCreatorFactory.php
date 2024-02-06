@@ -30,7 +30,7 @@ class PageImageCreatorFactory extends Factory {
      *
      * @param int $image
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function image($image) {
         return $this->state(function (array $attributes) use ($image) {
@@ -46,7 +46,7 @@ class PageImageCreatorFactory extends Factory {
      *
      * @param int $user
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function user($user) {
         return $this->state(function (array $attributes) use ($user) {
@@ -62,7 +62,7 @@ class PageImageCreatorFactory extends Factory {
      *
      * @param int $url
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function url($url) {
         return $this->state(function (array $attributes) use ($url) {

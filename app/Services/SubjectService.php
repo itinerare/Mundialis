@@ -139,9 +139,9 @@ class SubjectService extends Service {
     /**
      * Updates a category.
      *
-     * @param \App\Models\Subject\SubjectCategory $category
-     * @param array                               $data
-     * @param \App\Models\User\User               $user
+     * @param SubjectCategory       $category
+     * @param array                 $data
+     * @param \App\Models\User\User $user
      *
      * @return \App\Models\Subject\SubjectCategory|bool
      */
@@ -223,8 +223,8 @@ class SubjectService extends Service {
     /**
      * Delete a category.
      *
-     * @param \App\Models\Subject\SubjectCategory $category
-     * @param \App\Models\User\User               $user
+     * @param SubjectCategory       $category
+     * @param \App\Models\User\User $user
      *
      * @return bool
      */
@@ -386,9 +386,9 @@ class SubjectService extends Service {
     /**
      * Updates a chronology.
      *
-     * @param \App\Models\Subject\TimeChronology $chronology
-     * @param array                              $data
-     * @param \App\Models\User\User              $user
+     * @param TimeChronology        $chronology
+     * @param array                 $data
+     * @param \App\Models\User\User $user
      *
      * @return \App\Models\Subject\TimeChronology|bool
      */
@@ -415,7 +415,7 @@ class SubjectService extends Service {
     /**
      * Delete a chronology.
      *
-     * @param \App\Models\Subject\TimeChronology $chronology
+     * @param TimeChronology $chronology
      *
      * @return bool
      */
@@ -572,9 +572,9 @@ class SubjectService extends Service {
     /**
      * Updates a lexicon category.
      *
-     * @param \App\Models\Subject\LexiconCategory $category
-     * @param array                               $data
-     * @param \App\Models\User\User               $user
+     * @param LexiconCategory       $category
+     * @param array                 $data
+     * @param \App\Models\User\User $user
      *
      * @return \App\Models\Subject\LexiconCategory|bool
      */
@@ -616,7 +616,7 @@ class SubjectService extends Service {
     /**
      * Deletes a lexicon category.
      *
-     * @param \App\Models\Subject\LexiconCategory $category
+     * @param LexiconCategory $category
      *
      * @return bool
      */

@@ -30,7 +30,7 @@ class PageImageFactory extends Factory {
     /**
      * Generate a hidden image.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function hidden() {
         return $this->state(function (array $attributes) {
@@ -43,7 +43,7 @@ class PageImageFactory extends Factory {
     /**
      * Generate a deleted image.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function deleted() {
         return $this->state(function (array $attributes) {

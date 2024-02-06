@@ -31,7 +31,7 @@ class NotificationFactory extends Factory {
      *
      * @param int $user
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function user($user) {
         return $this->state(function (array $attributes) use ($user) {
@@ -47,7 +47,7 @@ class NotificationFactory extends Factory {
      * @param \App\Models\Page\Page $page
      * @param \App\Models\User\User $user
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function watchedPageUpdated($page = null, $user = null) {
         return $this->state(function (array $attributes) use ($page, $user) {
@@ -69,7 +69,7 @@ class NotificationFactory extends Factory {
      * @param \App\Models\Page\Page $page
      * @param \App\Models\User\User $user
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function watchedPageImageUpdated($page = null, $user = null) {
         return $this->state(function (array $attributes) use ($page, $user) {
@@ -91,7 +91,7 @@ class NotificationFactory extends Factory {
      * @param \App\Models\Page\Page $page
      * @param \App\Models\User\User $user
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function watchedPageDeleted($page = null, $user = null) {
         return $this->state(function (array $attributes) use ($page, $user) {

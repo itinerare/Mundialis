@@ -47,7 +47,7 @@ return [
     | Do not change this value!
     |
     */
-    'version'                    => '2.2.4',
+    'version'                    => Composer\InstalledVersions::getRootPackage()['pretty_version'],
 
     /*
     |--------------------------------------------------------------------------

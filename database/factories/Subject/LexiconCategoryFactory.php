@@ -29,7 +29,7 @@ class LexiconCategoryFactory extends Factory {
      *
      * @param int $class
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function testData($class = 1) {
         return $this->state(function (array $attributes) use ($class) {
@@ -44,7 +44,7 @@ class LexiconCategoryFactory extends Factory {
      *
      * @param int $class
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function extendedData($class = 1) {
         return $this->state(function (array $attributes) use ($class) {

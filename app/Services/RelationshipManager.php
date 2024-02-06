@@ -21,9 +21,9 @@ class RelationshipManager extends Service {
     /**
      * Creates a relationship.
      *
-     * @param array                 $data
-     * @param \App\Models\Page\Page $page
-     * @param \App\Models\User\User $user
+     * @param array $data
+     * @param Page  $page
+     * @param User  $user
      *
      * @return \App\Models\Page\PageImage|bool
      */
@@ -60,9 +60,9 @@ class RelationshipManager extends Service {
     /**
      * Updates a relationship.
      *
-     * @param \App\Models\Page\PageRelationship $relationship
-     * @param array                             $data
-     * @param \App\Models\User\User             $user
+     * @param PageRelationship $relationship
+     * @param array            $data
+     * @param User             $user
      *
      * @return \App\Models\Page\Page|bool
      */
@@ -89,8 +89,8 @@ class RelationshipManager extends Service {
     /**
      * Delete a relationship.
      *
-     * @param \App\Models\Page\PageRelationship $relationship
-     * @param \App\Models\User\User             $user
+     * @param PageRelationship $relationship
+     * @param User             $user
      *
      * @return bool
      */

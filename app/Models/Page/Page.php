@@ -215,7 +215,7 @@ class Page extends Model {
     /**
      * Get the page's most recent version.
      *
-     * @return \App\Models\Page\PageVersion
+     * @return PageVersion
      */
     public function getVersionAttribute() {
         return $this->versions()->orderBy('created_at', 'DESC')->first();
@@ -224,7 +224,7 @@ class Page extends Model {
     /**
      * Get the page's most recent protection record.
      *
-     * @return \App\Models\Page\PageProtection
+     * @return PageProtection
      */
     public function getProtectionAttribute() {
         if (!$this->protections->count()) {
@@ -312,6 +312,7 @@ class Page extends Model {
         if (url()->current() == $this->url) {
             return $this->displayTitle.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
         }
+
         // Otherwise, return the link as usual
         return '<a href="'.$this->url.'" class="text-primary"'.($this->summary ? ' data-toggle="tooltip" title="'.$this->summary.'"' : '').'>'.$this->displayTitle.'</a>'.(!$this->is_visible ? ' <i class="fas fa-eye-slash" data-toggle="tooltip" title="This page is currently hidden"></i>' : '');
     }

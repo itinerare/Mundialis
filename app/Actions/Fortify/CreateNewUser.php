@@ -17,7 +17,7 @@ class CreateNewUser implements CreatesNewUsers {
     /**
      * Validate and create a newly registered user.
      *
-     * @return \App\Models\User\User
+     * @return User
      */
     public function create(array $input) {
         if (!Settings::get('is_registration_open')) {

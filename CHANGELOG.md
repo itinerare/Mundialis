@@ -4,6 +4,18 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.2.5](https://github.com/itinerare/Mundialis/compare/v2.2.4...v2.2.5) (2024-01-14)
+
+### Bug Fixes
+
+
+##### Users
+
+* Improve password reset flow ([c04a07](https://github.com/itinerare/Mundialis/commit/c04a0794ac44334fabb833e52a2ff4be978992ae))
+
+
+---
+
 ## [2.2.4](https://github.com/itinerare/Mundialis/compare/v2.2.3...v2.2.4) (2023-08-20)
 
 ### Bug Fixes

@@ -79,9 +79,9 @@ class LexiconManager extends Service {
     /**
      * Updates a lexicon entry.
      *
-     * @param \App\Models\Lexicon\LexiconEntry $entry
-     * @param array                            $data
-     * @param \App\Models\User\User            $user
+     * @param LexiconEntry          $entry
+     * @param array                 $data
+     * @param \App\Models\User\User $user
      *
      * @return \App\Models\Lexicon\LexiconEntry|bool
      */
@@ -150,8 +150,8 @@ class LexiconManager extends Service {
     /**
      * Deletes a lexicon entry.
      *
-     * @param \App\Models\Lexicon\LexiconEntry $entry
-     * @param \App\Models\User\User            $user
+     * @param LexiconEntry          $entry
+     * @param \App\Models\User\User $user
      *
      * @return bool
      */
@@ -180,8 +180,8 @@ class LexiconManager extends Service {
     /**
      * Processes etymology data.
      *
-     * @param \App\Models\Lexicon\LexiconEntry $entry
-     * @param array                            $data
+     * @param LexiconEntry $entry
+     * @param array        $data
      *
      * @return array
      */
@@ -231,8 +231,8 @@ class LexiconManager extends Service {
     /**
      * Processes conjugation/declension data.
      *
-     * @param \App\Models\Lexicon\LexiconEntry $entry
-     * @param array                            $data
+     * @param LexiconEntry $entry
+     * @param array        $data
      *
      * @return array
      */
