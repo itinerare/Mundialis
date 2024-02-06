@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(TagController::class)->get('get/tags', 'getAllTags');
+Route::get('get/tags', [TagController::class, 'getAllTags']);
 
 Route::prefix('pages')->group(function () {
     Route::controller(PageController::class)->group(function () {

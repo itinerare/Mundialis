@@ -31,18 +31,18 @@ Route::middleware(['auth'])->controller(AccountController::class)->group(functio
     Routes that require read permissions
 ****************************************************/
 Route::middleware(['read'])->group(function () {
-    Route::group(__DIR__.'/mundialis/read.php');
+    Route::group([], __DIR__.'/mundialis/read.php');
 
     /* Routes that require login */
     Route::group(['middleware' => ['auth', 'verified']], function () {
-        Route::group(__DIR__.'/mundialis/members.php');
+        Route::group([], __DIR__.'/mundialis/members.php');
 
         /* Routes that require write permissions */
         Route::group(['middleware' => ['write']], function () {
-            Route::group(__DIR__.'/mundialis/write.php');
+            Route::group([], __DIR__.'/mundialis/write.php');
 
             /* Routes that require admin permissions */
-            Route::prefix('admin')->middleware(['admin'])->group(__DIR__.'/mundialis/admin.php');
+            Route::prefix('admin')->middleware(['admin'])->group([], __DIR__.'/mundialis/admin.php');
         });
     });
 });
