@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(AdminController::class)->get('/', 'getIndex');
+Route::get('/', [AdminController::class, 'getIndex']);
 
 /*
     DATA/SUBJECTS
