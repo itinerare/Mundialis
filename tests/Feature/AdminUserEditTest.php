@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User\Rank;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -78,7 +79,9 @@ class AdminUserEditTest extends TestCase {
      */
     public function testPostEditUser($withUser, $data, $expected) {
         // Make a user of the specified rank
-        $subject = User::factory()->create(['rank_id' => $data[0]]);
+        $subject = User::factory()->create([
+            'rank_id' => Rank::where('sort', $data[0])->first()->id,
+        ]);
 
         // Generate some test data
         $username = $this->faker()->domainWord();
@@ -104,12 +107,12 @@ class AdminUserEditTest extends TestCase {
         // $data = [$oldRank, $newRank, $withUsername]
 
         return [
-            'edit username'   => [1, [3, 3, 1], 1],
-            'user to editor'  => [1, [3, 2, 0], 1],
-            'user to admin'   => [1, [3, 1, 0], 1],
-            'editor to admin' => [1, [2, 1, 0], 1],
-            'admin to editor' => [1, [1, 2, 0], 0],
-            'invalid user'    => [0, [3, 3, 0], 0],
+            'edit username'   => [1, [0, 0, 1], 1],
+            'user to editor'  => [1, [0, 1, 0], 1],
+            'user to admin'   => [1, [0, 2, 0], 1],
+            'editor to admin' => [1, [1, 2, 0], 1],
+            'admin to editor' => [1, [2, 1, 0], 0],
+            'invalid user'    => [0, [0, 0, 0], 0],
         ];
     }
 
@@ -183,7 +186,9 @@ class AdminUserEditTest extends TestCase {
      */
     public function testPostBanUser($withUser, $rank, $withReason, $expected) {
         // Make a user of the specified rank
-        $subject = User::factory()->create(['rank_id' => $rank]);
+        $subject = User::factory()->create([
+            'rank_id' => Rank::where('sort', $rank)->first()->id,
+        ]);
 
         // Generate test data
         $reason = $this->faker()->domainWord();
@@ -224,7 +229,9 @@ class AdminUserEditTest extends TestCase {
      */
     public function testPostEditBan($withUser, $rank, $withReason, $expected) {
         // Make a persistent user of the specified rank and ban status
-        $subject = User::factory()->banned()->create(['rank_id' => $rank]);
+        $subject = User::factory()->banned()->create([
+            'rank_id' => Rank::where('sort', $rank)->first()->id,
+        ]);
 
         // Generate test data
         $reason = $this->faker()->domainWord();
@@ -253,13 +260,13 @@ class AdminUserEditTest extends TestCase {
 
     public static function postBanUserProvider() {
         return [
-            'user'               => [1, 3, 0, 1],
-            'user with reason'   => [1, 3, 1, 1],
-            'editor'             => [1, 2, 0, 1],
-            'editor with reason' => [1, 2, 1, 1],
-            'admin'              => [1, 1, 0, 0],
-            'admin with reason'  => [1, 1, 1, 0],
-            'invalid user'       => [0, 3, 0, 0],
+            'user'               => [1, 0, 0, 1],
+            'user with reason'   => [1, 0, 1, 1],
+            'editor'             => [1, 1, 0, 1],
+            'editor with reason' => [1, 1, 1, 1],
+            'admin'              => [1, 2, 0, 0],
+            'admin with reason'  => [1, 2, 1, 0],
+            'invalid user'       => [0, 0, 0, 0],
         ];
     }
 
@@ -277,7 +284,7 @@ class AdminUserEditTest extends TestCase {
         // Make a persistent user of the specified rank and ban status
         $subject = User::factory()->create([
             'is_banned' => $isBanned,
-            'rank_id'   => $rank,
+            'rank_id'   => Rank::where('sort', $rank)->first()->id,
         ]);
 
         $response = $this->actingAs($this->user)
@@ -300,13 +307,13 @@ class AdminUserEditTest extends TestCase {
 
     public static function postUnbanUserProvider() {
         return [
-            'user'            => [1, 1, 3, 1],
-            'unbanned user'   => [1, 0, 3, 0],
-            'editor'          => [1, 1, 2, 1],
-            'unbanned editor' => [1, 0, 2, 0],
-            'admin'           => [1, 1, 1, 0],
-            'unbanned admin'  => [1, 0, 1, 0],
-            'invalid user'    => [0, 0, 3, 0],
+            'user'            => [1, 1, 0, 1],
+            'unbanned user'   => [1, 0, 0, 0],
+            'editor'          => [1, 1, 1, 1],
+            'unbanned editor' => [1, 0, 1, 0],
+            'admin'           => [1, 1, 2, 0],
+            'unbanned admin'  => [1, 0, 2, 0],
+            'invalid user'    => [0, 0, 0, 0],
         ];
     }
 }
