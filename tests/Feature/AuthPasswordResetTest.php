@@ -6,7 +6,9 @@ use App\Models\User\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class AuthPasswordResetTest extends TestCase {
@@ -41,10 +43,10 @@ class AuthPasswordResetTest extends TestCase {
      */
     public function testPostPasswordResetEmail($isValid, $expected) {
         if ($isValid) {
+            Notification::fake();
             $user = User::factory()->create();
-            $this->expectsNotification($user, ResetPassword::class);
         } else {
-            $this->doesntExpectJobs(ResetPassword::class);
+            Queue::fake();
         }
 
         $response = $this->post('forgot-password', [
@@ -54,7 +56,9 @@ class AuthPasswordResetTest extends TestCase {
         if ($expected) {
             $response->assertStatus(302);
             $response->assertSessionHasNoErrors();
+            Notification::assertSentTo([$user], ResetPassword::class);
         } else {
+            Queue::assertNotPushed(ResetPassword::class);
             $response->assertSessionHasErrors();
         }
     }
