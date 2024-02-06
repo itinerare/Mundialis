@@ -138,6 +138,11 @@ class UserNotificationTest extends TestCase {
      * @param bool $editorWatched
      */
     public function testSendNotification($type, $userWatched, $editorWatched) {
+        if(Notification::all()->count()) {
+            // Delete any remaining notifications to ensure that counts are accurate
+            Notification::query()->delete();
+        }
+
         // Make a persistent editor to make changes
         $editor = User::factory()->editor()->create();
 
