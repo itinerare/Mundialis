@@ -448,7 +448,7 @@ class PageController extends Controller {
      */
     public function getDeletePage($id) {
         $page = Page::find($id);
-        if (!Auth::user()->canEdit($page)) {
+        if ($page && !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
