@@ -80,7 +80,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeletedPage($id) {
-        $page = Page::withTrashed()->where('id', $id)->first();
+        $page = Page::withTrashed()->whereNotNull('deleted_at')->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -100,7 +100,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRestorePage($id) {
-        $page = Page::withTrashed()->find($id);
+        $page = Page::withTrashed()->whereNotNull('deleted_at')->find($id);
 
         return view('admin.special._restore_page', [
             'page' => $page,
@@ -170,7 +170,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeletedImage(Request $request, $id) {
-        $image = PageImage::withTrashed()->where('id', $id)->first();
+        $image = PageImage::withTrashed()->whereNotNull('deleted_at')->where('id', $id)->first();
         if (!$image) {
             abort(404);
         }
@@ -210,7 +210,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRestoreImage($id) {
-        $image = PageImage::withTrashed()->find($id);
+        $image = PageImage::withTrashed()->whereNotNull('deleted_at')->find($id);
         if (!$image->pages->count()) {
             abort(404);
         }

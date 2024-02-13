@@ -210,6 +210,10 @@ class ImageManager extends Service {
         DB::beginTransaction();
 
         try {
+            if (!$image->deleted_at) {
+                throw new \Exception('This image has not been deleted.');
+            }
+
             // First, restore the image itself
             $image->restore();
 

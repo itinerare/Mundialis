@@ -462,6 +462,10 @@ class PageManager extends Service {
         DB::beginTransaction();
 
         try {
+            if (!$page->deleted_at) {
+                throw new \Exception('This page has not been deleted.');
+            }
+
             // First, restore the page itself
             $page->restore();
 
