@@ -7,9 +7,11 @@ use App\Models\Page\PageImage;
 use App\Models\Page\PageImageCreator;
 use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
+use App\Models\Page\PageProtection;
 use App\Models\Page\PageRelationship;
 use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
+use App\Models\User\Rank;
 use App\Models\User\User;
 use App\Services\ImageManager;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -19,197 +21,173 @@ use Tests\TestCase;
 class PageDeleteTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->page = Page::factory()->create();
+        $this->editor = User::factory()->editor()->create();
+        PageVersion::factory()->user($this->editor->id)->page($this->page->id)->create();
+
+        $this->admin = User::factory()->admin()->create();
+    }
+
     /**
      * Test page deletion access.
+     *
+     * @dataProvider getDeletePageProvider
+     *
+     * @param bool $isValid
      */
-    public function testCanGetDeletePage() {
-        // Create a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Make a page to be deleted
-        $page = Page::factory()->create();
-
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/delete');
+    public function testGetDeletePage($isValid) {
+        $response = $this->actingAs($this->editor)
+            ->get('/pages/'.($isValid ? $this->page->id : mt_rand(500, 1000)).'/delete');
 
         $response->assertStatus(200);
+
+        if ($isValid) {
+            $response->assertSee('You are about to delete the page');
+        } else {
+            $response->assertSee('Invalid page selected.');
+        }
+    }
+
+    public static function getDeletePageProvider() {
+        return [
+            'valid'   => [1],
+            'invalid' => [0],
+        ];
     }
 
     /**
      * Test (soft) page deletion.
+     *
+     * @dataProvider postDeletePageProvider
+     *
+     * @param int  $rank
+     * @param bool $withProtection
+     * @param bool $withChild
+     * @param bool $withReason
+     * @param bool $expected
      */
-    public function testCanPostSoftDeletePage() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Make a page to delete
-        $page = Page::factory()->create();
-        // As well as accompanying version
-        PageVersion::factory()->user($user->id)->page($page->id)->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/delete');
-
-        // Verify that the appropriate change has occurred
-        $this->assertSoftDeleted($page);
-    }
-
-    /**
-     * Test (soft) page deletion with a reason.
-     */
-    public function testCanPostSoftDeletePageWithReason() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Set a reason
-        $data = [
-            'reason' => $this->faker->unique()->domainWord(),
-        ];
-
-        // Make a page to delete & version
-        $page = Page::factory()->create();
-        PageVersion::factory()->user($user->id)->page($page->id)->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/delete', $data);
-
-        // Verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_versions', [
-            'page_id' => $page->id,
-            'type'    => 'Page Deleted',
-            'reason'  => $data['reason'],
+    public function testPostSoftDeletePage($rank, $withProtection, $withChild, $withReason, $expected) {
+        $user = User::factory()->create([
+            'rank_id' => Rank::where('sort', $rank)->first()->id,
         ]);
 
-        $this->assertSoftDeleted($page);
-    }
+        if ($withProtection) {
+            PageProtection::factory()->page($this->page->id)->user($this->admin->id)->create();
+        }
 
-    /**
-     * Test (soft) page deletion with page content.
-     */
-    public function testCanPostSoftDeletePageWithContent() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
+        if ($withChild) {
+            Page::factory()->create(['parent_id' => $this->page->id]);
+        }
 
-        // Make a page to delete
-        $page = Page::factory()->create();
-        // As well as accompanying version
-        $version = PageVersion::factory()->user($user->id)->page($page->id)
-            ->testData($this->faker->unique()->domainWord(), $this->faker->unique()->domainWord())->create();
+        $data = [
+            'reason' => $withReason ? $this->faker->unique()->domainWord() : null,
+        ];
 
-        // Try to post data
         $response = $this
             ->actingAs($user)
-            ->post('/pages/'.$page->id.'/delete');
+            ->post('/pages/'.$this->page->id.'/delete', $data);
 
-        // Verify that the appropriate change has occurred
-        // Ordinarily this would check for the presence of the test data
-        // in the deleted version, but testing seems to have difficulty with this.
-        // Manually verify.
-        $this->assertSoftDeleted($page);
+        if ($expected) {
+            $this->assertSoftDeleted($this->page);
+            $response->assertSessionHasNoErrors();
+
+            $this->assertDatabaseHas('page_versions', [
+                'page_id' => $this->page->id,
+                'type'    => 'Page Deleted',
+                'reason'  => $data['reason'],
+            ]);
+        } else {
+            $this->assertNotSoftDeleted($this->page);
+            $response->assertSessionHasErrors();
+        }
     }
 
-    /**
-     * Test (soft) page deletion with an associated image.
-     */
-    public function testCanPostSoftDeletePageWithImage() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Make a page to delete
-        $page = Page::factory()->create();
-        // As well as accompanying version
-        PageVersion::factory()->user($user->id)->page($page->id)
-            ->testData($this->faker->unique()->domainWord(), $this->faker->unique()->domainWord())->create();
-
-        $image = PageImage::factory()->create();
-        $imageVersion = PageImageVersion::factory()->image($image->id)->user($user->id)->create();
-        PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $imageVersion);
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/delete');
-
-        // Verify that the appropriate change has occurred
-        $this->assertSoftDeleted($image);
-        $this->assertSoftDeleted($page);
-
-        // Delete the test images, to clean up
-        unlink($image->imagePath.'/'.$imageVersion->thumbnailFileName);
-        unlink($image->imagePath.'/'.$imageVersion->imageFileName);
+    public static function postDeletePageProvider() {
+        return [
+            'editor basic'                 => [1, 0, 0, 0, 1],
+            'editor with reason'           => [1, 0, 0, 1, 1],
+            'editor protected'             => [1, 1, 0, 0, 0],
+            'editor protected with reason' => [1, 1, 0, 1, 0],
+            'editor with child'            => [1, 0, 1, 0, 0],
+            'editor with reason, child'    => [1, 0, 1, 1, 0],
+            'editor with everything'       => [1, 1, 1, 1, 0],
+            'admin basic'                  => [2, 0, 0, 0, 1],
+            'admin with reason'            => [2, 0, 0, 1, 1],
+            'admin protected'              => [2, 1, 0, 0, 1],
+            'admin protected with reason'  => [2, 1, 0, 1, 1],
+            'admin with child'             => [2, 0, 1, 0, 0],
+            'admin with reason, child'     => [2, 0, 1, 1, 0],
+            'admin with everything'        => [2, 1, 1, 1, 0],
+        ];
     }
 
     /**
      * Test (soft) page deletion with associated images.
-     * As one image is associated with another page, it should not be deleted.
+     *
+     * @dataProvider postDeletePageWithImagesProvider
+     *
+     * @param int $pages
      */
-    public function testCanPostSoftDeletePageWithImages() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        for ($i = 1; $i <= 2; $i++) {
+    public function testPostSoftDeletePageWithImages($pages) {
+        for ($i = 1; $i <= $pages; $i++) {
             // Make a page
             $page[$i] = Page::factory()->create();
             // As well as accompanying version
-            PageVersion::factory()->user($user->id)->page($page[$i]->id)
-                ->testData($this->faker->unique()->domainWord(), $this->faker->unique()->domainWord())->create();
+            PageVersion::factory()->user($this->editor->id)->page($page[$i]->id)->create();
 
             // Create an image and associated records, as well as test files
             $image[$i] = PageImage::factory()->create();
-            $imageVersion[$i] = PageImageVersion::factory()->image($image[$i]->id)->user($user->id)->create();
-            PageImageCreator::factory()->image($image[$i]->id)->user($user->id)->create();
+            $imageVersion[$i] = PageImageVersion::factory()->image($image[$i]->id)->user($this->editor->id)->create();
+            PageImageCreator::factory()->image($image[$i]->id)->user($this->editor->id)->create();
             PagePageImage::factory()->page($page[1]->id)->image($image[$i]->id)->create();
             (new ImageManager)->testImages($image[$i], $imageVersion[$i]);
         }
 
-        // Attach one of the images to page 2 as well
-        PagePageImage::factory()->page($page[2]->id)->image($image[2]->id)->create();
+        if ($pages > 1) {
+            // Attach one of the images to page 2 as well
+            PagePageImage::factory()->page($page[2]->id)->image($image[2]->id)->create();
+        }
 
         // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->editor)
             ->post('/pages/'.$page[1]->id.'/delete');
 
-        // Verify that the appropriate change has occurred
-        // In this case, this means checking that the second image is not deleted
-        $this->assertDatabaseHas('page_images', [
-            'id'         => $image[2]->id,
-            'deleted_at' => null,
-        ]);
-
-        // And that the first image has been soft-deleted
         $this->assertSoftDeleted($image[1]);
         $this->assertSoftDeleted($page[1]);
+        $response->assertSessionHasNoErrors();
 
-        // Delete the test images, to clean up
-        for ($i = 1; $i <= 2; $i++) {
+        if ($pages > 1) {
+            $this->assertNotSoftDeleted($image[2]);
+        }
+
+        for ($i = 1; $i <= $pages; $i++) {
             unlink($image[$i]->imagePath.'/'.$imageVersion[$i]->thumbnailFileName);
             unlink($image[$i]->imagePath.'/'.$imageVersion[$i]->imageFileName);
         }
     }
 
-    /**
-     * Test (soft) page deletion with a relation.
-     */
-    public function testCanPostSoftDeletePageWithRelationship() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
+    public static function postDeletePageWithImagesProvider() {
+        return [
+            'one page'  => [1],
+            'two pages' => [2],
+        ];
+    }
 
+    /**
+     * Test (soft) page deletion with a relationship.
+     */
+    public function testPostSoftDeletePageWithRelationship() {
         // Create a category in the "People" subject
         $category = SubjectCategory::factory()->subject('people')->create();
 
         // Create a couple pages to link
         for ($i = 1; $i <= 2; $i++) {
-            // Make a deleted page
-            $page[$i] = Page::factory()->category($category->id)->deleted()->create();
-            // As well as accompanying version
-            PageVersion::factory()->user($user->id)->page($page[$i]->id)->deleted()->create();
+            $page[$i] = Page::factory()->category($category->id)->create();
+            PageVersion::factory()->user($this->editor->id)->page($page[$i]->id)->create();
         }
 
         // Create a relationship for the two pages
@@ -217,253 +195,181 @@ class PageDeleteTest extends TestCase {
 
         // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->editor)
             ->post('/pages/'.$page[1]->id.'/delete');
 
-        // Verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_relationships', [
-            'id' => $relationship->id,
-        ]);
+        $this->assertModelExists($relationship);
         $this->assertSoftDeleted($page[1]);
-    }
-
-    /**
-     * Test (soft) page deletion with a child page.
-     * This shouldn't work.
-     */
-    public function testCannotPostSoftDeletePageWithChild() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Make a page to try to delete & version
-        $page = Page::factory()->create();
-        PageVersion::factory()->user($user->id)->page($page->id)->create();
-
-        // Make a child page & version
-        $child = Page::factory()->create();
-        PageVersion::factory()->user($user->id)->page($child->id)->create();
-
-        $child->update(['parent_id' => $page->id]);
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/delete');
-
-        // Verify that the appropriate change has occurred
-        $this->assertDatabaseHas('pages', [
-            'id'         => $page->id,
-            'deleted_at' => null,
-        ]);
-    }
-
-    /**
-     * Test full page deletion.
-     */
-    public function testCanPostForceDeletePage() {
-        // Make a persistent admin
-        $user = User::factory()->admin()->create();
-
-        // Make a category for the page to go into/to delete
-        $category = SubjectCategory::factory()->create();
-
-        // Make a deleted page
-        $page = Page::factory()->category($category->id)->deleted()->create();
-        // As well as accompanying version
-        PageVersion::factory()->user($user->id)->page($page->id)->deleted()->create();
-
-        // Try to post data; this time the category is deleted
-        // since deleting the category is the only way to force-delete pages
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/categories/delete/'.$category->id);
-
-        // Verify that the appropriate change has occurred
-        $this->assertModelMissing($page);
-    }
-
-    /**
-     * Test full page deletion with an image.
-     */
-    public function testCanPostForceDeletePageWithImage() {
-        // Make a persistent admin
-        $user = User::factory()->admin()->create();
-
-        // Make a category for the page to go into/to delete
-        $category = SubjectCategory::factory()->create();
-
-        // Make a deleted page
-        $page = Page::factory()->category($category->id)->deleted()->create();
-        // As well as accompanying version
-        PageVersion::factory()->user($user->id)->page($page->id)->deleted()->create();
-
-        $image = PageImage::factory()->deleted()->create();
-        $imageVersion = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
-        PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $imageVersion);
-
-        // Try to post data; this time the category is deleted
-        // since deleting the category is the only way to force-delete pages
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/categories/delete/'.$category->id);
-
-        // Verify that the appropriate change has occurred
-        // In this case, we check the image, as it should also be force-deleted
-        $this->assertModelMissing($image);
-    }
-
-    /**
-     * Test full page deletion with a relationship.
-     */
-    public function testCanPostForceDeletePageWithRelationship() {
-        // Make a persistent admin
-        $user = User::factory()->admin()->create();
-
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            // Make a deleted page
-            $page[$i] = Page::factory()->category($category->id)->deleted()->create();
-            // As well as accompanying version
-            PageVersion::factory()->user($user->id)->page($page[$i]->id)->deleted()->create();
-        }
-
-        // Create a relationship for the two pages
-        $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
-
-        // Try to post data; this time the category is deleted
-        // since deleting the category is the only way to force-delete pages
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/categories/delete/'.$category->id);
-
-        // Verify that the appropriate change has occurred
-        // In this case, we check the relationship, as it should also be deleted
-        $this->assertModelMissing($relationship);
+        $response->assertSessionHasNoErrors();
     }
 
     /**
      * Test deleted page access.
+     *
+     * @dataProvider getDeletePageProvider
+     *
+     * @param bool $isValid
      */
-    public function testCanGetDeletedPage() {
-        // Make a persistent admin
-        $user = User::factory()->admin()->create();
-
-        // Make a deleted page & version
+    public function testGetDeletedPage($isValid) {
         $page = Page::factory()->deleted()->create();
-        PageVersion::factory()->page($page->id)->user($user->id)->deleted()->create();
+        PageVersion::factory()->page($page->id)->user($this->editor->id)->deleted()->create();
 
-        $response = $this->actingAs($user)
-            ->get('/admin/special/deleted-pages/'.$page->id);
+        $response = $this->actingAs($this->admin)
+            ->get('/admin/special/deleted-pages/'.($isValid ? $page->id : $this->page->id));
 
-        $response->assertStatus(200);
+        $response->assertStatus($isValid ? 200 : 404);
     }
 
     /**
      * Test restore page access.
+     *
+     * @dataProvider getDeletePageProvider
+     *
+     * @param bool $isValid
      */
-    public function testCanGetRestorePage() {
-        // Make a persistent admin
-        $user = User::factory()->admin()->create();
-
-        // Make a deleted page & version
+    public function testGetRestorePage($isValid) {
         $page = Page::factory()->deleted()->create();
-        PageVersion::factory()->page($page->id)->user($user->id)->deleted()->create();
+        PageVersion::factory()->page($page->id)->user($this->editor->id)->deleted()->create();
 
-        $response = $this->actingAs($user)
-            ->get('/admin/special/deleted-pages/'.$page->id.'/restore');
+        $response = $this->actingAs($this->admin)
+            ->get('/admin/special/deleted-pages/'.($isValid ? $page->id : $this->page->id).'/restore');
 
         $response->assertStatus(200);
+
+        if ($isValid) {
+            $response->assertSee('You are about to restore the page');
+        } else {
+            $response->assertSee('Invalid page selected.');
+        }
     }
 
     /**
      * Test page restoration.
+     *
+     * @dataProvider postRestorePageProvider
+     *
+     * @param bool $deletedPage
+     * @param bool $withReason
+     * @param bool $withImage
+     * @param bool $expected
      */
-    public function testCanPostRestorePage() {
-        // Make a persistent admin
-        $user = User::factory()->admin()->create();
+    public function testPostRestorePage($deletedPage, $withReason, $withImage, $expected) {
+        $page = Page::factory()->deleted()->create();
+        PageVersion::factory()->page($page->id)->user($this->editor->id)->deleted()->create();
 
-        // Make a page to restore & version
-        $page = Page::factory()->create();
-        PageVersion::factory()->user($user->id)->page($page->id)->create();
+        if ($withImage) {
+            $image = PageImage::factory()->deleted()->create();
+            $imageVersion = PageImageVersion::factory()->image($image->id)->user($this->editor->id)->deleted()->create();
+            PageImageCreator::factory()->image($image->id)->user($this->editor->id)->create();
+            PagePageImage::factory()->page($page->id)->image($image->id)->create();
+            (new ImageManager)->testImages($image, $imageVersion);
+        }
 
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/special/deleted-pages/'.$page->id.'/restore');
-
-        // Verify that the appropriate change has occurred
-        $this->assertDatabaseHas('pages', [
-            'id'         => $page->id,
-            'deleted_at' => null,
-        ]);
-    }
-
-    /**
-     * Test page restoration with a reason.
-     */
-    public function testCanPostRestorePageWithReason() {
-        // Make a persistent admin
-        $user = User::factory()->admin()->create();
-
-        // Set a reason
         $data = [
-            'reason' => $this->faker->unique()->domainWord(),
+            'reason' => $withReason ? $this->faker->unique()->domainWord() : null,
         ];
 
-        // Make a page to restore & version
-        $page = Page::factory()->create();
-        PageVersion::factory()->user($user->id)->page($page->id)->create();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
-            ->post('/admin/special/deleted-pages/'.$page->id.'/restore', $data);
+            ->actingAs($this->admin)
+            ->post('/admin/special/deleted-pages/'.($deletedPage ? $page->id : $this->page->id).'/restore', $data);
 
-        // Verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_versions', [
-            'page_id' => $page->id,
-            'type'    => 'Page Restored',
-            'reason'  => $data['reason'],
-        ]);
+        if ($expected) {
+            $this->assertNotSoftDeleted($page);
+            $response->assertSessionHasNoErrors();
 
-        $this->assertDatabaseHas('pages', [
-            'id'         => $page->id,
-            'deleted_at' => null,
-        ]);
+            if ($withReason) {
+                $this->assertDatabaseHas('page_versions', [
+                    'page_id' => $page->id,
+                    'type'    => 'Page Restored',
+                    'reason'  => $data['reason'],
+                ]);
+            }
+
+            if ($withImage) {
+                $this->assertNotSoftDeleted($image);
+            }
+        } else {
+            $this->assertSoftDeleted($page);
+            $response->assertSessionHasErrors();
+        }
+    }
+
+    public static function postRestorePageProvider() {
+        return [
+            'basic'              => [1, 0, 0, 1],
+            'with reason'        => [1, 1, 0, 1],
+            'with image'         => [1, 0, 1, 1],
+            'with reason, image' => [1, 1, 1, 1],
+            'undeleted page'     => [0, 0, 0, 0],
+        ];
     }
 
     /**
-     * Test page restoration with an associated image.
+     * Test full/force page deletion.
+     *
+     * @dataProvider postForceDeletePageProvider
+     *
+     * @param bool $withProtection
+     * @param bool $withImage
+     * @param bool $withRelationship
      */
-    public function testCanPostRestorePageWithImage() {
-        // Make a persistent admin
-        $user = User::factory()->admin()->create();
+    public function testPostForceDeletePage($withProtection, $withImage, $withRelationship) {
+        // Make a category for the page to go into/to delete
+        $category = SubjectCategory::factory()->create();
 
-        // Make a page to restore & version
-        $page = Page::factory()->create();
-        PageVersion::factory()->user($user->id)->page($page->id)->create();
+        for ($i = 1; $i <= ($withRelationship ? 2 : 1); $i++) {
+            // Make a deleted page
+            $page[$i] = Page::factory()->category($category->id)->deleted()->create();
+            // As well as accompanying version
+            $version[$i] = PageVersion::factory()->user($this->editor->id)->page($page[$i]->id)->deleted()->create();
+        }
 
-        // Make a deleted image and associated records
-        $image = PageImage::factory()->deleted()->create();
-        $imageVersion = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
-        PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $imageVersion);
+        if ($withProtection) {
+            $protection = PageProtection::factory()->page($page[1]->id)->user($this->admin->id)->create();
+        }
 
-        // Try to post data
+        if ($withImage) {
+            $image = PageImage::factory()->deleted()->create();
+            $imageVersion = PageImageVersion::factory()->image($image->id)->user($this->editor->id)->deleted()->create();
+            PageImageCreator::factory()->image($image->id)->user($this->editor->id)->create();
+            PagePageImage::factory()->page($page[1]->id)->image($image->id)->create();
+            (new ImageManager)->testImages($image, $imageVersion);
+        }
+
+        if ($withRelationship) {
+            $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
+        }
+
+        // Delete the category, since that is the only way to force-delete pages
         $response = $this
-            ->actingAs($user)
-            ->post('/admin/special/deleted-pages/'.$page->id.'/restore');
+            ->actingAs($this->admin)
+            ->post('/admin/data/categories/delete/'.$category->id);
 
-        // Verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_images', [
-            'id'         => $image->id,
-            'deleted_at' => null,
-        ]);
+        $this->assertModelMissing($page[1]);
+        $this->assertModelMissing($version[1]);
+        $response->assertSessionHasNoErrors();
+
+        if ($withProtection) {
+            $this->assertModelMissing($protection);
+        }
+        if ($withImage) {
+            $this->assertModelMissing($image);
+        }
+        if ($withRelationship) {
+            $this->assertModelMissing($relationship);
+        }
+    }
+
+    public static function postForceDeletePageProvider() {
+        return [
+            'basic'                         => [0, 0, 0],
+            'with protection'               => [1, 0, 0],
+            'with protection, image'        => [1, 1, 0],
+            'with protection, relationship' => [1, 0, 1],
+            'with image'                    => [0, 1, 0],
+            'with image, relationship'      => [0, 1, 1],
+            'with relationship'             => [0, 0, 1],
+            'with everything'               => [1, 1, 1],
+        ];
     }
 }
