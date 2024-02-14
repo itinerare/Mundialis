@@ -28,7 +28,7 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageRelationships(Request $request, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        $page = Page::visible(Auth::check() ? Auth::user() : null)->subject('People')->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -80,11 +80,8 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageFamilyTree($id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
-        if (!$page) {
-            abort(404);
-        }
-        if (!$page->personRelations()) {
+        $page = Page::visible(Auth::check() ? Auth::user() : null)->subject('People')->where('id', $id)->first();
+        if (!$page || !$page->personRelations()) {
             abort(404);
         }
 
@@ -103,11 +100,8 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreateRelationship($id) {
-        $page = Page::where('id', $id)->first();
-        if (!$page) {
-            abort(404);
-        }
-        if (!Auth::user()->canEdit($page)) {
+        $page = Page::subject('People')->where('id', $id)->first();
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
@@ -130,11 +124,8 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditRelationship($pageId, $id) {
-        $page = Page::where('id', $pageId)->first();
-        if (!$page) {
-            abort(404);
-        }
-        if (!Auth::user()->canEdit($page)) {
+        $page = Page::subject('People')->where('id', $pageId)->first();
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
         $relationship = PageRelationship::where('id', $id)->first();
@@ -170,11 +161,8 @@ class RelationshipController extends Controller {
             'type_two', 'type_two_info', 'details_two',
         ]);
 
-        $page = Page::where('id', $pageId)->first();
-        if (!Auth::user()->canEdit($page)) {
-            abort(404);
-        }
-        if (!$page) {
+        $page = Page::subject('People')->where('id', $pageId)->first();
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
@@ -202,11 +190,8 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeleteRelationship($pageId, $id) {
-        $page = Page::where('id', $pageId)->first();
-        if (!$page) {
-            abort(404);
-        }
-        if (!Auth::user()->canEdit($page)) {
+        $page = Page::subject('People')->where('id', $pageId)->first();
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
         $relationship = PageRelationship::where('id', $id)->first();
@@ -231,7 +216,7 @@ class RelationshipController extends Controller {
      */
     public function postDeleteRelationship(Request $request, RelationshipManager $service, $pageId, $id) {
         if ($id && $service->deletePageRelationship(PageRelationship::find($id), Auth::user())) {
-            flash('Image deleted successfully.')->success();
+            flash('Relationship deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 $service->addError($error);
