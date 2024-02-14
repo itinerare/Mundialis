@@ -215,7 +215,12 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeleteRelationship(Request $request, RelationshipManager $service, $pageId, $id) {
-        if ($id && $service->deletePageRelationship(PageRelationship::find($id), Auth::user())) {
+        $relationship = PageRelationship::where('id', $id)->first();
+        if (!$relationship) {
+            abort(404);
+        }
+
+        if ($id && $service->deletePageRelationship($relationship, Auth::user())) {
             flash('Relationship deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
