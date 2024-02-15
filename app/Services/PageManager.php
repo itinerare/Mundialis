@@ -321,6 +321,10 @@ class PageManager extends Service {
                 throw new \Exception('You don\'t have permission to edit this page.');
             }
 
+            if (!$version) {
+                throw new \Exception('Invalid version selected.');
+            }
+
             // Fallback for testing purposes
             if (!is_array($version->data)) {
                 $version->data = json_decode($version->data, true);
