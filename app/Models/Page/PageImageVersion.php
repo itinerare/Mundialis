@@ -27,6 +27,15 @@ class PageImageVersion extends Model {
     protected $table = 'page_image_versions';
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'data' => 'array',
+    ];
+
+    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -58,19 +67,6 @@ class PageImageVersion extends Model {
         ACCESSORS
 
     **********************************************************************************************/
-
-    /**
-     * Get the data attribute as an associative array.
-     *
-     * @return array
-     */
-    public function getDataAttribute() {
-        if (!isset($this->attributes['data'])) {
-            return null;
-        }
-
-        return json_decode($this->attributes['data'], true);
-    }
 
     /**
      * Gets the file name of the model's image.

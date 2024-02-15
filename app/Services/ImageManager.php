@@ -314,7 +314,7 @@ class ImageManager extends Service {
                 'type'          => $type,
                 'reason'        => $reason,
                 'is_minor'      => $isMinor,
-                'data'          => json_encode($data),
+                'data'          => $data,
             ]);
 
             return $version;
@@ -547,7 +547,7 @@ class ImageManager extends Service {
 
             // Update version with archival data
             $version->update([
-                'data' => json_encode($imageData['version']),
+                'data' => $imageData['version'],
             ]);
 
             return $image;

@@ -54,13 +54,6 @@ class SubjectService extends Service {
                 $this->cascadeTemplateChanges($categories, $data);
             }
 
-            // Encode data before saving either way, for convenience
-            if (isset($data['data'])) {
-                $data['data'] = json_encode($data['data']);
-            } else {
-                $data['data'] = null;
-            }
-
             // Either create or update template data
             if (!$template) {
                 $template = SubjectTemplate::create($data);
@@ -111,13 +104,6 @@ class SubjectService extends Service {
                     $parent = SubjectCategory::find($data['parent_id']);
                 }
                 $data['data'] = isset($parent) && $parent ? $parent->data : SubjectTemplate::where('subject', $subject)->first()->data;
-            }
-
-            // Encode data before saving either way, for convenience
-            if (isset($data['data'])) {
-                $data['data'] = json_encode($data['data']);
-            } else {
-                $data['data'] = null;
             }
 
             // Create category
@@ -195,13 +181,6 @@ class SubjectService extends Service {
                     // Cascade changes to impacted categories
                     $this->cascadeTemplateChanges($categories, $data);
                 }
-            }
-
-            // Encode data before saving either way, for convenience
-            if (isset($data['data'])) {
-                $data['data'] = json_encode($data['data']);
-            } else {
-                $data['data'] = null;
             }
 
             // Update category
@@ -551,13 +530,6 @@ class SubjectService extends Service {
             // Process data for storage
             $data = $this->processLexiconData($data);
 
-            // Encode data before saving either way, for convenience
-            if (isset($data['data'])) {
-                $data['data'] = json_encode($data['data']);
-            } else {
-                $data['data'] = null;
-            }
-
             // Create category
             $category = LexiconCategory::create($data);
 
@@ -593,13 +565,6 @@ class SubjectService extends Service {
             // Overwrite with data from subject template if necessary
             if (isset($data['populate_settings']) && $data['populate_settings'] && $category->parent && isset($category->parent->data)) {
                 $data['data'] = $category->parent->data;
-            }
-
-            // Encode data before saving either way, for convenience
-            if (isset($data['data'])) {
-                $data['data'] = json_encode($data['data']);
-            } else {
-                $data['data'] = null;
             }
 
             // Update category
@@ -798,8 +763,6 @@ class SubjectService extends Service {
             // Recursively perform any additions
             $categoryData[$key] = array_replace_recursive($categoryData[$key], $data['changes']['added']);
 
-            // Update the category
-            $categoryData[$key] = json_encode($categoryData[$key]);
             $category->update(['data' => $categoryData[$key]]);
         }
 

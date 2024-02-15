@@ -243,6 +243,11 @@ class LexiconManager extends Service {
 
         // Auto-conjugation/declension
         if ($data['autoconj']) {
+            // Fallback for testing purposes
+            if (!is_array($entry->category->data)) {
+                $entry->category->data = json_decode($entry->category->data, true);
+            }
+
             $conjData = $entry->category->data[$entry->lexicalClass->id]['conjugation'] ?? null;
 
             // This option should only be offered in the first place if the data exists,
@@ -276,9 +281,6 @@ class LexiconManager extends Service {
             }
         }
 
-        // Process inputs for recording
-        $data['data'] = json_encode($data['conjdecl']);
-
-        return $data['data'];
+        return $data['conjdecl'];
     }
 }

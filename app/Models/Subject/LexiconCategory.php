@@ -25,6 +25,15 @@ class LexiconCategory extends Model {
     protected $table = 'lexicon_categories';
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'data' => 'array',
+    ];
+
+    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -48,6 +57,12 @@ class LexiconCategory extends Model {
     public static $updateRules = [
         'name' => 'required',
     ];
+
+    /**********************************************************************************************
+
+        RELATIONS
+
+    **********************************************************************************************/
 
     /**
      * Get parent category of this category.
@@ -75,19 +90,6 @@ class LexiconCategory extends Model {
         ACCESSORS
 
     **********************************************************************************************/
-
-    /**
-     * Get the data attribute as an associative array.
-     *
-     * @return array
-     */
-    public function getDataAttribute() {
-        if (!isset($this->attributes['data'])) {
-            return null;
-        }
-
-        return json_decode($this->attributes['data'], true);
-    }
 
     /**
      * Get the category's url.

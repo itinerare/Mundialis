@@ -73,7 +73,6 @@ class PageManager extends Service {
 
                     // Parse data and update version
                     $newData['data'] = $this->parse_wiki_links($versionData['data']);
-                    $version->data = json_encode($newData);
                     $version->save();
 
                     // And update the links themselves
@@ -322,6 +321,11 @@ class PageManager extends Service {
                 throw new \Exception('You don\'t have permission to edit this page.');
             }
 
+            // Fallback for testing purposes
+            if (!is_array($version->data)) {
+                $version->data = json_decode($version->data, true);
+            }
+
             // Double-check the title
             if (Page::withTrashed()->where('title', $version->data['title'])->where('id', '!=', $page->id)->exists()) {
                 throw new \Exception('The page title has already been taken.');
@@ -513,7 +517,7 @@ class PageManager extends Service {
                 'type'     => $type,
                 'reason'   => $reason,
                 'is_minor' => $isMinor,
-                'data'     => json_encode($data),
+                'data'     => $data,
             ]);
 
             return $version;

@@ -23,6 +23,15 @@ class SubjectTemplate extends Model {
      * @var string
      */
     protected $table = 'subject_templates';
+
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'data' => 'array',
+    ];
     /**
      * Whether the model contains timestamps to be saved and updated.
      *
@@ -64,24 +73,5 @@ class SubjectTemplate extends Model {
      */
     public function categories() {
         return $this->hasMany('App\Models\Subject\SubjectCategory', 'subject', 'subject');
-    }
-
-    /**********************************************************************************************
-
-        ACCESSORS
-
-    **********************************************************************************************/
-
-    /**
-     * Get the data attribute as an associative array.
-     *
-     * @return array
-     */
-    public function getDataAttribute() {
-        if (!isset($this->attributes['data'])) {
-            return null;
-        }
-
-        return json_decode($this->attributes['data'], true);
     }
 }
