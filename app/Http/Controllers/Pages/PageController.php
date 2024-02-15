@@ -173,10 +173,7 @@ class PageController extends Controller {
      */
     public function getEditPage($id) {
         $page = Page::find($id);
-        if (!$page) {
-            abort(404);
-        }
-        if (!Auth::user()->canEdit($page)) {
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
@@ -338,7 +335,7 @@ class PageController extends Controller {
      */
     public function getMovePage($id) {
         $page = Page::find($id);
-        if (!Auth::user()->canEdit($page)) {
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
@@ -382,7 +379,12 @@ class PageController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postMovePage(Request $request, PageManager $service, $id) {
-        if ($id && $service->movePage(Page::find($id), SubjectCategory::find($request->get('category_id')), Auth::user(), $request->get('reason'))) {
+        $page = Page::find($id);
+        if (!$page || !Auth::user()->canEdit($page)) {
+            abort(404);
+        }
+
+        if ($id && $service->movePage($page, SubjectCategory::find($request->get('category_id')), Auth::user(), $request->get('reason'))) {
             flash('Page moved successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
@@ -405,10 +407,10 @@ class PageController extends Controller {
      */
     public function getResetPage($pageId, $id) {
         $page = Page::find($pageId);
-        $version = $page->versions()->where('id', $id)->first();
-        if (!Auth::user()->canEdit($page)) {
+        if ($page && !Auth::user()->canEdit($page)) {
             abort(404);
         }
+        $version = $page?->versions()->where('id', $id)->first();
 
         return view('pages._reset_page', [
             'page'    => $page,
@@ -426,7 +428,12 @@ class PageController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postResetPage(Request $request, PageManager $service, $pageId, $id) {
-        if ($id && $service->resetPage(Page::find($pageId), PageVersion::find($id), Auth::user(), $request->get('reason'))) {
+        $page = Page::find($pageId);
+        if (!$page || !Auth::user()->canEdit($page)) {
+            abort(404);
+        }
+
+        if ($id && $service->resetPage($page, PageVersion::find($id), Auth::user(), $request->get('reason'))) {
             flash('Page reset successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
@@ -466,7 +473,12 @@ class PageController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeletePage(Request $request, PageManager $service, $id) {
-        if ($id && $service->deletePage(Page::find($id), Auth::user(), $request->get('reason'))) {
+        $page = Page::find($id);
+        if (!$page || !Auth::user()->canEdit($page)) {
+            abort(404);
+        }
+
+        if ($id && $service->deletePage($page, Auth::user(), $request->get('reason'))) {
             flash('Page deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
