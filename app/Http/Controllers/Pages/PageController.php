@@ -432,8 +432,9 @@ class PageController extends Controller {
         if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
+        $version = $page->versions()->where('id', $id)->first();
 
-        if ($id && $service->resetPage($page, PageVersion::find($id), Auth::user(), $request->get('reason'))) {
+        if ($id && $service->resetPage($page, $version, Auth::user(), $request->get('reason'))) {
             flash('Page reset successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
