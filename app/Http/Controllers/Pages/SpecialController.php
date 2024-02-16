@@ -169,10 +169,8 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUntaggedPages(Request $request) {
-        $query = Page::visible(Auth::check() ? Auth::user() : null)->get()
-            ->filter(function ($page) {
-                return $page->tags->count() == 0;
-            })->sortBy('created_at');
+        $query = Page::visible(Auth::check() ? Auth::user() : null)
+            ->doesntHave('tags')->orderBy('created_at');
 
         return view('pages.special.untagged', [
             'pages' => $query->paginate(20)->appends($request->query()),
@@ -185,10 +183,8 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getMostTaggedPages(Request $request) {
-        $query = Page::visible(Auth::check() ? Auth::user() : null)->get()
-            ->filter(function ($page) {
-                return $page->tags->count() > 0;
-            })
+        $query = Page::visible(Auth::check() ? Auth::user() : null)
+            ->whereHas('tags')->get()
             ->sortByDesc(function ($page) {
                 return $page->tags->count();
             });
