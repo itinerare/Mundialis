@@ -12,6 +12,7 @@ use App\Models\User\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 
 class ImageManager extends Service {
@@ -327,21 +328,24 @@ class ImageManager extends Service {
 
     /**
      * Generates and saves test images for page image test purposes.
-     * This is a workaround for normal image processing depending on Intervention.
      *
      * @param PageImage        $image
      * @param PageImageVersion $version
+     * @param bool             $create
      *
      * @return bool
      */
-    public function testImages($image, $version) {
-        // Generate the fake files to save
-        $file['image'] = UploadedFile::fake()->image('test_image.png');
-        $file['thumbnail'] = UploadedFile::fake()->image('test_thumb.png');
+    public function testImages($image, $version, $create = true) {
+        if ($create) {
+            $file['image'] = UploadedFile::fake()->image('test_image.png');
+            $file['thumbnail'] = UploadedFile::fake()->image('test_thumb.png');
 
-        // Save the files in line with usual image handling.
-        $this->handleImage($file['image'], $image->imagePath, $version->imageFileName);
-        $this->handleImage($file['thumbnail'], $image->imagePath, $version->thumbnailFileName);
+            $this->handleImage($file['image'], $image->imagePath, $version->imageFileName);
+            $this->handleImage($file['thumbnail'], $image->imagePath, $version->thumbnailFileName);
+        } elseif (!$create && File::exists($image->imagePath.'/'.$image->thumbnailFileName)) {
+            unlink($image->imagePath.'/'.$version->thumbnailFileName);
+            unlink($image->imagePath.'/'.$version->imageFileName);
+        }
 
         return true;
     }
