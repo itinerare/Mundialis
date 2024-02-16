@@ -32,7 +32,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPage($id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -52,7 +52,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageHistory(Request $request, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -94,7 +94,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getLinksHere(Request $request, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -124,7 +124,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageVersion($pageId, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $pageId)->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $pageId)->first();
         if (!$page) {
             abort(404);
         }
@@ -270,7 +270,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getProtectPage(Request $request, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }

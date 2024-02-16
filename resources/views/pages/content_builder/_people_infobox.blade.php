@@ -23,12 +23,12 @@
                         : '' !!}@if ($segment == 'death' && $page->personAge($page->data['birth'], $page->data['death']))
                         (age {{ $page->personAge($page->data['birth'], $page->data['death']) }})
                     @endif{!! isset($page->data[$segment]['place']) &&
-                    App\Models\Page\Page::visible(Auth::check() ? Auth::user() : null)->where('id', $page->data[$segment]['place'])->first() &&
+                    App\Models\Page\Page::visible(Auth::user() ?? null)->where('id', $page->data[$segment]['place'])->first() &&
                     isset($page->data[$segment]['date'])
                         ? ',<br/>'
                         : null !!}{!! isset($page->data[$segment]['place']) &&
-                    App\Models\Page\Page::visible(Auth::check() ? Auth::user() : null)->where('id', $page->data[$segment]['place'])->first()
-                        ? App\Models\Page\Page::visible(Auth::check() ? Auth::user() : null)->where('id', $page->data[$segment]['place'])->first()->displayName
+                    App\Models\Page\Page::visible(Auth::user() ?? null)->where('id', $page->data[$segment]['place'])->first()
+                        ? App\Models\Page\Page::visible(Auth::user() ?? null)->where('id', $page->data[$segment]['place'])->first()->displayName
                         : null !!}
                 </div>
             </div>

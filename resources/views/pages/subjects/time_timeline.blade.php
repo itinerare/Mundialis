@@ -39,10 +39,10 @@
             </div>
 
             @if (
-                $eventHelper->timeOrderedEvents(Auth::check() ? Auth::user() : null,
+                $eventHelper->timeOrderedEvents(Auth::user() ?? null,
                     $chronology->id,
                     Request::get('tags') ? Request::get('tags') : null))
-                @foreach ($eventHelper->timeOrderedEvents(Auth::check() ? Auth::user() : null, $chronology->id, Request::get('tags') ? Request::get('tags') : null) as $key => $group)
+                @foreach ($eventHelper->timeOrderedEvents(Auth::user() ?? null, $chronology->id, Request::get('tags') ? Request::get('tags') : null) as $key => $group)
                     <div
                         class="col-md-6 border-right border-secondary timeline-section-left {{ $loop->even ? 'mobile-hide' : '' }}">
                         @if ($loop->even)
@@ -71,7 +71,7 @@
     @endforeach
 
     @if (
-        $eventHelper->timeOrderedEvents(Auth::check() ? Auth::user() : null,
+        $eventHelper->timeOrderedEvents(Auth::user() ?? null,
             null,
             Request::get('tags') ? Request::get('tags') : null))
         <div class="row">
@@ -81,7 +81,7 @@
             <div class="col-md-6 mobile-hide">
             </div>
 
-            @foreach ($eventHelper->timeOrderedEvents(Auth::check() ? Auth::user() : null, null, Request::get('tags') ? Request::get('tags') : null) as $key => $group)
+            @foreach ($eventHelper->timeOrderedEvents(Auth::user() ?? null, null, Request::get('tags') ? Request::get('tags') : null) as $key => $group)
                 <div
                     class="col-md-6 border-right border-secondary timeline-section-left {{ $loop->even ? 'mobile-hide' : '' }}">
                     @if ($loop->even)

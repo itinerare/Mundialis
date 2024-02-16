@@ -35,7 +35,7 @@
                 </div>
             @endif
         </h5>
-        @foreach ($image->pages()->visible(Auth::check() ? Auth::user() : null)->get() as $page)
+        @foreach ($image->pages()->visible(Auth::user() ?? null)->get() as $page)
             {!! $page->image_id == $image->id
                 ? '<i class="fas fa-star text-info" data-toggle="tooltip" title="This image is this page\'s primary image."></i> '
                 : '' !!}

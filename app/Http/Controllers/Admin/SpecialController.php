@@ -29,7 +29,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUnwatchedPages(Request $request) {
-        $query = Page::visible(Auth::check() ? Auth::user() : null)->get()
+        $query = Page::visible(Auth::user() ?? null)->get()
             ->filter(function ($page) {
                 return $page->watchers->count() == 0;
             })->sortBy('title');

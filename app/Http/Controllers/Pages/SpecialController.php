@@ -42,10 +42,10 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRandomPage() {
-        if (!Page::visible(Auth::check() ? Auth::user() : null)->count()) {
+        if (!Page::visible(Auth::user() ?? null)->count()) {
             return redirect('/');
         }
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->get()->random();
+        $page = Page::visible(Auth::user() ?? null)->get()->random();
 
         return redirect($page->url);
     }
@@ -56,7 +56,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getAllPages(Request $request) {
-        $query = Page::visible(Auth::check() ? Auth::user() : null);
+        $query = Page::visible(Auth::user() ?? null);
         $sort = $request->only(['sort']);
 
         if ($request->get('title')) {
@@ -129,7 +129,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getAllImages(Request $request) {
-        $query = PageImage::visible(Auth::check() ? Auth::user() : null);
+        $query = PageImage::visible(Auth::user() ?? null);
 
         if ($request->get('creator_url')) {
             $creatorUrl = $request->get('creator_url');
@@ -169,7 +169,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUntaggedPages(Request $request) {
-        $query = Page::visible(Auth::check() ? Auth::user() : null)
+        $query = Page::visible(Auth::user() ?? null)
             ->doesntHave('tags')->orderBy('created_at');
 
         return view('pages.special.untagged', [
@@ -183,7 +183,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getMostTaggedPages(Request $request) {
-        $query = Page::visible(Auth::check() ? Auth::user() : null)
+        $query = Page::visible(Auth::user() ?? null)
             ->whereHas('tags')->get()
             ->sortByDesc(function ($page) {
                 return $page->tags->count();
@@ -202,7 +202,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRevisedPages(Request $request, $mode) {
-        $query = Page::visible(Auth::check() ? Auth::user() : null)->get();
+        $query = Page::visible(Auth::user() ?? null)->get();
 
         if ($mode == 'least') {
             $query = $query->sortBy(function ($page) {
@@ -331,7 +331,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getProtectedPages(Request $request) {
-        $query = Page::visible(Auth::check() ? Auth::user() : null)->get()->filter(function ($page) {
+        $query = Page::visible(Auth::user() ?? null)->get()->filter(function ($page) {
             if ($page->protection && $page->protection->is_protected) {
                 return 1;
             }
@@ -352,7 +352,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUtilityTagPages(Request $request, $tag) {
-        $query = Page::visible(Auth::check() ? Auth::user() : null)->whereIn('id', PageTag::utilityTag()->tagSearch($tag)->pluck('page_id')->toArray());
+        $query = Page::visible(Auth::user() ?? null)->whereIn('id', PageTag::utilityTag()->tagSearch($tag)->pluck('page_id')->toArray());
         $sort = $request->only(['sort']);
 
         if ($request->get('title')) {

@@ -28,7 +28,7 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageRelationships(Request $request, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->subject('People')->where('id', $id)->first();
+        $page = Page::visible(Auth::user() ?? null)->subject('People')->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -80,7 +80,7 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageFamilyTree($id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->subject('People')->where('id', $id)->first();
+        $page = Page::visible(Auth::user() ?? null)->subject('People')->where('id', $id)->first();
         if (!$page || !$page->personRelations()) {
             abort(404);
         }

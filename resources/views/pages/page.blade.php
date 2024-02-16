@@ -52,7 +52,7 @@
             @if ($tag->hasNavbox)
                 @include('pages.tags._navbox', [
                     'tag' => $tag,
-                    'navbox' => $tag->navboxInfo(Auth::check() ? Auth::user() : null),
+                    'navbox' => $tag->navboxInfo(Auth::user() ?? null),
                 ])
             @endif
         @endforeach

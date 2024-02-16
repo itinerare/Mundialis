@@ -30,12 +30,12 @@ class ImageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageGallery(Request $request, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
 
-        $query = $page->images()->visible(Auth::check() ? Auth::user() : null)->orderBy('is_valid', 'DESC');
+        $query = $page->images()->visible(Auth::user() ?? null)->orderBy('is_valid', 'DESC');
         $sort = $request->only(['sort']);
 
         if ($request->get('creator_url')) {
@@ -82,11 +82,11 @@ class ImageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageImage(Request $request, $pageId, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $pageId)->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $pageId)->first();
         if (!$page) {
             abort(404);
         }
-        $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $id)->first();
+        $image = $page->images()->visible(Auth::user() ?? null)->where('page_images.id', $id)->first();
         if (!$image) {
             abort(404);
         }
@@ -129,13 +129,13 @@ class ImageController extends Controller {
      */
     public function getPageImagePopup($id, $imageId = null) {
         if (isset($id) && isset($imageId)) {
-            $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+            $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
             if (!$page) {
                 abort(404);
             }
-            $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $imageId)->first();
+            $image = $page->images()->visible(Auth::user() ?? null)->where('page_images.id', $imageId)->first();
         } else {
-            $image = PageImage::where('id', $id)->visible(Auth::check() ? Auth::user() : null)->first();
+            $image = PageImage::where('id', $id)->visible(Auth::user() ?? null)->first();
         }
         if (!$image) {
             abort(404);
@@ -214,7 +214,7 @@ class ImageController extends Controller {
         if (!Auth::user()->canEdit($page)) {
             abort(404);
         }
-        $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $id)->first();
+        $image = $page->images()->visible(Auth::user() ?? null)->where('page_images.id', $id)->first();
         if (!$image) {
             abort(404);
         }
@@ -311,7 +311,7 @@ class ImageController extends Controller {
         if (!Auth::user()->canEdit($page)) {
             abort(404);
         }
-        $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $id)->first();
+        $image = $page->images()->visible(Auth::user() ?? null)->where('page_images.id', $id)->first();
         if (!$image) {
             abort(404);
         }

@@ -38,7 +38,7 @@ class SubjectController extends Controller {
         $subject['key'] = $subjectKey;
 
         if ($subject['key'] == 'language') {
-            $query = LexiconEntry::whereNull('category_id')->visible(Auth::check() ? Auth::user() : null);
+            $query = LexiconEntry::whereNull('category_id')->visible(Auth::user() ?? null);
             $sort = $request->only(['sort']);
 
             if ($request->get('class')) {
@@ -122,7 +122,7 @@ class SubjectController extends Controller {
             abort(404);
         }
 
-        $query = $category->pages()->visible(Auth::check() ? Auth::user() : null);
+        $query = $category->pages()->visible(Auth::user() ?? null);
         $sort = $request->only(['sort']);
 
         if ($request->get('title')) {
@@ -181,7 +181,7 @@ class SubjectController extends Controller {
             abort(404);
         }
 
-        $query = $chronology->pages()->visible(Auth::check() ? Auth::user() : null);
+        $query = $chronology->pages()->visible(Auth::user() ?? null);
         $sort = $request->only(['sort']);
 
         if ($request->get('title')) {
@@ -266,7 +266,7 @@ class SubjectController extends Controller {
             abort(404);
         }
 
-        $query = $category->entries()->visible(Auth::check() ? Auth::user() : null);
+        $query = $category->entries()->visible(Auth::user() ?? null);
         $sort = $request->only(['sort']);
 
         if ($request->get('class')) {
@@ -334,7 +334,7 @@ class SubjectController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getLexiconEntryModal($id) {
-        $entry = LexiconEntry::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        $entry = LexiconEntry::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$entry) {
             abort(404);
         }
