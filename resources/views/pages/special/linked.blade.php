@@ -16,13 +16,13 @@
     <ul>
         @foreach ($pages as $group)
             <li>
-                {!! $group->first()->linkedPage->displayName !!} ({{ $group->count() }} link{{ $group->count() != 1 ? 's' : '' }}) <a
+                {!! $group->first()->linked->displayName !!} ({{ $group->count() }} link{{ $group->count() != 1 ? 's' : '' }}) <a
                     class="collapse-toggle collapsed" href="#group-{{ $group->first()->id }}" data-toggle="collapse">Show <i
                         class="fas fa-caret-right"></i></a></h3>
                 <div class="collapse" id="group-{{ $group->first()->id }}">
                     <ul>
                         @foreach ($group as $link)
-                            <li>{!! $link->page->displayName !!}</li>
+                            <li>{!! $link->parent->displayName !!}</li>
                         @endforeach
                     </ul>
                 </div>

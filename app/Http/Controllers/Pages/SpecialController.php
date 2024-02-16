@@ -244,12 +244,12 @@ class SpecialController extends Controller {
      */
     public function getMostLinkedPages(Request $request) {
         $query = PageLink::whereNotNull('link_id')->where('linked_type', 'page')
-            ->get()->filter(function ($value) {
+            ->get()->filter(function ($link) {
                 if (Auth::check() && Auth::user()->canWrite) {
                     return 1;
                 }
 
-                return $value->linkedPage->is_visible;
+                return $link->linked->is_visible;
             })->groupBy('link_id')->sortByDesc(function ($group) {
                 return $group->count();
             });
