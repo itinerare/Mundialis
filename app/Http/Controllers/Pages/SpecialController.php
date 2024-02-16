@@ -305,6 +305,9 @@ class SpecialController extends Controller {
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }
+            if (!$version->image->pages()->visible(Auth::user() ?? null)->count()) {
+                return 0;
+            }
 
             return $version->image->is_visible;
         });

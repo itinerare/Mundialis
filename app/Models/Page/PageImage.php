@@ -100,7 +100,7 @@ class PageImage extends Model {
             return $query;
         }
 
-        return $query->where('is_visible', 1);
+        return $query->where('is_visible', 1)->whereRelation('pages', 'is_visible', 1);
     }
 
     /**********************************************************************************************
