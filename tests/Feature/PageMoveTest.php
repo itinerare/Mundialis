@@ -84,15 +84,11 @@ class PageMoveTest extends TestCase {
                 'reason'  => $data['reason'],
             ]);
         } else {
-            if ($withPage) {
-                $response->assertSessionHasErrors();
-                $this->assertDatabaseHas('pages', [
-                    'id'          => $this->page->id,
-                    'category_id' => $oldCategory->id,
-                ]);
-            } else {
-                $response->assertStatus(404);
-            }
+            $response->assertSessionHasErrors();
+            $this->assertDatabaseHas('pages', [
+                'id'          => $this->page->id,
+                'category_id' => $oldCategory->id,
+            ]);
         }
     }
 

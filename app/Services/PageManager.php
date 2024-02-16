@@ -137,7 +137,10 @@ class PageManager extends Service {
         DB::beginTransaction();
 
         try {
-            // Ensure user can edit
+            if (!$page) {
+                throw new \Exception('Invalid page selected.');
+            }
+
             if (!$user->canEdit($page)) {
                 throw new \Exception('You don\'t have permission to edit this page.');
             }
@@ -234,7 +237,10 @@ class PageManager extends Service {
         DB::beginTransaction();
 
         try {
-            // Check toggle
+            if (!$page) {
+                throw new \Exception('Invalid page selected.');
+            }
+
             if (!isset($data['is_protected'])) {
                 $data['is_protected'] = 0;
             }
@@ -272,7 +278,9 @@ class PageManager extends Service {
         DB::beginTransaction();
 
         try {
-            // Ensure user can edit
+            if (!$page) {
+                throw new \Exception('Invalid page selected.');
+            }
             if (!$user->canEdit($page)) {
                 throw new \Exception('You don\'t have permission to edit this page.');
             }
@@ -316,11 +324,12 @@ class PageManager extends Service {
         DB::beginTransaction();
 
         try {
-            // Ensure user can edit
+            if (!$page) {
+                throw new \Exception('Invalid page selected.');
+            }
             if (!$user->canEdit($page)) {
                 throw new \Exception('You don\'t have permission to edit this page.');
             }
-
             if (!$version) {
                 throw new \Exception('Invalid version selected.');
             }
@@ -366,7 +375,9 @@ class PageManager extends Service {
         DB::beginTransaction();
 
         try {
-            // Ensure user can edit
+            if (!$page) {
+                throw new \Exception('Invalid page selected.');
+            }
             if (!$user->canEdit($page)) {
                 throw new \Exception('You don\'t have permission to edit this page.');
             }
@@ -470,6 +481,10 @@ class PageManager extends Service {
         DB::beginTransaction();
 
         try {
+            if (!$page) {
+                throw new \Exception('Invalid page selected.');
+            }
+
             if (!$page->deleted_at) {
                 throw new \Exception('This page has not been deleted.');
             }

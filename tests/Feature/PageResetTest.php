@@ -74,11 +74,12 @@ class PageResetTest extends TestCase {
                 'reason'  => $data['reason'],
             ]);
         } else {
-            if ($withPage) {
-                $response->assertSessionHasErrors();
-            } else {
-                $response->assertStatus(404);
-            }
+            $response->assertSessionHasErrors();
+            $this->assertDatabaseMissing('page_versions', [
+                'page_id' => $this->page->id,
+                'type'    => 'Page Reset to Ver. #'.$this->oldVersion->id,
+                'reason'  => $data['reason'],
+            ]);
         }
     }
 
