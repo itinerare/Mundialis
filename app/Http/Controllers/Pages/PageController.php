@@ -270,7 +270,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getProtectPage(Request $request, $id) {
-        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
+        $page = Page::where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
