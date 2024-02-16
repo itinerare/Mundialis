@@ -78,34 +78,39 @@ Route::prefix('pages')->group(function () {
     Route::prefix('tags')->get('{tag}', [TagController::class, 'getTag']);
 });
 
-Route::controller(SpecialController::class)->prefix('special')->group(function () {
-    Route::get('/', 'getSpecialIndex');
+Route::prefix('special')->group(function () {
+    Route::controller(SpecialController::class)->group(function () {
+        Route::get('/', 'getSpecialIndex');
 
-    // MAINTENANCE REPORTS
-    Route::get('untagged-pages', 'getUntaggedPages');
-    Route::get('tagged-pages', 'getMostTaggedPages');
-    Route::get('{mode}-revised-pages', 'getRevisedPages')
-        ->whereAlphanumeric('mode');
-    Route::get('unlinked-pages', 'getUnlinkedPages');
-    Route::get('linked-pages', 'getMostLinkedPages');
-    Route::get('recent-pages', 'getRecentPages');
-    Route::get('recent-images', 'getRecentImages');
+        // MAINTENANCE REPORTS
+        Route::get('untagged-pages', 'getUntaggedPages');
+        Route::get('tagged-pages', 'getMostTaggedPages');
+        Route::get('{mode}-revised-pages', 'getRevisedPages')
+            ->whereAlphanumeric('mode');
+        Route::get('unlinked-pages', 'getUnlinkedPages');
+        Route::get('linked-pages', 'getMostLinkedPages');
+        Route::get('recent-pages', 'getRecentPages');
+        Route::get('recent-images', 'getRecentImages');
 
-    Route::get('wanted-pages', 'getWantedPages');
-    Route::get('protected-pages', 'getProtectedPages');
-    Route::get('{tag}-pages', 'getUtilityTagPages')
-        ->where('tag', implode('|', array_keys(config('mundialis.utility_tags'))));
+        Route::get('wanted-pages', 'getWantedPages');
+        Route::get('protected-pages', 'getProtectedPages');
+        Route::get('{tag}-pages', 'getUtilityTagPages')
+            ->where('tag', implode('|', array_keys(config('mundialis.utility_tags'))));
 
-    // LISTS
-    Route::get('all-pages', 'getAllPages');
-    Route::get('all-tags', 'getAllTags');
-    Route::get('all-images', 'getAllImages');
-    Route::get('get-image/{id}', 'ImageController@getPageImagePopup')
-        ->whereNumber('id');
+        // LISTS
+        Route::get('all-pages', 'getAllPages');
+        Route::get('all-tags', 'getAllTags');
+        Route::get('all-images', 'getAllImages');
 
-    // USERS
-    Route::get('user-list', 'getUserList');
+        // USERS
+        Route::get('user-list', 'getUserList');
 
-    // OTHER
-    Route::get('random-page', 'getRandomPage');
+        // OTHER
+        Route::get('random-page', 'getRandomPage');
+    });
+
+    Route::controller(ImageController::class)->group(function () {
+        Route::get('get-image/{id}', 'getPageImagePopup')
+            ->whereNumber('id');
+    });
 });
