@@ -75,7 +75,9 @@ Route::prefix('pages')->group(function () {
             ->whereNumber('id');
     });
 
-    Route::prefix('tags')->get('{tag}', [TagController::class, 'getTag']);
+    Route::controller(TagController::class)->prefix('tags')->group(function () {
+        Route::get('{tag}', 'getTag');
+    });
 });
 
 Route::prefix('special')->group(function () {
