@@ -278,7 +278,7 @@ class AccountController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postWatchPage(Request $request, UserService $service, $id) {
-        if ($service->watchPage(Page::find($id), Auth::user())) {
+        if ($service->watchPage(Page::visible(Auth::user())->find($id), Auth::user())) {
             flash('Page watch status updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
