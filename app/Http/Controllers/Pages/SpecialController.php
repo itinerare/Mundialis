@@ -221,20 +221,38 @@ class SpecialController extends Controller {
     }
 
     /**
+     * Shows list of unlinked-to pages.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUnlinkedPages(Request $request) {
+        $query = Page::visible(Auth::user() ?? null)
+            ->whereNotIn(
+                'id',
+                PageLink::whereNotNull('link_id')->where('linked_type', 'page')->pluck('link_id')->toArray()
+            );
+
+        return view('pages.special.unlinked', [
+            'pages' => $query->paginate(20)->appends($request->query()),
+        ]);
+    }
+
+    /**
      * Shows list of most linked-to pages.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getMostLinkedPages(Request $request) {
-        $query = PageLink::whereNotNull('link_id')->get()->filter(function ($value) {
-            if (Auth::check() && Auth::user()->canWrite) {
-                return 1;
-            }
+        $query = PageLink::whereNotNull('link_id')->where('linked_type', 'page')
+            ->get()->filter(function ($value) {
+                if (Auth::check() && Auth::user()->canWrite) {
+                    return 1;
+                }
 
-            return $value->linkedPage->is_visible;
-        })->groupBy('link_id')->sortByDesc(function ($group) {
-            return $group->count();
-        });
+                return $value->linkedPage->is_visible;
+            })->groupBy('link_id')->sortByDesc(function ($group) {
+                return $group->count();
+            });
 
         return view('pages.special.linked', [
             'pages' => $query->paginate(20)->appends($request->query()),

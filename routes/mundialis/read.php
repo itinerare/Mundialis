@@ -86,6 +86,7 @@ Route::controller(SpecialController::class)->prefix('special')->group(function (
     Route::get('tagged-pages', 'getMostTaggedPages');
     Route::get('{mode}-revised-pages', 'getRevisedPages')
         ->whereAlphanumeric('mode');
+    Route::get('unlinked-pages', 'getUnlinkedPages');
     Route::get('linked-pages', 'getMostLinkedPages');
     Route::get('recent-pages', 'getRecentPages');
     Route::get('recent-images', 'getRecentImages');

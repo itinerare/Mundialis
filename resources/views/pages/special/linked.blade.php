@@ -5,7 +5,7 @@
 @endsection
 
 @section('pages-content')
-    {!! breadcrumbs(['Special' => 'special', 'Wanted Pages' => 'special/wanted-pages']) !!}
+    {!! breadcrumbs(['Special' => 'special', 'Wanted Pages' => 'special/linked-pages']) !!}
 
     <h1>Special: Most Linked-To Pages</h1>
 

@@ -26,6 +26,7 @@
                 <li><a href="{{ url('special/tagged-pages') }}">Pages with the Most Tags</a></li>
                 <li><a href="{{ url('special/least-revised-pages') }}">Pages with the Fewest Revisions</a></li>
                 <li><a href="{{ url('special/most-revised-pages') }}">Pages with the Most Revisions</a></li>
+                <li><a href="{{ url('special/unlinked-pages') }}">Unlinked-To Pages</a></li>
                 <li><a href="{{ url('special/linked-pages') }}">Most Linked-To Pages</a></li>
                 <li><a href="{{ url('special/recent-pages') }}">Recently Edited Pages</a></li>
                 <li><a href="{{ url('special/recent-images') }}">Recently Edited Images</a></li>
