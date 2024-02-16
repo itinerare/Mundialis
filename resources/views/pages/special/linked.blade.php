@@ -9,7 +9,7 @@
 
     <h1>Special: Most Linked-To Pages</h1>
 
-    <p>This is a list of all wanted pages. Note that this list only counts links made within page content.</p>
+    <p>This is a list of the most linked-to pages. Note that this list only counts links made within page content.</p>
 
     {!! $pages->render() !!}
 
