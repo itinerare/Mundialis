@@ -406,12 +406,12 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getWantedPages(Request $request) {
-        $query = PageLink::whereNotNull('title')->get()->filter(function ($value) {
+        $query = PageLink::whereNotNull('title')->get()->filter(function ($link) {
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }
 
-            return $value->parent->is_visible;
+            return $link->parent->is_visible;
         })->groupBy('title')->sortByDesc(function ($group) {
             return $group->count();
         });
@@ -466,6 +466,10 @@ class SpecialController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postCreateWantedPage(Request $request) {
+        $request->validate([
+            'category_id' => 'required|exists:subject_categories,id',
+        ]);
+
         return redirect()->to('pages/create/'.$request->get('category_id').'?title='.$request->get('title'));
     }
 
