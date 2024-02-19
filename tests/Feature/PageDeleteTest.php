@@ -293,12 +293,12 @@ class PageDeleteTest extends TestCase {
      *
      * @dataProvider postRestorePageProvider
      *
-     * @param bool $deletedPage
+     * @param bool $isDeleted
      * @param bool $withReason
      * @param bool $withImage
      * @param bool $expected
      */
-    public function testPostRestorePage($deletedPage, $withReason, $withImage, $expected) {
+    public function testPostRestorePage($isDeleted, $withReason, $withImage, $expected) {
         $page = Page::factory()->deleted()->create();
         PageVersion::factory()->page($page->id)->user($this->editor->id)->deleted()->create();
 
@@ -316,7 +316,7 @@ class PageDeleteTest extends TestCase {
 
         $response = $this
             ->actingAs($this->admin)
-            ->post('/admin/special/deleted-pages/'.($deletedPage ? $page->id : $this->page->id).'/restore', $data);
+            ->post('/admin/special/deleted-pages/'.($isDeleted ? $page->id : $this->page->id).'/restore', $data);
 
         if ($expected) {
             $this->assertNotSoftDeleted($page);
