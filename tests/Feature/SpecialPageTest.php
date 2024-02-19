@@ -9,15 +9,24 @@ use App\Models\Page\PageImageVersion;
 use App\Models\Page\PageLink;
 use App\Models\Page\PagePageImage;
 use App\Models\Page\PageProtection;
+use App\Models\Page\PageTag;
 use App\Models\Page\PageVersion;
 use App\Models\User\User;
 use App\Services\ImageManager;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class SpecialPageTest extends TestCase {
     use RefreshDatabase, WithFaker;
+
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->editor = User::factory()->editor()->create();
+        $this->user = User::factory()->create();
+    }
 
     /******************************************************************************
         MAINTENANCE REPORTS
@@ -26,439 +35,669 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests all special pages access.
      */
-    public function testCanGetSpecialPages() {
-        $user = User::factory()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/special');
-
-        $response->assertStatus(200);
+    public function testGetSpecialPages() {
+        $this->get('/special')
+            ->assertStatus(200);
     }
 
     /**
      * Tests untagged pages access.
+     *
+     * @dataProvider getTaggedPagesProvider
+     *
+     * @param int  $pages
+     * @param int  $tagged
+     * @param bool $isVisible
      */
-    public function testCanGetUntaggedPages() {
-        $user = User::factory()->make();
+    public function testGetUntaggedPages($pages, $tagged, $isVisible) {
+        if ($pages) {
+            for ($i = 1; $i <= $pages; $i++) {
+                $page[$i] = Page::factory()->create([
+                    'is_visible' => $tagged && $tagged >= $i ? 1 : $isVisible,
+                ]);
+                $version[$i] = PageVersion::factory()->user($this->editor->id)->page($page[$i]->id)->create();
 
-        $response = $this->actingAs($user)
-            ->get('/special/untagged-pages');
+                if ($tagged && $tagged >= $i) {
+                    PageTag::factory()->page($page[$i]->id)->create();
+                }
+            }
+        }
 
-        $response->assertStatus(200);
-    }
+        $response = $this->get('/special/untagged-pages')
+            ->assertStatus(200);
 
-    /**
-     * Tests untagged pages access with an untagged page.
-     */
-    public function testCanGetUntaggedPagesWithPage() {
-        $user = User::factory()->make();
+        if ($pages) {
+            if ($pages > $tagged && $isVisible) {
+                // At least one page should be listed
+                $response->assertSeeText($page[$pages]->title);
 
-        $editor = User::factory()->editor()->create();
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->testData()->create();
-
-        $response = $this->actingAs($user)
-            ->get('/special/untagged-pages');
-
-        $response->assertStatus(200);
+                if ($tagged) {
+                    $response->assertDontSeeText($page[$tagged]->title);
+                }
+            } else {
+                foreach ($page as $taggedPage) {
+                    $response->assertDontSeeText($taggedPage->title);
+                }
+            }
+        } else {
+            $response->assertViewHas('pages', function ($pages) {
+                return $pages->count() == 0;
+            });
+        }
     }
 
     /**
      * Tests most tagged pages access.
+     *
+     * @dataProvider getTaggedPagesProvider
+     *
+     * @param int  $pages
+     * @param int  $tagged
+     * @param bool $isVisible
      */
-    public function testCanGetMostTaggedPages() {
-        $user = User::factory()->make();
+    public function testGetMostTaggedPages($pages, $tagged, $isVisible) {
+        if ($pages) {
+            for ($i = 1; $i <= $pages; $i++) {
+                $page[$i] = Page::factory()->create([
+                    'is_visible' => $tagged && $tagged >= $i ? $isVisible : 1,
+                ]);
+                $version[$i] = PageVersion::factory()->user($this->editor->id)->page($page[$i]->id)->create();
 
-        $response = $this->actingAs($user)
-            ->get('/special/tagged-pages');
+                if ($tagged && $tagged >= $i) {
+                    PageTag::factory()->page($page[$i]->id)->create();
+                }
+            }
+        }
 
-        $response->assertStatus(200);
+        $response = $this->get('/special/tagged-pages')
+            ->assertStatus(200);
+
+        if ($pages) {
+            if ($isVisible) {
+                foreach ($page as $key=>$taggedPage) {
+                    if ($tagged && $key <= $tagged) {
+                        // At least one page should be listed
+                        $response->assertSeeText($taggedPage->title);
+                    }
+                }
+
+                if ($pages > $tagged) {
+                    $response->assertDontSeeText($page[$pages]->title);
+                }
+            } else {
+                foreach ($page as $taggedPage) {
+                    $response->assertDontSeeText($taggedPage->title);
+                }
+            }
+        } else {
+            $response->assertViewHas('pages', function ($pages) {
+                return $pages->count() == 0;
+            });
+        }
     }
 
-    /**
-     * Tests most tagged pages access with a tagged page.
-     */
-    public function testCanGetMostTaggedPagesWithPage() {
-        $user = User::factory()->make();
-
-        $editor = User::factory()->editor()->create();
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->testData($page->title, null, null, '"'.$this->faker->unique()->domainWord().'", "'.$this->faker->unique()->domainWord().'"')->create();
-
-        $response = $this->actingAs($user)
-            ->get('/special/tagged-pages');
-
-        $response->assertStatus(200);
+    public static function getTaggedPagesProvider() {
+        return [
+            'basic'                => [0, 0, 0],
+            'untagged page'        => [1, 0, 1],
+            'hidden untagged page' => [1, 0, 0],
+            'tagged page'          => [1, 1, 1],
+            'hidden tagged page'   => [1, 1, 0],
+            'both'                 => [2, 1, 1],
+            'both hidden'          => [2, 1, 1],
+        ];
     }
 
     /**
      * Tests least revised pages access.
+     *
+     * @dataProvider getRevisedPagesProvider
+     *
+     * @param bool $withPages
+     * @param bool $isVisible
      */
-    public function testCanGetLeastRevisedPages() {
-        $user = User::factory()->make();
+    public function testGetLeastRevisedPages($withPages, $isVisible) {
+        if ($withPages) {
+            // By default, the pagination is set to 20 results per page
+            // so create 21 pages so that one will by hidden due to ordering
+            for ($i = 1; $i <= 21; $i++) {
+                $page[$i] = Page::factory()->create([
+                    'is_visible' => $isVisible,
+                ]);
+                PageVersion::factory()->user($this->editor->id)->page($page[$i]->id)->create();
 
-        $response = $this->actingAs($user)
-            ->get('/special/least-revised-pages');
+                for ($i2 = 21; $i2 >= $i; $i2--) {
+                    if ($i > 1) {
+                        PageVersion::factory()->user($this->editor->id)->page($page[$i - 1]->id)->create();
+                    }
+                }
+            }
+        }
 
-        $response->assertStatus(200);
-    }
+        $response = $this->get('/special/least-revised-pages')
+            ->assertStatus(200);
 
-    /**
-     * Tests least revised pages access with a page.
-     */
-    public function testCanGetLeastRevisedPagesWithPage() {
-        $user = User::factory()->make();
-
-        $editor = User::factory()->editor()->create();
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->testData()->create();
-
-        $response = $this->actingAs($user)
-            ->get('/special/least-revised-pages');
-
-        $response->assertStatus(200);
+        if ($withPages) {
+            for ($i = 21; $i >= 1; $i--) {
+                if ($i > 1 && $isVisible) {
+                    $response->assertSeeText($page[$i]->title);
+                } else {
+                    $response->assertDontSeeText($page[$i]->title);
+                }
+            }
+        } else {
+            $response->assertViewHas('pages', function ($pages) {
+                return $pages->count() == 0;
+            });
+        }
     }
 
     /**
      * Tests most revised pages access.
+     *
+     * @dataProvider getRevisedPagesProvider
+     *
+     * @param bool $withPages
+     * @param bool $isVisible
      */
-    public function testCanGetMostRevisedPages() {
-        $user = User::factory()->make();
+    public function testGetMostRevisedPages($withPages, $isVisible) {
+        if ($withPages) {
+            // By default, the pagination is set to 20 results per page
+            // so create 21 pages so that one will by hidden due to ordering
+            for ($i = 1; $i <= 21; $i++) {
+                $page[$i] = Page::factory()->create([
+                    'is_visible' => $isVisible,
+                ]);
+                PageVersion::factory()->user($this->editor->id)->page($page[$i]->id)->create();
 
-        $response = $this->actingAs($user)
-            ->get('/special/most-revised-pages');
+                for ($i2 = 21; $i2 >= $i; $i2--) {
+                    if ($i > 1) {
+                        PageVersion::factory()->user($this->editor->id)->page($page[$i - 1]->id)->create();
+                    }
+                }
+            }
+        }
 
-        $response->assertStatus(200);
+        $response = $this->get('/special/most-revised-pages')
+            ->assertStatus(200);
+
+        if ($withPages) {
+            for ($i = 1; $i <= 21; $i++) {
+                if ($i <= 20 && $isVisible) {
+                    $response->assertSeeText($page[$i]->title);
+                } else {
+                    $response->assertDontSeeText($page[$i]->title);
+                }
+            }
+        } else {
+            $response->assertViewHas('pages', function ($pages) {
+                return $pages->count() == 0;
+            });
+        }
+    }
+
+    public static function getRevisedPagesProvider() {
+        return [
+            'without pages'     => [0, 0],
+            'with pages'        => [1, 1],
+            'with hidden pages' => [1, 0],
+        ];
     }
 
     /**
-     * Tests most revised pages access with a page.
+     * Tests unlinked pages access.
+     *
+     * @dataProvider getLinkedPagesProvider
+     *
+     * @param int  $pages
+     * @param int  $linked
+     * @param bool $isVisible
      */
-    public function testCanGetMostRevisedPagesWithPage() {
-        $user = User::factory()->make();
+    public function testGetUnlinkedPages($pages, $linked, $isVisible) {
+        if ($pages) {
+            for ($i = 1; $i <= $pages; $i++) {
+                $page[$i] = Page::factory()->create([
+                    'is_visible' => $linked && $linked >= $i ? 1 : $isVisible,
+                ]);
+                $version[$i] = PageVersion::factory()->user($this->editor->id)->page($page[$i]->id)->create();
 
-        $editor = User::factory()->editor()->create();
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->testData()->create();
+                if ($linked && $linked >= $i) {
+                    $parent[$i] = Page::factory()->create();
+                    PageLink::factory()->parent($parent[$i]->id)->link($page[$i]->id)->create();
+                }
+            }
+        }
 
-        $response = $this->actingAs($user)
-            ->get('/special/most-revised-pages');
+        $response = $this->get('/special/unlinked-pages')
+            ->assertStatus(200);
 
-        $response->assertStatus(200);
+        if ($pages) {
+            if ($pages > $linked && $isVisible) {
+                // At least one page should be listed
+                $response->assertSeeText($page[$pages]->title);
+
+                if ($linked) {
+                    $response->assertDontSeeText($page[$linked]->title);
+                }
+            } else {
+                foreach ($page as $taggedPage) {
+                    $response->assertDontSeeText($taggedPage->title);
+                }
+            }
+        } else {
+            $response->assertViewHas('pages', function ($pages) {
+                return $pages->count() == 0;
+            });
+        }
     }
 
     /**
      * Tests most linked pages access.
+     *
+     * @dataProvider getLinkedPagesProvider
+     *
+     * @param int  $pages
+     * @param int  $linked
+     * @param bool $isVisible
      */
-    public function testCanGetMostLinkedPages() {
-        $user = User::factory()->make();
+    public function testGetMostLinkedPages($pages, $linked, $isVisible) {
+        if ($pages) {
+            for ($i = 1; $i <= $pages; $i++) {
+                $page[$i] = Page::factory()->create([
+                    'is_visible' => $linked && $linked >= $i ? $isVisible : 1,
+                ]);
+                $version[$i] = PageVersion::factory()->user($this->editor->id)->page($page[$i]->id)->create();
 
-        $response = $this->actingAs($user)
-            ->get('/special/linked-pages');
+                if ($linked && $linked >= $i) {
+                    $parent[$i] = Page::factory()->create();
+                    PageLink::factory()->parent($parent[$i]->id)->link($page[$i]->id)->create();
+                }
+            }
+        }
 
-        $response->assertStatus(200);
+        $response = $this->get('/special/linked-pages')
+            ->assertStatus(200);
+
+        if ($pages) {
+            if ($isVisible) {
+                foreach ($page as $key=>$taggedPage) {
+                    if ($linked && $key <= $linked) {
+                        // At least one page should be listed
+                        $response->assertSeeText($taggedPage->title);
+                    }
+                }
+
+                if ($pages > $linked) {
+                    $response->assertDontSeeText($page[$pages]->title);
+                }
+            } else {
+                foreach ($page as $taggedPage) {
+                    $response->assertDontSeeText($taggedPage->title);
+                }
+            }
+        } else {
+            $response->assertViewHas('pages', function ($pages) {
+                return $pages->count() == 0;
+            });
+        }
     }
 
-    /**
-     * Tests most linked pages access with a linked page.
-     * Does not work in test environment; retained for posterity.
-     */
-    public function canGetMostLinkedPagesWithPage() {
-        $user = User::factory()->make();
-
-        $editor = User::factory()->editor()->create();
-
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->create();
-            PageVersion::factory()->page($page[$i]->id)->user($editor->id)->testData()->create();
-        }
-        PageLink::factory()->parent($page[1]->id)->link($page[2]->id)->create();
-
-        $response = $this->actingAs($user)
-            ->get('/special/linked-pages');
-
-        $response->assertStatus(200);
+    public static function getLinkedPagesProvider() {
+        return [
+            'basic'                => [0, 0, 0],
+            'unlinked page'        => [1, 0, 1],
+            'hidden unlinked page' => [1, 0, 0],
+            'linked page'          => [1, 1, 1],
+            'hidden linked page'   => [1, 1, 0],
+            'both'                 => [2, 1, 1],
+            'both hidden'          => [2, 1, 1],
+        ];
     }
 
     /**
      * Tests recently edited pages access.
+     *
+     * @dataProvider getRecentlyEditedProvider
+     *
+     * @param array|null $pageData
+     * @param mixed|null $mode
      */
-    public function testCanGetRecentlyEditedPages() {
-        $user = User::factory()->make();
+    public function testGetRecentlyEditedPages($pageData, $mode) {
+        if ($pageData) {
+            $page = Page::factory()->create([
+                'is_visible' => $pageData[0],
+            ]);
+            $version = PageVersion::factory()->page($page->id)->user($this->editor->id)
+                ->testData()->create([
+                    'created_at' => $pageData[1] ? Carbon::now() : Carbon::now()->subDays($mode && is_numeric($mode) ? $mode + 1 : 0),
+                ]);
+        }
 
-        $response = $this->actingAs($user)
-            ->get('/special/recent-pages');
+        $response = $this->get('/special/recent-pages'.($mode ? '?mode='.$mode : ''))
+            ->assertStatus(200);
 
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Tests recently edited pages access with a page.
-     */
-    public function testCanGetRecentlyEditedPagesWithPage() {
-        $user = User::factory()->make();
-
-        $editor = User::factory()->editor()->create();
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->testData()->create();
-
-        $response = $this->actingAs($user)
-            ->get('/special/recent-pages');
-
-        $response->assertStatus(200);
+        if ($pageData) {
+            if ($pageData[0] && ($pageData[1] || ($mode && $mode == 'all'))) {
+                $response->assertSeeText($page->title);
+                $response->assertSeeText('#'.$version->id);
+            } else {
+                $response->assertDontSeeText($page->title);
+                $response->assertDontSeeText('#'.$version->id);
+            }
+        } else {
+            $response->assertViewHas('pages', function ($pages) {
+                return $pages->count() == 0;
+            });
+        }
     }
 
     /**
      * Tests recently edited images access.
+     *
+     * @dataProvider getRecentlyEditedProvider
+     * @dataProvider getRecentlyEditedImagesProvider
+     *
+     * @param array|null $imageData
+     * @param mixed|null $mode
      */
-    public function testCanGetRecentlyEditedImages() {
-        $user = User::factory()->make();
+    public function testGetRecentlyEditedImages($imageData, $mode) {
+        if ($imageData) {
+            $service = new ImageManager;
+            $page = Page::factory()->create([
+                'is_visible' => $imageData[2] ?? 1,
+            ]);
+            PageVersion::factory()->page($page->id)->user($this->editor->id)->testData()->create();
 
-        $response = $this->actingAs($user)
-            ->get('/special/recent-images');
+            $image = PageImage::factory()->create([
+                'is_visible' => $imageData[0],
+            ]);
+            $version = PageImageVersion::factory()->image($image->id)->user($this->editor->id)->create([
+                'created_at' => $imageData[1] ? Carbon::now() : Carbon::now()->subDays($mode && is_numeric($mode) ? $mode + 1 : 0),
+            ]);
+            PageImageCreator::factory()->image($image->id)->user($this->editor->id)->create();
+            PagePageImage::factory()->page($page->id)->image($image->id)->create();
+            $service->testImages($image, $version);
+        }
 
-        $response->assertStatus(200);
+        $response = $this->get('/special/recent-images'.($mode ? '?mode='.$mode : ''))
+            ->assertStatus(200);
+
+        if ($imageData) {
+            if ($imageData[0] && ($imageData[2] ?? 1) && ($imageData[1] || ($mode && $mode == 'all'))) {
+                $response->assertSeeText('#'.$version->id);
+                $response->assertSee($image->thumbnailUrl);
+            } else {
+                $response->assertDontSeeText('#'.$version->id);
+                $response->assertDontSee($image->thumbnailUrl);
+            }
+
+            $service->testImages($image, $version, false);
+        } else {
+            $response->assertViewHas('images', function ($images) {
+                return $images->count() == 0;
+            });
+        }
     }
 
-    /**
-     * Tests recently edited images access with an image.
-     */
-    public function testCanGetRecentlyEditedImagesWithImage() {
-        $user = User::factory()->make();
+    public static function getRecentlyEditedProvider() {
+        return [
+            // $data = [$isVisible, $isCurrent]
 
-        // Create a persistent editor
-        $editor = User::factory()->editor()->create();
-        // Create a page for the image to belong to
-        $page = Page::factory()->create();
+            'basic'                    => [null, null],
+            'with version'             => [[1, 1], null],
+            'with hidden version'      => [[0, 1], null],
+            '1 day, current'           => [[1, 1], 1],
+            '1 day, current, hidden'   => [[0, 1], 1],
+            '1 day, old'               => [[1, 0], 1],
+            '1 day, old, hidden'       => [[0, 0], 1],
+            '3 days, current'          => [[1, 1], 3],
+            '3 days, current, hidden'  => [[0, 1], 3],
+            '3 days, old'              => [[1, 0], 3],
+            '3 days, old, hidden'      => [[0, 0], 3],
+            '7 days, current'          => [[1, 1], 7],
+            '7 days, current, hidden'  => [[0, 1], 7],
+            '7 days, old'              => [[1, 0], 7],
+            '7 days, old, hidden'      => [[0, 0], 7],
+            '30 days, current'         => [[1, 1], 30],
+            '30 days, current, hidden' => [[0, 1], 30],
+            '30 days, old'             => [[1, 0], 30],
+            '30 days, old, hidden'     => [[0, 0], 30],
+            '50 days, current'         => [[1, 1], 50],
+            '50 days, current, hidden' => [[0, 1], 50],
+            '50 days, old'             => [[1, 0], 50],
+            '50 days, old, hidden'     => [[0, 0], 50],
+            'all, current'             => [[1, 1], 'all'],
+            'all, current, hidden'     => [[0, 1], 'all'],
+            'all, old'                 => [[1, 0], 'all'],
+            'all, old, hidden'         => [[0, 0], 'all'],
+        ];
+    }
 
-        // Create the image and associated records
-        $image = PageImage::factory()->create();
-        $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
-        PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+    public static function getRecentlyEditedImagesProvider() {
+        return [
+            // $data = [$isVisible, $isCurrent, $pageVisible]
 
-        $response = $this->actingAs($user)
-            ->get('/special/recent-images');
-
-        $response->assertStatus(200);
-
-        // Delete the test images, to clean up
-        unlink($image->imagePath.'/'.$version->thumbnailFileName);
-        unlink($image->imagePath.'/'.$version->imageFileName);
+            'with hidden page' => [[1, 1, 0], null],
+        ];
     }
 
     /**
      * Tests wanted pages access.
+     *
+     * @dataProvider getWantedPagesProvider
+     *
+     * @param bool $withLink
+     * @param bool $isVisible
      */
-    public function testCanGetWantedPages() {
-        $user = User::factory()->make();
+    public function testGetWantedPages($withLink, $isVisible) {
+        if ($withLink) {
+            $page = Page::factory()->create([
+                'is_visible' => $isVisible,
+            ]);
+            $link = PageLink::factory()->parent($page->id)->wanted()->create();
+        }
 
-        $response = $this->actingAs($user)
-            ->get('/special/wanted-pages');
+        $response = $this->get('/special/wanted-pages')
+            ->assertStatus(200);
 
-        $response->assertStatus(200);
+        if ($withLink) {
+            if ($isVisible) {
+                $response->assertSeeText($link->title);
+                $response->assertSeeText($page->title);
+            } else {
+                $response->assertDontSeeText($link->title);
+                $response->assertDontSeeText($page->title);
+            }
+        } else {
+            $response->assertViewHas('pages', function ($pages) {
+                return $pages->count() == 0;
+            });
+        }
     }
 
-    /**
-     * Tests wanted pages access with a wanted page.
-     */
-    public function testCanGetWantedPagesWithLinks() {
-        $user = User::factory()->make();
-
-        // Make a page and a wanted page link for it
-        $page = Page::factory()->create();
-        PageLink::factory()->parent($page->id)->wanted()->create();
-
-        $response = $this->actingAs($user)
-            ->get('/special/wanted-pages');
-
-        $response->assertStatus(200);
+    public static function getWantedPagesProvider() {
+        return [
+            'without link'     => [0, 0],
+            'with link'        => [1, 1],
+            'with hidden link' => [1, 0],
+        ];
     }
 
     /**
      * Tests create wanted page access.
      */
-    public function testCanGetCreateWantedPage() {
-        $user = User::factory()->editor()->make();
-
-        // Make a page and a wanted page link for it
+    public function testGetCreateWantedPage() {
         $page = Page::factory()->create();
         $link = PageLink::factory()->parent($page->id)->wanted()->create();
 
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->editor)
             ->get('/special/create-wanted/'.$link->title);
 
         $response->assertStatus(200);
     }
 
     /**
+     * Tests create wanted page access.
+     *
+     * @dataProvider postCreateWantedPageProvider
+     *
+     * @param bool $withCategory
+     */
+    public function testPostCreateWantedPage($withCategory) {
+        $page = Page::factory()->create();
+        $link = PageLink::factory()->parent($page->id)->wanted()->create();
+
+        $data = [
+            'category_id' => $withCategory ? $page->category->id : mt_rand(500, 1000),
+            'title'       => $link->title,
+        ];
+
+        $response = $this->actingAs($this->editor)
+            ->post('/special/create-wanted/', $data);
+
+        if ($withCategory) {
+            $response->assertSessionHasNoErrors();
+        } else {
+            $response->assertSessionHasErrors();
+        }
+    }
+
+    public static function postCreateWantedPageProvider() {
+        return [
+            'with category'    => [1],
+            'without category' => [0],
+        ];
+    }
+
+    /**
      * Tests protected pages access.
+     *
+     * @dataProvider getProtectedPagesProvider
+     *
+     * @param bool $withPage
+     * @param bool $isVisible
      */
-    public function testCanGetProtectedPages() {
-        $user = User::factory()->make();
+    public function testGetProtectedPages($withPage, $isVisible) {
+        if ($withPage) {
+            $admin = User::factory()->admin()->create();
+            $page = Page::factory()->create([
+                'is_visible' => $isVisible,
+            ]);
+            PageVersion::factory()->page($page->id)->user($admin->id)->testData()->create();
+            PageProtection::factory()->page($page->id)->user($admin->id)->create();
+        }
 
-        $response = $this->actingAs($user)
-            ->get('/special/protected-pages');
+        $response = $this->get('/special/protected-pages')
+            ->assertStatus(200);
 
-        $response->assertStatus(200);
+        if ($withPage) {
+            if ($isVisible) {
+                $response->assertSeeText($page->title);
+            } else {
+                $response->assertDontSeeText($page->title);
+            }
+        } else {
+            $response->assertViewHas('pages', function ($pages) {
+                return $pages->count() == 0;
+            });
+        }
+    }
+
+    public static function getProtectedPagesProvider() {
+        return [
+            'basic'       => [0, 0],
+            'with page'   => [1, 1],
+            'hidden page' => [1, 0],
+        ];
     }
 
     /**
-     * Tests protected pages access with a page.
+     * Tests utility tag page access.
+     *
+     * @dataProvider getUtilityTagProvider
+     *
+     * @param string $tag
+     * @param bool   $withPage
+     * @param bool   $isVisible
      */
-    public function testCanGetProtectedPagesWithPage() {
-        $user = User::factory()->make();
+    public function testGetUtilityTagPage($tag, $withPage, $isVisible) {
+        if ($withPage) {
+            $page = Page::factory()->create([
+                'is_visible' => $isVisible,
+            ]);
+            PageVersion::factory()->page($page->id)->user($this->editor->id)->testData($page->title, null, '"wip"')->create();
+            PageTag::factory()->page($page->id)->create([
+                'type' => 'utility',
+                'tag'  => $tag,
+            ]);
+        }
 
-        $admin = User::factory()->admin()->create();
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($admin->id)->testData()->create();
-        PageProtection::factory()->page($page->id)->user($admin->id)->create();
+        $response = $this->get('/special/'.$tag.'-pages')
+            ->assertStatus(200);
 
-        $response = $this->actingAs($user)
-            ->get('/special/protected-pages');
-
-        $response->assertStatus(200);
+        if ($withPage) {
+            if ($isVisible) {
+                $response->assertSeeText($page->title);
+            } else {
+                $response->assertDontSeeText($page->title);
+            }
+        } else {
+            $response->assertViewHas('pages', function ($pages) {
+                return $pages->count() == 0;
+            });
+        }
     }
 
-    /**
-     * Tests WIP pages access.
-     */
-    public function testCanGetWipPages() {
-        $user = User::factory()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/special/wip-pages');
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Tests WIP pages access with a page.
-     */
-    public function testCanGetWipPagesWithPage() {
-        $user = User::factory()->make();
-
-        $editor = User::factory()->editor()->create();
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->testData($page->title, null, '"wip"')->create();
-
-        $response = $this->actingAs($user)
-            ->get('/special/wip-pages');
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Tests stub pages access.
-     */
-    public function testCanGetStubPages() {
-        $user = User::factory()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/special/stub-pages');
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Tests stub pages access with a page.
-     */
-    public function testCanGetStubPagesWithPage() {
-        $user = User::factory()->make();
-
-        $editor = User::factory()->editor()->create();
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->testData($page->title, null, '"stub"')->create();
-
-        $response = $this->actingAs($user)
-            ->get('/special/stub-pages');
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Tests outdated pages access.
-     */
-    public function testCanGetOutdatedPages() {
-        $user = User::factory()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/special/outdated-pages');
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Tests outdated pages access with a page.
-     */
-    public function testCanGetOutdatedPagesWithPage() {
-        $user = User::factory()->make();
-
-        $editor = User::factory()->editor()->create();
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->testData($page->title, null, '"outdated"')->create();
-
-        $response = $this->actingAs($user)
-            ->get('/special/outdated-pages');
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Tests pages needing cleanup access.
-     */
-    public function testCanGetCleanupPages() {
-        $user = User::factory()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/special/cleanup-pages');
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Tests pages needing cleanup access with a page.
-     */
-    public function testCanGetCleanupPagesWithPage() {
-        $user = User::factory()->make();
-
-        $editor = User::factory()->editor()->create();
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->testData($page->title, null, '"cleanup"')->create();
-
-        $response = $this->actingAs($user)
-            ->get('/special/cleanup-pages');
-
-        $response->assertStatus(200);
+    public static function getUtilityTagProvider() {
+        return [
+            'wip'                  => ['wip', 0, 0],
+            'wip with page'        => ['wip', 1, 1],
+            'wip with hidden'      => ['wip', 1, 0],
+            'stub'                 => ['stub', 0, 0],
+            'stub with page'       => ['stub', 1, 1],
+            'stub with hidden'     => ['stub', 1, 0],
+            'outdated'             => ['outdated', 0, 0],
+            'outdated with page'   => ['outdated', 1, 1],
+            'outdated with hidden' => ['outdated', 1, 0],
+            'cleanup'              => ['cleanup', 0, 0],
+            'cleanup with page'    => ['cleanup', 1, 1],
+            'cleanup with hidden'  => ['cleanup', 1, 0],
+        ];
     }
 
     /**
      * Tests unwatched pages access.
+     *
+     * @dataProvider getUnwatchedPagesProvider
+     *
+     * @param bool $withPage
      */
-    public function testCanGetUnwatchedPages() {
-        $user = User::factory()->admin()->make();
+    public function testGetUnwatchedPages($withPage) {
+        $admin = User::factory()->admin()->make();
 
-        $response = $this->actingAs($user)
-            ->get('/special/cleanup-pages');
+        if ($withPage) {
+            $page = Page::factory()->create();
+            PageVersion::factory()->page($page->id)->user($this->editor->id)->testData()->create();
+        }
 
-        $response->assertStatus(200);
+        $response = $this->actingAs($admin)
+            ->get('/admin/special/unwatched-pages')
+            ->assertStatus(200);
+
+        if ($withPage) {
+            $response->assertSeeText($page->title);
+        } else {
+            $response->assertViewHas('pages', function ($pages) {
+                return $pages->count() == 0;
+            });
+        }
     }
 
-    /**
-     * Tests unwatched pages access with a page.
-     */
-    public function testCanGetUnwatchedPagesWithPage() {
-        $user = User::factory()->admin()->make();
-
-        $editor = User::factory()->editor()->create();
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->testData()->create();
-
-        $response = $this->actingAs($user)
-            ->get('/special/cleanup-pages');
-
-        $response->assertStatus(200);
+    public static function getUnwatchedPagesProvider() {
+        return [
+            'basic'     => [0],
+            'with page' => [1],
+        ];
     }
 
     /******************************************************************************
@@ -467,163 +706,137 @@ class SpecialPageTest extends TestCase {
 
     /**
      * Tests all pages access.
+     *
+     * @dataProvider getAllPagesProvider
+     *
+     * @param bool $withPage
+     * @param bool $isVisible
      */
-    public function testCanGetAllPages() {
-        $user = User::factory()->make();
+    public function testGetAllPages($withPage, $isVisible) {
+        if ($withPage) {
+            $page = Page::factory()->create([
+                'is_visible' => $isVisible,
+            ]);
+            PageVersion::factory()->page($page->id)->user($this->editor->id)->testData()->create();
+        }
 
-        $response = $this->actingAs($user)
-            ->get('/special/all-pages');
+        $response = $this->get('/special/all-pages')
+            ->assertStatus(200);
 
-        $response->assertStatus(200);
+        if ($withPage) {
+            if ($isVisible) {
+                $response->assertSeeText($page->title);
+            } else {
+                $response->assertDontSeeText($page->title);
+            }
+        } else {
+            $response->assertViewHas('pages', function ($pages) {
+                return $pages->count() == 0;
+            });
+        }
     }
 
-    /**
-     * Tests all pages access with a page.
-     */
-    public function testCanGetAllPagesWithPage() {
-        $user = User::factory()->make();
-
-        $editor = User::factory()->editor()->create();
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->create();
-
-        $response = $this->actingAs($user)
-            ->get('/special/all-pages');
-
-        $response->assertStatus(200);
+    public static function getAllPagesProvider() {
+        return [
+            'without page'     => [0, 0],
+            'with page'        => [1, 1],
+            'with hidden page' => [1, 0],
+        ];
     }
 
     /**
      * Tests all tags access.
+     *
+     * @dataProvider getAllTagsProvider
+     *
+     * @param bool $withTag
+     * @param bool $isVisible
      */
-    public function testCanGetAllTags() {
-        $user = User::factory()->make();
+    public function testGetAllTags($withTag, $isVisible) {
+        if ($withTag) {
+            $page = Page::factory()->create([
+                'is_visible' => $isVisible,
+            ]);
+            PageVersion::factory()->page($page->id)->user($this->editor->id)->testData($page->title, null, null, '"'.$this->faker->unique()->domainWord().'"')->create();
 
-        $response = $this->actingAs($user)
-            ->get('/special/all-tags');
+            $tag = PageTag::factory()->page($page->id)->create();
+        }
 
-        $response->assertStatus(200);
+        $response = $this->get('/special/all-tags')
+            ->assertStatus(200);
+
+        if ($withTag) {
+            if ($isVisible) {
+                $response->assertSeeText($tag->tag);
+            } else {
+                $response->assertDontSeeText($tag->tag);
+            }
+        } else {
+            $response->assertViewHas('tags', function ($tags) {
+                return $tags->count() == 0;
+            });
+        }
     }
 
-    /**
-     * Tests all tags access with a tag.
-     */
-    public function testCanGetAllTagsWithTag() {
-        $user = User::factory()->make();
-
-        $editor = User::factory()->editor()->create();
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($editor->id)->testData($page->title, null, null, '"'.$this->faker->unique()->domainWord().'"')->create();
-
-        $response = $this->actingAs($user)
-            ->get('/special/all-tags');
-
-        $response->assertStatus(200);
+    public static function getAllTagsProvider() {
+        return [
+            'without tag'     => [0, 0],
+            'with tag'        => [1, 1],
+            'with hidden tag' => [1, 0],
+        ];
     }
 
     /**
      * Tests all images access.
+     *
+     * @dataProvider getAllImagesProvider
+     *
+     * @param bool $withImage
+     * @param bool $isVisible
+     * @param bool $pageVisible
      */
-    public function testCanGetAllImages() {
-        $user = User::factory()->make();
+    public function testGetAllImages($withImage, $isVisible, $pageVisible) {
+        if ($withImage) {
+            $service = new ImageManager;
 
-        $response = $this->actingAs($user)
-            ->get('/special/all-images');
+            $page = Page::factory()->create([
+                'is_visible' => $pageVisible,
+            ]);
 
-        $response->assertStatus(200);
+            $image = PageImage::factory()->create([
+                'is_visible' => $isVisible,
+            ]);
+            $version = PageImageVersion::factory()->image($image->id)->user($this->editor->id)->create();
+            PageImageCreator::factory()->image($image->id)->user($this->editor->id)->create();
+            PagePageImage::factory()->page($page->id)->image($image->id)->create();
+            $service->testImages($image, $version);
+        }
+
+        $response = $this->get('/special/all-images')
+            ->assertStatus(200);
+
+        if ($withImage) {
+            if ($isVisible && $pageVisible) {
+                $response->assertSee($image->thumbnailUrl);
+            } else {
+                $response->assertDontSee($image->thumbnailUrl);
+            }
+
+            $service->testImages($image, $version, false);
+        } else {
+            $response->assertViewHas('images', function ($images) {
+                return $images->count() == 0;
+            });
+        }
     }
 
-    /**
-     * Tests all images access with an image.
-     */
-    public function testCanGetAllImagesWithImage() {
-        $user = User::factory()->make();
-
-        // Create a persistent editor
-        $editor = User::factory()->editor()->create();
-        // Create a page for the image to belong to
-        $page = Page::factory()->create();
-
-        // Create the image and associated records
-        $image = PageImage::factory()->create();
-        $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
-        PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
-
-        $response = $this->actingAs($user)
-            ->get('/special/all-images');
-
-        $response->assertStatus(200);
-
-        // Delete the test images, to clean up
-        unlink($image->imagePath.'/'.$version->thumbnailFileName);
-        unlink($image->imagePath.'/'.$version->imageFileName);
-    }
-
-    /**
-     * Tests deleted pages access.
-     */
-    public function testCanGetDeletedPages() {
-        $user = User::factory()->admin()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/admin/special/deleted-pages');
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Tests deleted pages access with a page.
-     */
-    public function testCanGetDeletedPagesWithPage() {
-        $user = User::factory()->admin()->create();
-
-        $page = Page::factory()->deleted()->create();
-        PageVersion::factory()->page($page->id)->user($user->id)->deleted()->create();
-
-        $response = $this->actingAs($user)
-            ->get('/admin/special/deleted-pages');
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Tests deleted images access.
-     */
-    public function testCanGetDeletedImages() {
-        $user = User::factory()->admin()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/admin/special/deleted-images');
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Tests deleted images access with an image.
-     */
-    public function testCanGetDeletedImagesWithImage() {
-        $user = User::factory()->admin()->create();
-
-        // Create a page for the image to belong to
-        $page = Page::factory()->create();
-
-        // Create the image and associated records
-        $image = PageImage::factory()->deleted()->create();
-        $version = PageImageVersion::factory()->image($image->id)->user($user->id)->deleted()->create();
-        PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
-
-        $response = $this->actingAs($user)
-            ->get('/admin/special/deleted-images');
-
-        $response->assertStatus(200);
-
-        // Delete the test images, to clean up
-        unlink($image->imagePath.'/'.$version->thumbnailFileName);
-        unlink($image->imagePath.'/'.$version->imageFileName);
+    public static function getAllImagesProvider() {
+        return [
+            'without image'     => [0, 0, 1],
+            'with image'        => [1, 1, 1],
+            'with hidden image' => [1, 0, 1],
+            'with hidden page'  => [1, 1, 0],
+        ];
     }
 
     /******************************************************************************
@@ -633,25 +846,15 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests user list access.
      */
-    public function testCanGetUserList() {
-        $user = User::factory()->make();
+    public function testGetUserList() {
+        $response = $this->get('/special/user-list')
+            ->assertStatus(200);
 
-        $response = $this->actingAs($user)
-            ->get('/special/user-list');
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Tests user list access with a persistent user.
-     */
-    public function testCanGetUserListWithUser() {
-        $user = User::factory()->create();
-
-        $response = $this->actingAs($user)
-            ->get('/special/user-list');
-
-        $response->assertStatus(200);
+        $response->assertSeeText($this->editor->name);
+        $response->assertSeeText($this->user->name);
+        $response->assertViewHas('users', function ($users) {
+            return $users->contains($this->editor) && $users->contains($this->user);
+        });
     }
 
     /******************************************************************************
@@ -660,13 +863,34 @@ class SpecialPageTest extends TestCase {
 
     /**
      * Tests random page access.
+     *
+     * @dataProvider getRandomPageProvider
+     *
+     * @param bool $withPage
+     * @param bool $isVisible
      */
-    public function testCanGetRandomPage() {
-        $user = User::factory()->make();
+    public function testGetRandomPage($withPage, $isVisible) {
+        if ($withPage) {
+            $page = Page::factory()->create([
+                'is_visible' => $isVisible,
+            ]);
+        }
 
-        $response = $this->actingAs($user)
-            ->get('/special/random-page');
+        $response = $this->get('/special/random-page')
+            ->assertStatus(302);
 
-        $response->assertStatus(302);
+        if ($withPage && $isVisible) {
+            $response->assertRedirect('/pages/'.$page->id.'.'.$page->slug);
+        } else {
+            $response->assertRedirect('/');
+        }
+    }
+
+    public static function getRandomPageProvider() {
+        return [
+            'with page'        => [1, 1],
+            'with hidden page' => [1, 0],
+            'without page'     => [0, 0],
+        ];
     }
 }
