@@ -210,10 +210,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRestoreImage($id) {
-        $image = PageImage::withTrashed()->whereNotNull('deleted_at')->find($id);
-        if (!$image->pages->count()) {
-            abort(404);
-        }
+        $image = PageImage::withTrashed()->whereNotNull('deleted_at')->has('pages')->find($id);
 
         return view('admin.special._restore_image', [
             'image' => $image,
@@ -229,10 +226,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postRestoreImage(Request $request, ImageManager $service, $id) {
-        $image = PageImage::withTrashed()->find($id);
-        if (!$image->pages->count()) {
-            abort(404);
-        }
+        $image = PageImage::withTrashed()->has('pages')->find($id);
 
         if ($id && $service->restorePageImage($image, Auth::user(), $request->get('reason'))) {
             flash('Image restored successfully.')->success();

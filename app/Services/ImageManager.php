@@ -215,6 +215,10 @@ class ImageManager extends Service {
         DB::beginTransaction();
 
         try {
+            if (!$image) {
+                throw new \Exception('Invalid image selected.');
+            }
+
             if (!$image->deleted_at) {
                 throw new \Exception('This image has not been deleted.');
             }

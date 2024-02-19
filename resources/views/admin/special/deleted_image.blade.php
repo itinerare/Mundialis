@@ -13,7 +13,7 @@
 
     <h1>
         Deleted Image (#{{ $image->id }})
-        @if ($image->pages()->count())
+        @if ($image->has('pages'))
             <a href="#" class="btn btn-info float-right restore-image-button">Restore Image</a>
         @endif
     </h1>
