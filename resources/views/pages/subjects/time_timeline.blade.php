@@ -70,10 +70,7 @@
     @endif
     @endforeach
 
-    @if (
-        $eventHelper->timeOrderedEvents(Auth::user() ?? null,
-            null,
-            Request::get('tags') ? Request::get('tags') : null))
+    @if ($eventHelper->timeOrderedEvents(Auth::user() ?? null, null, Request::get('tags') ? Request::get('tags') : null))
         <div class="row">
             <div class="col-md-6 border-right border-secondary timeline-section-left">
                 <h2>Current Events</h2>
