@@ -156,10 +156,7 @@ class ImageController extends Controller {
      */
     public function getCreateImage($id) {
         $page = Page::where('id', $id)->first();
-        if (!$page) {
-            abort(404);
-        }
-        if (!Auth::user()->canEdit($page)) {
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
@@ -208,10 +205,7 @@ class ImageController extends Controller {
      */
     public function getEditImage($pageId, $id) {
         $page = Page::where('id', $pageId)->first();
-        if (!$page) {
-            abort(404);
-        }
-        if (!Auth::user()->canEdit($page)) {
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
         $image = $page->images()->visible(Auth::user() ?? null)->where('page_images.id', $id)->first();
@@ -273,10 +267,7 @@ class ImageController extends Controller {
         ]);
 
         $page = Page::where('id', $pageId)->first();
-        if (!Auth::user()->canEdit($page)) {
-            abort(404);
-        }
-        if (!$page) {
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
@@ -305,16 +296,10 @@ class ImageController extends Controller {
      */
     public function getDeleteImage($pageId, $id) {
         $page = Page::where('id', $pageId)->first();
-        if (!$page) {
-            abort(404);
-        }
-        if (!Auth::user()->canEdit($page)) {
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
         $image = $page->images()->visible(Auth::user() ?? null)->where('page_images.id', $id)->first();
-        if (!$image) {
-            abort(404);
-        }
 
         return view('pages.images._delete_image', [
             'image' => $image,
