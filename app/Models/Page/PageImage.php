@@ -128,6 +128,15 @@ class PageImage extends Model {
     }
 
     /**
+     * Checks whether any of the image's associated pages are protected.
+     *
+     * @return bool
+     */
+    public function getIsProtectedAttribute() {
+        return $this->pages()->whereRelation('protections', 'is_protected', 1)->exists();
+    }
+
+    /**
      * Gets the file directory containing the model's image.
      *
      * @return string

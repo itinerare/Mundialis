@@ -18,7 +18,7 @@
     ]) !!}
 
     @include('pages._page_header', ['section' => ($image->id ? 'Edit' : 'Create') . ' Image'])
-    @if ($image->id)
+    @if ($image->id && (!$image->isProtected || Auth::user()->isAdmin))
         <a href="#" class="btn btn-danger float-right delete-image-button">Delete Image</a>
     @endif
 

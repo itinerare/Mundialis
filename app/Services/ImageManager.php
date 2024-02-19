@@ -124,6 +124,10 @@ class ImageManager extends Service {
                 throw new \Exception('This image does not belong to this page.');
             }
 
+            if ($image->isProtected && !$user->isAdmin) {
+                throw new \Exception('One or more pages this image is linked to are protected; you do not have permission to edit it.');
+            }
+
             // Process toggles
             if (!isset($data['is_valid'])) {
                 $data['is_valid'] = 0;
@@ -246,6 +250,10 @@ class ImageManager extends Service {
         DB::beginTransaction();
 
         try {
+            if ($image->isProtected && !$user->isAdmin) {
+                throw new \Exception('One or more pages this image is linked to are protected; you cannot delete it.');
+            }
+
             // Unset this image ID from any pages where it is the active image
             if (Page::where('image_id', $image->id)->exists()) {
                 Page::where('image_id', $image->id)->update(['image_id' => null]);
