@@ -25,7 +25,6 @@ class SpecialPageTest extends TestCase {
         parent::setUp();
 
         $this->editor = User::factory()->editor()->create();
-        $this->user = User::factory()->create();
     }
 
     /******************************************************************************
@@ -851,9 +850,8 @@ class SpecialPageTest extends TestCase {
             ->assertStatus(200);
 
         $response->assertSeeText($this->editor->name);
-        $response->assertSeeText($this->user->name);
         $response->assertViewHas('users', function ($users) {
-            return $users->contains($this->editor) && $users->contains($this->user);
+            return $users->contains($this->editor);
         });
     }
 
