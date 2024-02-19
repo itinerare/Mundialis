@@ -204,6 +204,51 @@ class PageDeleteTest extends TestCase {
     }
 
     /**
+     * Tests deleted pages access.
+     *
+     * @dataProvider getDeletedPagesProvider
+     *
+     * @param bool $withPage
+     * @param bool $isDeleted
+     */
+    public function testGetDeletedPages($withPage, $isDeleted) {
+        if ($withPage) {
+            $page = Page::factory();
+            $version = PageVersion::factory()->user($this->editor->id);
+            if ($isDeleted) {
+                $page = $page->deleted();
+                $version = $version->deleted();
+            }
+            $page = $page->create();
+            $version = $version->page($page->id)->create();
+        }
+
+        $response = $this->actingAs($this->admin)
+            ->get('/admin/special/deleted-pages')
+            ->assertStatus(200);
+
+        if ($withPage) {
+            if ($isDeleted) {
+                $response->assertSeeText($page->title);
+            } else {
+                $response->assertDontSeeText($page->title);
+            }
+        } else {
+            $response->assertViewHas('pages', function ($pages) {
+                return $pages->count() == 0;
+            });
+        }
+    }
+
+    public static function getDeletedPagesProvider() {
+        return [
+            'without page'        => [0, 0],
+            'with deleted page'   => [1, 1],
+            'with undeleted page' => [1, 0],
+        ];
+    }
+
+    /**
      * Test deleted page access.
      *
      * @dataProvider getDeletePageProvider
