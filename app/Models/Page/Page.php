@@ -240,11 +240,18 @@ class Page extends Model {
      * @return array
      */
     public function getDataAttribute() {
-        if (!$this->versions->count() || !isset($this->version->data['data'])) {
+        if (!$this->versions->count()) {
             return null;
         }
 
-        return $this->version->data['data'];
+        // Fallback for testing purposes
+        if (!is_array($this->version->data)) {
+            $data = json_decode($this->version->data, true);
+
+            return $data['data'] ?? null;
+        }
+
+        return $this->version->data['data'] ?? null;
     }
 
     /**
@@ -253,11 +260,18 @@ class Page extends Model {
      * @return array
      */
     public function getParsedDataAttribute() {
-        if (!$this->versions->count() || !isset($this->version->data['data']['parsed'])) {
+        if (!$this->versions->count()) {
             return null;
         }
 
-        return $this->version->data['data']['parsed'];
+        // Fallback for testing purposes
+        if (!is_array($this->version->data)) {
+            $data = json_decode($this->version->data, true);
+
+            return $data['parsed'] ?? null;
+        }
+
+        return $this->version->data['data']['parsed'] ?? null;
     }
 
     /**
