@@ -406,7 +406,10 @@ class SubjectService extends Service {
             if (TimeChronology::where('parent_id', $chronology->id)->exists()) {
                 throw new \Exception('A sub-chronology of this chronology exists. Please move or delete it first.');
             }
-            //if(Piece::where('project_id', $project->id)->exists()) throw new \Exception("A piece with this chronology exists. Please move or delete it first.");
+
+            if (Page::subject('time')->where('parent_id', $chronology->id)->exists()) {
+                throw new \Exception('A page in this chronology exists. Please move or delete it first.');
+            }
 
             $chronology->delete();
 
