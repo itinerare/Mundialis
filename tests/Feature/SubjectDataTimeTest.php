@@ -14,308 +14,445 @@ use Tests\TestCase;
 class SubjectDataTimeTest extends TestCase {
     use RefreshDatabase, withFaker;
 
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->admin = User::factory()->admin()->create();
+        $this->category = SubjectCategory::factory()->subject('time')->create();
+    }
+
     /******************************************************************************
-        TIME
+        DIVISIONS
     *******************************************************************************/
 
     /**
      * Test time divisions access.
+     *
+     * @dataProvider getTimeDivisionsProvider
+     *
+     * @param bool $withDivision
      */
-    public function testCanGetEditTimeDivisions() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+    public function testGetEditTimeDivisions($withDivision) {
+        if ($withDivision) {
+            $division = TimeDivision::factory()->create();
+        }
 
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->admin)
             ->get('/admin/data/time/divisions')
             ->assertStatus(200);
+
+        if ($withDivision) {
+            $response->assertSee($division->name);
+        } else {
+            $response->assertViewHas('divisions', function ($divisions) {
+                return $divisions->count() == 0;
+            });
+        }
+    }
+
+    public static function getTimeDivisionsProvider() {
+        return [
+            'basic'         => [0],
+            'with division' => [1],
+        ];
     }
 
     /**
      * Test time division creation.
+     *
+     * @dataProvider postTimeDivisionsProvider
+     *
+     * @param bool $withName
+     * @param bool $withAbbreviation
+     * @param bool $withUnit
+     * @param bool $dateEnabled
+     * @param bool $expected
      */
-    public function testCanPostCreateTimeDivision() {
-        // Define some basic template data
+    public function testPostCreateTimeDivision($withName, $withAbbreviation, $withUnit, $dateEnabled, $expected) {
         $data = [
-            'name'         => [0 => $this->faker->unique()->domainWord()],
-            'abbreviation' => [0 => $this->faker->unique()->domainWord()],
-            'unit'         => [0 => mt_rand(1, 100)],
+            'name'         => [0 => $withName ? $this->faker->unique()->domainWord() : null],
+            'abbreviation' => [0 => $withAbbreviation ? $this->faker->unique()->domainWord() : null],
+            'unit'         => [0 => $withUnit ? mt_rand(1, 100) : null],
         ];
 
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->admin)
             ->post('/admin/data/time/divisions', $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('time_divisions', [
-            'name'         => $data['name'][0],
-            'abbreviation' => $data['abbreviation'][0],
-            'unit'         => $data['unit'][0],
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('time_divisions', [
+                'name'         => $data['name'][0],
+                'abbreviation' => $data['abbreviation'][0],
+                'unit'         => $data['unit'][0],
+            ]);
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertDatabaseMissing('time_divisions', [
+                'name'         => $data['name'][0],
+                'abbreviation' => $data['abbreviation'][0],
+                'unit'         => $data['unit'][0],
+            ]);
+        }
     }
 
     /**
      * Test time division editing.
+     *
+     * @dataProvider postTimeDivisionsProvider
+     * @dataProvider postEditTimeDivisionsProvider
+     *
+     * @param bool $withName
+     * @param bool $withAbbreviation
+     * @param bool $withUnit
+     * @param bool $dateEnabled
+     * @param bool $expected
      */
-    public function testCanPostEditTimeDivisions() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+    public function testPostEditTimeDivisions($withName, $withAbbreviation, $withUnit, $dateEnabled, $expected) {
+        for ($i = 0; $i <= 1; $i++) {
+            $division[$i] = TimeDivision::factory()->create();
+        }
 
-        $division = TimeDivision::factory()->create();
-
-        // Define some basic data
         $data = [
-            'id'           => [0 => $division->id],
-            'name'         => [0 => $this->faker->unique()->domainWord()],
-            'abbreviation' => [0 => $this->faker->unique()->domainWord()],
-            'unit'         => [0 => mt_rand(1, 100)],
+            'id' => [
+                0 => $division[0]->id,
+                1 => $division[1]->id,
+            ],
+            'name' => [
+                0 => $withName ? $this->faker->unique()->domainWord() : null,
+                1 => $division[1]->name,
+            ],
+            'abbreviation' => [
+                0 => $withAbbreviation ? $this->faker->unique()->domainWord() : null,
+                1 => $division[1]->abbreviation,
+            ],
+            'unit' => [
+                0 => $withUnit ? mt_rand(1, 100) : null,
+                1 => $division[1]->unit,
+            ],
+            'use_for_dates' => [
+                $division[0]->id => $dateEnabled ?? null,
+                $division[1]->id => $division[1]->use_for_dates ?? null,
+            ],
         ];
 
-        // Try to post data again
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->admin)
             ->post('/admin/data/time/divisions', $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('time_divisions', [
-            'name'         => $data['name'][0],
-            'abbreviation' => $data['abbreviation'][0],
-            'unit'         => $data['unit'][0],
-            'id'           => $division->id,
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('time_divisions', [
+                'id'            => $division[0]->id,
+                'name'          => $data['name'][0],
+                'abbreviation'  => $data['abbreviation'][0],
+                'unit'          => $data['unit'][0],
+                'use_for_dates' => $data['use_for_dates'][$division[0]->id] ?? 0,
+            ]);
+
+            $this->assertDatabaseHas('time_divisions', [
+                'id'            => $division[1]->id,
+                'name'          => $data['name'][1],
+                'abbreviation'  => $data['abbreviation'][1],
+                'unit'          => $data['unit'][1],
+                'use_for_dates' => $data['use_for_dates'][$division[1]->id] ?? 0,
+            ]);
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertDatabaseMissing('time_divisions', [
+                'id'            => $division[0]->id,
+                'name'          => $data['name'][0],
+                'abbreviation'  => $data['abbreviation'][0],
+                'unit'          => $data['unit'][0],
+                'use_for_dates' => $data['use_for_dates'][$division[0]->id] ?? 0,
+            ]);
+        }
     }
+
+    public static function postTimeDivisionsProvider() {
+        return [
+            'basic'                   => [1, 0, 0, 0, 1],
+            'with abbreviation'       => [1, 1, 0, 0, 1],
+            'with unit'               => [1, 0, 1, 0, 1],
+            'with abbreviation, unit' => [1, 0, 1, 0, 1],
+            'without name'            => [0, 0, 0, 0, 0],
+        ];
+    }
+
+    public static function postEditTimeDivisionsProvider() {
+        return [
+            'date enabled'                   => [1, 0, 0, 1, 1],
+            'date enabled with abbreviation' => [1, 1, 0, 1, 1],
+            'date enabled with unit'         => [1, 0, 1, 1, 1],
+            'with everything'                => [1, 1, 1, 1, 1],
+        ];
+    }
+
+    /******************************************************************************
+        CHRONOLOGIES
+    *******************************************************************************/
 
     /**
      * Test time chronologies access.
+     *
+     * @dataProvider getTimeChronologiesProvider
+     *
+     * @param bool $withChronology
      */
-    public function testCanGetTimeChronologies() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+    public function testGetTimeChronologies($withChronology) {
+        if ($withChronology) {
+            $chronology = TimeChronology::factory()->create();
+        }
 
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->admin)
             ->get('/admin/data/time/chronology')
             ->assertStatus(200);
+
+        if ($withChronology) {
+            $response->assertSeeText($chronology->name);
+        } else {
+            $response->assertViewHas('chronologies', function ($chronologies) {
+                return $chronologies->count() == 0;
+            });
+        }
+    }
+
+    public static function getTimeChronologiesProvider() {
+        return [
+            'basic'           => [0],
+            'with chronology' => [1],
+        ];
     }
 
     /**
      * Test time chronology create access.
+     *
+     * @dataProvider getTimeChronologiesProvider
+     *
+     * @param bool $withChronology
      */
-    public function testCanGetCreateTimeChronology() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+    public function testGetCreateTimeChronology($withChronology) {
+        if ($withChronology) {
+            $chronology = TimeChronology::factory()->create();
+        }
 
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->admin)
             ->get('/admin/data/time/chronology/create')
             ->assertStatus(200);
+
+        if ($withChronology) {
+            $response->assertSee($chronology->name);
+        } else {
+            $response->assertViewHas('chronologyOptions', function ($chronologies) {
+                return count($chronologies) == 0;
+            });
+        }
     }
 
     /**
      * Test time chronology edit access.
+     *
+     * @dataProvider getTimeChronologiesProvider
+     *
+     * @param bool $withChronology
      */
-    public function testCanGetEditTimeChronology() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+    public function testGetEditTimeChronology($withChronology) {
         $chronology = TimeChronology::factory()->create();
 
-        $response = $this->actingAs($user)
+        if ($withChronology) {
+            $chronologyOption = TimeChronology::factory()->create();
+        }
+
+        $response = $this->actingAs($this->admin)
             ->get('/admin/data/time/chronology/edit/'.$chronology->id)
             ->assertStatus(200);
+
+        if ($withChronology) {
+            $response->assertSee($chronologyOption->name);
+        } else {
+            $response->assertViewHas('chronologyOptions', function ($chronologies) {
+                return count($chronologies) == 0;
+            });
+        }
     }
 
     /**
      * Test time chronology creation.
+     *
+     * @dataProvider postTimeChronologyProvider
+     *
+     * @param bool $withName
+     * @param bool $withAbbreviation
+     * @param bool $withParent
+     * @param bool $withDescription
+     * @param bool $expected
      */
-    public function testCanPostCreateTimeChronology() {
-        // Define some basic template data
+    public function testPostCreateTimeChronology($withName, $withAbbreviation, $withParent, $withDescription, $expected) {
+        if ($withParent) {
+            $parent = TimeChronology::factory()->create();
+        }
+
         $data = [
-            'name'        => $this->faker->unique()->domainWord(),
-            'description' => $this->faker->unique()->domainWord(),
+            'name'         => $withName ? $this->faker->unique()->domainWord() : null,
+            'abbreviation' => $withAbbreviation ? $this->faker->unique()->domainWord() : null,
+            'parent_id'    => $withParent ? $parent->id : null,
+            'description'  => $withDescription ? $this->faker->unique()->domainWord() : null,
         ];
 
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->admin)
             ->post('/admin/data/time/chronology/create', $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('time_chronology', [
-            'name'        => $data['name'],
-            'description' => $data['description'],
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('time_chronology', [
+                'name'         => $data['name'],
+                'abbreviation' => $data['abbreviation'],
+                'parent_id'    => $data['parent_id'],
+                'description'  => $data['description'],
+            ]);
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertDatabaseMissing('time_chronology', [
+                'name'         => $data['name'],
+                'abbreviation' => $data['abbreviation'],
+                'parent_id'    => $data['parent_id'],
+                'description'  => $data['description'],
+            ]);
+        }
     }
 
     /**
      * Test time chronology editing.
+     *
+     * @dataProvider postTimeChronologyProvider
+     *
+     * @param bool $withName
+     * @param bool $withAbbreviation
+     * @param bool $withParent
+     * @param bool $withDescription
+     * @param bool $expected
      */
-    public function testCanPostEditTimeChronology() {
+    public function testPostEditTimeChronology($withName, $withAbbreviation, $withParent, $withDescription, $expected) {
         $chronology = TimeChronology::factory()->create();
 
-        // Define some basic template data
+        if ($withParent) {
+            $parent = TimeChronology::factory()->create();
+        }
+
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
+            'name'         => $withName ? $this->faker->unique()->domainWord() : null,
+            'abbreviation' => $withAbbreviation ? $this->faker->unique()->domainWord() : null,
+            'parent_id'    => $withParent ? $parent->id : null,
+            'description'  => $withDescription ? $this->faker->unique()->domainWord() : null,
         ];
 
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->admin)
             ->post('/admin/data/time/chronology/edit/'.$chronology->id, $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('time_chronology', [
-            'id'   => $chronology->id,
-            'name' => $data['name'],
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('time_chronology', [
+                'id'           => $chronology->id,
+                'name'         => $data['name'],
+                'abbreviation' => $data['abbreviation'],
+                'parent_id'    => $data['parent_id'],
+                'description'  => $data['description'],
+            ]);
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertDatabaseMissing('time_chronology', [
+                'id'           => $chronology->id,
+                'name'         => $data['name'],
+                'abbreviation' => $data['abbreviation'],
+                'parent_id'    => $data['parent_id'],
+                'description'  => $data['description'],
+            ]);
+        }
     }
 
-    /**
-     * Test time chronology creation with a parent.
-     */
-    public function testCanPostCreateTimeChronologyWithParent() {
-        $parent = TimeChronology::factory()->create();
-
-        // Define some basic template data
-        $data = [
-            'name'      => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id,
+    public static function postTimeChronologyProvider() {
+        return [
+            'with name'                            => [1, 0, 0, 0, 1],
+            'with name, abbreviation'              => [1, 1, 0, 0, 1],
+            'with name, parent'                    => [1, 0, 1, 0, 1],
+            'with name, description'               => [1, 0, 0, 1, 1],
+            'with name, abbreviation, parent'      => [1, 1, 1, 0, 1],
+            'with name, abbreviation, description' => [1, 1, 0, 1, 1],
+            'with name, parent, description'       => [1, 0, 1, 1, 1],
+            'with everything'                      => [1, 1, 1, 1, 1],
+            'without name'                         => [0, 0, 0, 0, 0],
         ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/time/chronology/create', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('time_chronology', [
-            'name'      => $data['name'],
-            'parent_id' => $parent->id,
-        ]);
-    }
-
-    /**
-     * Test time chronology editing with a parent.
-     */
-    public function testCanPostEditTimeChronologyWithParent() {
-        $chronology = TimeChronology::factory()->create();
-        $parent = TimeChronology::factory()->create();
-
-        // Define some basic template data
-        $data = [
-            'name'      => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id,
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/time/chronology/edit/'.$chronology->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('time_chronology', [
-            'id'        => $chronology->id,
-            'name'      => $data['name'],
-            'parent_id' => $parent->id,
-        ]);
     }
 
     /**
      * Test chronology delete access.
+     *
+     * @dataProvider getTimeChronologiesProvider
+     *
+     * @param bool $withChronology
      */
-    public function testCanGetDeleteTimeChronology() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+    public function testGetDeleteTimeChronology($withChronology) {
         $chronology = TimeChronology::factory()->create();
 
-        $response = $this->actingAs($user)
-            ->get('/admin/data/time/chronology/delete/'.$chronology->id)
+        $response = $this->actingAs($this->admin)
+            ->get('/admin/data/time/chronology/delete/'.($withChronology ? $chronology->id : mt_rand(500, 1000)))
             ->assertStatus(200);
+
+        if ($withChronology) {
+            $response->assertSeeText('You are about to delete the chronology '.$chronology->name);
+        } else {
+            $response->assertSeeText('Invalid chronology selected');
+        }
     }
 
     /**
      * Test chronology deletion.
-     * This should work.
+     *
+     * @dataProvider postDeleteTimeChronologyProvider
+     *
+     * @param bool $withChronology
+     * @param bool $withChild
+     * @param bool $withPage
+     * @param bool $expected
      */
-    public function testCanPostDeleteTimeChronology() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Create a chronology to delete
+    public function testPostDeleteTimeChronology($withChronology, $withChild, $withPage, $expected) {
         $chronology = TimeChronology::factory()->create();
 
-        // Count existing chronologies
-        $oldCount = TimeChronology::all()->count();
+        if ($withChild) {
+            TimeChronology::factory()->create([
+                'parent_id' => $chronology->id,
+            ]);
+        }
 
-        // Try to post data
+        if ($withPage) {
+            $category = SubjectCategory::factory()->subject('time')->create();
+            Page::factory()->category($category->id)->create([
+                'parent_id' => $chronology->id,
+            ]);
+        }
+
         $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/time/chronology/delete/'.$chronology->id);
+            ->actingAs($this->admin)
+            ->post('/admin/data/time/chronology/delete/'.($withChronology ? $chronology->id : mt_rand(500, 1000)));
 
-        // Check that there are fewer chronologies than before
-        $this->assertTrue(TimeChronology::all()->count() < $oldCount);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertModelMissing($chronology);
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertModelExists($chronology);
+        }
     }
 
-    /**
-     * Test chronology deletion with a page.
-     * This shouldn't work.
-     */
-    public function testCannotPostDeleteTimeChronologyWithPage() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Count existing chronologies
-        $oldCount = TimeChronology::all()->count();
-        // Create a chronology to delete
-        $chronology = TimeChronology::factory()->create();
-        // Create a page with the chronology
-        $category = SubjectCategory::factory()->subject('time')->create();
-        $page = Page::factory()->category($category->id)->create();
-        $page->update(['parent_id' => $chronology->id]);
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/time/chronology/delete/'.$chronology->id);
-
-        // Check that there are the same number of chronologies or more
-        $this->assertTrue(TimeChronology::all()->count() >= $oldCount);
-    }
-
-    /**
-     * Test chronology deletion with a sub-category.
-     * This shouldn't work.
-     */
-    public function testCannotPostDeleteTimeChronologyWithSubchronology() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Count existing chronologies
-        $oldCount = TimeChronology::all()->count();
-        // Create a chronology to delete
-        $chronology = TimeChronology::factory()->create();
-        // Create a subcategory of the chronology, and set its parent ID
-        $subchronology = TimeChronology::factory()->create();
-        $subchronology->update(['parent_id' => $chronology->id]);
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/time/chronology/delete/'.$chronology->id);
-
-        // Check that there are the same number of chronologies or more
-        $this->assertTrue(TimeChronology::all()->count() >= $oldCount);
+    public static function postDeleteTimeChronologyProvider() {
+        return [
+            'with chronology'        => [1, 0, 0, 1],
+            'with chronology, child' => [1, 1, 0, 0],
+            'with chronology, page'  => [1, 0, 1, 0],
+            'with everything'        => [1, 1, 1, 0],
+            'without chronology'     => [0, 0, 0, 0],
+        ];
     }
 }
