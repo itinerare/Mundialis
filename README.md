@@ -29,12 +29,12 @@ Thus, this project was born out of a desire for a more efficient way to record w
 - A random page button (just delightful, in my opinion)
 
 ## Setup
-Important: For those who are not familiar with web development, please refer to the [Full Guide](https://github.com/itinerare/Mundialis/wiki/Setup-Guide) for a much more detailed set of instructions!
+Important: For those who are not familiar with web development, please refer to the [Full Guide](https://code.itinerare.net/itinerare/Mundialis/wiki/Setup-Guide) for a much more detailed set of instructions!
 
 ### Obtain a copy of the code
 
 ```
-$ git clone https://github.com/itinerare/mundialis.git
+$ git clone https://code.itinerare.net/itinerare/mundialis.git
 ```
 
 ### Configure .env in the directory
@@ -70,7 +70,7 @@ $ php artisan setup-mundialis
 ```
 
 ## Contributing
-Thank you for considering contributing to Mundialis! Please see the [Contribution Guide](https://github.com/itinerare/Mundialis/blob/main/CONTRIBUTING.md) for information on how best to contribute.
+Thank you for considering contributing to Mundialis! Please see the [Contribution Guide](CONTRIBUTING.md) for information on how best to contribute.
 
 ### Extending Mundialis
 If you are interested in providing optional/plugin-type functionality for Mundialis, please contact me first and foremost; while I am open to developing plugin support and would rather do so before any are made, I will not be doing so until there is concrete interest in it.
