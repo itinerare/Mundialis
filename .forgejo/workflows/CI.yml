@@ -56,7 +56,7 @@ jobs:
     - name: Set up node
       uses: https://github.com/actions/setup-node@v4
       with:
-        node-version: 16.x
+        node-version: ${{ vars.NODE_VERSION }}
         cache: 'npm'
 
     - name: Install packages
@@ -87,7 +87,7 @@ jobs:
     - name: Set up node
       uses: https://github.com/actions/setup-node@v4
       with:
-        node-version: 16.x
+        node-version: ${{ vars.NODE_VERSION }}
         cache: 'npm'
 
     - name: Install packages
