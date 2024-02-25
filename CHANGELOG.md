@@ -4,6 +4,11 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.2.6](https://code.itinerare.net/itinerare/Mundialis/compare/v2.2.5...v2.2.6) (2024-02-25)
+
+
+---
+
 ## [2.2.5](https://code.itinerare.net/itinerare/Mundialis/compare/v2.2.4...v2.2.5) (2024-01-14)
 
 ### Bug Fixes
