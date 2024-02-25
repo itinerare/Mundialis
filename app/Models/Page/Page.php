@@ -219,7 +219,7 @@ class Page extends Model {
     /**
      * Get the page's most recent version.
      *
-     * @return \App\Models\Page\PageVersion
+     * @return PageVersion
      */
     public function getVersionAttribute() {
         return $this->versions()->orderBy('created_at', 'DESC')->first();
@@ -228,7 +228,7 @@ class Page extends Model {
     /**
      * Get the page's most recent protection record.
      *
-     * @return \App\Models\Page\PageProtection
+     * @return PageProtection
      */
     public function getProtectionAttribute() {
         if (!$this->protections->count()) {

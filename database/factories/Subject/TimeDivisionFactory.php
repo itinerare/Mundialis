@@ -30,7 +30,7 @@ class TimeDivisionFactory extends Factory {
     /**
      * Generate a division for use in dates.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function date() {
         return $this->state(function (array $attributes) {

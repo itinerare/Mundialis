@@ -21,7 +21,7 @@ class RankService extends Service {
      *
      * @param \App\Models\Rank\Rank $rank
      * @param array                 $data
-     * @param \App\Models\User\User $user
+     * @param User                  $user
      *
      * @return bool
      */

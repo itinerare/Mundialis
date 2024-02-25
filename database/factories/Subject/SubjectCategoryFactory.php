@@ -30,7 +30,7 @@ class SubjectCategoryFactory extends Factory {
      *
      * @param string $subject
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function subject($subject) {
         return $this->state(function (array $attributes) use ($subject) {
@@ -43,7 +43,7 @@ class SubjectCategoryFactory extends Factory {
     /**
      * Generate a category with some fields set.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function testData() {
         return $this->state(function (array $attributes) {
@@ -63,7 +63,7 @@ class SubjectCategoryFactory extends Factory {
      * @param string $choices
      * @param string $value
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function infoboxField($key = 'test', $label = 'Test', $type = 'text', $rules = null, $choices = null, $value = null) {
         return $this->state(function (array $attributes) use ($key, $label, $type, $rules, $choices, $value) {
@@ -83,7 +83,7 @@ class SubjectCategoryFactory extends Factory {
      * @param string $choices
      * @param string $value
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function bodyField($key = 'test', $label = 'Test', $type = 'text', $rules = null, $choices = null, $value = null) {
         return $this->state(function (array $attributes) use ($key, $label, $type, $rules, $choices, $value) {

@@ -173,7 +173,7 @@ class SubjectCategory extends Model {
     /**
      * Get the category's subject's template.
      *
-     * @return App\Models\Subject\SubjectTemplate
+     * @return SubjectTemplate
      */
     public function getSubjectTemplateAttribute() {
         return SubjectTemplate::where('subject', $this->attributes['subject'])->first();

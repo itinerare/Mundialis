@@ -31,7 +31,7 @@ class WatchedPageFactory extends Factory {
      *
      * @param int $page
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function page($page) {
         return $this->state(function (array $attributes) use ($page) {
@@ -47,7 +47,7 @@ class WatchedPageFactory extends Factory {
      *
      * @param int $user
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function user($user) {
         return $this->state(function (array $attributes) use ($user) {

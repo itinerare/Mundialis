@@ -32,7 +32,7 @@ class PageRelationshipFactory extends Factory {
      *
      * @param int $page
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function pageOne($page) {
         return $this->state(function (array $attributes) use ($page) {
@@ -48,7 +48,7 @@ class PageRelationshipFactory extends Factory {
      *
      * @param int $page
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function pageTwo($page) {
         return $this->state(function (array $attributes) use ($page) {
@@ -61,7 +61,7 @@ class PageRelationshipFactory extends Factory {
     /**
      * Generate a familial relationship.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function familial() {
         return $this->state(function (array $attributes) {

@@ -41,7 +41,7 @@ class LexiconEntryFactory extends Factory {
      *
      * @param int $category
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function category($category) {
         return $this->state(function (array $attributes) use ($category) {
@@ -54,7 +54,7 @@ class LexiconEntryFactory extends Factory {
     /**
      * Generate an entry with conjugation data. Matches category test data.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function conjugationData() {
         return $this->state(function (array $attributes) {
@@ -67,7 +67,7 @@ class LexiconEntryFactory extends Factory {
     /**
      * Generate an entry with conjugation data. Matches extended category data.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function extendedConjugationData() {
         return $this->state(function (array $attributes) {
