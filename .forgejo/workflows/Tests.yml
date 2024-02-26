@@ -4,14 +4,6 @@ on:
   push:
     branches:
       - '**'
-  pull_request:
-    branches:
-      - '**'
-    types:
-      - opened
-      - edited
-      - synchronize
-      - reopened
 
 jobs:
   laravel-tests:
