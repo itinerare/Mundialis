@@ -74,7 +74,7 @@ jobs:
           author_name: ${{ vars.COMMITTER_NAME }}
           author_email: ${{ vars.COMMITTER_EMAIL }}
 
-  rebuild-vite-assets:
+  rebuild-mix-assets:
     runs-on: docker
 
     steps:
