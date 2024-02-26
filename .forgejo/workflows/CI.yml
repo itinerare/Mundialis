@@ -41,7 +41,7 @@ jobs:
           message: 'refactor: fix PHP styling'
           default_author: github_actions
           author_name: Amadeus[bot]
-          author_email: root@itinerare.net
+          author_email: amadeus@itinerare.net
 
   blade-formatter:
     runs-on: docker
@@ -72,7 +72,7 @@ jobs:
           message: 'refactor: fix blade formatting'
           default_author: github_actions
           author_name: Amadeus[bot]
-          author_email: root@itinerare.net
+          author_email: amadeus@itinerare.net
 
   rebuild-vite-assets:
     runs-on: docker
@@ -103,4 +103,4 @@ jobs:
           message: 'chore(deps): rebuild mix assets'
           default_author: github_actions
           author_name: Amadeus[bot]
-          author_email: root@itinerare.net
+          author_email: amadeus@itinerare.net
