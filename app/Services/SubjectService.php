@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Lexicon\LexiconEntry;
 use App\Models\Page\Page;
 use App\Models\Subject\LexiconCategory;
 use App\Models\Subject\LexiconSetting;
@@ -596,7 +597,10 @@ class SubjectService extends Service {
             if (LexiconCategory::where('parent_id', $category->id)->exists()) {
                 throw new \Exception('A sub-category of this category exists. Please move or delete it first.');
             }
-            //if(Piece::where('project_id', $project->id)->exists()) throw new \Exception("A piece with this category exists. Please move or delete it first.");
+
+            if (LexiconEntry::where('category_id', $category->id)->exists()) {
+                throw new \Exception('An entriy with this category exists. Please move or delete it first.');
+            }
 
             $category->delete();
 
