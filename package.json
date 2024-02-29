@@ -12,17 +12,17 @@
     },
     "devDependencies": {
         "axios": "^1.6",
-        "blade-formatter": "^1.38.6",
+        "blade-formatter": "^1.40.1",
         "bootstrap": "^4.6",
         "buffer": "^6.0.3",
         "jquery": "^3.7",
         "laravel-mix": "^6.0.43",
         "popper.js": "^1.12",
-        "postcss": "^8.4.33",
+        "postcss": "^8.4.35",
         "process": "0.11.10",
         "resolve-url-loader": "^5.0.0",
-        "sass": "^1.70.0",
+        "sass": "^1.71.0",
         "sass-loader": "^14.1.0"
     },
-    "version": "2.2.5"
+    "version": "2.2.6"
 }
