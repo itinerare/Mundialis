@@ -13,241 +13,263 @@ use Tests\TestCase;
 class SubjectDataLanguageTest extends TestCase {
     use RefreshDatabase, withFaker;
 
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->admin = User::factory()->admin()->create();
+    }
+
     /******************************************************************************
-        LANGUAGE
+        LEXICON SETTINGS
     *******************************************************************************/
 
     /**
      * Test lexicon settings access.
+     *
+     * @dataProvider getLexiconSettingsProvider
+     *
+     * @param bool $withClass
      */
-    public function testCanGetEditLexiconSettings() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+    public function testGetLexiconSettings($withClass) {
+        if ($withClass) {
+            $class = LexiconSetting::create([
+                'name'         => $this->faker->unique()->domainWord(),
+                'abbreviation' => $this->faker->unique()->domainWord(),
+            ]);
+        }
 
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->admin)
             ->get('/admin/data/language/lexicon-settings')
             ->assertStatus(200);
+
+        if ($withClass) {
+            $response->assertSee($class->name);
+        } else {
+            $response->assertViewHas('parts', function ($parts) {
+                return $parts->count() == 0;
+            });
+        }
+    }
+
+    public static function getLexiconSettingsProvider() {
+        return [
+            'basic'      => [0],
+            'with class' => [1],
+        ];
     }
 
     /**
      * Test lexicon setting creation.
+     *
+     * @dataProvider postLexiconSettingsProvider
+     *
+     * @param bool $withName
+     * @param bool $withAbbreviation
+     * @param bool $expected
      */
-    public function testCanPostCreateLexiconSettings() {
-        // Define some basic data
+    public function testPostCreateLexiconSetting($withName, $withAbbreviation, $expected) {
         $data = [
-            'name'         => [0 => $this->faker->unique()->domainWord()],
-            'abbreviation' => [0 => $this->faker->unique()->domainWord()],
+            'name'         => [0 => $withName ? $this->faker->unique()->domainWord() : null],
+            'abbreviation' => [0 => $withAbbreviation ? $this->faker->unique()->domainWord() : null],
         ];
 
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
+        $response = $this->actingAs($this->admin)
             ->post('/admin/data/language/lexicon-settings', $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_settings', [
-            'name'         => $data['name'][0],
-            'abbreviation' => $data['abbreviation'][0],
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('lexicon_settings', [
+                'name'         => $data['name'][0],
+                'abbreviation' => $data['abbreviation'][0],
+            ]);
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertDatabaseMissing('lexicon_settings', [
+                'name'         => $data['name'][0],
+                'abbreviation' => $data['abbreviation'][0],
+            ]);
+        }
     }
 
     /**
      * Test lexicon setting editing.
+     *
+     * @dataProvider postLexiconSettingsProvider
+     *
+     * @param bool $withName
+     * @param bool $withAbbreviation
+     * @param bool $expected
      */
-    public function testCanPostEditLexiconSettings() {
-        // Define some basic data
+    public function testPostEditLexiconSettings($withName, $withAbbreviation, $expected) {
+        for ($i = 0; $i <= 1; $i++) {
+            $class[$i] = LexiconSetting::create([
+                'name'         => $this->faker->unique()->domainWord(),
+                'abbreviation' => $this->faker->unique()->domainWord(),
+            ]);
+        }
+
         $data = [
-            'name'         => [0 => $this->faker->unique()->domainWord()],
-            'abbreviation' => [0 => $this->faker->unique()->domainWord()],
+            'id' => [
+                0 => $class[0]->id,
+                1 => $class[1]->id,
+            ],
+            'name' => [
+                0 => $withName ? $this->faker->unique()->domainWord() : null,
+                1 => $class[1]->name,
+            ],
+            'abbreviation' => [
+                0 => $withAbbreviation ? $this->faker->unique()->domainWord() : null,
+                1 => $class[1]->abbreviation,
+            ],
         ];
 
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        $division = LexiconSetting::create([
-            'name'         => $data['name'][0],
-            'abbreviation' => $data['abbreviation'][0],
-        ]);
-
-        // Define some more basic data
-        $data['name'][1] = $this->faker->unique()->domainWord();
-        $data['abbreviation'][1] = $this->faker->unique()->domainWord();
-        $data['id'][0] = $division->id;
-
-        // Try to post data again
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->admin)
             ->post('/admin/data/language/lexicon-settings', $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_settings', [
-            'name'         => $data['name'][0],
-            'abbreviation' => $data['abbreviation'][0],
-            'id'           => $division->id,
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('lexicon_settings', [
+                'id'            => $class[0]->id,
+                'name'          => $data['name'][0],
+                'abbreviation'  => $data['abbreviation'][0],
+            ]);
+
+            $this->assertDatabaseHas('lexicon_settings', [
+                'id'            => $class[1]->id,
+                'name'          => $data['name'][1],
+                'abbreviation'  => $data['abbreviation'][1],
+            ]);
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertDatabaseMissing('lexicon_settings', [
+                'id'            => $class[0]->id,
+                'name'          => $data['name'][0],
+                'abbreviation'  => $data['abbreviation'][0],
+            ]);
+        }
     }
+
+    public static function postLexiconSettingsProvider() {
+        return [
+            'basic'             => [1, 0, 1],
+            'with abbreviation' => [1, 1, 1],
+            'without name'      => [0, 0, 0],
+        ];
+    }
+
+    /******************************************************************************
+        LEXICON CATEGORIES
+    *******************************************************************************/
 
     /**
      * Test lexicon categories access.
+     *
+     * @dataProvider getLexiconCategoriesProvider
+     *
+     * @param bool $withCategory
      */
-    public function testCanGetLexiconCategories() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+    public function testGetLexiconCategories($withCategory) {
+        if ($withCategory) {
+            $category = LexiconCategory::factory()->create();
+        }
 
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->admin)
             ->get('/admin/data/language/lexicon-categories')
             ->assertStatus(200);
+
+        if ($withCategory) {
+            $response->assertSeeText($category->name);
+        } else {
+            $response->assertViewHas('categories', function ($categories) {
+                return $categories->count() == 0;
+            });
+        }
+    }
+
+    public static function getLexiconCategoriesProvider() {
+        return [
+            'basic'         => [0],
+            'with category' => [1],
+        ];
     }
 
     /**
      * Test create lexicon category access.
+     *
+     * @dataProvider getLexiconCategoriesProvider
+     *
+     * @param bool $withCategory
      */
-    public function testCanGetCreateLexiconCategory() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+    public function testGetCreateLexiconCategory($withCategory) {
+        if ($withCategory) {
+            $category = LexiconCategory::factory()->create();
+        }
 
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->admin)
             ->get('/admin/data/language/lexicon-categories/create')
             ->assertStatus(200);
+
+        if ($withCategory) {
+            $response->assertSeeText($category->name);
+        } else {
+            $response->assertViewHas('categoryOptions', function ($categories) {
+                return count($categories) == 0;
+            });
+        }
     }
 
     /**
      * Test edit lexicon category access.
+     *
+     * @dataProvider getLexiconCategoriesProvider
+     *
+     * @param bool $withCategory
      */
-    public function testCanGetEditLexiconCategory() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+    public function testGetEditLexiconCategory($withCategory) {
         $category = LexiconCategory::factory()->create();
 
-        $response = $this->actingAs($user)
+        if ($withCategory) {
+            $categoryOption = LexiconCategory::factory()->create();
+        }
+
+        $response = $this->actingAs($this->admin)
             ->get('/admin/data/language/lexicon-categories/edit/'.$category->id)
             ->assertStatus(200);
+
+        if ($withCategory) {
+            $response->assertSee($categoryOption->name);
+        } else {
+            $response->assertViewHas('categoryOptions', function ($categories) {
+                return count($categories) == 0;
+            });
+        }
     }
 
     /**
      * Test lexicon category creation.
+     *
+     * @dataProvider postLexiconCategoryProvider
+     *
+     * @param bool $withName
+     * @param bool $withParent
+     * @param bool $withDescription
+     * @param bool $withData
+     * @param bool $expected
      */
-    public function testCanPostCreateLexiconCategory() {
+    public function testPostCreateLexiconCategory($withName, $withParent, $withDescription, $withData, $expected) {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
 
-        // Define some basic template data
+        if ($withParent) {
+            $parent = LexiconCategory::factory()->create();
+        }
+
         $data = [
-            'name'        => $this->faker->unique()->domainWord(),
-            'description' => $this->faker->unique()->domainWord(),
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/language/lexicon-categories/create', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_categories', [
-            'name'        => $data['name'],
-            'description' => $data['description'],
-        ]);
-    }
-
-    /**
-     * Test lexicon category editing.
-     */
-    public function testCanPostEditLexiconCategory() {
-        $category = LexiconCategory::factory()->create();
-
-        // Define some basic template data
-        $data = [
-            'name' => $this->faker->unique()->domainWord(),
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/language/lexicon-categories/edit/'.$category->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_categories', [
-            'id'   => $category->id,
-            'name' => $data['name'],
-        ]);
-    }
-
-    /**
-     * Test lexicon category creation with a parent.
-     */
-    public function testCanPostCreateLexiconCategoryWithParent() {
-        $parent = LexiconCategory::factory()->create();
-
-        // Define some basic template data
-        $data = [
-            'name'      => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id,
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/language/lexicon-categories/create', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_categories', [
-            'name'      => $data['name'],
-            'parent_id' => $parent->id,
-        ]);
-    }
-
-    /**
-     * Test lexicon category editing with a parent.
-     */
-    public function testCanPostEditLexiconCategoryWithParent() {
-        $category = LexiconCategory::factory()->create();
-        $parent = LexiconCategory::factory()->create();
-
-        // Define some basic template data
-        $data = [
-            'name'      => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id,
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/language/lexicon-categories/edit/'.$category->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_categories', [
-            'id'        => $category->id,
-            'name'      => $data['name'],
-            'parent_id' => $parent->id,
-        ]);
-    }
-
-    /**
-     * Test lexicon category creation with some data.
-     */
-    public function testCanPostCreateLexiconCategoryWithData() {
-        // Ensure lexical classes are present to utilize
-        $this->artisan('add-lexicon-settings');
-
-        // Define some basic template data
-        $data = [
-            'name'                => $this->faker->unique()->domainWord(),
-            'description'         => $this->faker->unique()->domainWord(),
+            'name'        => $withName ? $this->faker->unique()->domainWord() : null,
+            'parent_id'   => $withParent ? $parent->id : null,
+            'description' => $withDescription ? $this->faker->unique()->domainWord() : null,
+        ] + ($withData ? [
             'property_name'       => [
                 0 => 'Number',
                 1 => 'Case',
@@ -260,37 +282,62 @@ class SubjectDataLanguageTest extends TestCase {
                 0 => 1,
                 1 => 1,
             ],
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+        ] : []);
 
         // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->admin)
             ->post('/admin/data/language/lexicon-categories/create', $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_categories', [
-            'name'        => $data['name'],
-            'description' => $data['description'],
-            'data'        => '{"1":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}}}}',
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('lexicon_categories', [
+                'name'         => $data['name'],
+                'parent_id'    => $data['parent_id'],
+                'description'  => $data['description'],
+                'data'         => $withData ? '{"1":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}}}}' : null,
+            ]);
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertDatabaseMissing('lexicon_categories', [
+                'name'         => $data['name'],
+                'parent_id'    => $data['parent_id'],
+                'description'  => $data['description'],
+                'data'         => $withData ? '{"1":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}}}}' : null,
+            ]);
+        }
     }
 
     /**
-     * Test lexicon category editing with some data.
+     * Test lexicon category editing.
+     *
+     * @dataProvider postLexiconCategoryProvider
+     *
+     * @param bool $withName
+     * @param bool $withParent
+     * @param bool $withDescription
+     * @param bool $withData
+     * @param bool $expected
      */
-    public function testCanPostEditLexiconCategoryWithData() {
+    public function testPostEditLexiconCategory($withName, $withParent, $withDescription, $withData, $expected) {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
 
         $category = LexiconCategory::factory()->create();
-        $class = LexiconSetting::all()->first();
 
-        // Define some basic template data
+        if ($withParent) {
+            $parent = LexiconCategory::factory()->create();
+        }
+
+        if ($withData) {
+            $class = LexiconSetting::all()->first();
+        }
+
         $data = [
-            'name'                => $this->faker->unique()->domainWord(),
+            'name'        => $withName ? $this->faker->unique()->domainWord() : null,
+            'parent_id'   => $withParent ? $parent->id : null,
+            'description' => $withDescription ? $this->faker->unique()->domainWord() : null,
+        ] + ($withData ? [
             'property_name'       => [
                 0 => 'Number',
                 1 => 'Case',
@@ -303,77 +350,73 @@ class SubjectDataLanguageTest extends TestCase {
                 0 => $class->id,
                 1 => $class->id,
             ],
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+        ] : []);
 
         // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->admin)
             ->post('/admin/data/language/lexicon-categories/edit/'.$category->id, $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_categories', [
-            'id'   => $category->id,
-            'name' => $data['name'],
-            'data' => '{"'.$class->id.'":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}}}}',
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('lexicon_categories', [
+                'id'           => $category->id,
+                'name'         => $data['name'],
+                'parent_id'    => $data['parent_id'],
+                'description'  => $data['description'],
+                'data'         => $withData ? '{"'.$class->id.'":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}}}}' : null,
+            ]);
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertDatabaseMissing('lexicon_categories', [
+                'id'           => $category->id,
+                'name'         => $data['name'],
+                'parent_id'    => $data['parent_id'],
+                'description'  => $data['description'],
+                'data'         => $withData ? '{"'.$class->id.'":{"properties":{"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]},"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative","Accusative","Dative"]}}}}' : null,
+            ]);
+        }
     }
 
-    /**
-     * Test lexicon category editing, removing data.
-     */
-    public function testCanPostEditLexiconCategoryRemovingData() {
-        $category = LexiconCategory::factory()->testData()->create();
-
-        // Define some basic template data
-        $data = [
-            'name' => $this->faker->unique()->domainWord(),
+    public static function postLexiconCategoryProvider() {
+        return [
+            'with name'                      => [1, 0, 0, 0, 1],
+            'with name, parent'              => [1, 1, 0, 0, 1],
+            'with name, description'         => [1, 0, 1, 0, 1],
+            'with name, data'                => [1, 0, 0, 1, 1],
+            'with name, parent, description' => [1, 1, 1, 0, 1],
+            'with name, parent, data'        => [1, 1, 0, 1, 1],
+            'with name, description, data'   => [1, 0, 1, 1, 1],
+            'with everything'                => [1, 1, 1, 1, 1],
+            'without name'                   => [0, 0, 0, 0, 0],
         ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/language/lexicon-categories/edit/'.$category->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_categories', [
-            'id'   => $category->id,
-            'name' => $data['name'],
-            'data' => null,
-        ]);
     }
 
     /**
      * Test lexicon category editing with extended data.
      */
-    public function testCanPostEditLexiconCategoryWithExtendedData() {
+    public function testPostEditLexiconCategoryWithExtendedData() {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
 
         $category = LexiconCategory::factory()->testData()->create();
         $class = LexiconSetting::all()->first();
 
-        // Define some basic template data
         $data = [
-            'name'                   => $this->faker->unique()->domainWord(),
-            'property_name'          => [
+            'name'          => $this->faker->unique()->domainWord(),
+            'property_name' => [
                 0 => 'Number',
                 1 => 'Case',
             ],
-            'property_dimensions'    => [
+            'property_dimensions' => [
                 0 => 'Singular,Plural',
                 1 => 'Nominative,Accusative,Dative',
             ],
-            'property_class'         => [
+            'property_class' => [
                 0 => $class->id,
                 1 => $class->id,
             ],
-            'declension_criteria'    => [
+            'declension_criteria' => [
                 $class->id => [
                     0 => 'a',
                     1 => null,
@@ -383,7 +426,7 @@ class SubjectDataLanguageTest extends TestCase {
                     5 => null,
                 ],
             ],
-            'declension_regex'       => [
+            'declension_regex' => [
                 $class->id => [
                     0 => '^',
                     1 => null,
@@ -405,15 +448,11 @@ class SubjectDataLanguageTest extends TestCase {
             ],
         ];
 
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->admin)
             ->post('/admin/data/language/lexicon-categories/edit/'.$category->id, $data);
 
-        // Directly verify that the appropriate change has occurred
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('lexicon_categories', [
             'id'   => $category->id,
             'name' => $data['name'],
@@ -422,29 +461,46 @@ class SubjectDataLanguageTest extends TestCase {
     }
 
     /**
-     * Test lexicon category editing, removing extended data.
+     * Test lexicon category editing, populating data from a parent.
      */
-    public function testCanPostEditLexiconCategoryRemovingExtendedData() {
-        // Ensure lexical classes are present to utilize
-        $this->artisan('add-lexicon-settings');
+    public function testPopulateLexiconEntryData() {
+        $parent = LexiconCategory::factory()->testData()->create();
+        $category = LexiconCategory::factory()->create([
+            'parent_id' => $parent->id,
+        ]);
 
-        $category = LexiconCategory::factory()->extendedData()->create();
-        $class = LexiconSetting::all()->first();
-
-        // Define some basic template data
         $data = [
-            'name' => $category->name,
+            'name'              => $this->faker->unique()->domainWord(),
+            'populate_settings' => 1,
         ];
 
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->admin)
             ->post('/admin/data/language/lexicon-categories/edit/'.$category->id, $data);
 
-        // Directly verify that the appropriate change has occurred
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('lexicon_categories', [
+            'id'   => $category->id,
+            'name' => $data['name'],
+            'data' => '{"1":{"properties":{"case":{"name":"Case","non_dimensional":0,"dimensions":["Nominative"]},"number":{"name":"Number","non_dimensional":0,"dimensions":["Singular","Plural"]}}}}',
+        ]);
+    }
+
+    /**
+     * Test lexicon category editing, removing data.
+     */
+    public function testRemoveLexiconCategoryData() {
+        $category = LexiconCategory::factory()->testData()->create();
+
+        $data = [
+            'name' => $this->faker->unique()->domainWord(),
+        ];
+
+        $response = $this
+            ->actingAs($this->admin)
+            ->post('/admin/data/language/lexicon-categories/edit/'.$category->id, $data);
+
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('lexicon_categories', [
             'id'   => $category->id,
             'name' => $data['name'],
@@ -454,86 +510,68 @@ class SubjectDataLanguageTest extends TestCase {
 
     /**
      * Test lexicon category delete access.
+     *
+     * @dataProvider getLexiconCategoriesProvider
+     *
+     * @param bool $withCategory
      */
-    public function testCanGetDeleteLexiconCategory() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+    public function testGetDeleteLexiconCategory($withCategory) {
         $category = LexiconCategory::factory()->create();
 
-        $response = $this->actingAs($user)
-            ->get('/admin/data/language/lexicon-categories/delete/'.$category->id)
+        $response = $this->actingAs($this->admin)
+            ->get('/admin/data/language/lexicon-categories/delete/'.($withCategory ? $category->id : mt_rand(500, 1000)))
             ->assertStatus(200);
+
+        if ($withCategory) {
+            $response->assertSeeText('You are about to delete the category '.$category->name);
+        } else {
+            $response->assertSeeText('Invalid category selected');
+        }
     }
 
     /**
      * Test lexicon category deletion.
-     * This should work.
+     *
+     * @dataProvider postDeleteLexiconCategoryProvider
+     *
+     * @param bool  $withCategory
+     * @param bool  $withChild
+     * @param bool  $expected
+     * @param mixed $withEntry
      */
-    public function testCanPostDeleteLexiconCategory() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Create a category to delete
+    public function testPostDeleteLexiconCategory($withCategory, $withChild, $withEntry, $expected) {
         $category = LexiconCategory::factory()->create();
 
-        // Count existing categories
-        $oldCount = LexiconCategory::all()->count();
+        if ($withChild) {
+            LexiconCategory::factory()->create([
+                'parent_id' => $category->id,
+            ]);
+        }
 
-        // Try to post data
+        if ($withEntry) {
+            $entry = LexiconEntry::factory()->category($category->id)->create();
+        }
+
         $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/language/lexicon-categories/delete/'.$category->id);
+            ->actingAs($this->admin)
+            ->post('/admin/data/language/lexicon-categories/delete/'.($withCategory ? $category->id : mt_rand(500, 1000)));
 
-        // Check that there are fewer categories than before
-        $this->assertTrue(LexiconCategory::all()->count() < $oldCount);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertModelMissing($category);
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertModelExists($category);
+        }
     }
 
-    /**
-     * Test lexicon category deletion with a lexicon entry.
-     * This shouldn't work.
-     */
-    public function testCannotPostDeleteLexiconCategoryWithEntry() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Count existing categories
-        $oldCount = LexiconCategory::all()->count();
-        // Create a category to delete
-        $category = LexiconCategory::factory()->create();
-        // Create an entry in the category
-        $entry = LexiconEntry::factory()->category($category->id)->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/language/lexicon-categories/delete/'.$category->id);
-
-        // Check that there are the same number of categories or more
-        $this->assertTrue(LexiconCategory::all()->count() >= $oldCount);
-    }
-
-    /**
-     * Test lexicon category deletion with a sub-category.
-     * This shouldn't work.
-     */
-    public function testCannotPostDeleteLexiconCategoryWithSubcategory() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Count existing categories
-        $oldCount = LexiconCategory::all()->count();
-        // Create a category to delete
-        $category = LexiconCategory::factory()->create();
-        // Create a subcategory of the category, and set its parent ID
-        $subcategory = LexiconCategory::factory()->create();
-        $subcategory->update(['parent_id' => $category->id]);
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/language/lexicon-categories/delete/'.$category->id);
-
-        // Check that there are the same number of categories or more
-        $this->assertTrue(LexiconCategory::all()->count() >= $oldCount);
+    public static function postDeleteLexiconCategoryProvider() {
+        return [
+            'with category'        => [1, 0, 0, 1],
+            'with category, child' => [1, 1, 0, 0],
+            'with category, entry' => [1, 0, 1, 0],
+            'with everything'      => [1, 1, 1, 0],
+            'without category'     => [0, 0, 0, 0],
+        ];
     }
 }

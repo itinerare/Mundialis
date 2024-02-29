@@ -568,6 +568,11 @@ class SubjectService extends Service {
 
             // Overwrite with data from subject template if necessary
             if (isset($data['populate_settings']) && $data['populate_settings'] && $category->parent && isset($category->parent->data)) {
+                // Fallback for testing purposes
+                if (!is_array($category->parent->data)) {
+                    $category->parent->data = json_decode($category->parent->data, true);
+                }
+
                 $data['data'] = $category->parent->data;
             }
 
