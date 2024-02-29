@@ -35,13 +35,20 @@ jobs:
     - name: Run pint
       run: composer lint
 
+    - name: Import GPG key
+      uses: https://github.com/crazy-max/ghaction-import-gpg@v4
+      with:
+        gpg_private_key: ${{ secrets.CI_GPG }}
+        git_user_signingkey: true
+        git_commit_gpgsign: true
+
     - name: Commit changes
       uses: https://github.com/EndBug/add-and-commit@v9
       with:
-          message: 'refactor: fix PHP styling'
-          default_author: github_actions
-          author_name: ${{ vars.COMMITTER_NAME }}
-          author_email: ${{ vars.COMMITTER_EMAIL }}
+        message: 'refactor: fix PHP styling'
+        default_author: github_actions
+        author_name: ${{ vars.COMMITTER_NAME }}
+        author_email: ${{ vars.COMMITTER_EMAIL }}
 
   blade-formatter:
     runs-on: docker
@@ -64,15 +71,22 @@ jobs:
 
     - name: Run blade-formatter
       run: npm run format
+      
+    - name: Import GPG key
+      uses: https://github.com/crazy-max/ghaction-import-gpg@v4
+      with:
+        gpg_private_key: ${{ secrets.CI_GPG }}
+        git_user_signingkey: true
+        git_commit_gpgsign: true
 
     - name: Commit changes
       uses: https://github.com/EndBug/add-and-commit@v9
       with:
-          pull: '--rebase --autostash'
-          message: 'refactor: fix blade formatting'
-          default_author: github_actions
-          author_name: ${{ vars.COMMITTER_NAME }}
-          author_email: ${{ vars.COMMITTER_EMAIL }}
+        pull: '--rebase --autostash'
+        message: 'refactor: fix blade formatting'
+        default_author: github_actions
+        author_name: ${{ vars.COMMITTER_NAME }}
+        author_email: ${{ vars.COMMITTER_EMAIL }}
 
   rebuild-mix-assets:
     runs-on: docker
@@ -95,6 +109,13 @@ jobs:
 
     - name: Run Mix
       run: npm run prod
+      
+    - name: Import GPG key
+      uses: https://github.com/crazy-max/ghaction-import-gpg@v4
+      with:
+        gpg_private_key: ${{ secrets.CI_GPG }}
+        git_user_signingkey: true
+        git_commit_gpgsign: true
 
     - name: Commit changes
       uses: https://github.com/EndBug/add-and-commit@v9
