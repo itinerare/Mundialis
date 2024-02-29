@@ -155,7 +155,7 @@
                 return $key = $tag['label'];
             })->toArray() as $key => $answer)
             <div class="choice-wrapper">
-                <label>{{ Form::checkbox('utility_tag[]', $key, $page->utilityTags()->tagSearch($key)->first() ? $key : null, ['class' => 'mr-1']) }}
+                <label>{{ Form::checkbox('utility_tag[]',$key,$page->utilityTags()->tagSearch($key)->first()? $key: null,['class' => 'mr-1']) }}
                     {{ $answer }}</label>
             </div>
         @endforeach
