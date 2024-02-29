@@ -844,6 +844,10 @@ class SubjectService extends Service {
             }
         }
 
+        if (!isset($data['data'])) {
+            $data['data'] = null;
+        }
+
         return $data;
     }
 }
