@@ -739,6 +739,11 @@ class SubjectService extends Service {
 
         // Perform operations on impacted categories
         foreach ($categories as $key=>$category) {
+            // Fallback for testing purposes
+            if (isset($category->data) && !is_array($category->data)) {
+                $category->data = json_decode($category->data, true);
+            }
+
             $categoryData[$key] = $category->data;
 
             // Perform any removals

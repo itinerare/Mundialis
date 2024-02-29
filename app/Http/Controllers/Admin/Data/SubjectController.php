@@ -59,6 +59,11 @@ class SubjectController extends Controller {
 
         $template = SubjectTemplate::where('subject', $subject['key'])->first();
 
+        // Fallback for testing purposes
+        if (isset($template->data) && !is_array($template->data)) {
+            $template->data = json_decode($template->data, true);
+        }
+
         return view('admin.subjects.template', [
             'subject'  => $subject,
             'template' => $template ? $template : new SubjectTemplate,
