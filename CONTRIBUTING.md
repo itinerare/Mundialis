@@ -79,7 +79,7 @@ If you are fixing bug(s), there are a few possibilities depending on the circums
 - If you are making a hotfix for a critical issue present **in the current release**, create a new hotfix branch off of `main`, make the necessary changes, and PR it back into `main`.
 
 ### Code Style
-Contributions are recommended to follow the style of the project's existing code. However, PHP styling and view formatting will automatically be adjusted for contributions on creation of a pull request, so following these formats is not required.
+Contributions are recommended to follow the style of the project's existing code. However, PHP styling and view formatting will automatically be adjusted for contributions on creation of a pull request.
 
 If you wish to apply these changes locally, you can run or dry-run them via:
 - Fix PHP styling with `composer lint` or dry run with `composer sniff`
