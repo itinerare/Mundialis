@@ -30,9 +30,11 @@ If you want to start contributing to the project's code, please follow these gui
 - Before adding a new feature, ask about it in the [issue tracker](https://github.com/itinerare/Mundialis/issues) or the [support Discord](https://discord.gg/mVqUzgQXMd), or check if there is an existing issue to make sure the new functionality is desired. 
 - **Changes that will consist of more than 50 lines of code should be discussed via an [issue](https://github.com/itinerare/Mundialis/issues) or the [support Discord](https://discord.gg/mVqUzgQXMd)**, so that you don't spend too much time implementing something that might not be accepted.
 - Pull requests that make many changes using an automated tool, like for spell fixing, styling, etc. will not be accepted. An exception would be if the changes have been discussed and someone has agreed to review **and test** the pull request.
-- It's recommended to run tests for at minimum the general area(s) you are modifying! While all tests are run by default on creation of a pull request, these tests *must* pass, and running them locally first can help catch issues before making a pull request. Note that if your changes require tests to be added and/or updated, you **must** do so. For more information on working with tests, see [here](https://github.com/itinerare/Mundialis/wiki/Working-With-Tests).
+- It's recommended to run tests for at minimum the general area(s) you are modifying! While all tests are run by default on creation of a pull request, these tests *must* pass, and running them locally first can help catch issues before making a pull request. Note that if your changes require tests to be added and/or updated, you **must** do so. For more information on working with tests, see [here](https://code.itinerare.net/itinerare/Mundialis/wiki/Working-With-Tests).
 - Be sure to include any instructions, such as running `php artisan migrate`, in your pull request!
 - If in doubt, provide more information, not less. It can sometimes be difficult to tell from code alone what the purpose of a change is, so you should explain as best you can.
+
+Note that while the project is primarily located at https://code.itinerare.net/itinerare/Mundialis, contributions are accepted via [GitHub](https://github.com/itinerare/Mundialis) for convenience.
 
 ### General Architecture
 
@@ -77,11 +79,11 @@ If you are fixing bug(s), there are a few possibilities depending on the circums
 - If you are making a hotfix for a critical issue present **in the current release**, create a new hotfix branch off of `main`, make the necessary changes, and PR it back into `main`.
 
 ### Code Style
-Contributions are recommended to follow the style of the project's existing code. However, PHP styling will automatically be adjusted for contributions on creation of a pull request or subsequent merge commit.
+Contributions are recommended to follow the style of the project's existing code. However, PHP styling and view formatting will automatically be adjusted for contributions on creation of a pull request, so following these formats is not required.
 
 If you wish to apply these changes locally, you can run or dry-run them via:
-- Run with `composer lint` 
-- Dry run with `composer sniff`
+- Fix PHP styling with `composer lint` or dry run with `composer sniff`
+- Format views with `npm run format`
 
 ### Commit Formatting
 Commits to this project follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) formatting. Contributors are *highly recommended* to follow this formatting when making pull requests (it also makes it very easy to make pull requests!). It is also recommended to focus on atomic commits (commit each fix or task as a separate change, and only commit when a block of work is complete)-- this makes it much easier both to review and manage changes.
