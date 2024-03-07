@@ -103,8 +103,20 @@ class SubjectService extends Service {
             if (isset($data['populate_template']) && $data['populate_template']) {
                 if (isset($data['parent_id'])) {
                     $parent = SubjectCategory::find($data['parent_id']);
+
+                    if (!$parent) {
+                        throw new \Exception('Invalid category selected.');
+                    }
+                } else {
+                    $parent = SubjectTemplate::where('subject', $subject)->first();
                 }
-                $data['data'] = isset($parent) && $parent ? $parent->data : SubjectTemplate::where('subject', $subject)->first()->data;
+
+                // Fallback for testing purposes
+                if (!is_array($parent->data)) {
+                    $parent->data = json_decode($parent->data, true);
+                }
+
+                $data['data'] = $parent->data;
             }
 
             // Create category
@@ -163,7 +175,18 @@ class SubjectService extends Service {
 
             // Overwrite with data from subject template if necessary
             if (isset($data['populate_template']) && $data['populate_template']) {
-                $data['data'] = $category->parent ? $category->parent->data : $category->subjectTemplate->data;
+                if ($category->parent) {
+                    $parent = $category->parent;
+                } else {
+                    $parent = $category->subjectTemplate;
+                }
+
+                // Fallback for testing purposes
+                if (!is_array($parent->data)) {
+                    $parent->data = json_decode($parent->data, true);
+                }
+
+                $data['data'] = $parent->data;
             }
 
             // Check if changes should cascade, and if so, perform comparison
@@ -695,6 +718,10 @@ class SubjectService extends Service {
                     'is_subsection' => $data['field_is_subsection'][$key],
                 ];
             }
+        }
+
+        if (!isset($data['data'])) {
+            $data['data'] = null;
         }
 
         return $data;
