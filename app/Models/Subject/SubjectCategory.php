@@ -48,7 +48,7 @@ class SubjectCategory extends Model {
      */
     public static $createRules = [
         'name'  => 'required|unique:subject_categories',
-        'image' => 'mimes:png',
+        'image' => 'nullable|mimes:png',
     ];
 
     /**
@@ -58,7 +58,7 @@ class SubjectCategory extends Model {
      */
     public static $updateRules = [
         'name'  => 'required',
-        'image' => 'mimes:png',
+        'image' => 'nullable|mimes:png',
     ];
 
     /**********************************************************************************************
