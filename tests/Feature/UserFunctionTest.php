@@ -66,6 +66,8 @@ class UserFunctionTest extends TestCase {
         // Check that the file is now present
         $this->
             assertTrue(File::exists(public_path('images/avatars/'.$this->user->id.'.png')));
+
+        unlink(public_path('images/avatars/'.$this->user->id.'.png'));
     }
 
     /**
