@@ -8,7 +8,9 @@ use App\Models\Subject\SubjectTemplate;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class SubjectDataTest extends TestCase {
@@ -17,7 +19,7 @@ class SubjectDataTest extends TestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->user = User::factory()->admin()->make();
+        $this->admin = User::factory()->admin()->make();
     }
 
     /******************************************************************************
@@ -41,7 +43,7 @@ class SubjectDataTest extends TestCase {
             $unrelated = SubjectCategory::factory()->subject($subject != 'misc' ? 'misc' : 'people')->create();
         }
 
-        $response = $this->actingAs($this->user)
+        $response = $this->actingAs($this->admin)
             ->get('/admin/data/'.$subject)
             ->assertStatus(200);
 
@@ -100,7 +102,7 @@ class SubjectDataTest extends TestCase {
             SubjectTemplate::factory()->subject($subject)->create();
         }
 
-        $response = $this->actingAs($this->user)
+        $response = $this->actingAs($this->admin)
             ->get('/admin/data/'.$subject.'/edit')
             ->assertStatus($status);
 
@@ -171,7 +173,7 @@ class SubjectDataTest extends TestCase {
         }
 
         $response = $this
-            ->actingAs($this->user)
+            ->actingAs($this->admin)
             ->post('/admin/data/'.$subject.'/edit', $data);
 
         if ($expected) {
@@ -234,122 +236,229 @@ class SubjectDataTest extends TestCase {
 
     /**
      * Test subject category create access.
+     *
+     * @dataProvider getSubjectCategoryProvider
+     *
+     * @param bool $withCategory
      */
-    public function testCanGetCreateSubjectCategory() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+    public function testGetCreateSubjectCategory($withCategory) {
+        if ($withCategory) {
+            $category = SubjectCategory::factory()->create();
+        }
 
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->admin)
             ->get('/admin/data/misc/create')
             ->assertStatus(200);
+
+        if ($withCategory) {
+            $response->assertSeeText($category->name);
+        } else {
+            $response->assertViewHas('categoryOptions', function ($categories) {
+                return count($categories) == 0;
+            });
+        }
+    }
+
+    public static function getSubjectCategoryProvider() {
+        return [
+            'basic'         => [0],
+            'with category' => [1],
+        ];
     }
 
     /**
      * Test subject category edit access.
+     *
+     * @dataProvider getSubjectCategoryProvider
+     *
+     * @param bool $withCategory
      */
-    public function testCanGetEditSubjectCategory() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+    public function testGetEditSubjectCategory($withCategory) {
         $category = SubjectCategory::factory()->create();
 
-        $response = $this->actingAs($user)
+        if ($withCategory) {
+            $categoryOption = SubjectCategory::factory()->create();
+        }
+
+        $response = $this->actingAs($this->admin)
             ->get('/admin/data/categories/edit/'.$category->id)
             ->assertStatus(200);
+
+        if ($withCategory) {
+            $response->assertSee($categoryOption->name);
+        } else {
+            $response->assertViewHas('categoryOptions', function ($categories) {
+                return count($categories) == 0;
+            });
+        }
     }
 
     /**
-     * Test subject category creation with minimal data.
+     * Test subject category creation.
+     *
+     * @dataProvider postSubjectCategoryProvider
+     *
+     * @param bool $withName
+     * @param bool $withParent
+     * @param bool $withDescription
+     * @param bool $withImage
+     * @param bool $populateData
+     * @param bool $expected
      */
-    public function testCanPostCreateEmptySubjectCategory() {
-        // Define some basic data
+    public function testPostCreateSubjectCategory($withName, $withParent, $withDescription, $withImage, $populateData, $expected) {
+        if ($withParent) {
+            $parent = SubjectCategory::factory()->testData()->create();
+        }
+
+        if ($withImage) {
+            Storage::fake('public');
+            $file = UploadedFile::fake()->image('test_image.png');
+        }
+
+        if ($populateData && !$withParent) {
+            SubjectTemplate::factory()->create();
+        }
+
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
+            'name'              => $withName ? $this->faker->unique()->domainWord() : null,
+            'parent_id'         => $withParent ? $parent->id : null,
+            'description'       => $withDescription ? $this->faker->unique()->domainWord() : null,
+            'populate_template' => $populateData ? 1 : null,
+            'image'             => $withImage ? $file : null,
         ];
 
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->admin)
             ->post('/admin/data/misc/create', $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('subject_categories', [
-            'subject' => 'misc',
-            'name'    => $data['name'],
-            'data'    => null,
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('subject_categories', [
+                'subject'     => 'misc',
+                'name'        => $data['name'],
+                'parent_id'   => $data['parent_id'],
+                'description' => $data['description'],
+                'has_image'   => $withImage,
+                'data'        => $populateData ? ($withParent ? '{"sections":{"test_category_section":{"name":"Test Category Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}' : '{"sections":{"test_subject_section":{"name":"Test Subject Section"}},"infobox":{"test_subject_field":{"label":"Test Subject Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}') : null,
+            ]);
+
+            if ($withImage) {
+                $category = SubjectCategory::where('subject', 'misc')->where('name', $data['name'])->first();
+
+                $this->assertTrue(File::exists(public_path('images/data/categories/'.$category->id.'-image.png')));
+
+                unlink(public_path('images/data/categories/'.$category->id.'-image.png'));
+            }
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertDatabaseMissing('subject_categories', [
+                'subject'     => 'misc',
+                'name'        => $data['name'],
+                'parent_id'   => $data['parent_id'],
+                'description' => $data['description'],
+                'has_image'   => $withImage,
+                'data'        => $populateData ? ($withParent ? '{"sections":{"test_category_section":{"name":"Test Category Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}' : '{"sections":{"test_subject_section":{"name":"Test Subject Section"}},"infobox":{"test_subject_field":{"label":"Test Subject Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}') : null,
+            ]);
+        }
     }
 
     /**
-     * Test subject category editing with minimal data.
+     * Test subject category editing.
+     *
+     * @dataProvider postSubjectCategoryProvider
+     *
+     * @param bool $withName
+     * @param bool $withParent
+     * @param bool $withDescription
+     * @param bool $withImage
+     * @param bool $populateData
+     * @param bool $expected
      */
-    public function testCanPostEditEmptySubjectCategory() {
-        $category = SubjectCategory::factory()->testData()->create();
+    public function testPostEditSubjectCategory($withName, $withParent, $withDescription, $withImage, $populateData, $expected) {
+        if ($withParent) {
+            $parent = SubjectCategory::factory()->testData()->create();
+        }
 
-        // Define some basic data
+        $category = SubjectCategory::factory()->testData()->create([
+            'parent_id' => $withParent ? $parent->id : null,
+        ]);
+
+        if ($withImage) {
+            Storage::fake('public');
+            $file = UploadedFile::fake()->image('test_image.png');
+        }
+
+        if ($populateData && !$withParent) {
+            SubjectTemplate::factory()->create();
+        }
+
         $data = [
-            'name' => $this->faker->unique()->domainWord(),
+            'name'              => $withName ? $this->faker->unique()->domainWord() : null,
+            'parent_id'         => $withParent ? $parent->id : null,
+            'description'       => $withDescription ? $this->faker->unique()->domainWord() : null,
+            'populate_template' => $populateData ? 1 : null,
+            'image'             => $withImage ? $file : null,
         ];
 
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->admin)
             ->post('/admin/data/categories/edit/'.$category->id, $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('subject_categories', [
-            'id'   => $category->id,
-            'name' => $data['name'],
-            'data' => null,
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('subject_categories', [
+                'id'          => $category->id,
+                'subject'     => 'misc',
+                'name'        => $data['name'],
+                'parent_id'   => $data['parent_id'],
+                'description' => $data['description'],
+                'has_image'   => $withImage,
+                'data'        => $populateData ? ($withParent ? '{"sections":{"test_category_section":{"name":"Test Category Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}' : '{"sections":{"test_subject_section":{"name":"Test Subject Section"}},"infobox":{"test_subject_field":{"label":"Test Subject Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}') : null,
+            ]);
+
+            if ($withImage) {
+                $category = SubjectCategory::where('subject', 'misc')->where('name', $data['name'])->first();
+
+                $this->assertTrue(File::exists(public_path('images/data/categories/'.$category->id.'-image.png')));
+
+                unlink(public_path('images/data/categories/'.$category->id.'-image.png'));
+            }
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertDatabaseMissing('subject_categories', [
+                'id'          => $category->id,
+                'subject'     => 'misc',
+                'name'        => $data['name'],
+                'parent_id'   => $data['parent_id'],
+                'description' => $data['description'],
+                'has_image'   => $withImage,
+                'data'        => $populateData ? ($withParent ? '{"sections":{"test_category_section":{"name":"Test Category Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}' : '{"sections":{"test_subject_section":{"name":"Test Subject Section"}},"infobox":{"test_subject_field":{"label":"Test Subject Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}') : null,
+            ]);
+        }
     }
 
-    /**
-     * Test subject category creation with basic data.
-     */
-    public function testCanPostCreateSubjectCategory() {
-        // Define some basic template data
-        $data = [
-            'name'            => $this->faker->unique()->domainWord(),
-            'section_key'     => [0 => 'test_category_section'],
-            'section_name'    => [0 => 'Test Section'],
-            'infobox_key'     => [0 => 'test_category_field'],
-            'infobox_type'    => [0 => 'text'],
-            'infobox_label'   => [0 => 'Test Field'],
-            'infobox_rules'   => [0 => null],
-            'infobox_choices' => [0 => null],
-            'infobox_value'   => [0 => null],
-            'infobox_help'    => [0 => null],
+    public static function postSubjectCategoryProvider() {
+        return [
+            'with name'                        => [1, 0, 0, 0, 0, 1],
+            'with name, parent'                => [1, 1, 0, 0, 0, 1],
+            'with name, description'           => [1, 0, 1, 0, 0, 1],
+            'with name, parent, description'   => [1, 1, 1, 0, 0, 1],
+            'with name, image'                 => [1, 0, 0, 1, 0, 1],
+            'with name, parent, image'         => [1, 1, 0, 1, 0, 1],
+            'with name, description, image'    => [1, 0, 1, 1, 0, 1],
+            'with name, populate data'         => [1, 0, 0, 0, 1, 1],
+            'with name, parent, populate data' => [1, 1, 0, 0, 1, 1],
+            'with everything'                  => [1, 1, 1, 1, 0, 1],
+            'without name'                     => [0, 0, 0, 0, 0, 0],
         ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/misc/create', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('subject_categories', [
-            'subject' => 'misc',
-            'name'    => $data['name'],
-            'data'    => '{"sections":{"test_category_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
-        ]);
     }
 
     /**
-     * Test subject category editing with basic data.
+     * Test subject category editing with data.
      */
-    public function testCanPostEditSubjectCategory() {
+    public function testPostEditSubjectCategoryWithData() {
         $category = SubjectCategory::factory()->create();
 
-        // Define some basic template data
         $data = [
             'name'            => $this->faker->unique()->domainWord(),
             'section_key'     => [0 => 'test_category_section'],
@@ -363,15 +472,11 @@ class SubjectDataTest extends TestCase {
             'infobox_help'    => [0 => null],
         ];
 
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->admin)
             ->post('/admin/data/categories/edit/'.$category->id, $data);
 
-        // Directly verify that the appropriate change has occurred
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('subject_categories', [
             'id'   => $category->id,
             'name' => $data['name'],
@@ -380,163 +485,14 @@ class SubjectDataTest extends TestCase {
     }
 
     /**
-     * Test subject category creating with template population.
-     */
-    public function testCanPostCreateSubjectCategoryWithPopulatedTemplate() {
-        // Ensure 'things' has specific template data to use
-        if (DB::table('subject_templates')->where('subject', 'things')->first()) {
-            DB::table('subject_templates')->where('subject', 'things')->update(
-                [
-                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
-                ]
-            );
-        } else {
-            DB::table('subject_templates')->insert([
-                [
-                    'subject' => 'things',
-                    'data'    => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
-                ],
-            ]);
-        }
-
-        // Define some basic template data
-        $data = [
-            'name'              => $this->faker->unique()->domainWord(),
-            'populate_template' => 1,
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/things/create', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('subject_categories', [
-            'subject' => 'things',
-            'name'    => $data['name'],
-            'data'    => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
-        ]);
-    }
-
-    /**
-     * Test subject category editing with template population.
-     */
-    public function testCanPostEditSubjectCategoryWithPopulatedTemplate() {
-        // Ensure 'things' has specific template data to use
-        if (DB::table('subject_templates')->where('subject', 'things')->first()) {
-            DB::table('subject_templates')->where('subject', 'things')->update(
-                [
-                    'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
-                ]
-            );
-        } else {
-            DB::table('subject_templates')->insert([
-                [
-                    'subject' => 'things',
-                    'data'    => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
-                ],
-            ]);
-        }
-
-        // Define some basic template data
-        $data = [
-            'name'              => $this->faker->unique()->domainWord(),
-            'populate_template' => 1,
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        $category = SubjectCategory::factory()->subject('things')->testData()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/categories/edit/'.$category->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('subject_categories', [
-            'id'   => $category->id,
-            'name' => $data['name'],
-            'data' => '{"sections":{"test_section":{"name":"Test Section"}},"infobox":{"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
-        ]);
-    }
-
-    /**
-     * Test subject category creation with a parent.
-     */
-    public function testCanPostCreateSubjectCategoryWithParent() {
-        $parent = SubjectCategory::factory()->subject('places')->create();
-
-        // Define some basic template data
-        $data = [
-            'name'      => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id,
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/places/create', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('subject_categories', [
-            'subject'   => 'places',
-            'name'      => $data['name'],
-            'parent_id' => $parent->id,
-        ]);
-    }
-
-    /**
-     * Test subject category editing with a parent.
-     */
-    public function testCanPostEditSubjectCategoryWithParent() {
-        $category = SubjectCategory::factory()->subject('places')->create();
-        $parent = SubjectCategory::factory()->subject('places')->create();
-
-        // Define some basic template data
-        $data = [
-            'name'      => $this->faker->unique()->domainWord(),
-            'parent_id' => $parent->id,
-        ];
-
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/categories/edit/'.$category->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('subject_categories', [
-            'id'        => $category->id,
-            'name'      => $data['name'],
-            'parent_id' => $parent->id,
-        ]);
-    }
-
-    /**
      * Test subject template editing and cascading.
      */
-    public function testCanPostEditSubjectCategoryAndCascade() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Create a category to cascade changes to
+    public function testPostEditSubjectCategoryAndCascade() {
         $category = SubjectCategory::factory()->subject('concepts')->create();
         $recipient = SubjectCategory::factory()->subject('concepts')->testData()->create();
 
-        // Set the recipient's parent ID
         $recipient->update(['parent_id' => $category->id]);
 
-        // Define some basic template data
         $data = [
             'name'             => $category->name,
             'section_key'      => [0 => 'test_section'],
@@ -551,12 +507,11 @@ class SubjectDataTest extends TestCase {
             'cascade_template' => 1,
         ];
 
-        // Then attempt to edit the cascading category
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->admin)
             ->post('/admin/data/categories/edit/'.$category->id, $data);
 
-        // Directly verify that the appropriate change has occurred
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('subject_categories', [
             'id'   => $recipient->id,
             'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
@@ -566,20 +521,14 @@ class SubjectDataTest extends TestCase {
     /**
      * Test subject template editing and cascading recursively.
      */
-    public function testCanPostEditSubjectCategoryAndCascadeRecursively() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Create a category to cascade changes to
+    public function testPostEditSubjectCategoryAndCascadeRecursively() {
         $category = SubjectCategory::factory()->subject('concepts')->create();
         $child = SubjectCategory::factory()->subject('concepts')->testData()->create();
         $grandchild = SubjectCategory::factory()->subject('concepts')->testData()->create();
 
-        // Set the recipient's parent ID
         $child->update(['parent_id' => $category->id]);
         $grandchild->update(['parent_id' => $child->id]);
 
-        // Define some basic template data
         $data = [
             'name'                => $category->name,
             'section_key'         => [0 => 'test_section'],
@@ -595,12 +544,11 @@ class SubjectDataTest extends TestCase {
             'cascade_recursively' => 1,
         ];
 
-        // Then attempt to edit the cascading category
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->admin)
             ->post('/admin/data/categories/edit/'.$category->id, $data);
 
-        // Directly verify that the appropriate change has occurred
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('subject_categories', [
             'id'   => $grandchild->id,
             'data' => '{"sections":{"test_category_section":{"name":"Test Category Section"},"test_section":{"name":"Test Section"}},"infobox":{"test_category_field":{"label":"Test Category Field","type":"text","rules":null,"choices":null,"value":null,"help":null},"test_field":{"label":"Test Field","type":"text","rules":null,"choices":null,"value":null,"help":null}}}',
@@ -609,86 +557,68 @@ class SubjectDataTest extends TestCase {
 
     /**
      * Test subject category delete access.
+     *
+     * @dataProvider getSubjectCategoryProvider
+     *
+     * @param bool $withCategory
      */
-    public function testCanGetDeleteSubjectCategory() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
+    public function testGetDeleteSubjectCategory($withCategory) {
         $category = SubjectCategory::factory()->create();
 
-        $response = $this->actingAs($user)
-            ->get('/admin/data/categories/delete/'.$category->id)
+        $response = $this->actingAs($this->admin)
+            ->get('/admin/data/categories/delete/'.($withCategory ? $category->id : mt_rand(500, 1000)))
             ->assertStatus(200);
+
+        if ($withCategory) {
+            $response->assertSeeText('You are about to delete the category '.$category->name);
+        } else {
+            $response->assertSeeText('Invalid category selected');
+        }
     }
 
     /**
      * Test subject category deletion.
-     * This should work.
+     *
+     * @dataProvider postDeleteSubjectCategoryProvider
+     *
+     * @param bool $withCategory
+     * @param bool $withChild
+     * @param bool $withPage
+     * @param bool $expected
      */
-    public function testCanPostDeleteSubjectCategory() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Create a category to delete
+    public function testPostDeleteSubjectCategory($withCategory, $withChild, $withPage, $expected) {
         $category = SubjectCategory::factory()->create();
 
-        // Count existing categories
-        $oldCount = SubjectCategory::all()->count();
+        if ($withChild) {
+            SubjectCategory::factory()->create([
+                'parent_id' => $category->id,
+            ]);
+        }
 
-        // Try to post data
+        if ($withPage) {
+            Page::factory()->category($category->id)->create();
+        }
+
         $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/categories/delete/'.$category->id);
+            ->actingAs($this->admin)
+            ->post('/admin/data/categories/delete/'.($withCategory ? $category->id : mt_rand(500, 1000)));
 
-        // Check that there are fewer categories than before
-        $this->assertTrue(SubjectCategory::all()->count() < $oldCount);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertModelMissing($category);
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertModelExists($category);
+        }
     }
 
-    /**
-     * Test subject category deletion with a page.
-     * This shouldn't work.
-     */
-    public function testCannotPostDeleteSubjectCategoryWithPage() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Count existing categories
-        $oldCount = SubjectCategory::all()->count();
-        // Create a category to delete
-        $category = SubjectCategory::factory()->create();
-        // Create a page in the category
-        $page = Page::factory()->category($category->id)->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/categories/delete/'.$category->id);
-
-        // Check that there are the same number of categories or more
-        $this->assertTrue(SubjectCategory::all()->count() >= $oldCount);
-    }
-
-    /**
-     * Test subject category deletion with a sub-category.
-     * This shouldn't work.
-     */
-    public function testCannotPostDeleteSubjectCategoryWithSubcategory() {
-        // Make a temporary admin
-        $user = User::factory()->admin()->make();
-
-        // Count existing categories
-        $oldCount = SubjectCategory::all()->count();
-        // Create a category to delete
-        $category = SubjectCategory::factory()->create();
-        // Create a subcategory of the category, and set its parent ID
-        $subcategory = SubjectCategory::factory()->create();
-        $subcategory->update(['parent_id' => $category->id]);
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/data/categories/delete/'.$category->id);
-
-        // Check that there are the same number of categories or more
-        $this->assertTrue(SubjectCategory::all()->count() >= $oldCount);
+    public static function postDeleteSubjectCategoryProvider() {
+        return [
+            'with category'        => [1, 0, 0, 1],
+            'with category, child' => [1, 1, 0, 0],
+            'with category, page'  => [1, 0, 1, 0],
+            'with everything'      => [1, 1, 1, 0],
+            'without category'     => [0, 0, 0, 0],
+        ];
     }
 }
