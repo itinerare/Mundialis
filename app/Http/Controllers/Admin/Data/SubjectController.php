@@ -195,7 +195,7 @@ class SubjectController extends Controller {
      */
     public function postDeleteCategory(Request $request, SubjectService $service, $id) {
         $category = SubjectCategory::find($id);
-        $subject = $category->subject;
+        $subject = $category?->subject;
         if ($id && $service->deleteCategory($category, Auth::user())) {
             flash('Category deleted successfully.')->success();
         } else {

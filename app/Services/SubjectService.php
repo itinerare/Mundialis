@@ -235,7 +235,9 @@ class SubjectService extends Service {
         DB::beginTransaction();
 
         try {
-            // Check first if the category is currently in use
+            if (!$category) {
+                throw new \Exception('Invalid category selected.');
+            }
             if (SubjectCategory::where('parent_id', $category->id)->exists()) {
                 throw new \Exception('A sub-category of this category exists. Please move or delete it first.');
             }
