@@ -50,7 +50,8 @@ Route::controller(SubjectController::class)->group(function () {
 Route::prefix('pages')->group(function () {
     Route::controller(PageController::class)->group(function () {
         Route::get('{id}.', 'getPage');
-        Route::get('{id}.{slug?}', 'getPage');
+        Route::get('{id}.{slug?}', 'getPage')
+            ->whereNumber('id');
         Route::get('{id}/history', 'getPageHistory')
             ->whereNumber('id');
         Route::get('{page_id}/history/{id}', 'getPageVersion')
