@@ -17,6 +17,14 @@ class SubjectDataLanguageTest extends TestCase {
         parent::setUp();
 
         $this->admin = User::factory()->admin()->create();
+
+        // Delete any lexicon settings/categories present due to other tests
+        if (LexiconSetting::query()->count()) {
+            LexiconSetting::query()->delete();
+        }
+        if (LexiconCategory::query()->count()) {
+            LexiconCategory::query()->delete();
+        }
     }
 
     /******************************************************************************

@@ -19,6 +19,14 @@ class SubjectDataTimeTest extends TestCase {
 
         $this->admin = User::factory()->admin()->create();
         $this->category = SubjectCategory::factory()->subject('time')->create();
+
+        // Delete any time divisions/chronologies present due to other tests
+        if (TimeDivision::query()->count()) {
+            TimeDivision::query()->delete();
+        }
+        if (TimeChronology::query()->count()) {
+            TimeChronology::query()->delete();
+        }
     }
 
     /******************************************************************************

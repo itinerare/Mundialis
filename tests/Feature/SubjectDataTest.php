@@ -20,6 +20,11 @@ class SubjectDataTest extends TestCase {
         parent::setUp();
 
         $this->admin = User::factory()->admin()->make();
+
+        // Delete any subject categories present due to other tests
+        if (SubjectCategory::query()->count()) {
+            SubjectCategory::query()->delete();
+        }
     }
 
     /******************************************************************************
