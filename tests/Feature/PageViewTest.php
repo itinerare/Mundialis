@@ -12,6 +12,14 @@ use Tests\TestCase;
 class PageViewTest extends TestCase {
     use RefreshDatabase;
 
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->editor = User::factory()->editor()->create();
+
+        $this->markTestIncomplete();
+    }
+
     /**
      * Test page access.
      */

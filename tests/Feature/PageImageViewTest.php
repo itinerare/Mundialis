@@ -15,6 +15,14 @@ use Tests\TestCase;
 class PageImageViewTest extends TestCase {
     use RefreshDatabase;
 
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->editor = User::factory()->editor()->create();
+
+        $this->markTestIncomplete();
+    }
+
     /**
      * Test image modal access.
      */

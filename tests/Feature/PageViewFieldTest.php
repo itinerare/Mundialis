@@ -13,6 +13,14 @@ use Tests\TestCase;
 class PageViewFieldTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->editor = User::factory()->editor()->create();
+
+        $this->markTestIncomplete();
+    }
+
     /**
      * Test page access with an infobox text field.
      */

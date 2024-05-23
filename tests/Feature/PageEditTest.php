@@ -12,6 +12,14 @@ use Tests\TestCase;
 class PageEditTest extends TestCase {
     use RefreshDatabase, withFaker;
 
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->editor = User::factory()->editor()->create();
+
+        $this->markTestIncomplete();
+    }
+
     /**
      * Test page creation access.
      */

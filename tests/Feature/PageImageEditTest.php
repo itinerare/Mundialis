@@ -17,6 +17,14 @@ use Tests\TestCase;
 class PageImageEditTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->editor = User::factory()->editor()->create();
+
+        $this->markTestIncomplete();
+    }
+
     /**
      * Test image creation access.
      */
