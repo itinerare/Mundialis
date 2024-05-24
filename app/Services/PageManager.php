@@ -36,6 +36,10 @@ class PageManager extends Service {
         DB::beginTransaction();
 
         try {
+            if (!SubjectCategory::where('id', $data['category_id'])->exists()) {
+                throw new \Exception('Invalid category selected.');
+            }
+
             // More specific validation
             if (Page::withTrashed()->where('title', $data['title'])->where('category_id', $data['category_id'])->exists()) {
                 throw new \Exception('The page title has already been taken within this category.');

@@ -40,7 +40,8 @@ class Page extends Model {
      * @var array
      */
     public static $createRules = [
-        'title' => 'required',
+        'category_id' => 'required',
+        'title'       => 'required',
     ];
 
     /**

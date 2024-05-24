@@ -211,35 +211,38 @@ class PageController extends Controller {
         $answerArray = ['title', 'summary', 'description', 'category_id', 'is_visible',
             'parent_id', 'page_tag', 'utility_tag', 'reason', 'is_minor', ];
         $validationRules = ($id ? Page::$updateRules : Page::$createRules);
-        foreach ($category->formFields as $key=>$field) {
-            $answerArray[] = $key;
-            if (isset($field['rules'])) {
-                $validationRules[$key] = $field['rules'];
+
+        if ($category) {
+            foreach ($category->formFields as $key=>$field) {
+                $answerArray[] = $key;
+                if (isset($field['rules'])) {
+                    $validationRules[$key] = $field['rules'];
+                }
+                if ($field['type'] == 'checkbox' && !isset($request[$key])) {
+                    $request[$key] = 0;
+                }
             }
-            if ($field['type'] == 'checkbox' && !isset($request[$key])) {
-                $request[$key] = 0;
-            }
-        }
-        if ($category->subject['key'] == 'time') {
-            foreach (['start', 'end'] as $segment) {
-                foreach ((new TimeDivision)->dateFields() as $key=>$field) {
-                    $answerArray[] = 'date_'.$segment.'_'.$key;
-                    if (isset($field['rules'])) {
-                        $validationRules['date_'.$segment.'_'.$key] = $field['rules'];
-                    }
-                    if ($field['type'] == 'checkbox' && !isset($request['date_'.$segment.'_'.$key])) {
-                        $request['date_'.$segment.'_'.$key] = 0;
+            if ($category->subject['key'] == 'time') {
+                foreach (['start', 'end'] as $segment) {
+                    foreach ((new TimeDivision)->dateFields() as $key=>$field) {
+                        $answerArray[] = 'date_'.$segment.'_'.$key;
+                        if (isset($field['rules'])) {
+                            $validationRules['date_'.$segment.'_'.$key] = $field['rules'];
+                        }
+                        if ($field['type'] == 'checkbox' && !isset($request['date_'.$segment.'_'.$key])) {
+                            $request['date_'.$segment.'_'.$key] = 0;
+                        }
                     }
                 }
             }
-        }
-        if ($category->subject['key'] == 'people') {
-            $answerArray[] = 'people_name';
-            foreach (['birth', 'death'] as $segment) {
-                $answerArray[] = $segment.'_place_id';
-                $answerArray[] = $segment.'_chronology_id';
-                foreach ((new TimeDivision)->dateFields() as $key=>$field) {
-                    $answerArray[] = $segment.'_'.$key;
+            if ($category->subject['key'] == 'people') {
+                $answerArray[] = 'people_name';
+                foreach (['birth', 'death'] as $segment) {
+                    $answerArray[] = $segment.'_place_id';
+                    $answerArray[] = $segment.'_chronology_id';
+                    foreach ((new TimeDivision)->dateFields() as $key=>$field) {
+                        $answerArray[] = $segment.'_'.$key;
+                    }
                 }
             }
         }
