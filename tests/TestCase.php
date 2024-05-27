@@ -15,6 +15,12 @@ abstract class TestCase extends BaseTestCase {
         $this->artisan('add-site-settings');
         $this->artisan('copy-default-images');
 
+        // Clean up any extant users to minimize risk of issues
+        // due to the large volume of tests
+        if (User::query()->count()) {
+            User::query()->delete();
+        }
+
         // Create a temporary user to assist with general testing
         $this->user = User::factory()->make();
     }
