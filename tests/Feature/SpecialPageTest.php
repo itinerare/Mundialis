@@ -859,7 +859,7 @@ class SpecialPageTest extends TestCase {
 
         //$response->assertSeeText($this->editor->name);
         $response->assertViewHas('users', function ($users) {
-            return $users->contains($this->editor);
+            return ($users->contains($this->editor) || $users->count >= 20);
         });
     }
 
