@@ -265,38 +265,4 @@ class PageEditTest extends TestCase {
             'without page' => [0, 1, 0, 0, 0, 0, 0, 0],
         ];
     }
-
-    /**
-     * Test page creation with utility tags.
-     */
-    public function testPostCreatePageWithUtilityTags() {
-        $this->markTestIncomplete();
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->create();
-
-        // Define some basic data
-        $data = [
-            'title'       => $this->faker->unique()->domainWord(),
-            'summary'     => null,
-            'category_id' => $category->id,
-            'utility_tag' => [0 => 'wip'],
-        ];
-
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/create', $data);
-
-        $page = Page::where('title', $data['title'])->where('category_id', $category->id)->first();
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_tags', [
-            'page_id' => $page->id,
-            'type'    => 'utility',
-            'tag'     => 'wip',
-        ]);
-    }
 }
