@@ -13,6 +13,7 @@ use App\Models\User\User;
 use App\Services\PageManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class PageController extends Controller {
     /*
@@ -214,6 +215,11 @@ class PageController extends Controller {
         $answerArray = ['title', 'summary', 'description', 'category_id', 'is_visible',
             'parent_id', 'page_tag', 'utility_tag', 'reason', 'is_minor'];
         $validationRules = ($id ? Page::$updateRules : Page::$createRules);
+
+        // Validate against the configured utility tags
+        $validationRules = $validationRules + [
+            'utility_tags.*' => ['nullable', Rule::in(array_keys(config('mundialis.utility_tags')))],
+        ];
 
         if ($category) {
             // Fallback for testing purposes
