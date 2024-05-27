@@ -857,9 +857,9 @@ class SpecialPageTest extends TestCase {
         $response = $this->get('/special/user-list')
             ->assertStatus(200);
 
-        //$response->assertSeeText($this->editor->name);
+        $response->assertSeeText($this->editor->name);
         $response->assertViewHas('users', function ($users) {
-            return ($users->contains($this->editor) || $users->count >= 20);
+            return $users->contains($this->editor);
         });
     }
 
