@@ -202,6 +202,9 @@ class PageController extends Controller {
         if (!$id) {
             $category = SubjectCategory::where('id', $request->get('category_id'))->first();
         } else {
+            if (!Page::where('id', $id)->exists()) {
+                abort(404);
+            }
             $category = Page::find($id)->category;
         }
 
