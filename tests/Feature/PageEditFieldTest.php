@@ -254,7 +254,7 @@ class PageEditFieldTest extends TestCase {
 
         // Set up some data for the page itself
         $data = [
-            'title'       => $this->faker->unique()->domainWord(),
+            'title'       => $this->faker->unique()->domainWord().$this->faker->unique()->domainWord(),
             'summary'     => null,
             'category_id' => $category->id,
         ];
@@ -360,7 +360,7 @@ class PageEditFieldTest extends TestCase {
 
         // Set up some data for the page itself
         $data = [
-            'title'   => $this->faker->unique()->domainWord(),
+            'title'   => $this->faker->unique()->domainWord().$this->faker->unique()->domainWord(),
             'summary' => null,
         ];
 
@@ -643,7 +643,7 @@ class PageEditFieldTest extends TestCase {
 
         // Set up some data for the page itself
         $data = [
-            'title'       => $this->faker->unique()->domainWord(),
+            'title'       => $this->faker->unique()->domainWord().$this->faker->unique()->domainWord(),
             'summary'     => null,
             'category_id' => $category->id,
         ];
@@ -752,7 +752,7 @@ class PageEditFieldTest extends TestCase {
 
         // Set up some data for the page itself
         $data = [
-            'title'   => $this->faker->unique()->domainWord(),
+            'title'   => $this->faker->unique()->domainWord().$this->faker->unique()->domainWord(),
             'summary' => null,
         ];
 

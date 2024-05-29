@@ -11,7 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class PageTagTest extends TestCase {
+class PageEditTagTest extends TestCase {
     use RefreshDatabase, withFaker;
 
     protected function setUp(): void {
@@ -50,7 +50,7 @@ class PageTagTest extends TestCase {
         }
 
         $data = [
-            'title'       => $this->faker->unique()->domainWord(),
+            'title'       => $this->faker->unique()->domainWord().$this->faker->unique()->domainWord(),
             'summary'     => null,
             'category_id' => $category->id,
             'utility_tag' => count($utilityTags) ? $utilityTags : null,
@@ -135,7 +135,7 @@ class PageTagTest extends TestCase {
         }
 
         $data = [
-            'title'       => $this->faker->unique()->domainWord(),
+            'title'       => $this->faker->unique()->domainWord().$this->faker->unique()->domainWord(),
             'summary'     => null,
             'utility_tag' => count($utilityTags) ? $utilityTags : null,
         ];
@@ -215,7 +215,7 @@ class PageTagTest extends TestCase {
         }
 
         $data = [
-            'title'       => $this->faker->unique()->domainWord(),
+            'title'       => $this->faker->unique()->domainWord().$this->faker->unique()->domainWord(),
             'summary'     => null,
             'category_id' => $category->id,
             'page_tag'    => count($tags) ? implode(',', $tags) : null,
@@ -281,7 +281,7 @@ class PageTagTest extends TestCase {
         $tags = $newTags + ($preserveExisting ? $oldTags : []);
 
         $data = [
-            'title'    => $this->faker->unique()->domainWord(),
+            'title'    => $this->faker->unique()->domainWord().$this->faker->unique()->domainWord(),
             'summary'  => null,
             'page_tag' => count($tags) ? implode(',', $tags) : null,
         ];

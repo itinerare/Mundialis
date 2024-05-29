@@ -97,7 +97,7 @@ class PageEditTest extends TestCase {
         }
 
         $data = [
-            'title'               => $withTitle ? $this->faker->unique()->domainWord() : null,
+            'title'               => $withTitle ? $this->faker->unique()->domainWord().$this->faker->unique()->domainWord() : null,
             'summary'             => $withSummary ? $this->faker->unique()->domainWord() : null,
             'category_id'         => $withCategory ? $category->id : null,
             'parent_id'           => $withParent ? $parent->id : null,
@@ -184,7 +184,7 @@ class PageEditTest extends TestCase {
         }
 
         $data = [
-            'title'               => $withTitle ? $this->faker->unique()->domainWord() : null,
+            'title'               => $withTitle ? $this->faker->unique()->domainWord().$this->faker->unique()->domainWord() : null,
             'summary'             => $withSummary ? $this->faker->unique()->domainWord() : null,
             'parent_id'           => $withParent ? $parent->id : null,
             'test_category_field' => $withData ? $this->faker->unique()->domainWord() : null,
