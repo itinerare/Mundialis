@@ -30,7 +30,7 @@ class PageMoveTest extends TestCase {
      */
     public function testGetMovePage($isValid) {
         $response = $this->actingAs($this->editor)
-            ->get('/pages/'.($isValid ? $this->page->id : mt_rand(500, 1000)).'/move');
+            ->get('/pages/'.($isValid ? $this->page->id : 9999).'/move');
 
         $response->assertStatus($isValid ? 200 : 404);
     }
@@ -69,7 +69,7 @@ class PageMoveTest extends TestCase {
 
         $response = $this
             ->actingAs($this->editor)
-            ->post('/pages/'.($withPage ? $this->page->id : mt_rand(500, 1000)).'/move', $data);
+            ->post('/pages/'.($withPage ? $this->page->id : 9999).'/move', $data);
 
         if ($expected) {
             $response->assertSessionHasNoErrors();

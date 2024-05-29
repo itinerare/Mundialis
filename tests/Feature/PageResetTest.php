@@ -30,7 +30,7 @@ class PageResetTest extends TestCase {
      */
     public function testGetResetPage($withPage) {
         $response = $this->actingAs($this->editor)
-            ->get('/pages/'.($withPage ? $this->page->id : mt_rand(500, 1000)).'/history/'.$this->oldVersion->id.'/reset');
+            ->get('/pages/'.($withPage ? $this->page->id : 9999).'/history/'.$this->oldVersion->id.'/reset');
 
         $response->assertStatus(200);
 
@@ -64,7 +64,7 @@ class PageResetTest extends TestCase {
 
         $response = $this
             ->actingAs($this->editor)
-            ->post('/pages/'.($withPage ? $this->page->id : mt_rand(500, 1000)).'/history/'.$this->oldVersion->id.'/reset', $data);
+            ->post('/pages/'.($withPage ? $this->page->id : 9999).'/history/'.$this->oldVersion->id.'/reset', $data);
 
         if ($expected) {
             $response->assertSessionHasNoErrors();

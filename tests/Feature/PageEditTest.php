@@ -33,7 +33,7 @@ class PageEditTest extends TestCase {
         }
 
         $response = $this->actingAs($this->editor)
-            ->get('/pages/create/'.($withCategory ? $category->id : mt_rand(100, 500)));
+            ->get('/pages/create/'.($withCategory ? $category->id : 9999));
 
         $response->assertStatus($status);
     }
@@ -59,7 +59,7 @@ class PageEditTest extends TestCase {
         }
 
         $response = $this->actingAs($this->editor)
-            ->get('/pages/'.($withPage ? $page->id : mt_rand(100, 500)).'/edit');
+            ->get('/pages/'.($withPage ? $page->id : 9999).'/edit');
 
         $response->assertStatus($status);
     }
@@ -194,7 +194,7 @@ class PageEditTest extends TestCase {
 
         $response = $this
             ->actingAs($this->editor)
-            ->post('/pages/'.($withPage ? $page->id : mt_rand(100, 500)).'/edit', $data);
+            ->post('/pages/'.($withPage ? $page->id : 9999).'/edit', $data);
 
         if ($expected) {
             $response->assertSessionHasNoErrors();

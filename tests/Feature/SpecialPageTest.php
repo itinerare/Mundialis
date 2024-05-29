@@ -555,7 +555,7 @@ class SpecialPageTest extends TestCase {
         $link = PageLink::factory()->parent($page->id)->wanted()->create();
 
         $data = [
-            'category_id' => $withCategory ? $page->category->id : mt_rand(500, 1000),
+            'category_id' => $withCategory ? $page->category->id : 9999,
             'title'       => $link->title,
         ];
 

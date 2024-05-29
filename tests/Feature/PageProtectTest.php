@@ -32,7 +32,7 @@ class PageProtectTest extends TestCase {
      */
     public function testGetProtectPage($isValid) {
         $response = $this->actingAs($this->admin)
-            ->get('/pages/'.($isValid ? $this->page->id : mt_rand(500, 1000)).'/protect');
+            ->get('/pages/'.($isValid ? $this->page->id : 9999).'/protect');
 
         $response->assertStatus($isValid ? 200 : 404);
     }

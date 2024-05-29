@@ -52,7 +52,7 @@ class PageImageDeleteTest extends TestCase {
      */
     public function testGetDeleteImage($isValid) {
         $response = $this->actingAs($this->editor)
-            ->get('/pages/'.$this->page->id.'/gallery/delete/'.($isValid ? $this->image->id : mt_rand(500, 1000)));
+            ->get('/pages/'.$this->page->id.'/gallery/delete/'.($isValid ? $this->image->id : 9999));
 
         $response->assertStatus(200);
 

@@ -64,7 +64,7 @@ class PageWatchTest extends TestCase {
         }
 
         $response = $this->actingAs($this->user)
-            ->post('/account/watched-pages/'.($withPage ? $this->page->id : mt_rand(500, 1000)));
+            ->post('/account/watched-pages/'.($withPage ? $this->page->id : 9999));
 
         if ($withPage) {
             $response->assertSessionHasNoErrors();

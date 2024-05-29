@@ -527,7 +527,7 @@ class SubjectDataLanguageTest extends TestCase {
         $category = LexiconCategory::factory()->create();
 
         $response = $this->actingAs($this->admin)
-            ->get('/admin/data/language/lexicon-categories/delete/'.($withCategory ? $category->id : mt_rand(500, 1000)))
+            ->get('/admin/data/language/lexicon-categories/delete/'.($withCategory ? $category->id : 9999))
             ->assertStatus(200);
 
         if ($withCategory) {
@@ -562,7 +562,7 @@ class SubjectDataLanguageTest extends TestCase {
 
         $response = $this
             ->actingAs($this->admin)
-            ->post('/admin/data/language/lexicon-categories/delete/'.($withCategory ? $category->id : mt_rand(500, 1000)));
+            ->post('/admin/data/language/lexicon-categories/delete/'.($withCategory ? $category->id : 9999));
 
         if ($expected) {
             $response->assertSessionHasNoErrors();

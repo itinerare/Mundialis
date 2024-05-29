@@ -40,7 +40,7 @@ class PageDeleteTest extends TestCase {
      */
     public function testGetDeletePage($isValid) {
         $response = $this->actingAs($this->editor)
-            ->get('/pages/'.($isValid ? $this->page->id : mt_rand(500, 1000)).'/delete');
+            ->get('/pages/'.($isValid ? $this->page->id : 9999).'/delete');
 
         $response->assertStatus(200);
 
