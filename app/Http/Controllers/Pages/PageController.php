@@ -222,11 +222,6 @@ class PageController extends Controller {
         ];
 
         if ($category) {
-            // Fallback for testing purposes
-            if (!is_array($category->data)) {
-                $category->data = json_decode($category->data, true);
-            }
-
             foreach ($category->formFields as $key=>$field) {
                 $answerArray[] = $key;
                 if (isset($field['rules'])) {

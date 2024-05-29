@@ -183,6 +183,11 @@ class SubjectCategory extends Model {
     public function getTemplateAttribute() {
         // Check to see if this category's data is set,
         if (isset($this->data) && $this->data) {
+            // Fallback for testing purposes
+            if (!is_array($this->data)) {
+                $this->data = json_decode($this->data, true);
+            }
+
             return $this->data;
         }
 
@@ -197,6 +202,11 @@ class SubjectCategory extends Model {
         // If no data is found and the subject's template is set,
         // return the subject's template data
         if (isset($this->subjectTemplate->data) && $this->subjectTemplate->data) {
+            // Fallback for testing purposes
+            if (!is_array($this->subjectTemplate->data)) {
+                $this->subjectTemplate->data = json_decode($this->subjectTemplate->data, true);
+            }
+
             return $this->subjectTemplate->data;
         }
 
@@ -230,6 +240,11 @@ class SubjectCategory extends Model {
 
     private function fetchTemplateRecursive($parent) {
         if (isset($parent->data) && $parent->data) {
+            // Fallback for testing purposes
+            if (!is_array($parent->data)) {
+                $parent->data = json_decode($parent->data, true);
+            }
+
             return $parent->data;
         }
         if (isset($parent->parent_id) && $parent->parent) {

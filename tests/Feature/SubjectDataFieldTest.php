@@ -78,7 +78,7 @@ class SubjectDataFieldTest extends TestCase {
     }
 
     /**
-     * Test subject template editing with a text field.
+     * Test subject template editing with a main body field.
      *
      * @dataProvider postEditFieldProvider
      * @dataProvider postEditTemplateFieldProvider

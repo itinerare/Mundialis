@@ -569,11 +569,6 @@ class PageManager extends Service {
             $data['is_visible'] = 0;
         }
 
-        // Fallback for testing purposes
-        if (!is_array($category->data)) {
-            $category->data = json_decode($category->data, true);
-        }
-
         // Cycle through the category's form fields
         // Data is recorded here in a flat array/only according to key, as keys should not
         // be duplicated in a template, and the template accounts for form building as well
