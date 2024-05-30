@@ -13,357 +13,192 @@ use Tests\TestCase;
 class PageViewFieldTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
-    protected function setUp(): void {
-        parent::setUp();
-
-        $this->editor = User::factory()->editor()->create();
-
-        $this->markTestIncomplete();
-    }
-
     /**
-     * Test page access with an infobox text field.
+     * Test page access with an infobox field.
+     *
+     * @dataProvider getPageWithFieldProvider
+     *
+     * @param string $fieldType
+     * @param bool   $withInput
      */
-    public function testCanGetPageWithInfoboxTextField() {
-        // Generate some data for the field
+    public function testGetPageWithInfoboxField($fieldType, $withInput) {
+        // Set up some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->infoboxField($fieldData['key'], $fieldData['label'])->create();
+        if ($fieldType == 'choice' || $fieldType == 'multiple') {
+            for ($i = 0; $i <= 1; $i++) {
+                $fieldData['options'][$i] = $this->faker->unique()->domainWord();
+            }
+        }
 
+        // Create a category with the relevant data directly
+        $category = SubjectCategory::factory()->infoboxField(
+            $fieldData['key'],
+            $fieldData['label'],
+            $fieldType,
+            null,
+            $fieldType == 'choice' || $fieldType == 'multiple' ? json_encode($fieldData['options']) : null,
+        )->create();
+
+        if ($withInput) {
+            switch ($fieldType) {
+                case 'text': case 'textarea':
+                    $data[$fieldData['key']] = $this->faker->unique()->domainWord();
+                    break;
+                case 'number':
+                    $data[$fieldData['key']] = mt_rand(1, 50);
+                    break;
+                case 'checkbox':
+                    $data[$fieldData['key']] = 1;
+                    break;
+                case 'choice':
+                    $data[$fieldData['key']] = 1;
+                    break;
+                case 'multiple':
+                    $data[$fieldData['key']] = '["1","1"]';
+                    break;
+            }
+            $inputString = is_numeric($data[$fieldData['key']]) || $fieldType == 'multiple' ? $data[$fieldData['key']] : '"'.$data[$fieldData['key']].'"';
+        }
+
+        // Directly create the page and associated version with the requisite data
         $page = Page::factory()->category($category->id)->create();
+        PageVersion::factory()->page($page->id)
+            ->user(User::factory()->editor()->create()->id)->create([
+                'data' => '{"data":{"description":null,"'.$fieldData['key'].'":'.($withInput ? $inputString : 'null').',"parsed":{"description":null,"'.$fieldData['key'].'":'.($withInput ? $inputString : 'null').'}},"title":"'.$page->title.'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
+            ]);
 
-        // Define some basic data
-        $data = [
-            'title'           => $this->faker->unique()->domainWord(),
-            'summary'         => null,
-            $fieldData['key'] => $this->faker->unique()->domainWord(),
-        ];
+        $response = $this->actingAs($this->user)
+            ->get('/pages/'.$page->id.'.'.$page->slug)
+            ->assertStatus(200);
 
-        // Create page version and update with field data
-        $version = PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
+        if ($withInput) {
+            $response->assertSeeText($fieldData['label']);
 
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
+            switch ($fieldType) {
+                case 'checkbox':
+                    $response->assertSee('fas fa-check text-success');
+                    break;
+                case 'choice':
+                    $response->assertSee($fieldData['options'][$data[$fieldData['key']]]);
+                    break;
+                case 'multiple':
+                    foreach ($fieldData['options'] as $option) {
+                        $response->assertSee($option);
+                    }
+                    break;
+                default:
+                    $response->assertSee($data[$fieldData['key']]);
+                    break;
+            }
+        }
     }
 
     /**
-     * Test page access with an infobox number field.
+     * Test page access with a main body field.
+     *
+     * @dataProvider getPageWithFieldProvider
+     * @dataProvider getPageWithTemplateFieldProvider
+     *
+     * @param string $fieldType
+     * @param bool   $withInput
      */
-    public function testCanGetPageWithInfoboxNumberField() {
-        // Generate some data for the field
+    public function testGetPageWithTemplateField($fieldType, $withInput) {
+        // Set up some data for the field
         $fieldData = [
             'key'   => $this->faker->unique()->domainWord(),
             'label' => $this->faker->unique()->domainWord(),
         ];
 
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->infoboxField($fieldData['key'], $fieldData['label'], 'number')->create();
+        if ($fieldType == 'choice' || $fieldType == 'multiple') {
+            for ($i = 0; $i <= 1; $i++) {
+                $fieldData['options'][$i] = $this->faker->unique()->domainWord();
+            }
+        }
 
+        // Create a category with the relevant data directly
+        $category = SubjectCategory::factory()->bodyField(
+            $fieldData['key'],
+            $fieldData['label'],
+            $fieldType,
+            null,
+            $fieldType == 'choice' || $fieldType == 'multiple' ? json_encode($fieldData['options']) : null,
+        )->create();
+
+        if ($withInput) {
+            switch ($fieldType) {
+                case 'text': case 'textarea':
+                    $data[$fieldData['key']] = $this->faker->unique()->domainWord();
+                    break;
+                case 'number':
+                    $data[$fieldData['key']] = mt_rand(1, 50);
+                    break;
+                case 'checkbox':
+                    $data[$fieldData['key']] = 1;
+                    break;
+                case 'choice':
+                    $data[$fieldData['key']] = 1;
+                    break;
+                case 'multiple':
+                    $data[$fieldData['key']] = '["1","1"]';
+                    break;
+            }
+            $inputString = is_numeric($data[$fieldData['key']]) || $fieldType == 'multiple' ? $data[$fieldData['key']] : '"'.$data[$fieldData['key']].'"';
+        }
+
+        // Directly create the page and associated version with the requisite data
         $page = Page::factory()->category($category->id)->create();
+        PageVersion::factory()->page($page->id)
+            ->user(User::factory()->editor()->create()->id)->create([
+                'data' => '{"data":{"description":null,"'.$fieldData['key'].'":'.($withInput ? $inputString : 'null').',"parsed":{"description":null,"'.$fieldData['key'].'":'.($withInput ? $inputString : 'null').'}},"title":"'.$page->title.'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
+            ]);
 
-        // Define some basic data
-        $data = [
-            'title'           => $this->faker->unique()->domainWord(),
-            'summary'         => null,
-            $fieldData['key'] => mt_rand(1, 100),
-        ];
+        $response = $this->actingAs($this->user)
+            ->get('/pages/'.$page->id.'.'.$page->slug)
+            ->assertStatus(200);
 
-        // Create page version and update with field data
-        $version = PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
+        if ($withInput) {
+            switch ($fieldType) {
+                case 'checkbox':
+                    $response->assertSee('fas fa-check text-success');
+                    break;
+                case 'choice':
+                    $response->assertSee($fieldData['options'][$data[$fieldData['key']]]);
+                    break;
+                case 'multiple':
+                    foreach ($fieldData['options'] as $option) {
+                        $response->assertSee($option);
+                    }
+                    break;
+                default:
+                    $response->assertSee($data[$fieldData['key']]);
+                    break;
+            }
+        }
     }
 
-    /**
-     * Test page access with an infobox checkbox field.
-     */
-    public function testCanGetPageWithInfoboxCheckboxField() {
-        // Generate some data for the field
-        $fieldData = [
-            'key'     => $this->faker->unique()->domainWord(),
-            'label'   => $this->faker->unique()->domainWord(),
-            'choices' => '["Choice 1","Choice 2"]',
+    public static function getPageWithFieldProvider() {
+        return [
+            'text'                       => ['text', 0],
+            'text with input'            => ['text', 1],
+            'number'                     => ['number', 0],
+            'number with input'          => ['number', 1],
+            'checkbox'                   => ['checkbox', 0],
+            'checkbox with input'        => ['checkbox', 1],
+            'choose one'                 => ['choice', 0],
+            'choose one with input'      => ['choice', 1],
+            'choose multiple'            => ['multiple', 0],
+            'choose multiple with input' => ['multiple', 1],
         ];
-
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->infoboxField($fieldData['key'], $fieldData['label'], 'choice', null, $fieldData['choices'])->create();
-
-        $page = Page::factory()->category($category->id)->create();
-
-        // Define some basic data
-        $data = [
-            'title'           => $this->faker->unique()->domainWord(),
-            'summary'         => null,
-            // This being passed in as string echoes the form input
-            $fieldData['key'] => (string) mt_rand(0, 1),
-        ];
-
-        // Create page version and update with field data
-        $version = PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
     }
 
-    /**
-     * Test page access with an infobox choose one field.
-     */
-    public function testCanGetPageWithInfoboxChooseOneField() {
-        // Generate some data for the field
-        $fieldData = [
-            'key'     => $this->faker->unique()->domainWord(),
-            'label'   => $this->faker->unique()->domainWord(),
-            'choices' => '["Choice 1","Choice 2"]',
+    public static function getPageWithTemplateFieldProvider() {
+        return [
+            'textbox'            => ['textarea', 0],
+            'textbox with input' => ['textarea', 1],
         ];
-
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->infoboxField($fieldData['key'], $fieldData['label'], 'choice', null, $fieldData['choices'])->create();
-
-        $page = Page::factory()->category($category->id)->create();
-
-        // Define some basic data
-        $data = [
-            'title'           => $this->faker->unique()->domainWord(),
-            'summary'         => null,
-            // This being passed in as string echoes the form input
-            $fieldData['key'] => (string) mt_rand(0, 1),
-        ];
-
-        // Create page version and update with field data
-        $version = PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test page access with an infobox choose multiple field.
-     */
-    public function testCanGetPageWithInfoboxChooseMultipleField() {
-        // Generate some data for the field
-        $fieldData = [
-            'key'     => $this->faker->unique()->domainWord(),
-            'label'   => $this->faker->unique()->domainWord(),
-            'choices' => '["Choice 1","Choice 2"]',
-        ];
-
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->infoboxField($fieldData['key'], $fieldData['label'], 'multiple', null, $fieldData['choices'])->create();
-
-        $page = Page::factory()->category($category->id)->create();
-
-        // Define some basic data
-        $data = [
-            'title'           => $this->faker->unique()->domainWord(),
-            'summary'         => null,
-            $fieldData['key'] => [
-                0 => (string) mt_rand(0, 1),
-                1 => (string) mt_rand(0, 1),
-            ],
-        ];
-
-        // Create page version and update with field data
-        $version = PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"],"parsed":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"]}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test page access with a text field.
-     */
-    public function testCanGetPageWithTextField() {
-        // Generate some data for the field
-        $fieldData = [
-            'key'   => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
-        ];
-
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->bodyField($fieldData['key'], $fieldData['label'])->create();
-
-        $page = Page::factory()->category($category->id)->create();
-
-        // Define some basic data
-        $data = [
-            'title'           => $this->faker->unique()->domainWord(),
-            'summary'         => null,
-            $fieldData['key'] => $this->faker->unique()->domainWord(),
-        ];
-
-        // Create page version and update with field data
-        $version = PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test page access with a number field.
-     */
-    public function testCanGetPageWithNumberField() {
-        // Generate some data for the field
-        $fieldData = [
-            'key'   => $this->faker->unique()->domainWord(),
-            'label' => $this->faker->unique()->domainWord(),
-        ];
-
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->bodyField($fieldData['key'], $fieldData['label'], 'number')->create();
-
-        $page = Page::factory()->category($category->id)->create();
-
-        // Define some basic data
-        $data = [
-            'title'           => $this->faker->unique()->domainWord(),
-            'summary'         => null,
-            $fieldData['key'] => mt_rand(1, 100),
-        ];
-
-        // Create page version and update with field data
-        $version = PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].',"parsed":{"description":null,"'.$fieldData['key'].'":'.$data[$fieldData['key']].'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test page access with a checkbox field.
-     */
-    public function testCanGetPageWithCheckboxField() {
-        // Generate some data for the field
-        $fieldData = [
-            'key'     => $this->faker->unique()->domainWord(),
-            'label'   => $this->faker->unique()->domainWord(),
-            'choices' => '["Choice 1","Choice 2"]',
-        ];
-
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->bodyField($fieldData['key'], $fieldData['label'], 'choice', null, $fieldData['choices'])->create();
-
-        $page = Page::factory()->category($category->id)->create();
-
-        // Define some basic data
-        $data = [
-            'title'           => $this->faker->unique()->domainWord(),
-            'summary'         => null,
-            // This being passed in as string echoes the form input
-            $fieldData['key'] => (string) mt_rand(0, 1),
-        ];
-
-        // Create page version and update with field data
-        $version = PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test page access with a choose one field.
-     */
-    public function testCanGetPageWithChooseOneField() {
-        // Generate some data for the field
-        $fieldData = [
-            'key'     => $this->faker->unique()->domainWord(),
-            'label'   => $this->faker->unique()->domainWord(),
-            'choices' => '["Choice 1","Choice 2"]',
-        ];
-
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->bodyField($fieldData['key'], $fieldData['label'], 'choice', null, $fieldData['choices'])->create();
-
-        $page = Page::factory()->category($category->id)->create();
-
-        // Define some basic data
-        $data = [
-            'title'           => $this->faker->unique()->domainWord(),
-            'summary'         => null,
-            // This being passed in as string echoes the form input
-            $fieldData['key'] => (string) mt_rand(0, 1),
-        ];
-
-        // Create page version and update with field data
-        $version = PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'","parsed":{"description":null,"'.$fieldData['key'].'":"'.$data[$fieldData['key']].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test page access with a choose multiple field.
-     */
-    public function testCanGetPageWithChooseMultipleField() {
-        // Generate some data for the field
-        $fieldData = [
-            'key'     => $this->faker->unique()->domainWord(),
-            'label'   => $this->faker->unique()->domainWord(),
-            'choices' => '["Choice 1","Choice 2"]',
-        ];
-
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->bodyField($fieldData['key'], $fieldData['label'], 'multiple', null, $fieldData['choices'])->create();
-
-        $page = Page::factory()->category($category->id)->create();
-
-        // Define some basic data
-        $data = [
-            'title'           => $this->faker->unique()->domainWord(),
-            'summary'         => null,
-            $fieldData['key'] => [
-                0 => (string) mt_rand(0, 1),
-                1 => (string) mt_rand(0, 1),
-            ],
-        ];
-
-        // Create page version and update with field data
-        $version = PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id)->create();
-        $version->update(['data' => '{"data":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"],"parsed":{"description":null,"'.$fieldData['key'].'":["'.$data[$fieldData['key']][0].'","'.$data[$fieldData['key']][1].'"]}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}']);
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
     }
 }

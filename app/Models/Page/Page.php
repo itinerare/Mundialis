@@ -269,7 +269,7 @@ class Page extends Model {
         if (!is_array($this->version->data)) {
             $data = json_decode($this->version->data, true);
 
-            return $data['parsed'] ?? null;
+            return $data['data']['parsed'] ?? null;
         }
 
         return $this->version->data['data']['parsed'] ?? null;

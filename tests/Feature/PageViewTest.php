@@ -13,12 +13,6 @@ use Tests\TestCase;
 class PageViewTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
-    protected function setUp(): void {
-        parent::setUp();
-
-        $this->user = User::factory()->make();
-    }
-
     /**
      * Test page access.
      *
