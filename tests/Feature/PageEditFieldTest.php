@@ -37,7 +37,7 @@ class PageEditFieldTest extends TestCase {
         ];
 
         if ($fieldType == 'choice' || $fieldType == 'multiple') {
-            for ($i = 1; $i <= 2; $i++) {
+            for ($i = 0; $i <= 1; $i++) {
                 $fieldData['options'][$i] = $this->faker->unique()->domainWord();
             }
         }
@@ -52,9 +52,6 @@ class PageEditFieldTest extends TestCase {
                     break;
                 case 'checkbox':
                     $fieldData['value'] = 1;
-                    break;
-                case 'choice': case 'multiple':
-                    $fieldData['value'] = 2;
                     break;
             }
         }
@@ -108,7 +105,7 @@ class PageEditFieldTest extends TestCase {
         ];
 
         if ($fieldType == 'choice' || $fieldType == 'multiple') {
-            for ($i = 1; $i <= 2; $i++) {
+            for ($i = 0; $i <= 1; $i++) {
                 $fieldData['options'][$i] = $this->faker->unique()->domainWord();
             }
         }
@@ -123,9 +120,6 @@ class PageEditFieldTest extends TestCase {
                     break;
                 case 'checkbox':
                     $fieldData['value'] = 1;
-                    break;
-                case 'choice': case 'multiple':
-                    $fieldData['value'] = 2;
                     break;
             }
         }
@@ -220,7 +214,7 @@ class PageEditFieldTest extends TestCase {
         ];
 
         if ($fieldType == 'choice' || $fieldType == 'multiple') {
-            for ($i = 1; $i <= 2; $i++) {
+            for ($i = 0; $i <= 1; $i++) {
                 $fieldData['options'][$i] = $this->faker->unique()->domainWord();
             }
         }
@@ -235,9 +229,6 @@ class PageEditFieldTest extends TestCase {
                     break;
                 case 'checkbox':
                     $fieldData['value'] = 1;
-                    break;
-                case 'choice': case 'multiple':
-                    $fieldData['value'] = 2;
                     break;
             }
         }
@@ -270,14 +261,27 @@ class PageEditFieldTest extends TestCase {
                 case 'checkbox':
                     $data[$fieldData['key']] = 1;
                     break;
-                case 'choice': case 'multiple':
-                    $data[$fieldData['key']] = 2;
+                case 'choice':
+                    $data[$fieldData['key']] = 1;
+                    break;
+                case 'multiple':
+                    $data[$fieldData['key']] = [0 => '1', 1 => '1'];
                     break;
             }
         } elseif ($withValue) {
             $data[$fieldData['key']] = $fieldData['value'];
         } else {
             $data[$fieldData['key']] = null;
+        }
+
+        if ($withInput || $withValue) {
+            if (is_numeric($data[$fieldData['key']])) {
+                $inputString = $data[$fieldData['key']];
+            } elseif (is_array($data[$fieldData['key']])) {
+                $inputString = json_encode($data[$fieldData['key']]);
+            } else {
+                $inputString = '"'.$data[$fieldData['key']].'"';
+            }
         }
 
         $response = $this
@@ -291,7 +295,7 @@ class PageEditFieldTest extends TestCase {
 
             $this->assertDatabaseHas('page_versions', [
                 'page_id' => $page->id,
-                'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? (is_numeric($data[$fieldData['key']]) ? $data[$fieldData['key']] : '"'.$data[$fieldData['key']].'"') : 'null').',"parsed":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? (is_numeric($data[$fieldData['key']]) ? $data[$fieldData['key']] : '"'.$data[$fieldData['key']].'"') : 'null').'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
+                'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? $inputString : 'null').',"parsed":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? $inputString : 'null').'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
             ]);
         } else {
             $response->assertSessionHasErrors();
@@ -324,7 +328,7 @@ class PageEditFieldTest extends TestCase {
         ];
 
         if ($fieldType == 'choice' || $fieldType == 'multiple') {
-            for ($i = 1; $i <= 2; $i++) {
+            for ($i = 0; $i <= 1; $i++) {
                 $fieldData['options'][$i] = $this->faker->unique()->domainWord();
             }
         }
@@ -339,9 +343,6 @@ class PageEditFieldTest extends TestCase {
                     break;
                 case 'checkbox':
                     $fieldData['value'] = 1;
-                    break;
-                case 'choice': case 'multiple':
-                    $fieldData['value'] = 2;
                     break;
             }
         }
@@ -375,14 +376,27 @@ class PageEditFieldTest extends TestCase {
                 case 'checkbox':
                     $data[$fieldData['key']] = 1;
                     break;
-                case 'choice': case 'multiple':
-                    $data[$fieldData['key']] = 2;
+                case 'choice':
+                    $data[$fieldData['key']] = 1;
+                    break;
+                case 'multiple':
+                    $data[$fieldData['key']] = [0 => '1', 1 => '1'];
                     break;
             }
         } elseif ($withValue) {
             $data[$fieldData['key']] = $fieldData['value'];
         } else {
             $data[$fieldData['key']] = null;
+        }
+
+        if ($withInput || $withValue) {
+            if (is_numeric($data[$fieldData['key']])) {
+                $inputString = $data[$fieldData['key']];
+            } elseif (is_array($data[$fieldData['key']])) {
+                $inputString = json_encode($data[$fieldData['key']]);
+            } else {
+                $inputString = '"'.$data[$fieldData['key']].'"';
+            }
         }
 
         $response = $this
@@ -394,14 +408,14 @@ class PageEditFieldTest extends TestCase {
 
             $this->assertDatabaseHas('page_versions', [
                 'page_id' => $page->id,
-                'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? (is_numeric($data[$fieldData['key']]) ? $data[$fieldData['key']] : '"'.$data[$fieldData['key']].'"') : 'null').',"parsed":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? (is_numeric($data[$fieldData['key']]) ? $data[$fieldData['key']] : '"'.$data[$fieldData['key']].'"') : 'null').'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
+                'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? $inputString : 'null').',"parsed":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? $inputString : 'null').'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
             ]);
         } else {
             $response->assertSessionHasErrors();
 
             $this->assertDatabaseMissing('page_versions', [
                 'page_id' => $page->id,
-                'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? (is_numeric($data[$fieldData['key']]) ? $data[$fieldData['key']] : '"'.$data[$fieldData['key']].'"') : 'null').',"parsed":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? (is_numeric($data[$fieldData['key']]) ? $data[$fieldData['key']] : '"'.$data[$fieldData['key']].'"') : 'null').'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
+                'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? $inputString : 'null').',"parsed":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? $inputString : 'null').'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
             ]);
         }
     }
@@ -462,7 +476,7 @@ class PageEditFieldTest extends TestCase {
         ];
 
         if ($fieldType == 'choice' || $fieldType == 'multiple') {
-            for ($i = 1; $i <= 2; $i++) {
+            for ($i = 0; $i <= 1; $i++) {
                 $fieldData['options'][$i] = $this->faker->unique()->domainWord();
             }
         }
@@ -477,9 +491,6 @@ class PageEditFieldTest extends TestCase {
                     break;
                 case 'checkbox':
                     $fieldData['value'] = 1;
-                    break;
-                case 'choice': case 'multiple':
-                    $fieldData['value'] = 2;
                     break;
             }
         }
@@ -533,7 +544,7 @@ class PageEditFieldTest extends TestCase {
         ];
 
         if ($fieldType == 'choice' || $fieldType == 'multiple') {
-            for ($i = 1; $i <= 2; $i++) {
+            for ($i = 0; $i <= 1; $i++) {
                 $fieldData['options'][$i] = $this->faker->unique()->domainWord();
             }
         }
@@ -548,9 +559,6 @@ class PageEditFieldTest extends TestCase {
                     break;
                 case 'checkbox':
                     $fieldData['value'] = 1;
-                    break;
-                case 'choice': case 'multiple':
-                    $fieldData['value'] = 2;
                     break;
             }
         }
@@ -609,7 +617,7 @@ class PageEditFieldTest extends TestCase {
         ];
 
         if ($fieldType == 'choice' || $fieldType == 'multiple') {
-            for ($i = 1; $i <= 2; $i++) {
+            for ($i = 0; $i <= 1; $i++) {
                 $fieldData['options'][$i] = $this->faker->unique()->domainWord();
             }
         }
@@ -624,9 +632,6 @@ class PageEditFieldTest extends TestCase {
                     break;
                 case 'checkbox':
                     $fieldData['value'] = 1;
-                    break;
-                case 'choice': case 'multiple':
-                    $fieldData['value'] = 2;
                     break;
             }
         }
@@ -659,14 +664,27 @@ class PageEditFieldTest extends TestCase {
                 case 'checkbox':
                     $data[$fieldData['key']] = 1;
                     break;
-                case 'choice': case 'multiple':
-                    $data[$fieldData['key']] = 2;
+                case 'choice':
+                    $data[$fieldData['key']] = 1;
+                    break;
+                case 'multiple':
+                    $data[$fieldData['key']] = [0 => '1', 1 => '1'];
                     break;
             }
         } elseif ($withValue) {
             $data[$fieldData['key']] = $fieldData['value'];
         } else {
             $data[$fieldData['key']] = null;
+        }
+
+        if ($withInput || $withValue) {
+            if (is_numeric($data[$fieldData['key']])) {
+                $inputString = $data[$fieldData['key']];
+            } elseif (is_array($data[$fieldData['key']])) {
+                $inputString = json_encode($data[$fieldData['key']]);
+            } else {
+                $inputString = '"'.$data[$fieldData['key']].'"';
+            }
         }
 
         $response = $this
@@ -682,7 +700,7 @@ class PageEditFieldTest extends TestCase {
 
             $this->assertDatabaseHas('page_versions', [
                 'page_id' => $page->id,
-                'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? (is_numeric($data[$fieldData['key']]) ? $data[$fieldData['key']] : '"'.$data[$fieldData['key']].'"') : 'null').',"parsed":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? (is_numeric($data[$fieldData['key']]) ? $data[$fieldData['key']] : '"'.$data[$fieldData['key']].'"') : 'null').'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
+                'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? $inputString : 'null').',"parsed":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? $inputString : 'null').'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
             ]);
         } else {
             $response->assertSessionHasErrors();
@@ -716,7 +734,7 @@ class PageEditFieldTest extends TestCase {
         ];
 
         if ($fieldType == 'choice' || $fieldType == 'multiple') {
-            for ($i = 1; $i <= 2; $i++) {
+            for ($i = 0; $i <= 1; $i++) {
                 $fieldData['options'][$i] = $this->faker->unique()->domainWord();
             }
         }
@@ -731,9 +749,6 @@ class PageEditFieldTest extends TestCase {
                     break;
                 case 'checkbox':
                     $fieldData['value'] = 1;
-                    break;
-                case 'choice': case 'multiple':
-                    $fieldData['value'] = 2;
                     break;
             }
         }
@@ -767,14 +782,27 @@ class PageEditFieldTest extends TestCase {
                 case 'checkbox':
                     $data[$fieldData['key']] = 1;
                     break;
-                case 'choice': case 'multiple':
-                    $data[$fieldData['key']] = 2;
+                case 'choice':
+                    $data[$fieldData['key']] = 1;
+                    break;
+                case 'multiple':
+                    $data[$fieldData['key']] = [0 => '1', 1 => '1'];
                     break;
             }
         } elseif ($withValue) {
             $data[$fieldData['key']] = $fieldData['value'];
         } else {
             $data[$fieldData['key']] = null;
+        }
+
+        if ($withInput || $withValue) {
+            if (is_numeric($data[$fieldData['key']])) {
+                $inputString = $data[$fieldData['key']];
+            } elseif (is_array($data[$fieldData['key']])) {
+                $inputString = json_encode($data[$fieldData['key']]);
+            } else {
+                $inputString = '"'.$data[$fieldData['key']].'"';
+            }
         }
 
         $response = $this
@@ -786,14 +814,14 @@ class PageEditFieldTest extends TestCase {
 
             $this->assertDatabaseHas('page_versions', [
                 'page_id' => $page->id,
-                'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? (is_numeric($data[$fieldData['key']]) ? $data[$fieldData['key']] : '"'.$data[$fieldData['key']].'"') : 'null').',"parsed":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? (is_numeric($data[$fieldData['key']]) ? $data[$fieldData['key']] : '"'.$data[$fieldData['key']].'"') : 'null').'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
+                'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? $inputString : 'null').',"parsed":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? $inputString : 'null').'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
             ]);
         } else {
             $response->assertSessionHasErrors();
 
             $this->assertDatabaseMissing('page_versions', [
                 'page_id' => $page->id,
-                'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? (is_numeric($data[$fieldData['key']]) ? $data[$fieldData['key']] : '"'.$data[$fieldData['key']].'"') : 'null').',"parsed":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? (is_numeric($data[$fieldData['key']]) ? $data[$fieldData['key']] : '"'.$data[$fieldData['key']].'"') : 'null').'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
+                'data'    => '{"data":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? $inputString : 'null').',"parsed":{"description":null,"'.$fieldData['key'].'":'.($withInput || $withValue ? $inputString : 'null').'}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
             ]);
         }
     }
