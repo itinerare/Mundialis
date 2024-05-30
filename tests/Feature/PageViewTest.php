@@ -7,221 +7,101 @@ use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class PageViewTest extends TestCase {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     protected function setUp(): void {
         parent::setUp();
 
-        $this->editor = User::factory()->editor()->create();
-
-        $this->markTestIncomplete();
+        $this->user = User::factory()->make();
     }
 
     /**
      * Test page access.
+     *
+     * @dataProvider getPageProvider
+     *
+     * @param string $subject
+     * @param bool   $withPage
+     * @param int    $status
      */
-    public function testCanGetPage() {
-        // Create a temporary user
-        $user = User::factory()->make();
+    public function testGetPage($subject, $withPage, $status) {
+        if ($withPage) {
+            $category = SubjectCategory::factory()->subject($subject)->create();
 
-        // Create a page to view & version
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id)->create();
+            $page = Page::factory()->category($category->id)->create();
+            PageVersion::factory()->page($page->id)
+                ->user(User::factory()->editor()->create()->id)->create();
+        }
 
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'.'.$page->slug);
+        $response = $this->actingAs($this->user)
+            ->get('/pages/'.($withPage ? $page->id.'.'.$page->slug : '9999.'.$this->faker->unique()->domainWord()));
 
-        $response->assertStatus(200);
+        $response->assertStatus($status);
+    }
+
+    public static function getPageProvider() {
+        return [
+            'person page'       => ['people', 1, 200],
+            'place page'        => ['places', 1, 200],
+            'species page'      => ['species', 1, 200],
+            'thing page'        => ['things', 1, 200],
+            'concept page'      => ['concepts', 1, 200],
+            'event page'        => ['time', 1, 200],
+            'language page'     => ['language', 1, 200],
+            'misc with page'    => ['misc', 1, 200],
+            'misc without page' => ['misc', 0, 404],
+        ];
     }
 
     /**
      * Test page history access.
+     *
+     * @dataProvider getPageProvider
+     *
+     * @param string $subject
+     * @param bool   $withPage
+     * @param int    $status
      */
-    public function testCanGetPageHistory() {
-        // Create a temporary user
-        $user = User::factory()->make();
+    public function testGetPageHistory($subject, $withPage, $status) {
+        if ($withPage) {
+            $category = SubjectCategory::factory()->subject($subject)->create();
 
-        // Create a page to view & version
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id)->create();
+            $page = Page::factory()->category($category->id)->create();
+            PageVersion::factory()->page($page->id)
+                ->user(User::factory()->editor()->create()->id)->create();
+        }
 
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/history');
+        $response = $this->actingAs($this->user)
+            ->get('/pages/'.($withPage ? $page->id : 9999).'/history');
 
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test page gallery access.
-     */
-    public function testCanGetPageGallery() {
-        // Create a temporary user
-        $user = User::factory()->make();
-
-        // Create a page to view & version
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id)->create();
-
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/gallery');
-
-        $response->assertStatus(200);
+        $response->assertStatus($status);
     }
 
     /**
      * Test page "what links here" access.
+     *
+     * @dataProvider getPageProvider
+     *
+     * @param string $subject
+     * @param bool   $withPage
+     * @param int    $status
      */
-    public function testCanGetPageLinks() {
-        // Create a temporary user
-        $user = User::factory()->make();
+    public function testCanGetPageLinks($subject, $withPage, $status) {
+        if ($withPage) {
+            $category = SubjectCategory::factory()->subject($subject)->create();
 
-        // Create a page to view & version
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)
-            ->user(User::factory()->editor()->create()->id)->create();
+            $page = Page::factory()->category($category->id)->create();
+            PageVersion::factory()->page($page->id)
+                ->user(User::factory()->editor()->create()->id)->create();
+        }
 
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/links-here');
+        $response = $this->actingAs($this->user)
+            ->get('/pages/'.($withPage ? $page->id : 9999).'/links-here');
 
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test page access in the "people" subject.
-     */
-    public function testCanGetPeoplePage() {
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a page to view & version
-        $page = Page::factory()->category($category->id)->create();
-        $version = PageVersion::factory()->page($page->id)
-            ->testData($page->title, $page->summary, null, null, null)
-            ->user(User::factory()->editor()->create()->id)->create();
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test page access in the "places" subject.
-     */
-    public function testCanGetPlacesPage() {
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->subject('places')->create();
-
-        // Create a page to view & version
-        $page = Page::factory()->category($category->id)->create();
-        $version = PageVersion::factory()->page($page->id)
-            ->testData($page->title, $page->summary, null, null, null)
-            ->user(User::factory()->editor()->create()->id)->create();
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test page access in the "flora and fauna" subject.
-     */
-    public function testCanGetSpeciesPage() {
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->subject('species')->create();
-
-        // Create a page to view & version
-        $page = Page::factory()->category($category->id)->create();
-        $version = PageVersion::factory()->page($page->id)
-            ->testData($page->title, $page->summary, null, null, null)
-            ->user(User::factory()->editor()->create()->id)->create();
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test page access in the "things" subject.
-     */
-    public function testCanGetThingsPage() {
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->subject('things')->create();
-
-        // Create a page to view & version
-        $page = Page::factory()->category($category->id)->create();
-        $version = PageVersion::factory()->page($page->id)
-            ->testData($page->title, $page->summary, null, null, null)
-            ->user(User::factory()->editor()->create()->id)->create();
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test page access in the "concepts" subject.
-     */
-    public function testCanGetConceptsPage() {
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->subject('concepts')->create();
-
-        // Create a page to view & version
-        $page = Page::factory()->category($category->id)->create();
-        $version = PageVersion::factory()->page($page->id)
-            ->testData($page->title, $page->summary, null, null, null)
-            ->user(User::factory()->editor()->create()->id)->create();
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test page access in the "time" subject.
-     */
-    public function testCanGetTimePage() {
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->subject('time')->create();
-
-        // Create a page to view & version
-        $page = Page::factory()->category($category->id)->create();
-        $version = PageVersion::factory()->page($page->id)
-            ->testData($page->title, $page->summary, null, null, null)
-            ->user(User::factory()->editor()->create()->id)->create();
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Test page access in the "language" subject.
-     */
-    public function testCanGetLanguagePage() {
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->subject('language')->create();
-
-        // Create a page to view & version
-        $page = Page::factory()->category($category->id)->create();
-        $version = PageVersion::factory()->page($page->id)
-            ->testData($page->title, $page->summary, null, null, null)
-            ->user(User::factory()->editor()->create()->id)->create();
-
-        $response = $this->actingAs(User::factory()->make())
-            ->get('/pages/'.$page->id.'.'.$page->slug);
-
-        $response->assertStatus(200);
+        $response->assertStatus($status);
     }
 }
