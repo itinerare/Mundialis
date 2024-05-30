@@ -50,6 +50,7 @@ class PageEditFieldTest extends TestCase {
      * Test page creation access with a main body field.
      *
      * @dataProvider getPageWithFieldProvider
+     * @dataProvider getPageWithTemplateFieldProvider
      *
      * @param string $fieldType
      * @param bool   $withRule
@@ -64,6 +65,7 @@ class PageEditFieldTest extends TestCase {
      * Test page editing access with a main body field.
      *
      * @dataProvider getPageWithFieldProvider
+     * @dataProvider getPageWithTemplateFieldProvider
      *
      * @param string $fieldType
      * @param bool   $withRule
@@ -108,6 +110,19 @@ class PageEditFieldTest extends TestCase {
             'choose multiple with rule'       => ['multiple', 1, 0, 0],
             'choose multiple with help'       => ['multiple', 0, 0, 1],
             'choose multiple with rule, help' => ['multiple', 1, 0, 1],
+        ];
+    }
+
+    public static function getPageWithTemplateFieldProvider() {
+        return [
+            'textbox'                  => ['textarea', 0, 0, 0],
+            'textbox with rule'        => ['textarea', 1, 0, 0],
+            'textbox with value'       => ['textarea', 0, 1, 0],
+            'textbox with help'        => ['textarea', 0, 0, 1],
+            'textbox with rule, value' => ['textarea', 1, 1, 0],
+            'textbox with rule, help'  => ['textarea', 1, 0, 1],
+            'textbox with value, help' => ['textarea', 0, 1, 1],
+            'textbox with all'         => ['textarea', 1, 1, 1],
         ];
     }
 
