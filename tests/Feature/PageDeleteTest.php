@@ -165,8 +165,7 @@ class PageDeleteTest extends TestCase {
         }
 
         for ($i = 1; $i <= $pages; $i++) {
-            unlink($image[$i]->imagePath.'/'.$imageVersion[$i]->thumbnailFileName);
-            unlink($image[$i]->imagePath.'/'.$imageVersion[$i]->imageFileName);
+            (new ImageManager)->testImages($image[$i], $imageVersion[$i], false);
         }
     }
 
@@ -332,6 +331,7 @@ class PageDeleteTest extends TestCase {
 
             if ($withImage) {
                 $this->assertNotSoftDeleted($image);
+                (new ImageManager)->testImages($image, $imageVersion, false);
             }
         } else {
             $this->assertSoftDeleted($page);
