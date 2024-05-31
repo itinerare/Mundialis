@@ -405,14 +405,14 @@ class ImageManager extends Service {
                 }
 
                 // Save image
-                if (!$this->handleImage($data['image'], $image->imageDirectory, $version->imageFileName)) {
+                if (!$this->handleImage($data['image'], $image->imagePath, $version->imageFileName)) {
                     throw new \Exception('An error occurred while handling image file.');
                 }
 
                 // Save thumbnail
-                if (isset($data['use_cropper'])) {
+                if (isset($data['use_cropper']) && $data['use_cropper']) {
                     $this->cropThumbnail(Arr::only($data, ['x0', 'x1', 'y0', 'y1']), $image, $version);
-                } elseif (!$this->handleImage($data['thumbnail'], $image->imageDirectory, $version->thumbnailFileName)) {
+                } elseif (!$this->handleImage($data['thumbnail'], $image->imagePath, $version->thumbnailFileName)) {
                     throw new \Exception('An error occurred while handling thumbnail file.');
                 }
 
