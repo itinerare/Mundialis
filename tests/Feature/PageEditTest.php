@@ -66,8 +66,8 @@ class PageEditTest extends TestCase {
 
     public static function getEditPageProvider() {
         return [
-            'with category'    => [1, 200],
-            'without category' => [0, 404],
+            'with page'    => [1, 200],
+            'without page' => [0, 404],
         ];
     }
 
