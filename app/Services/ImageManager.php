@@ -376,7 +376,7 @@ class ImageManager extends Service {
         try {
             // Process data stored on the image
             $imageData['description'] = $data['description'] ?? null;
-            $imageData['is_visible'] = isset($data['is_visible']);
+            $imageData['is_visible'] = $data['is_visible'] ?? 0;
 
             // If there's no preexisting image, create one
             if (!$image) {
