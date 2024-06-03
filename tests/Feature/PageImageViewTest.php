@@ -95,7 +95,7 @@ class PageImageViewTest extends TestCase {
     /**
      * Creates an image and associated records.
      *
-     * @param \App\Models\Page\Page|null $page
+     * @param Page|null $page
      */
     private function createImage($page = null) {
         if (!$page) {

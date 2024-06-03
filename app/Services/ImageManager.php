@@ -32,7 +32,7 @@ class ImageManager extends Service {
      * @param Page  $page
      * @param User  $user
      *
-     * @return \App\Models\Page\PageImage|bool
+     * @return bool|PageImage
      */
     public function createPageImage($data, $page, $user) {
         DB::beginTransaction();
@@ -109,7 +109,7 @@ class ImageManager extends Service {
      * @param array     $data
      * @param User      $user
      *
-     * @return \App\Models\Page\Page|bool
+     * @return bool|Page
      */
     public function updatePageImage($page, $image, $data, $user) {
         DB::beginTransaction();
@@ -311,7 +311,7 @@ class ImageManager extends Service {
      * @param array  $data
      * @param bool   $isMinor
      *
-     * @return \App\Models\Page\PageImageVersion|bool
+     * @return bool|PageImageVersion
      */
     public function logImageVersion($imageId, $userId, $imageData, $type, $reason, $data, $isMinor = false) {
         try {
@@ -370,7 +370,7 @@ class ImageManager extends Service {
      * @param User      $user
      * @param PageImage $image
      *
-     * @return \App\Models\Page\PageImage|bool
+     * @return bool|PageImage
      */
     private function handlePageImage($data, $page, $user, $image = null) {
         try {

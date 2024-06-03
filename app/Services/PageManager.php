@@ -30,7 +30,7 @@ class PageManager extends Service {
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return \App\Models\Page\Page|bool
+     * @return bool|Page
      */
     public function createPage($data, $user) {
         DB::beginTransaction();
@@ -135,7 +135,7 @@ class PageManager extends Service {
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return \App\Models\Page\Page|bool
+     * @return bool|Page
      */
     public function updatePage($page, $data, $user) {
         DB::beginTransaction();
@@ -530,7 +530,7 @@ class PageManager extends Service {
      * @param array  $data
      * @param bool   $isMinor
      *
-     * @return \App\Models\Page\PageVersion|bool
+     * @return bool|PageVersion
      */
     public function logPageVersion($pageId, $userId, $type, $reason, $data, $isMinor = false) {
         try {

@@ -302,7 +302,7 @@ class UserService extends Service {
      * @param \App\Models\Page\Page $page
      * @param User                  $user
      *
-     * @return \App\Models\User\WatchedPage|bool
+     * @return bool|WatchedPage
      */
     public function watchPage($page, $user) {
         DB::beginTransaction();

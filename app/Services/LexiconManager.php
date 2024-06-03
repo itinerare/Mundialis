@@ -23,7 +23,7 @@ class LexiconManager extends Service {
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return \App\Models\Lexicon\LexiconEntry|bool
+     * @return bool|LexiconEntry
      */
     public function createLexiconEntry($data, $user) {
         DB::beginTransaction();
@@ -83,7 +83,7 @@ class LexiconManager extends Service {
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return \App\Models\Lexicon\LexiconEntry|bool
+     * @return bool|LexiconEntry
      */
     public function updateLexiconEntry($entry, $data, $user) {
         DB::beginTransaction();

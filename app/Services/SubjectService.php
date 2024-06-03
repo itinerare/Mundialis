@@ -77,7 +77,7 @@ class SubjectService extends Service {
      * @param \App\Models\User\User $user
      * @param string                $subject
      *
-     * @return \App\Models\Subject\SubjectCategory|bool
+     * @return bool|SubjectCategory
      */
     public function createCategory($data, $user, $subject) {
         DB::beginTransaction();
@@ -142,7 +142,7 @@ class SubjectService extends Service {
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return \App\Models\Subject\SubjectCategory|bool
+     * @return bool|SubjectCategory
      */
     public function updateCategory($category, $data, $user) {
         DB::beginTransaction();
@@ -395,7 +395,7 @@ class SubjectService extends Service {
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return \App\Models\Subject\TimeChronology|bool
+     * @return bool|TimeChronology
      */
     public function updateChronology($chronology, $data, $user) {
         DB::beginTransaction();
@@ -577,7 +577,7 @@ class SubjectService extends Service {
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return \App\Models\Subject\LexiconCategory|bool
+     * @return bool|LexiconCategory
      */
     public function updateLexiconCategory($category, $data, $user) {
         DB::beginTransaction();
