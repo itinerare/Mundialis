@@ -76,6 +76,30 @@ class PageViewTest extends TestCase {
     }
 
     /**
+     * Test page gallery access.
+     *
+     * @dataProvider getPageProvider
+     *
+     * @param string $subject
+     * @param bool   $withPage
+     * @param int    $status
+     */
+    public function testGetPageGallery($subject, $withPage, $status) {
+        if ($withPage) {
+            $category = SubjectCategory::factory()->subject($subject)->create();
+
+            $page = Page::factory()->category($category->id)->create();
+            PageVersion::factory()->page($page->id)
+                ->user(User::factory()->editor()->create()->id)->create();
+        }
+
+        $response = $this->actingAs($this->user)
+            ->get('/pages/'.($withPage ? $page->id : 9999).'/gallery');
+
+        $response->assertStatus($status);
+    }
+
+    /**
      * Test page "what links here" access.
      *
      * @dataProvider getPageProvider
