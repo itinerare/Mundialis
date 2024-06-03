@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\User\InvitationCode;
 use App\Models\User\User;
 use App\Services\InvitationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,18 +11,20 @@ class AdminInvitationTest extends TestCase {
     use RefreshDatabase;
 
     /******************************************************************************
-        INVITATIONS
+        ADMIN / INVITATIONS
     *******************************************************************************/
+
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->user = User::factory()->admin()->create();
+    }
 
     /**
      * Test invitation code index access.
      */
-    public function testCanGetInvitationIndex() {
-        // Make a temporary user
-        $user = User::factory()->admin()->make();
-
-        // Attempt page access
-        $response = $this->actingAs($user)
+    public function testGetInvitationIndex() {
+        $this->actingAs($this->user)
             ->get('/admin/invitations')
             ->assertStatus(200);
     }
@@ -31,74 +32,51 @@ class AdminInvitationTest extends TestCase {
     /**
      * Test invitation code creation.
      */
-    public function testCanPostCreateInvitation() {
-        // Count currently extant invitation codes
-        $oldCount = InvitationCode::all()->count();
-
-        // Make a persistent user
-        $user = User::factory()->admin()->create();
-
+    public function testPostCreateInvitation() {
         // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->post('/admin/invitations/create');
 
-        // Check that there are more invitation codes than before
-        $this->assertTrue(InvitationCode::all()->count() > $oldCount);
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseCount('invitation_codes', 1);
     }
 
     /**
      * Test invitation code deletion.
+     *
+     * @dataProvider deleteInvitationProvider
+     *
+     * @param bool $isUsed
+     * @param bool $expected
      */
-    public function testCanPostDeleteInvitation() {
-        // Make a persistent user (in case a code needs to be generated)
-        $user = User::factory()->admin()->create();
+    public function testPostDeleteInvitation($isUsed, $expected) {
+        // Since invitation code generation is fairly straightforward,
+        // simply use the function rather than a factory
+        $invitation = (new InvitationService)->generateInvitation($this->user);
 
-        // Count existing codes
-        $oldCount = InvitationCode::all()->count();
-        // Find or create a code to delete
-        $code =
-            InvitationCode::where('recipient_id', null)->first() ?
-            InvitationCode::where('recipient_id', null)->first() :
-            (new InvitationService)->generateInvitation($user);
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/admin/invitations/delete/'.$code->id);
-
-        // Check that there are fewer invitation codes than before
-        $this->assertTrue(InvitationCode::all()->count() <= $oldCount);
-    }
-
-    /**
-     * Ensure a used invitation code cannot be deleted.
-     */
-    public function testCannotPostDeleteUsedInvitation() {
-        // Make a persistent user (in case a code needs to be generated)
-        $user = User::factory()->admin()->create();
-
-        // Count existing codes
-        $oldCount = InvitationCode::all()->count();
-        // Find or create a code to attempt to delete
-        $code =
-            InvitationCode::where('recipient_id', '!=', null)->first() ?
-            InvitationCode::where('recipient_id', '!=', null)->first() :
-            (new InvitationService)->generateInvitation($user);
-
-        // If necessary, simulate a "used" code
-        if ($code->recipient_id == null) {
-            // Create a persistent user and mark them as the code's recipient
+        if ($isUsed) {
             $recipient = User::factory()->create();
-            $code->update(['recipient_id' => $recipient->id]);
+            $invitation->update(['recipient_id' => $recipient->id]);
         }
 
-        // Try to post data
         $response = $this
-            ->actingAs($user)
-            ->post('/admin/invitations/delete/'.$code->id);
+            ->actingAs($this->user)
+            ->post('/admin/invitations/delete/'.$invitation->id);
 
-        // Check that there are the same number of invitation codes or greater
-        $this->assertTrue(InvitationCode::all()->count() >= $oldCount);
+        if ($expected) {
+            $this->assertModelMissing($invitation);
+            $response->assertSessionHasNoErrors();
+        } else {
+            $this->assertModelExists($invitation);
+            $response->assertSessionHasErrors();
+        }
+    }
+
+    public static function deleteInvitationProvider() {
+        return [
+            'unused' => [0, 1],
+            'used'   => [1, 0],
+        ];
     }
 }

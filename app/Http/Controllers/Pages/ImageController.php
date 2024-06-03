@@ -11,7 +11,6 @@ use App\Models\User\User;
 use App\Services\ImageManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 
 class ImageController extends Controller {
     /*
@@ -31,12 +30,12 @@ class ImageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageGallery(Request $request, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
 
-        $query = $page->images()->visible(Auth::check() ? Auth::user() : null)->orderBy('is_valid', 'DESC');
+        $query = $page->images()->visible(Auth::user() ?? null)->orderBy('is_valid', 'DESC');
         $sort = $request->only(['sort']);
 
         if ($request->get('creator_url')) {
@@ -83,11 +82,11 @@ class ImageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageImage(Request $request, $pageId, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $pageId)->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $pageId)->first();
         if (!$page) {
             abort(404);
         }
-        $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $id)->first();
+        $image = $page->images()->visible(Auth::user() ?? null)->where('page_images.id', $id)->first();
         if (!$image) {
             abort(404);
         }
@@ -130,13 +129,13 @@ class ImageController extends Controller {
      */
     public function getPageImagePopup($id, $imageId = null) {
         if (isset($id) && isset($imageId)) {
-            $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+            $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
             if (!$page) {
                 abort(404);
             }
-            $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $imageId)->first();
+            $image = $page->images()->visible(Auth::user() ?? null)->where('page_images.id', $imageId)->first();
         } else {
-            $image = PageImage::where('id', $id)->visible(Auth::check() ? Auth::user() : null)->first();
+            $image = PageImage::where('id', $id)->visible(Auth::user() ?? null)->first();
         }
         if (!$image) {
             abort(404);
@@ -157,10 +156,7 @@ class ImageController extends Controller {
      */
     public function getCreateImage($id) {
         $page = Page::where('id', $id)->first();
-        if (!$page) {
-            abort(404);
-        }
-        if (!Auth::user()->canEdit($page)) {
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
@@ -170,7 +166,7 @@ class ImageController extends Controller {
         }, $preserveKeys = true)->toArray();
 
         // Collect subjects and information
-        $orderedSubjects = collect(Config::get('mundialis.subjects'))->filter(function ($subject) use ($groupedPages) {
+        $orderedSubjects = collect(config('mundialis.subjects'))->filter(function ($subject) use ($groupedPages) {
             if (isset($groupedPages[$subject['name']])) {
                 return 1;
             } else {
@@ -209,13 +205,10 @@ class ImageController extends Controller {
      */
     public function getEditImage($pageId, $id) {
         $page = Page::where('id', $pageId)->first();
-        if (!$page) {
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
-        if (!Auth::user()->canEdit($page)) {
-            abort(404);
-        }
-        $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $id)->first();
+        $image = $page->images()->visible(Auth::user() ?? null)->where('page_images.id', $id)->first();
         if (!$image) {
             abort(404);
         }
@@ -226,7 +219,7 @@ class ImageController extends Controller {
         }, $preserveKeys = true)->toArray();
 
         // Collect subjects and information
-        $orderedSubjects = collect(Config::get('mundialis.subjects'))->filter(function ($subject) use ($groupedPages) {
+        $orderedSubjects = collect(config('mundialis.subjects'))->filter(function ($subject) use ($groupedPages) {
             if (isset($groupedPages[$subject['name']])) {
                 return 1;
             } else {
@@ -274,10 +267,7 @@ class ImageController extends Controller {
         ]);
 
         $page = Page::where('id', $pageId)->first();
-        if (!Auth::user()->canEdit($page)) {
-            abort(404);
-        }
-        if (!$page) {
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
@@ -289,7 +279,7 @@ class ImageController extends Controller {
             return redirect()->to('pages/'.$page->id.'/gallery');
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -306,16 +296,10 @@ class ImageController extends Controller {
      */
     public function getDeleteImage($pageId, $id) {
         $page = Page::where('id', $pageId)->first();
-        if (!$page) {
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
-        if (!Auth::user()->canEdit($page)) {
-            abort(404);
-        }
-        $image = $page->images()->visible(Auth::check() ? Auth::user() : null)->where('page_images.id', $id)->first();
-        if (!$image) {
-            abort(404);
-        }
+        $image = $page->images()->visible(Auth::user() ?? null)->where('page_images.id', $id)->first();
 
         return view('pages.images._delete_image', [
             'image' => $image,
@@ -337,7 +321,7 @@ class ImageController extends Controller {
             flash('Image deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 

@@ -9,7 +9,7 @@
 @endsection
 
 @section('meta-desc')
-    {{ $page->summary ? $page->summary : Config::get('mundialis.settings.site_desc') }}
+    {{ $page->summary ? $page->summary : config('mundialis.settings.site_desc') }}
 @endsection
 
 @section('pages-content')

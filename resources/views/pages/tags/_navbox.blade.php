@@ -11,7 +11,7 @@
         id="navbox-{{ $tag->id }}">
         @if (isset($navbox['subjects']))
             <div class="px-2">
-                @foreach (Config::get('mundialis.subjects') as $subjectKey => $subjectValues)
+                @foreach (config('mundialis.subjects') as $subjectKey => $subjectValues)
                     @if (isset($navbox['subjects'][$subjectKey]))
                         <div class="row my-1">
                             <div class="col-md-2 bg-dark text-light rounded pt-1">

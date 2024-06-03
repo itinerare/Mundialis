@@ -7,7 +7,6 @@ use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Config;
 
 class Page extends Model {
     use HasFactory, SoftDeletes;
@@ -41,7 +40,8 @@ class Page extends Model {
      * @var array
      */
     public static $createRules = [
-        'title' => 'required',
+        'category_id' => 'required',
+        'title'       => 'required',
     ];
 
     /**
@@ -192,10 +192,7 @@ class Page extends Model {
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeSubject($query, $subject) {
-        return $query->whereIn(
-            'category_id',
-            SubjectCategory::where('subject', $subject)->pluck('id')->toArray()
-        );
+        return $query->whereRelation('category', 'subject', $subject);
     }
 
     /**
@@ -244,11 +241,18 @@ class Page extends Model {
      * @return array
      */
     public function getDataAttribute() {
-        if (!$this->versions->count() || !isset($this->version->data['data'])) {
+        if (!$this->versions->count()) {
             return null;
         }
 
-        return $this->version->data['data'];
+        // Fallback for testing purposes
+        if (!is_array($this->version->data)) {
+            $data = json_decode($this->version->data, true);
+
+            return $data['data'] ?? null;
+        }
+
+        return $this->version->data['data'] ?? null;
     }
 
     /**
@@ -257,11 +261,18 @@ class Page extends Model {
      * @return array
      */
     public function getParsedDataAttribute() {
-        if (!$this->versions->count() || !isset($this->version->data['data']['parsed'])) {
+        if (!$this->versions->count()) {
             return null;
         }
 
-        return $this->version->data['data']['parsed'];
+        // Fallback for testing purposes
+        if (!is_array($this->version->data)) {
+            $data = json_decode($this->version->data, true);
+
+            return $data['data']['parsed'] ?? null;
+        }
+
+        return $this->version->data['data']['parsed'] ?? null;
     }
 
     /**
@@ -422,8 +433,8 @@ class Page extends Model {
                 break;
             default:
                 $familyTypes =
-                    Config::get('mundialis.people_relationships.Familial') +
-                    Config::get('mundialis.people_relationships.Romantic') +
+                    config('mundialis.people_relationships.Familial') +
+                    config('mundialis.people_relationships.Romantic') +
                     ['platonic_partner' => 'Partner (platonic)'];
                 break;
         }

@@ -19,7 +19,7 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdown">
-                            @foreach (Config::get('mundialis.subjects') as $subject => $values)
+                            @foreach (config('mundialis.subjects') as $subject => $values)
                                 <a class="dropdown-item" href="{{ url($subject) }}">
                                     {{ $values['name'] }}
                                 </a>
@@ -45,7 +45,7 @@
                             </a>
                             @if (Auth::check() && Auth::user()->canWrite)
                                 <div class="dropdown-divider"></div>
-                                @foreach (Config::get('mundialis.utility_tags') as $key => $tag)
+                                @foreach (config('mundialis.utility_tags') as $key => $tag)
                                     <a class="dropdown-item" href="{{ url('special/' . $key . '-pages') }}">
                                         {{ $tag['name'] }}
                                     </a>

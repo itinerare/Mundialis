@@ -297,7 +297,7 @@ class UserService extends Service {
     }
 
     /**
-     * Toggles favorite status on a submission for a user.
+     * Toggles watch status on a page for a user.
      *
      * @param \App\Models\Page\Page $page
      * @param User                  $user
@@ -308,12 +308,11 @@ class UserService extends Service {
         DB::beginTransaction();
 
         try {
-            // Check that the submission can be favorited
-            if (!$user->canWrite && !$page->is_visible) {
-                throw new \Exception("This page isn't visible to be watched.");
+            if (!$page) {
+                throw new \Exception('Invalid page selected.');
             }
 
-            // Check if the user has an existing favorite, and if so, delete it
+            // Check if the user has an existing watch record, and if so, delete it
             // or else create one.
             if ($user->watched()->where('page_id', $page->id)->first() != null) {
                 if (!WatchedPage::where('user_id', $user->id)->where('page_id', $page->id)->delete()) {

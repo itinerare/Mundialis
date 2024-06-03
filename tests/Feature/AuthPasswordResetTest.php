@@ -6,7 +6,9 @@ use App\Models\User\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class AuthPasswordResetTest extends TestCase {
@@ -16,68 +18,76 @@ class AuthPasswordResetTest extends TestCase {
     // They are modified from https://github.com/dwightwatson/laravel-auth-tests
 
     /******************************************************************************
-        PASSWORD RESET
+        AUTH / PASSWORD RESET
     *******************************************************************************/
+
+    protected function setUp(): void {
+        parent::setUp();
+    }
 
     /**
      * Test password reset access.
      */
-    public function testCanGetPasswordReset() {
-        $response = $this->get('forgot-password');
-
-        $response->assertStatus(200);
+    public function testGetPasswordReset() {
+        $this->get('forgot-password')
+            ->assertStatus(200);
     }
 
     /**
-     * Test password reset email with a valid user.
-     * This should work.
+     * Test password reset email.
+     *
+     * @dataProvider passwordResetProvider
+     *
+     * @param bool $isValid
+     * @param bool $expected
      */
-    public function testCanPostValidPasswordResetEmail() {
-        $user = User::factory()->create();
-
-        $this->expectsNotification($user, ResetPassword::class);
+    public function testPostPasswordResetEmail($isValid, $expected) {
+        if ($isValid) {
+            Notification::fake();
+            $user = User::factory()->create();
+        } else {
+            Queue::fake();
+        }
 
         $response = $this->post('forgot-password', [
-            'email' => $user->email,
+            'email' => $isValid ? $user->email : 'invalid@email.com',
         ]);
 
-        $response->assertStatus(302);
+        if ($expected) {
+            $response->assertStatus(302);
+            $response->assertSessionHasNoErrors();
+            Notification::assertSentTo([$user], ResetPassword::class);
+        } else {
+            Queue::assertNotPushed(ResetPassword::class);
+            $response->assertSessionHasErrors();
+        }
     }
 
-    /**
-     * Test password reset email with an invalid user.
-     * This shouldn't work.
-     */
-    public function testCannotPostInvalidPasswordResetEmail() {
-        $this->doesntExpectJobs(ResetPassword::class);
-
-        $this->post('forgot-password', [
-            'email' => 'invalid@email.com',
-        ]);
+    public static function passwordResetProvider() {
+        return [
+            'valid user'   => [1, 1],
+            'invalid user' => [0, 0],
+        ];
     }
 
     /**
      * Test password reset form access.
      */
-    public function testCanGetPasswordResetForm() {
-        $user = User::factory()->create();
+    public function testGetPasswordResetForm() {
+        $token = Password::createToken($this->user);
 
-        $token = Password::createToken($user);
-
-        $response = $this->get('reset-password/'.$token);
-
-        $response->assertStatus(200);
+        $this->get('reset-password/'.$token)
+            ->assertStatus(200);
     }
 
     /**
      * Test password resetting.
      */
-    public function testCanResetUserPassword() {
+    public function testResetUserPassword() {
         $user = User::factory()->create();
-
         $token = Password::createToken($user);
 
-        $response = $this->post('reset-password', [
+        $this->post('reset-password', [
             'token'                 => $token,
             'email'                 => $user->email,
             'password'              => 'password',

@@ -1,70 +1,84 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\Data\SubjectController;
+use App\Http\Controllers\Admin\InvitationController;
+use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\RankController;
+use App\Http\Controllers\Admin\SpecialController;
+use App\Http\Controllers\Admin\UserController;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
 |--------------------------------------------------------------------------
 |
-| Routes for pages that require admin permissions to view. These largely
+| Routes for pages that require admin permissions to access. These largely
 | encompass editing core site settings and page templates.
 |
 */
 
-Route::get('/', 'AdminController@getIndex');
+Route::get('/', [AdminController::class, 'getIndex']);
 
 /*
-    SUBJECTS
+    DATA/SUBJECTS
 */
+Route::prefix('data')->group(function () {
+    Route::controller(SubjectController::class)->group(function () {
+        Route::get('{subject}', 'getSubjectIndex')
+            ->where('subject', implode('|', array_keys(config('mundialis.subjects'))));
+        Route::get('{subject}/edit', 'getEditTemplate')
+            ->where('subject', implode('|', array_keys(config('mundialis.subjects'))));
+        Route::get('{subject}/create', 'getCreateCategory')
+            ->where('subject', implode('|', array_keys(config('mundialis.subjects'))));
+        Route::post('{subject}/edit', 'postEditTemplate')
+            ->where('subject', implode('|', array_keys(config('mundialis.subjects'))));
+        Route::post('{subject}/create', 'postCreateEditCategory')
+            ->where('subject', implode('|', array_keys(config('mundialis.subjects'))));
+        Route::post('{subject}/sort', 'postSortCategory')
+            ->where('subject', implode('|', array_keys(config('mundialis.subjects'))));
 
-Route::group(['prefix' => 'data', 'namespace' => 'Data'], function () {
-    // GENERIC ROUTES
-    Route::get('{subject}', 'SubjectController@getSubjectIndex')
-        ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
-    Route::get('{subject}/edit', 'SubjectController@getEditTemplate')
-        ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
-    Route::get('{subject}/create', 'SubjectController@getCreateCategory')
-        ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
-    Route::post('{subject}/edit', 'SubjectController@postEditTemplate')
-        ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
-    Route::post('{subject}/create', 'SubjectController@postCreateEditCategory')
-        ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
+        Route::prefix('categories')->group(function () {
+            Route::get('edit/{id}', 'getEditCategory');
+            Route::get('delete/{id}', 'getDeleteCategory');
+            Route::post('edit/{id?}', 'postCreateEditCategory');
+            Route::post('delete/{id}', 'postDeleteCategory');
+        });
 
-    Route::get('categories/edit/{id}', 'SubjectController@getEditCategory');
-    Route::get('categories/delete/{id}', 'SubjectController@getDeleteCategory');
-    Route::post('categories/edit/{id?}', 'SubjectController@postCreateEditCategory');
-    Route::post('categories/delete/{id}', 'SubjectController@postDeleteCategory');
-    Route::post('{subject}/sort', 'SubjectController@postSortCategory')
-        ->where('subject', implode('|', array_keys(Config::get('mundialis.subjects'))));
+        Route::prefix('time')->group(function () {
+            Route::get('divisions', 'getTimeDivisions');
+            Route::post('divisions', 'postEditDivisions');
 
-    // SPECIALIZED ROUTES
-    Route::group(['prefix' => 'time'], function () {
-        Route::get('divisions', 'SubjectController@getTimeDivisions');
-        Route::post('divisions', 'SubjectController@postEditDivisions');
+            Route::prefix('chronology')->group(function () {
+                Route::get('/', 'getTimeChronology');
+                Route::get('create', 'getCreateChronology');
+                Route::get('edit/{id}', 'getEditChronology');
+                Route::get('delete/{id}', 'getDeleteChronology');
 
-        Route::get('chronology', 'SubjectController@getTimeChronology');
-        Route::get('chronology/create', 'SubjectController@getCreateChronology');
-        Route::get('chronology/edit/{id}', 'SubjectController@getEditChronology');
-        Route::get('chronology/delete/{id}', 'SubjectController@getDeleteChronology');
+                Route::post('create', 'postCreateEditChronology');
+                Route::post('edit/{id?}', 'postCreateEditChronology');
+                Route::post('delete/{id}', 'postDeleteChronology');
+                Route::post('sort', 'postSortChronology');
+            });
+        });
 
-        Route::post('chronology/create', 'SubjectController@postCreateEditChronology');
-        Route::post('chronology/edit/{id?}', 'SubjectController@postCreateEditChronology');
-        Route::post('chronology/delete/{id}', 'SubjectController@postDeleteChronology');
-        Route::post('chronology/sort', 'SubjectController@postSortChronology');
-    });
+        Route::prefix('language')->group(function () {
+            Route::get('lexicon-settings', 'getLexiconSettings');
+            Route::post('lexicon-settings', 'postEditLexiconSettings');
 
-    Route::group(['prefix' => 'language'], function () {
-        Route::get('lexicon-settings', 'SubjectController@getLexiconSettings');
-        Route::post('lexicon-settings', 'SubjectController@postEditLexiconSettings');
+            Route::prefix('lexicon-categories')->group(function () {
+                Route::get('/', 'getLexiconCategories');
+                Route::get('create', 'getCreateLexiconCategory');
+                Route::get('edit/{id}', 'getEditLexiconCategory');
+                Route::get('delete/{id}', 'getDeleteLexiconCategory');
 
-        Route::get('lexicon-categories', 'SubjectController@getLexiconCategories');
-        Route::get('lexicon-categories/create', 'SubjectController@getCreateLexiconCategory');
-        Route::get('lexicon-categories/edit/{id}', 'SubjectController@getEditLexiconCategory');
-        Route::get('lexicon-categories/delete/{id}', 'SubjectController@getDeleteLexiconCategory');
-
-        Route::post('lexicon-categories/create', 'SubjectController@postCreateEditLexiconCategory');
-        Route::post('lexicon-categories/edit/{id?}', 'SubjectController@postCreateEditLexiconCategory');
-        Route::post('lexicon-categories/delete/{id}', 'SubjectController@postDeleteLexiconCategory');
-        Route::post('lexicon-categories/sort', 'SubjectController@postSortLexiconCategory');
+                Route::post('create', 'postCreateEditLexiconCategory');
+                Route::post('edit/{id?}', 'postCreateEditLexiconCategory');
+                Route::post('delete/{id}', 'postDeleteLexiconCategory');
+                Route::post('sort', 'postSortLexiconCategory');
+            });
+        });
     });
 });
 
@@ -72,78 +86,75 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data'], function () {
     USERS
 */
 
-// RANKS
-Route::group(['prefix' => 'ranks'], function () {
-    Route::get('/', 'RankController@getIndex');
-    Route::get('edit/{id}', 'RankController@getEditRank');
-    Route::post('edit/{id?}', 'RankController@postEditRank');
+Route::controller(RankController::class)->prefix('ranks')->group(function () {
+    Route::get('/', 'getIndex');
+    Route::get('edit/{id}', 'getEditRank');
+    Route::post('edit/{id?}', 'postEditRank');
 });
 
-// INVITATIONS
-Route::group(['prefix' => 'invitations'], function () {
-    Route::get('/', 'InvitationController@getIndex');
-    Route::post('create', 'InvitationController@postGenerateKey');
-    Route::post('delete/{id}', 'InvitationController@postDeleteKey');
+Route::controller(InvitationController::class)->prefix('invitations')->group(function () {
+    Route::get('/', 'getIndex');
+    Route::post('create', 'postGenerateKey');
+    Route::post('delete/{id?}', 'postDeleteKey');
 });
 
-// USERS
-Route::group(['prefix' => 'users'], function () {
-    Route::get('/', 'UserController@getUserIndex');
-    Route::get('{name}/edit', 'UserController@getUser');
-    Route::get('{name}/updates', 'UserController@getUserUpdates');
-    Route::post('{name}/basic', 'UserController@postUserBasicInfo');
-    Route::post('{name}/account', 'UserController@postUserAccount');
-    Route::post('{name}/forgot-password', 'UserController@postForgotPassword');
+Route::controller(UserController::class)->prefix('users')->group(function () {
+    Route::get('/', 'getUserIndex');
+    Route::get('{name}/edit', 'getUser');
+    Route::get('{name}/updates', 'getUserUpdates');
+    Route::post('{name}/basic', 'postUserBasicInfo');
+    Route::post('{name}/account', 'postUserAccount');
 
-    Route::get('{name}/ban', 'UserController@getBan');
-    Route::get('{name}/ban-confirm', 'UserController@getBanConfirmation');
-    Route::post('{name}/ban', 'UserController@postBan');
-    Route::get('{name}/unban-confirm', 'UserController@getUnbanConfirmation');
-    Route::post('{name}/unban', 'UserController@postUnban');
+    Route::get('{name}/ban', 'getBan');
+    Route::get('{name}/ban-confirm', 'getBanConfirmation');
+    Route::post('{name}/ban', 'postBan');
+    Route::get('{name}/unban-confirm', 'getUnbanConfirmation');
+    Route::post('{name}/unban', 'postUnban');
 });
 
 /*
     MAINTENANCE
 */
+Route::controller(SpecialController::class)->prefix('special')->group(function () {
+    Route::get('unwatched-pages', 'getUnwatchedPages');
 
-// SPECIAL PAGES
-Route::group(['prefix' => 'special'], function () {
-    Route::get('unwatched-pages', 'SpecialController@getUnwatchedPages');
+    Route::prefix('deleted-pages')->group(function () {
+        Route::get('/', 'getDeletedPages');
+        Route::get('{id}', 'getDeletedPage')
+            ->whereNumber('id');
+        Route::get('{id}/restore', 'getRestorePage')
+            ->whereNumber('id');
+        Route::post('{id?}/restore', 'postRestorePage')
+            ->whereNumber('id');
+    });
 
-    Route::get('deleted-pages', 'SpecialController@getDeletedPages');
-    Route::get('deleted-pages/{id}', 'SpecialController@getDeletedPage')
-        ->whereNumber('id');
-    Route::get('deleted-pages/{id}/restore', 'SpecialController@getRestorePage')
-        ->whereNumber('id');
-    Route::post('deleted-pages/{id?}/restore', 'SpecialController@postRestorePage')
-        ->whereNumber('id');
-    Route::get('deleted-images', 'SpecialController@getDeletedImages');
-    Route::get('deleted-images/{id}', 'SpecialController@getDeletedImage')
-        ->whereNumber('id');
-    Route::get('deleted-images/{id}/restore', 'SpecialController@getRestoreImage')
-        ->whereNumber('id');
-    Route::post('deleted-images/{id?}/restore', 'SpecialController@postRestoreImage')
-        ->whereNumber('id');
+    Route::prefix('deleted-images')->group(function () {
+        Route::get('/', 'getDeletedImages');
+        Route::get('{id}', 'getDeletedImage')
+            ->whereNumber('id');
+        Route::get('{id}/restore', 'getRestoreImage')
+            ->whereNumber('id');
+        Route::post('{id?}/restore', 'postRestoreImage')
+            ->whereNumber('id');
+    });
 });
 
 /*
     SITE SETTINGS
 */
-
-// TEXT PAGES
-Route::group(['prefix' => 'pages'], function () {
-    Route::get('/', 'PageController@getIndex');
-    Route::get('edit/{id}', 'PageController@getEditPage');
-    Route::post('edit/{id?}', 'PageController@postEditPage');
+Route::controller(PageController::class)->prefix('pages')->group(function () {
+    Route::get('/', 'getIndex');
+    Route::get('edit/{id}', 'getEditPage');
+    Route::post('edit/{id?}', 'postEditPage');
 });
 
-// SITE SETTINGS
-Route::get('site-settings', 'AdminController@getSettings');
-Route::post('site-settings/{key}', 'AdminController@postEditSetting');
+Route::controller(AdminController::class)->prefix('site-settings')->group(function () {
+    Route::get('/', 'getSettings');
+    Route::post('{key}', 'postEditSetting');
+});
 
-// SITE IMAGES
-Route::group(['prefix' => 'site-images'], function () {
-    Route::get('/', 'AdminController@getSiteImages');
-    Route::post('upload', 'AdminController@postUploadImage');
-    Route::post('upload/css', 'AdminController@postUploadCss');
+Route::controller(AdminController::class)->prefix('site-images')->group(function () {
+    Route::get('/', 'getSiteImages');
+    Route::post('upload', 'postUploadImage');
+    Route::post('upload/css', 'postUploadCss');
 });

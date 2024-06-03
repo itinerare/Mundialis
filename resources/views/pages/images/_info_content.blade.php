@@ -29,13 +29,15 @@
                 <div class="float-right">
                     <a href="{{ url('pages/' . $page->id . '/gallery/' . $image->id) }}" class="btn btn-sm btn-primary"
                         data-toggle="tooltip" title="View Page and Version History"><i class="fas fa-link"></i></a>
-                    <a href="{{ url('pages/' . $page->id . '/gallery/edit/' . $image->id) }}"
-                        class="btn btn-sm btn-primary mr-1" data-toggle="tooltip" title="Edit Image"><i
-                            class="fas fa-pencil-alt"></i></a>
+                    @if (Auth::check() && Auth::user()->canWrite && (!$image->isProtected || Auth::user()->isAdmin))
+                        <a href="{{ url('pages/' . $page->id . '/gallery/edit/' . $image->id) }}"
+                            class="btn btn-sm btn-primary mr-1" data-toggle="tooltip" title="Edit Image"><i
+                                class="fas fa-pencil-alt"></i></a>
+                    @endif
                 </div>
             @endif
         </h5>
-        @foreach ($image->pages()->visible(Auth::check() ? Auth::user() : null)->get() as $page)
+        @foreach ($image->pages()->visible(Auth::user() ?? null)->get() as $page)
             {!! $page->image_id == $image->id
                 ? '<i class="fas fa-star text-info" data-toggle="tooltip" title="This image is this page\'s primary image."></i> '
                 : '' !!}

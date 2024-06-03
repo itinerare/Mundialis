@@ -15,175 +15,103 @@ use Tests\TestCase;
 class PageImageViewTest extends TestCase {
     use RefreshDatabase;
 
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->editor = User::factory()->editor()->create();
+
+        $this->service = new ImageManager;
+    }
+
     /**
      * Test image modal access.
+     *
+     * @dataProvider getImageProvider
+     *
+     * @param bool $withImage
+     * @param bool $asEditor
+     * @param bool $isVisible
+     * @param int  $status
      */
-    public function testCanGetImageModal() {
-        // Create a temporary user
-        $user = User::factory()->make();
-
-        // Create a persistent editor
-        $editor = User::factory()->editor()->create();
-        // Create a page for the image to belong to
+    public function testGetImageModal($withImage, $asEditor, $isVisible, $status) {
         $page = Page::factory()->create();
+        if ($withImage) {
+            $imageData = $this->createImage($page);
 
-        // Create the image and associated records
-        $image = PageImage::factory()->create();
-        $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
-        PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+            $imageData['image']->update([
+                'is_visible' => $isVisible,
+            ]);
+        }
 
-        $response = $this->actingAs($user)
-            ->get('pages/get-image/'.$page->id.'/'.$image->id);
+        $response = $this->actingAs($asEditor ? $this->editor : $this->user)
+            ->get('pages/get-image/'.$page->id.'/'.($withImage ? $imageData['image']->id : 9999));
 
-        $response->assertStatus(200);
+        $response->assertStatus($status);
 
-        // Delete the test images, to clean up
-        unlink($image->imagePath.'/'.$version->thumbnailFileName);
-        unlink($image->imagePath.'/'.$version->imageFileName);
-    }
-
-    /**
-     * Test hidden image modal access.
-     * This shouldn't work.
-     */
-    public function testCannotGetHiddenImageModal() {
-        // Create a temporary user
-        $user = User::factory()->make();
-
-        // Create a persistent editor
-        $editor = User::factory()->editor()->create();
-        // Create a page for the image to belong to
-        $page = Page::factory()->create();
-
-        // Create the image and associated records
-        $image = PageImage::factory()->hidden()->create();
-        $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
-        PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
-
-        $response = $this->actingAs($user)
-            ->get('pages/get-image/'.$page->id.'/'.$image->id);
-
-        $response->assertStatus(404);
-
-        // Delete the test images, to clean up
-        unlink($image->imagePath.'/'.$version->thumbnailFileName);
-        unlink($image->imagePath.'/'.$version->imageFileName);
-    }
-
-    /**
-     * Test hidden image modal access.
-     * This should work.
-     */
-    public function testCanGetHiddenImageModalAsEditor() {
-        // Create a persistent editor
-        $editor = User::factory()->editor()->create();
-        // Create a page for the image to belong to
-        $page = Page::factory()->create();
-
-        // Create the image and associated records
-        $image = PageImage::factory()->hidden()->create();
-        $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
-        PageImageCreator::factory()->image($image->id)->user($editor->id)->create();
-        PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
-
-        $response = $this->actingAs($editor)
-            ->get('pages/get-image/'.$page->id.'/'.$image->id);
-
-        $response->assertStatus(200);
-
-        // Delete the test images, to clean up
-        unlink($image->imagePath.'/'.$version->thumbnailFileName);
-        unlink($image->imagePath.'/'.$version->imageFileName);
+        if ($withImage) {
+            $this->service->testImages($imageData['image'], $imageData['version'], false);
+        }
     }
 
     /**
      * Test image page access.
+     *
+     * @dataProvider getImageProvider
+     *
+     * @param bool $withImage
+     * @param bool $asEditor
+     * @param bool $isVisible
+     * @param int  $status
      */
-    public function testCanGetImagePage() {
-        // Create a temporary user
-        $user = User::factory()->make();
-
-        // Create a persistent editor
-        $editor = User::factory()->editor()->create();
-        // Create a page for the image to belong to
+    public function testGetImagePage($withImage, $asEditor, $isVisible, $status) {
         $page = Page::factory()->create();
+        if ($withImage) {
+            $imageData = $this->createImage($page);
 
-        // Create the image and associated records
-        $image = PageImage::factory()->create();
-        $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
-        PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+            $imageData['image']->update([
+                'is_visible' => $isVisible,
+            ]);
+        }
 
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/gallery/'.$image->id);
+        $response = $this->actingAs($asEditor ? $this->editor : $this->user)
+            ->get('/pages/'.$page->id.'/gallery/'.($withImage ? $imageData['image']->id : 9999));
 
-        $response->assertStatus(200);
+        $response->assertStatus($status);
 
-        // Delete the test images, to clean up
-        unlink($image->imagePath.'/'.$version->thumbnailFileName);
-        unlink($image->imagePath.'/'.$version->imageFileName);
+        if ($withImage) {
+            $this->service->testImages($imageData['image'], $imageData['version'], false);
+        }
+    }
+
+    public static function getImageProvider() {
+        return [
+            'with image'                   => [1, 0, 1, 200],
+            'with hidden image'            => [1, 0, 0, 404],
+            'with hidden image, as editor' => [1, 1, 0, 200],
+            'without image'                => [0, 0, 1, 404],
+        ];
     }
 
     /**
-     * Test hidden image page access.
-     * This shouldn't work.
+     * Creates an image and associated records.
+     *
+     * @param \App\Models\Page\Page|null $page
      */
-    public function testCannotGetHiddenImagePage() {
-        // Create a temporary user
-        $user = User::factory()->make();
+    private function createImage($page = null) {
+        if (!$page) {
+            $imageData['page'] = Page::factory()->create();
+        } else {
+            $imageData['page'] = $page;
+        }
 
-        // Create a persistent editor
         $editor = User::factory()->editor()->create();
-        // Create a page for the image to belong to
-        $page = Page::factory()->create();
 
-        // Create the image and associated records
-        $image = PageImage::factory()->hidden()->create();
-        $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
-        PageImageCreator::factory()->image($image->id)->user($user->id)->create();
-        PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
+        $imageData['image'] = PageImage::factory()->create();
+        $imageData['version'] = PageImageVersion::factory()->image($imageData['image']->id)->user($editor->id)->create();
+        PageImageCreator::factory()->image($imageData['image']->id)->user($editor->id)->create();
+        PagePageImage::factory()->page($imageData['page']->id)->image($imageData['image']->id)->create();
+        $this->service->testImages($imageData['image'], $imageData['version']);
 
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/gallery/'.$image->id);
-
-        $response->assertStatus(404);
-
-        // Delete the test images, to clean up
-        unlink($image->imagePath.'/'.$version->thumbnailFileName);
-        unlink($image->imagePath.'/'.$version->imageFileName);
-    }
-
-    /**
-     * Test hidden image page access.
-     * This should work.
-     */
-    public function testCanGetHiddenImagePageAsEditor() {
-        // Create a persistent editor
-        $editor = User::factory()->editor()->create();
-        // Create a page for the image to belong to
-        $page = Page::factory()->create();
-
-        // Create the image and associated records
-        $image = PageImage::factory()->hidden()->create();
-        $version = PageImageVersion::factory()->image($image->id)->user($editor->id)->create();
-        PageImageCreator::factory()->image($image->id)->user($editor->id)->create();
-        PagePageImage::factory()->page($page->id)->image($image->id)->create();
-        (new ImageManager)->testImages($image, $version);
-
-        $response = $this->actingAs($editor)
-            ->get('/pages/'.$page->id.'/gallery/'.$image->id);
-
-        $response->assertStatus(200);
-
-        // Delete the test images, to clean up
-        unlink($image->imagePath.'/'.$version->thumbnailFileName);
-        unlink($image->imagePath.'/'.$version->imageFileName);
+        return $imageData;
     }
 }

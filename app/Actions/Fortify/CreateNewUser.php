@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Facades\Settings;
 use App\Models\User\InvitationCode;
 use App\Models\User\Rank;
 use App\Models\User\User;
@@ -9,7 +10,6 @@ use App\Services\InvitationService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
-use Settings;
 
 class CreateNewUser implements CreatesNewUsers {
     use PasswordValidationRules;

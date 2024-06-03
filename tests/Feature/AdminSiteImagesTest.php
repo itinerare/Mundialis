@@ -12,60 +12,68 @@ class AdminSiteImagesTest extends TestCase {
     use RefreshDatabase;
 
     /******************************************************************************
-        SITE IMAGES
+        ADMIN / SITE IMAGES
     *******************************************************************************/
+
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->user = User::factory()->admin()->make();
+    }
 
     /**
      * Test site image index access.
      */
-    public function testCanGetSiteImagesIndex() {
-        // Make a temporary user
-        $user = User::factory()->admin()->make();
-
-        // Attempt page access
-        $response = $this->actingAs($user)
+    public function testGetSiteImagesIndex() {
+        $this->actingAs($this->user)
             ->get('/admin/site-images')
             ->assertStatus(200);
     }
 
     /**
-     * Test site image uploading.
+     * Test image uploading.
+     *
+     * @dataProvider siteImageProvider
+     *
+     * @param string $key
      */
-    public function testCanPostEditSiteImage() {
-        // Make a temporary user
-        $user = User::factory()->admin()->make();
+    public function testPostUploadImage($key) {
+        // Remove the current file if it exists
+        if (File::exists(public_path('images/'.$key.'.png'))) {
+            unlink('public/images/'.$key.'.png');
+        }
 
         // Create a fake file
-        $file = UploadedFile::fake()->image('test_image.png');
-
-        // Remove the current logo file if it exists
-        if (File::exists(public_path('images/logo.png'))) {
-            unlink('public/images/logo.png');
-        }
+        $this->file = UploadedFile::fake()->image('test_image.png');
 
         // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->post('/admin/site-images/upload', [
-                'file' => $file,
-                'key'  => 'logo',
+                'file' => $this->file,
+                'key'  => $key,
             ]);
 
+        $response->assertSessionHasNoErrors();
         // Check that the file is now present
         $this->
-            assertTrue(File::exists(public_path('images/logo.png')));
+            assertTrue(File::exists(public_path('images/'.$key.'.png')));
 
         // Replace with default images for tidiness
         $this->artisan('copy-default-images');
     }
 
+    public static function siteImageProvider() {
+        return [
+            'logo'       => ['logo'],
+            'meta-image' => ['meta-image'],
+        ];
+    }
+
     /**
      * Test custom css uploading.
      */
-    public function testCanPostEditSiteCss() {
-        // Make a temporary user
-        $user = User::factory()->admin()->make();
-
+    public function testPostUploadSiteCss() {
         // Create a fake file
         $file = UploadedFile::fake()->create('test.css', 50);
 
@@ -76,11 +84,12 @@ class AdminSiteImagesTest extends TestCase {
 
         // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->post('/admin/site-images/upload/css', [
                 'file' => $file,
             ]);
 
+        $response->assertSessionHasNoErrors();
         // Check that the file is now present
         $this->
             assertTrue(File::exists(public_path('css/custom.css')));

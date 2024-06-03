@@ -26,6 +26,15 @@ class SubjectCategory extends Model {
     protected $table = 'subject_categories';
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'data' => 'array',
+    ];
+
+    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -39,7 +48,7 @@ class SubjectCategory extends Model {
      */
     public static $createRules = [
         'name'  => 'required|unique:subject_categories',
-        'image' => 'mimes:png',
+        'image' => 'nullable|mimes:png',
     ];
 
     /**
@@ -49,7 +58,7 @@ class SubjectCategory extends Model {
      */
     public static $updateRules = [
         'name'  => 'required',
-        'image' => 'mimes:png',
+        'image' => 'nullable|mimes:png',
     ];
 
     /**********************************************************************************************
@@ -84,19 +93,6 @@ class SubjectCategory extends Model {
         ACCESSORS
 
     **********************************************************************************************/
-
-    /**
-     * Get the data attribute as an associative array.
-     *
-     * @return array
-     */
-    public function getDataAttribute() {
-        if (!isset($this->attributes['data'])) {
-            return null;
-        }
-
-        return json_decode($this->attributes['data'], true);
-    }
 
     /**
      * Get the category's url.
@@ -163,7 +159,7 @@ class SubjectCategory extends Model {
      */
     public function getSubjectAttribute() {
         // Fetch config information for the recorded subject
-        $subject = Config::get('mundialis.subjects.'.$this->attributes['subject']);
+        $subject = config('mundialis.subjects.'.$this->attributes['subject']);
         // Then add its key to the array
         $subject['key'] = $this->attributes['subject'];
 
@@ -187,6 +183,11 @@ class SubjectCategory extends Model {
     public function getTemplateAttribute() {
         // Check to see if this category's data is set,
         if (isset($this->data) && $this->data) {
+            // Fallback for testing purposes
+            if (!is_array($this->data)) {
+                $this->data = json_decode($this->data, true);
+            }
+
             return $this->data;
         }
 
@@ -201,6 +202,11 @@ class SubjectCategory extends Model {
         // If no data is found and the subject's template is set,
         // return the subject's template data
         if (isset($this->subjectTemplate->data) && $this->subjectTemplate->data) {
+            // Fallback for testing purposes
+            if (!is_array($this->subjectTemplate->data)) {
+                $this->subjectTemplate->data = json_decode($this->subjectTemplate->data, true);
+            }
+
             return $this->subjectTemplate->data;
         }
 
@@ -234,6 +240,11 @@ class SubjectCategory extends Model {
 
     private function fetchTemplateRecursive($parent) {
         if (isset($parent->data) && $parent->data) {
+            // Fallback for testing purposes
+            if (!is_array($parent->data)) {
+                $parent->data = json_decode($parent->data, true);
+            }
+
             return $parent->data;
         }
         if (isset($parent->parent_id) && $parent->parent) {

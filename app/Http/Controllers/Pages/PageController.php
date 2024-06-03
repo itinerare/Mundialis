@@ -13,7 +13,7 @@ use App\Models\User\User;
 use App\Services\PageManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Validation\Rule;
 
 class PageController extends Controller {
     /*
@@ -33,7 +33,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPage($id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -53,7 +53,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageHistory(Request $request, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -95,7 +95,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getLinksHere(Request $request, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -125,7 +125,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageVersion($pageId, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $pageId)->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $pageId)->first();
         if (!$page) {
             abort(404);
         }
@@ -174,10 +174,7 @@ class PageController extends Controller {
      */
     public function getEditPage($id) {
         $page = Page::find($id);
-        if (!$page) {
-            abort(404);
-        }
-        if (!Auth::user()->canEdit($page)) {
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
@@ -206,6 +203,9 @@ class PageController extends Controller {
         if (!$id) {
             $category = SubjectCategory::where('id', $request->get('category_id'))->first();
         } else {
+            if (!Page::where('id', $id)->exists()) {
+                abort(404);
+            }
             $category = Page::find($id)->category;
         }
 
@@ -213,37 +213,45 @@ class PageController extends Controller {
         // Set any un-set toggles (since Laravel does not pass anything on for them),
         // and collect any custom validation rules for the configured fields
         $answerArray = ['title', 'summary', 'description', 'category_id', 'is_visible',
-            'parent_id', 'page_tag', 'utility_tag', 'reason', 'is_minor', ];
+            'parent_id', 'page_tag', 'utility_tag', 'reason', 'is_minor'];
         $validationRules = ($id ? Page::$updateRules : Page::$createRules);
-        foreach ($category->formFields as $key=>$field) {
-            $answerArray[] = $key;
-            if (isset($field['rules'])) {
-                $validationRules[$key] = $field['rules'];
+
+        // Validate against the configured utility tags
+        $validationRules = $validationRules + [
+            'utility_tags.*' => ['nullable', Rule::in(array_keys(config('mundialis.utility_tags')))],
+        ];
+
+        if ($category) {
+            foreach ($category->formFields as $key=>$field) {
+                $answerArray[] = $key;
+                if (isset($field['rules'])) {
+                    $validationRules[$key] = $field['rules'];
+                }
+                if ($field['type'] == 'checkbox' && !isset($request[$key])) {
+                    $request[$key] = 0;
+                }
             }
-            if ($field['type'] == 'checkbox' && !isset($request[$key])) {
-                $request[$key] = 0;
-            }
-        }
-        if ($category->subject['key'] == 'time') {
-            foreach (['start', 'end'] as $segment) {
-                foreach ((new TimeDivision)->dateFields() as $key=>$field) {
-                    $answerArray[] = 'date_'.$segment.'_'.$key;
-                    if (isset($field['rules'])) {
-                        $validationRules['date_'.$segment.'_'.$key] = $field['rules'];
-                    }
-                    if ($field['type'] == 'checkbox' && !isset($request['date_'.$segment.'_'.$key])) {
-                        $request['date_'.$segment.'_'.$key] = 0;
+            if ($category->subject['key'] == 'time') {
+                foreach (['start', 'end'] as $segment) {
+                    foreach ((new TimeDivision)->dateFields() as $key=>$field) {
+                        $answerArray[] = 'date_'.$segment.'_'.$key;
+                        if (isset($field['rules'])) {
+                            $validationRules['date_'.$segment.'_'.$key] = $field['rules'];
+                        }
+                        if ($field['type'] == 'checkbox' && !isset($request['date_'.$segment.'_'.$key])) {
+                            $request['date_'.$segment.'_'.$key] = 0;
+                        }
                     }
                 }
             }
-        }
-        if ($category->subject['key'] == 'people') {
-            $answerArray[] = 'people_name';
-            foreach (['birth', 'death'] as $segment) {
-                $answerArray[] = $segment.'_place_id';
-                $answerArray[] = $segment.'_chronology_id';
-                foreach ((new TimeDivision)->dateFields() as $key=>$field) {
-                    $answerArray[] = $segment.'_'.$key;
+            if ($category->subject['key'] == 'people') {
+                $answerArray[] = 'people_name';
+                foreach (['birth', 'death'] as $segment) {
+                    $answerArray[] = $segment.'_place_id';
+                    $answerArray[] = $segment.'_chronology_id';
+                    foreach ((new TimeDivision)->dateFields() as $key=>$field) {
+                        $answerArray[] = $segment.'_'.$key;
+                    }
                 }
             }
         }
@@ -259,7 +267,7 @@ class PageController extends Controller {
             return redirect()->to($page->url);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -274,7 +282,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getProtectPage(Request $request, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        $page = Page::where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -321,7 +329,7 @@ class PageController extends Controller {
             flash('Page protection updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();
@@ -339,7 +347,7 @@ class PageController extends Controller {
      */
     public function getMovePage($id) {
         $page = Page::find($id);
-        if (!Auth::user()->canEdit($page)) {
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
@@ -349,7 +357,7 @@ class PageController extends Controller {
         }, $preserveKeys = true)->toArray();
 
         // Collect subjects and information
-        $orderedSubjects = collect(Config::get('mundialis.subjects'))->filter(function ($subject) use ($groupedCategories) {
+        $orderedSubjects = collect(config('mundialis.subjects'))->filter(function ($subject) use ($groupedCategories) {
             if (isset($groupedCategories[$subject['name']])) {
                 return 1;
             } else {
@@ -387,7 +395,7 @@ class PageController extends Controller {
             flash('Page moved successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();
@@ -406,10 +414,10 @@ class PageController extends Controller {
      */
     public function getResetPage($pageId, $id) {
         $page = Page::find($pageId);
-        $version = $page->versions()->where('id', $id)->first();
-        if (!Auth::user()->canEdit($page)) {
+        if ($page && !Auth::user()->canEdit($page)) {
             abort(404);
         }
+        $version = $page?->versions()->where('id', $id)->first();
 
         return view('pages._reset_page', [
             'page'    => $page,
@@ -427,11 +435,14 @@ class PageController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postResetPage(Request $request, PageManager $service, $pageId, $id) {
-        if ($id && $service->resetPage(Page::find($pageId), PageVersion::find($id), Auth::user(), $request->get('reason'))) {
+        $page = Page::find($pageId);
+        $version = $page?->versions()->where('id', $id)->first();
+
+        if ($id && $service->resetPage($page, $version, Auth::user(), $request->get('reason'))) {
             flash('Page reset successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();
@@ -449,7 +460,7 @@ class PageController extends Controller {
      */
     public function getDeletePage($id) {
         $page = Page::find($id);
-        if (!Auth::user()->canEdit($page)) {
+        if ($page && !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
@@ -471,7 +482,7 @@ class PageController extends Controller {
             flash('Page deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();

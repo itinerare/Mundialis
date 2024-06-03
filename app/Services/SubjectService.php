@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Lexicon\LexiconEntry;
 use App\Models\Page\Page;
 use App\Models\Subject\LexiconCategory;
 use App\Models\Subject\LexiconSetting;
@@ -43,22 +44,15 @@ class SubjectService extends Service {
 
             // Check if changes should cascade, and if so, perform comparison
             // and make updates as necessary
-            if ($template && (isset($data['cascade_template']) && $data['cascade_template']) && $data['data'] != $template->data) {
+            if ((isset($data['cascade_template']) && $data['cascade_template']) && (!$template || ($template && $data['data'] != $template->data))) {
                 // First find any impacted categories
-                $categories = $template->categories()->whereNotNull('data')->get();
+                $categories = SubjectCategory::where('subject', $subject)->whereNotNull('data')->get();
 
                 // Collect existing template data
-                $data['old'] = $template->data;
+                $data['old'] = ($template ? $template->data : []);
 
                 // Cascade changes to impacted categories
                 $this->cascadeTemplateChanges($categories, $data);
-            }
-
-            // Encode data before saving either way, for convenience
-            if (isset($data['data'])) {
-                $data['data'] = json_encode($data['data']);
-            } else {
-                $data['data'] = null;
             }
 
             // Either create or update template data
@@ -109,15 +103,20 @@ class SubjectService extends Service {
             if (isset($data['populate_template']) && $data['populate_template']) {
                 if (isset($data['parent_id'])) {
                     $parent = SubjectCategory::find($data['parent_id']);
-                }
-                $data['data'] = isset($parent) && $parent ? $parent->data : SubjectTemplate::where('subject', $subject)->first()->data;
-            }
 
-            // Encode data before saving either way, for convenience
-            if (isset($data['data'])) {
-                $data['data'] = json_encode($data['data']);
-            } else {
-                $data['data'] = null;
+                    if (!$parent) {
+                        throw new \Exception('Invalid category selected.');
+                    }
+                } else {
+                    $parent = SubjectTemplate::where('subject', $subject)->first();
+                }
+
+                // Fallback for testing purposes
+                if (!is_array($parent->data)) {
+                    $parent->data = json_decode($parent->data, true);
+                }
+
+                $data['data'] = $parent->data;
             }
 
             // Create category
@@ -176,7 +175,18 @@ class SubjectService extends Service {
 
             // Overwrite with data from subject template if necessary
             if (isset($data['populate_template']) && $data['populate_template']) {
-                $data['data'] = $category->parent ? $category->parent->data : $category->subjectTemplate->data;
+                if ($category->parent) {
+                    $parent = $category->parent;
+                } else {
+                    $parent = $category->subjectTemplate;
+                }
+
+                // Fallback for testing purposes
+                if (!is_array($parent->data)) {
+                    $parent->data = json_decode($parent->data, true);
+                }
+
+                $data['data'] = $parent->data;
             }
 
             // Check if changes should cascade, and if so, perform comparison
@@ -195,13 +205,6 @@ class SubjectService extends Service {
                     // Cascade changes to impacted categories
                     $this->cascadeTemplateChanges($categories, $data);
                 }
-            }
-
-            // Encode data before saving either way, for convenience
-            if (isset($data['data'])) {
-                $data['data'] = json_encode($data['data']);
-            } else {
-                $data['data'] = null;
             }
 
             // Update category
@@ -232,7 +235,9 @@ class SubjectService extends Service {
         DB::beginTransaction();
 
         try {
-            // Check first if the category is currently in use
+            if (!$category) {
+                throw new \Exception('Invalid category selected.');
+            }
             if (SubjectCategory::where('parent_id', $category->id)->exists()) {
                 throw new \Exception('A sub-category of this category exists. Please move or delete it first.');
             }
@@ -427,7 +432,10 @@ class SubjectService extends Service {
             if (TimeChronology::where('parent_id', $chronology->id)->exists()) {
                 throw new \Exception('A sub-chronology of this chronology exists. Please move or delete it first.');
             }
-            //if(Piece::where('project_id', $project->id)->exists()) throw new \Exception("A piece with this chronology exists. Please move or delete it first.");
+
+            if (Page::subject('time')->where('parent_id', $chronology->id)->exists()) {
+                throw new \Exception('A page in this chronology exists. Please move or delete it first.');
+            }
 
             $chronology->delete();
 
@@ -551,13 +559,6 @@ class SubjectService extends Service {
             // Process data for storage
             $data = $this->processLexiconData($data);
 
-            // Encode data before saving either way, for convenience
-            if (isset($data['data'])) {
-                $data['data'] = json_encode($data['data']);
-            } else {
-                $data['data'] = null;
-            }
-
             // Create category
             $category = LexiconCategory::create($data);
 
@@ -592,14 +593,12 @@ class SubjectService extends Service {
 
             // Overwrite with data from subject template if necessary
             if (isset($data['populate_settings']) && $data['populate_settings'] && $category->parent && isset($category->parent->data)) {
-                $data['data'] = $category->parent->data;
-            }
+                // Fallback for testing purposes
+                if (!is_array($category->parent->data)) {
+                    $category->parent->data = json_decode($category->parent->data, true);
+                }
 
-            // Encode data before saving either way, for convenience
-            if (isset($data['data'])) {
-                $data['data'] = json_encode($data['data']);
-            } else {
-                $data['data'] = null;
+                $data['data'] = $category->parent->data;
             }
 
             // Update category
@@ -628,7 +627,10 @@ class SubjectService extends Service {
             if (LexiconCategory::where('parent_id', $category->id)->exists()) {
                 throw new \Exception('A sub-category of this category exists. Please move or delete it first.');
             }
-            //if(Piece::where('project_id', $project->id)->exists()) throw new \Exception("A piece with this category exists. Please move or delete it first.");
+
+            if (LexiconEntry::where('category_id', $category->id)->exists()) {
+                throw new \Exception('An entriy with this category exists. Please move or delete it first.');
+            }
 
             $category->delete();
 
@@ -720,6 +722,10 @@ class SubjectService extends Service {
             }
         }
 
+        if (!isset($data['data'])) {
+            $data['data'] = null;
+        }
+
         return $data;
     }
 
@@ -762,6 +768,11 @@ class SubjectService extends Service {
 
         // Perform operations on impacted categories
         foreach ($categories as $key=>$category) {
+            // Fallback for testing purposes
+            if (isset($category->data) && !is_array($category->data)) {
+                $category->data = json_decode($category->data, true);
+            }
+
             $categoryData[$key] = $category->data;
 
             // Perform any removals
@@ -798,8 +809,6 @@ class SubjectService extends Service {
             // Recursively perform any additions
             $categoryData[$key] = array_replace_recursive($categoryData[$key], $data['changes']['added']);
 
-            // Update the category
-            $categoryData[$key] = json_encode($categoryData[$key]);
             $category->update(['data' => $categoryData[$key]]);
         }
 
@@ -872,6 +881,10 @@ class SubjectService extends Service {
                     }
                 }
             }
+        }
+
+        if (!isset($data['data'])) {
+            $data['data'] = null;
         }
 
         return $data;

@@ -57,8 +57,8 @@
 
         // Croppie ////////////////////////////////////////////////////////////////////////////////////
 
-        var thumbnailWidth = {{ Config::get('mundialis.settings.image_thumbnails.width') }};
-        var thumbnailHeight = {{ Config::get('mundialis.settings.image_thumbnails.height') }};
+        var thumbnailWidth = {{ config('mundialis.settings.image_thumbnails.width') }};
+        var thumbnailHeight = {{ config('mundialis.settings.image_thumbnails.height') }};
         var $cropper = $('#cropper');
         var c = null;
         var $x0 = $('#cropX0');

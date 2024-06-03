@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Lexicon\LexiconEntry;
 use App\Models\Page\Page;
+use App\Models\Page\PageVersion;
 use App\Models\Subject\LexiconSetting;
 use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
@@ -14,659 +15,257 @@ use Tests\TestCase;
 class PageLinkTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->editor = User::factory()->editor()->create();
+
+        // Delete any pages/versions present due to other tests
+        if (Page::query()->count()) {
+            Page::query()->delete();
+        }
+        if (PageVersion::query()->count()) {
+            PageVersion::query()->delete();
+        }
+
+        $this->page = Page::factory()->create();
+        PageVersion::factory()->page($this->page->id)->user($this->editor->id)->create();
+
+        $this->linkedPage = Page::factory()->create();
+        PageVersion::factory()->page($this->linkedPage->id)->user($this->editor->id)->create();
+    }
+
     /**
-     * Test page creation with a wiki-style link to a page.
+     * Test page creation with a wiki-style link.
+     *
+     * @dataProvider postWithLinkProvider
+     *
+     * @param string $type
+     * @param bool   $withLabel
      */
-    public function testCanPostCreatePageWithPageLink() {
-        // Create a category for the page to go into
+    public function testPostCreatePageWithLink($type, $withLabel) {
         $category = SubjectCategory::factory()->create();
 
-        // Create a page to link to
-        $linkPage = Page::factory()->create();
+        for ($i = 1; $i <= 2; $i++) {
+            $linkName[$i] = $this->faker->unique()->domainWord();
+        }
 
-        // Define some basic data
+        switch ($type) {
+            case 'page':
+                $target = [
+                    'id'   => $this->linkedPage->id,
+                    'name' => $this->linkedPage->title,
+                    'url'  => $this->linkedPage->url,
+                ];
+                break;
+            case 'wanted':
+                $target = [
+                    'name' => $linkName[1],
+                    'url'  => url('/special/create-wanted/'.$linkName[1]),
+                ];
+                break;
+        }
+
         $data = [
             'title'       => $this->faker->unique()->domainWord(),
-            'summary'     => null,
             'category_id' => $category->id,
-            'description' => '<p>[['.$linkPage->title.']]</p>',
+            'summary'     => null,
+            'description' => '<p>[['.$target['name'].($withLabel ? '|'.$linkName[2] : '').']]</p>',
         ];
 
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->editor)
             ->post('/pages/create', $data);
 
         $page = Page::where('title', $data['title'])->where('category_id', $category->id)->first();
 
-        // Directly verify that the appropriate change has occurred
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('page_versions', [
             'page_id' => $page->id,
-            'data'    => '{"data":{"description":"<p>[['.$linkPage->title.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/pages\/'.$linkPage->id.'.'.$linkPage->slug.'\" class=\"text-primary\">'.$linkPage->title.'<\/a><\/p>"},"links":[{"link_id":'.$linkPage->id.'}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
+            'data'    => '{"data":{"description":'.json_encode($data['description']).',"parsed":{"description":"<p><a href=\"'.str_replace('"', '', json_encode($target['url'])).'\" class=\"text-'.($type != 'wanted' ? 'primary' : 'danger').'\">'.($withLabel ? $linkName[2] : $target['name']).'<\/a><\/p>"},"links":['.(isset($target['id']) ? '{"link_id":'.$target['id'].'}' : '{"title":"'.$linkName[1].'"}').']},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
-
         $this->assertDatabaseHas('page_links', [
-            'parent_id' => $page->id,
-            'link_id'   => $linkPage->id,
+            'parent_id'   => $page->id,
+            'linked_type' => 'page',
+            'link_id'     => $target['id'] ?? null,
+            'title'       => $type == 'wanted' ? $linkName[1] : null,
         ]);
     }
 
-    /**
-     * Test page editing with a wiki-style link to a page.
-     */
-    public function testCanPostEditPageWithPageLink() {
-        $page = Page::factory()->create();
-
-        // Create a page to link to
-        $linkPage = Page::factory()->create();
-
-        // Define some basic data
-        $data = [
-            'title'       => $this->faker->unique()->domainWord(),
-            'summary'     => null,
-            'description' => '<p>[['.$linkPage->title.']]</p>',
+    public static function postWithLinkProvider() {
+        return [
+            'page'              => ['page', 0],
+            'page with label'   => ['page', 1],
+            'wanted'            => ['wanted', 0],
+            'wanted with label' => ['wanted', 1],
         ];
-
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/edit', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_versions', [
-            'page_id' => $page->id,
-            'data'    => '{"data":{"description":"<p>[['.$linkPage->title.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/pages\/'.$linkPage->id.'.'.$linkPage->slug.'\" class=\"text-primary\">'.$linkPage->title.'<\/a><\/p>"},"links":[{"link_id":'.$linkPage->id.'}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
-        ]);
-
-        $this->assertDatabaseHas('page_links', [
-            'parent_id' => $page->id,
-            'link_id'   => $linkPage->id,
-        ]);
     }
 
     /**
-     * Test page creation with a wiki-style link to a page with a label.
+     * Test page editing with a wiki-style link.
+     *
+     * @dataProvider postWithLinkProvider
+     *
+     * @param string $type
+     * @param bool   $withLabel
      */
-    public function testCanPostCreatePageWithLabeledPageLink() {
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->create();
-
-        // Generate a page to link to and word for label
-        $linkPage = Page::factory()->create();
-        $linkWord = $this->faker->unique()->domainWord();
-
-        // Define some basic data
-        $data = [
-            'title'       => $this->faker->unique()->domainWord(),
-            'summary'     => null,
-            'category_id' => $category->id,
-            'description' => '<p>[['.$linkPage->title.'|'.$linkWord.']]</p>',
-        ];
-
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/create', $data);
-
-        $page = Page::where('title', $data['title'])->where('category_id', $category->id)->first();
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_versions', [
-            'page_id' => $page->id,
-            'data'    => '{"data":{"description":"<p>[['.$linkPage->title.'|'.$linkWord.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/pages\/'.$linkPage->id.'.'.$linkPage->slug.'\" class=\"text-primary\">'.$linkWord.'<\/a><\/p>"},"links":[{"link_id":'.$linkPage->id.'}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
-        ]);
-
-        $this->assertDatabaseHas('page_links', [
-            'parent_id' => $page->id,
-            'link_id'   => $linkPage->id,
-        ]);
-    }
-
-    /**
-     * Test page editing with a wiki-style link to a page with a label.
-     */
-    public function testCanPostEditPageWithLabeledPageLink() {
-        $page = Page::factory()->create();
-
-        // Generate a page to link to and word for label
-        $linkPage = Page::factory()->create();
-        $linkWord = $this->faker->unique()->domainWord();
-
-        // Define some basic data
-        $data = [
-            'title'       => $this->faker->unique()->domainWord(),
-            'summary'     => null,
-            'description' => '<p>[['.$linkPage->title.'|'.$linkWord.']]</p>',
-        ];
-
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/edit', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_versions', [
-            'page_id' => $page->id,
-            'data'    => '{"data":{"description":"<p>[['.$linkPage->title.'|'.$linkWord.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/pages\/'.$linkPage->id.'.'.$linkPage->slug.'\" class=\"text-primary\">'.$linkWord.'<\/a><\/p>"},"links":[{"link_id":'.$linkPage->id.'}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
-        ]);
-
-        $this->assertDatabaseHas('page_links', [
-            'parent_id' => $page->id,
-            'link_id'   => $linkPage->id,
-        ]);
-    }
-
-    /**
-     * Test page creation with a wiki-style link to a wanted page.
-     */
-    public function testCanPostCreatePageWithWantedLink() {
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->create();
-
-        // Generate a word to use
-        $linkWord = $this->faker->unique()->domainWord();
-
-        // Define some basic data
-        $data = [
-            'title'       => $this->faker->unique()->domainWord(),
-            'summary'     => null,
-            'category_id' => $category->id,
-            'description' => '<p>[['.$linkWord.']]</p>',
-        ];
-
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/create', $data);
-
-        $page = Page::where('title', $data['title'])->where('category_id', $category->id)->first();
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_versions', [
-            'page_id' => $page->id,
-            'data'    => '{"data":{"description":"<p>[['.$linkWord.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/special\/create-wanted\/'.$linkWord.'\" class=\"text-danger\">'.$linkWord.'<\/a><\/p>"},"links":[{"title":"'.$linkWord.'"}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
-        ]);
-
-        $this->assertDatabaseHas('page_links', [
-            'parent_id' => $page->id,
-            'link_id'   => null,
-            'title'     => $linkWord,
-        ]);
-    }
-
-    /**
-     * Test page editing with a wiki-style link to a wanted page.
-     */
-    public function testCanPostEditPageWithWantedLink() {
-        $page = Page::factory()->create();
-
-        // Generate a word to use
-        $linkWord = $this->faker->unique()->domainWord();
-
-        // Define some basic data
-        $data = [
-            'title'       => $this->faker->unique()->domainWord(),
-            'summary'     => null,
-            'description' => '<p>[['.$linkWord.']]</p>',
-        ];
-
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/edit', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_versions', [
-            'page_id' => $page->id,
-            'data'    => '{"data":{"description":"<p>[['.$linkWord.']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/special\/create-wanted\/'.$linkWord.'\" class=\"text-danger\">'.$linkWord.'<\/a><\/p>"},"links":[{"title":"'.$linkWord.'"}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
-        ]);
-
-        $this->assertDatabaseHas('page_links', [
-            'parent_id' => $page->id,
-            'link_id'   => null,
-            'title'     => $linkWord,
-        ]);
-    }
-
-    /**
-     * Test page creation with a wiki-style link to a wanted page with a label.
-     */
-    public function testCanPostCreatePageWithLabeledWantedLink() {
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->create();
-
-        // Generate some words to use
+    public function testPostEditPageWithLink($type, $withLabel) {
         for ($i = 1; $i <= 2; $i++) {
-            $linkWord[$i] = $this->faker->unique()->domainWord();
+            $linkName[$i] = $this->faker->unique()->domainWord();
         }
 
-        // Define some basic data
-        $data = [
-            'title'       => $this->faker->unique()->domainWord(),
-            'summary'     => null,
-            'category_id' => $category->id,
-            'description' => '<p>[['.$linkWord[1].'|'.$linkWord[2].']]</p>',
-        ];
-
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/create', $data);
-
-        $page = Page::where('title', $data['title'])->where('category_id', $category->id)->first();
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_versions', [
-            'page_id' => $page->id,
-            'data'    => '{"data":{"description":"<p>[['.$linkWord[1].'|'.$linkWord[2].']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/special\/create-wanted\/'.$linkWord[1].'\" class=\"text-danger\">'.$linkWord[2].'<\/a><\/p>"},"links":[{"title":"'.$linkWord[1].'"}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
-        ]);
-
-        $this->assertDatabaseHas('page_links', [
-            'parent_id' => $page->id,
-            'link_id'   => null,
-            'title'     => $linkWord,
-        ]);
-    }
-
-    /**
-     * Test page editing with a wiki-style link to a wanted page with a label.
-     */
-    public function testCanPostEditPageWithLabeledWantedLink() {
-        $page = Page::factory()->create();
-
-        // Generate some words to use
-        for ($i = 1; $i <= 2; $i++) {
-            $linkWord[$i] = $this->faker->unique()->domainWord();
+        switch ($type) {
+            case 'page':
+                $target = [
+                    'id'   => $this->linkedPage->id,
+                    'name' => $this->linkedPage->title,
+                    'url'  => $this->linkedPage->url,
+                ];
+                break;
+            case 'wanted':
+                $target = [
+                    'name' => $linkName[1],
+                    'url'  => url('/special/create-wanted/'.$linkName[1]),
+                ];
+                break;
         }
 
-        // Define some basic data
         $data = [
             'title'       => $this->faker->unique()->domainWord(),
             'summary'     => null,
-            'description' => '<p>[['.$linkWord[1].'|'.$linkWord[2].']]</p>',
+            'description' => '<p>[['.$target['name'].($withLabel ? '|'.$linkName[2] : '').']]</p>',
         ];
 
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/edit', $data);
+            ->actingAs($this->editor)
+            ->post('/pages/'.$this->page->id.'/edit', $data);
 
-        // Directly verify that the appropriate change has occurred
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('page_versions', [
-            'page_id' => $page->id,
-            'data'    => '{"data":{"description":"<p>[['.$linkWord[1].'|'.$linkWord[2].']]<\/p>","parsed":{"description":"<p><a href=\"http:\/\/'.preg_replace('(^https?://)', '', env('APP_URL', 'localhost')).'\/special\/create-wanted\/'.$linkWord[1].'\" class=\"text-danger\">'.$linkWord[2].'<\/a><\/p>"},"links":[{"title":"'.$linkWord[1].'"}]},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
+            'page_id' => $this->page->id,
+            'data'    => '{"data":{"description":'.json_encode($data['description']).',"parsed":{"description":"<p><a href=\"'.str_replace('"', '', json_encode($target['url'])).'\" class=\"text-'.($type != 'wanted' ? 'primary' : 'danger').'\">'.($withLabel ? $linkName[2] : $target['name']).'<\/a><\/p>"},"links":['.(isset($target['id']) ? '{"link_id":'.$target['id'].'}' : '{"title":"'.$linkName[1].'"}').']},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
         ]);
-
         $this->assertDatabaseHas('page_links', [
-            'parent_id' => $page->id,
-            'link_id'   => null,
-            'title'     => $linkWord,
+            'parent_id'   => $this->page->id,
+            'linked_type' => 'page',
+            'link_id'     => $target['id'] ?? null,
+            'title'       => $type == 'wanted' ? $linkName[1] : null,
         ]);
     }
 
     /**
-     * Test lexicon entry creation with a link to a page.
+     * Test lexicon entry creation with a page link.
+     *
+     * @dataProvider postWithLinkProvider
+     *
+     * @param string $type
+     * @param bool   $withLabel
      */
-    public function testCanPostCreateLexiconEntryWithPageLink() {
-        // Ensure lexical classes are present to utilize
+    public function testPostCreateLexiconEntryWithLink($type, $withLabel) {
+        for ($i = 1; $i <= 2; $i++) {
+            $linkName[$i] = $this->faker->unique()->domainWord();
+        }
+
+        switch ($type) {
+            case 'page':
+                $target = [
+                    'id'   => $this->linkedPage->id,
+                    'name' => $this->linkedPage->title,
+                    'url'  => $this->linkedPage->url,
+                ];
+                break;
+            case 'wanted':
+                $target = [
+                    'name' => $linkName[1],
+                    'url'  => url('/special/create-wanted/'.$linkName[1]),
+                ];
+                break;
+        }
+
         $this->artisan('add-lexicon-settings');
         $class = LexiconSetting::all()->first();
 
-        // Create a page to link to
-        $linkPage = Page::factory()->create();
-
-        // Define some basic data
         $data = [
             'word'       => $this->faker->unique()->domainWord(),
             'meaning'    => $this->faker->unique()->domainWord(),
             'class'      => $class->name,
-            'definition' => '<p>[['.$linkPage->title.']]</p>',
+            'definition' => '<p>[['.$target['name'].($withLabel ? '|'.$linkName[2] : '').']]</p>',
         ];
 
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->editor)
             ->post('/language/lexicon/create', $data);
 
         $entry = LexiconEntry::where('word', $data['word'])->first();
 
-        // Directly verify that the appropriate change has occurred
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('lexicon_entries', [
             'id'                => $entry->id,
             'definition'        => $data['definition'],
-            'parsed_definition' => '<p>'.$linkPage->displayName.'</p>',
+            'parsed_definition' => '<p><a href="'.$target['url'].'" class="text-'.($type != 'wanted' ? 'primary' : 'danger').'">'.($withLabel ? $linkName[2] : $target['name']).'</a></p>',
         ]);
-
         $this->assertDatabaseHas('page_links', [
             'parent_id'   => $entry->id,
-            'link_id'     => $linkPage->id,
+            'link_id'     => $target['id'] ?? null,
             'parent_type' => 'entry',
+            'linked_type' => 'page',
+            'title'       => $type == 'wanted' ? $linkName[1] : null,
         ]);
     }
 
     /**
-     * Test lexicon entry editing with a link to a page.
+     * Test lexicon entry editing with a page link.
+     *
+     * @dataProvider postWithLinkProvider
+     *
+     * @param string $type
+     * @param bool   $withLabel
      */
-    public function testCanPostEditLexiconEntryWithPageLink() {
-        // Make an entry to edit
-        $entry = LexiconEntry::factory()->create();
-
-        // Create a page to link to
-        $linkPage = Page::factory()->create();
-
-        // Define some basic data
-        $data = [
-            'word'       => $this->faker->unique()->domainWord(),
-            'meaning'    => $entry->meaning,
-            'class'      => $entry->class,
-            'definition' => '<p>[['.$linkPage->title.']]</p>',
-        ];
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_entries', [
-            'id'                => $entry->id,
-            'definition'        => $data['definition'],
-            'parsed_definition' => '<p>'.$linkPage->displayName.'</p>',
-        ]);
-
-        $this->assertDatabaseHas('page_links', [
-            'parent_id'   => $entry->id,
-            'link_id'     => $linkPage->id,
-            'parent_type' => 'entry',
-        ]);
-    }
-
-    /**
-     * Test lexicon entry creation with a labeled link to a page.
-     */
-    public function testCanPostCreateLexiconEntryWithLabeledPageLink() {
-        // Ensure lexical classes are present to utilize
-        $this->artisan('add-lexicon-settings');
-        $class = LexiconSetting::all()->first();
-
-        // Generate a page to link to and word for label
-        $linkPage = Page::factory()->create();
-        $linkWord = $this->faker->unique()->domainWord();
-
-        // Define some basic data
-        $data = [
-            'word'       => $this->faker->unique()->domainWord(),
-            'meaning'    => $this->faker->unique()->domainWord(),
-            'class'      => $class->name,
-            'definition' => '<p>[['.$linkPage->title.'|'.$linkWord.']]</p>',
-        ];
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/create', $data);
-
-        $entry = LexiconEntry::where('word', $data['word'])->first();
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_entries', [
-            'id'                => $entry->id,
-            'definition'        => $data['definition'],
-            'parsed_definition' => '<p><a href="'.$linkPage->url.'" class="text-primary">'.$linkWord.'</a></p>',
-        ]);
-
-        $this->assertDatabaseHas('page_links', [
-            'parent_id'   => $entry->id,
-            'link_id'     => $linkPage->id,
-            'parent_type' => 'entry',
-        ]);
-    }
-
-    /**
-     * Test lexicon entry editing with a labeled link to a page.
-     */
-    public function testCanPostEditLexiconEntryWithLabeledPageLink() {
-        // Make an entry to edit
-        $entry = LexiconEntry::factory()->create();
-
-        // Generate a page to link to and word for label
-        $linkPage = Page::factory()->create();
-        $linkWord = $this->faker->unique()->domainWord();
-
-        // Define some basic data
-        $data = [
-            'word'       => $this->faker->unique()->domainWord(),
-            'meaning'    => $entry->meaning,
-            'class'      => $entry->class,
-            'definition' => '<p>[['.$linkPage->title.'|'.$linkWord.']]</p>',
-        ];
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_entries', [
-            'id'                => $entry->id,
-            'definition'        => $data['definition'],
-            'parsed_definition' => '<p><a href="'.$linkPage->url.'" class="text-primary">'.$linkWord.'</a></p>',
-        ]);
-
-        $this->assertDatabaseHas('page_links', [
-            'parent_id'   => $entry->id,
-            'link_id'     => $linkPage->id,
-            'parent_type' => 'entry',
-        ]);
-    }
-
-    /**
-     * Test lexicon entry creation with a link to a wanted page.
-     */
-    public function testCanPostCreateLexiconEntryWithWantedLink() {
-        // Ensure lexical classes are present to utilize
-        $this->artisan('add-lexicon-settings');
-        $class = LexiconSetting::all()->first();
-
-        // Generate a word to use
-        $linkWord = $this->faker->unique()->domainWord();
-
-        // Define some basic data
-        $data = [
-            'word'       => $this->faker->unique()->domainWord(),
-            'meaning'    => $this->faker->unique()->domainWord(),
-            'class'      => $class->name,
-            'definition' => '<p>[['.$linkWord.']]</p>',
-        ];
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/create', $data);
-
-        $entry = LexiconEntry::where('word', $data['word'])->first();
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_entries', [
-            'id'                => $entry->id,
-            'definition'        => $data['definition'],
-            'parsed_definition' => '<p><a href="'.url('special/create-wanted/'.$linkWord).'" class="text-danger">'.$linkWord.'</a></p>',
-        ]);
-
-        $this->assertDatabaseHas('page_links', [
-            'parent_id'   => $entry->id,
-            'parent_type' => 'entry',
-            'link_id'     => null,
-            'title'       => $linkWord,
-        ]);
-    }
-
-    /**
-     * Test lexicon entry editing with a link to a wanted page.
-     */
-    public function testCanPostEditLexiconEntryWithWantedLink() {
-        // Make an entry to edit
-        $entry = LexiconEntry::factory()->create();
-
-        // Generate a word to use
-        $linkWord = $this->faker->unique()->domainWord();
-
-        // Define some basic data
-        $data = [
-            'word'       => $this->faker->unique()->domainWord(),
-            'meaning'    => $entry->meaning,
-            'class'      => $entry->class,
-            'definition' => '<p>[['.$linkWord.']]</p>',
-        ];
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_entries', [
-            'id'                => $entry->id,
-            'definition'        => $data['definition'],
-            'parsed_definition' => '<p><a href="'.url('special/create-wanted/'.$linkWord).'" class="text-danger">'.$linkWord.'</a></p>',
-        ]);
-
-        $this->assertDatabaseHas('page_links', [
-            'parent_id'   => $entry->id,
-            'parent_type' => 'entry',
-            'link_id'     => null,
-            'title'       => $linkWord,
-        ]);
-    }
-
-    /**
-     * Test lexicon entry creation with a labeled link to a wanted page.
-     */
-    public function testCanPostCreateLexiconEntryWithLabeledWantedLink() {
-        // Ensure lexical classes are present to utilize
-        $this->artisan('add-lexicon-settings');
-        $class = LexiconSetting::all()->first();
-
-        // Generate some words to use
+    public function testPostEditLexiconEntryWithLink($type, $withLabel) {
         for ($i = 1; $i <= 2; $i++) {
-            $linkWord[$i] = $this->faker->unique()->domainWord();
+            $linkName[$i] = $this->faker->unique()->domainWord();
         }
 
-        // Define some basic data
-        $data = [
-            'word'       => $this->faker->unique()->domainWord(),
-            'meaning'    => $this->faker->unique()->domainWord(),
-            'class'      => $class->name,
-            'definition' => '<p>[['.$linkWord[1].'|'.$linkWord[2].']]</p>',
-        ];
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/create', $data);
-
-        $entry = LexiconEntry::where('word', $data['word'])->first();
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_entries', [
-            'id'                => $entry->id,
-            'definition'        => $data['definition'],
-            'parsed_definition' => '<p><a href="'.url('special/create-wanted/'.$linkWord[1]).'" class="text-danger">'.$linkWord[2].'</a></p>',
-        ]);
-
-        $this->assertDatabaseHas('page_links', [
-            'parent_id'   => $entry->id,
-            'parent_type' => 'entry',
-            'link_id'     => null,
-            'title'       => $linkWord[1],
-        ]);
-    }
-
-    /**
-     * Test lexicon entry editing with a labeled link to a wanted page.
-     */
-    public function testCanPostEditLexiconEntryWithLabeledWantedLink() {
-        // Make an entry to edit
-        $entry = LexiconEntry::factory()->create();
-
-        // Generate some words to use
-        for ($i = 1; $i <= 2; $i++) {
-            $linkWord[$i] = $this->faker->unique()->domainWord();
+        switch ($type) {
+            case 'page':
+                $target = [
+                    'id'   => $this->linkedPage->id,
+                    'name' => $this->linkedPage->title,
+                    'url'  => $this->linkedPage->url,
+                ];
+                break;
+            case 'wanted':
+                $target = [
+                    'name' => $linkName[1],
+                    'url'  => url('/special/create-wanted/'.$linkName[1]),
+                ];
+                break;
         }
 
-        // Define some basic data
+        $entry = LexiconEntry::factory()->create();
         $data = [
             'word'       => $this->faker->unique()->domainWord(),
             'meaning'    => $entry->meaning,
             'class'      => $entry->class,
-            'definition' => '<p>[['.$linkWord[1].'|'.$linkWord[2].']]</p>',
+            'definition' => '<p>[['.$target['name'].($withLabel ? '|'.$linkName[2] : '').']]</p>',
         ];
 
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->editor)
             ->post('/language/lexicon/edit/'.$entry->id, $data);
 
-        // Directly verify that the appropriate change has occurred
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('lexicon_entries', [
             'id'                => $entry->id,
             'definition'        => $data['definition'],
-            'parsed_definition' => '<p><a href="'.url('special/create-wanted/'.$linkWord[1]).'" class="text-danger">'.$linkWord[2].'</a></p>',
+            'parsed_definition' => '<p><a href="'.$target['url'].'" class="text-'.($type != 'wanted' ? 'primary' : 'danger').'">'.($withLabel ? $linkName[2] : $target['name']).'</a></p>',
         ]);
-
         $this->assertDatabaseHas('page_links', [
             'parent_id'   => $entry->id,
+            'link_id'     => $target['id'] ?? null,
             'parent_type' => 'entry',
-            'link_id'     => null,
-            'title'       => $linkWord[1],
+            'linked_type' => 'page',
+            'title'       => $type == 'wanted' ? $linkName[1] : null,
         ]);
     }
 }

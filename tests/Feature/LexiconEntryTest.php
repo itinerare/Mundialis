@@ -14,537 +14,426 @@ use Tests\TestCase;
 class LexiconEntryTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
+    /******************************************************************************
+        LANGUAGE / LEXICON
+    *******************************************************************************/
+
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->editor = User::factory()->editor()->make();
+        // Ensure lexical classes are present to utilize
+        $this->artisan('add-lexicon-settings');
+        $this->class = LexiconSetting::all()->first();
+
+        // Delete any entries/etymologies to ensure that counts are accurate
+        LexiconEntry::query()->delete();
+        LexiconEtymology::query()->delete();
+    }
+
+    /**
+     * Test lexicon entry access.
+     *
+     * @dataProvider getEntryProvider
+     *
+     * @param bool       $isValid
+     * @param array|null $data
+     * @param int        $status
+     */
+    public function testGetLexiconEntry($isValid, $data, $status) {
+        // Create an entry to view
+        $entry = LexiconEntry::factory();
+        if ($data && $data[3]) {
+            $entry = $entry->conjugationData();
+        }
+        $entry = $entry->create([
+            'definition' => $data && $data[0] ? '<p>'.$this->faker->unique()->domainWord().'</p>' : null,
+        ]);
+
+        if ($data && $data[1]) {
+            $parent = LexiconEntry::factory()->create();
+            LexiconEtymology::create([
+                'entry_id'  => $entry->id,
+                'parent_id' => $parent->id,
+            ]);
+        }
+
+        if ($data && $data[2]) {
+            $child = LexiconEntry::factory()->create();
+            LexiconEtymology::create([
+                'entry_id'  => $child->id,
+                'parent_id' => $entry->id,
+            ]);
+        }
+
+        $response = $this->actingAs($this->editor)
+            ->get('/language/lexicon/entries/'.($isValid ? $entry->id : 2));
+
+        $response->assertStatus($status);
+    }
+
+    public static function getEntryProvider() {
+        // $data = [$withDefinition, $withParent, $withChild, $withConjugation]
+
+        return [
+            'valid'                           => [1, null, 200],
+            'with definition'                 => [1, [1, 0, 0, 0], 200],
+            'with definition, parent'         => [1, [1, 1, 0, 0], 200],
+            'with definition, child'          => [1, [1, 0, 1, 0], 200],
+            'with definition, parent, child'  => [1, [1, 1, 1, 0], 200],
+            'with definition, conjugation'    => [1, [1, 0, 0, 1], 200],
+            'with parent'                     => [1, [0, 1, 0, 0], 200],
+            'with parent, conjugation'        => [1, [0, 1, 0, 1], 200],
+            'with child'                      => [1, [0, 0, 1, 0], 200],
+            'with child, conjugation'         => [1, [0, 0, 1, 0], 200],
+            'with parent, child'              => [1, [0, 1, 1, 0], 200],
+            'with parent, child, conjugation' => [1, [0, 1, 1, 1], 200],
+            'with all'                        => [1, [1, 1, 1, 1], 200],
+            'invalid'                         => [0, null, 404],
+        ];
+    }
+
     /**
      * Test lexicon entry creation access.
+     *
+     * @dataProvider getCreateEntryProvider
+     *
+     * @param bool $withCategory
      */
-    public function testCanGetCreateLexiconEntry() {
-        // Create a temporary editor
-        $user = User::factory()->editor()->make();
+    public function testGetCreateLexiconEntry($withCategory) {
+        if ($withCategory) {
+            // Create a category
+            $category = LexiconCategory::factory()->create();
+        }
 
-        $response = $this->actingAs($user)
-            ->get('/language/lexicon/create');
+        $response = $this->actingAs($this->editor)
+            ->get('/language/lexicon/create'.($withCategory ? '?category_id='.$category->id : ''));
 
         $response->assertStatus(200);
     }
 
-    /**
-     * Test lexicon entry creation access with a category.
-     */
-    public function testCanGetCreateLexiconEntryWithCategory() {
-        // Create a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Create a persistent category for the entry to go into
-        $category = LexiconCategory::factory()->create();
-
-        $response = $this->actingAs($user)
-            ->get('/language/lexicon/create?category_id='.$category->id);
-
-        $response->assertStatus(200);
+    public static function getCreateEntryProvider() {
+        return [
+            'without category' => [0],
+            'with category'    => [1],
+        ];
     }
 
     /**
-     * Test lexicon entry editing access.
+     * Test lexicon entry edit access.
+     *
+     * @dataProvider getEditEntryProvider
+     *
+     * @param bool $isValid
+     * @param int  $status
      */
-    public function testCanGetEditLexiconEntry() {
-        // Create a temporary editor
-        $user = User::factory()->editor()->make();
+    public function testGetEditLexiconEntry($isValid, $status) {
+        if ($isValid) {
+            // Make an entry to edit
+            $entry = LexiconEntry::factory()->create();
+        }
 
-        // Make an entry to edit
-        $entry = LexiconEntry::factory()->create();
+        $response = $this->actingAs($this->editor)
+            ->get('/language/lexicon/edit/'.($isValid ? $entry->id : 2));
 
-        $response = $this->actingAs($user)
-            ->get('/language/lexicon/edit/'.$entry->id);
+        $response->assertStatus($status);
+    }
 
-        $response->assertStatus(200);
+    public static function getEditEntryProvider() {
+        return [
+            'valid entry'   => [1, 200],
+            'invalid entry' => [0, 404],
+        ];
     }
 
     /**
-     * Test lexicon entry creation with minimal data.
+     * Test lexicon entry creation.
+     *
+     * @dataProvider postCreateEditEntryProvider
+     *
+     * @param bool       $withCategory
+     * @param bool       $withDefinition
+     * @param array|null $parent
+     * @param array|null $conjData
+     * @param bool       $expected
      */
-    public function testCanPostCreateEmptyLexiconEntry() {
-        // Ensure lexical classes are present to utilize
-        $this->artisan('add-lexicon-settings');
-        $class = LexiconSetting::all()->first();
+    public function testPostCreateLexiconEntry($withCategory, $withDefinition, $parent, $conjData, $expected) {
+        if ($withCategory) {
+            // Create a category for the entry to go into
+            $category = LexiconCategory::factory()->create();
+        }
 
-        // Define some basic data
+        if ($parent && $parent[0]) {
+            // Create an entry to be the parent
+            $parentEntry = LexiconEntry::factory()->create();
+        }
+
+        // Generate or otherwise set up some test data
         $data = [
-            'word'    => $this->faker->unique()->domainWord(),
-            'meaning' => $this->faker->unique()->domainWord(),
-            'class'   => $class->name,
+            'word'        => $this->faker->unique()->domainWord(),
+            'meaning'     => $expected ? $this->faker->unique()->domainWord() : null,
+            'class'       => $this->class->name,
+            'definition'  => $withDefinition ? '<p>'.$this->faker->unique()->domainWord().'</p>' : null,
+            'category_id' => $withCategory ? $category->id : null,
+            'parent_id'   => [] + ($parent && $parent[0] ? [$parentEntry->id] : []) + ($parent && $parent[1] ? [null] : []),
+            'parent'      => [] + ($parent && $parent[0] ? [null] : []) + ($parent && $parent[1] ? [$this->faker->unique()->domainWord()] : []),
         ];
 
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->editor)
             ->post('/language/lexicon/create', $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_entries', [
-            'word'    => $data['word'],
-            'meaning' => $data['meaning'],
-            'class'   => $data['class'],
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('lexicon_entries', [
+                'word'        => $data['word'],
+                'meaning'     => $data['meaning'],
+                'class'       => $data['class'],
+                'definition'  => $data['definition'],
+                'category_id' => $withCategory ? $category->id : null,
+            ]);
+
+            if ($parent) {
+                // Locate the newly created entry
+                $entry = LexiconEntry::where('word', $data['word'])->where('meaning', $data['meaning'])->first();
+
+                if ($parent[0]) {
+                    $this->assertDatabaseHas('lexicon_etymologies', [
+                        'entry_id'  => $entry->id,
+                        'parent_id' => $parentEntry->id,
+                    ]);
+                }
+
+                if ($parent[1]) {
+                    $this->assertDatabaseHas('lexicon_etymologies', [
+                        'entry_id' => $entry->id,
+                        'parent'   => $data['parent'][0],
+                    ]);
+                }
+            }
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertDatabaseCount('lexicon_entries', $parent[0] ?? 0);
+            if ($parent) {
+                $this->assertDatabaseEmpty('lexicon_etymologies');
+            }
+        }
     }
 
     /**
-     * Test lexicon entry editing with minimal data.
+     * Test lexicon entry editing.
+     *
+     * @dataProvider postCreateEditEntryProvider
+     * @dataProvider postConjugationProvider
+     *
+     * @param bool       $withCategory
+     * @param bool       $withDefinition
+     * @param array|null $parent
+     * @param array|null $conjData
+     * @param bool       $expected
      */
-    public function testCanPostEditEmptyLexiconEntry() {
+    public function testPostEditLexiconEntry($withCategory, $withDefinition, $parent, $conjData, $expected) {
         // Make an entry to edit
         $entry = LexiconEntry::factory()->create();
 
-        // Define some basic data
-        $data = [
-            'word'    => $this->faker->unique()->domainWord(),
-            'meaning' => $entry->meaning,
-            'class'   => $entry->class,
-        ];
+        if ($withCategory) {
+            $category = LexiconCategory::factory();
 
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
+            if (!$conjData) {
+                // Create a category for the entry to go into
+                $category = $category->create();
+            } elseif ($conjData) {
+                // Create a category with test data for the entry to go into
+                if ($conjData[0]) {
+                    $category = $category->extendedData($entry->lexicalClass->id)->create();
+                } else {
+                    $category = $category->testData($entry->lexicalClass->id)->create();
+                }
 
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
+                // Set the entry's category from the outset
+                // This is necessary for adding conjugated/declined forms
+                $entry->update(['category_id' => $category->id]);
+            }
+        }
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_entries', [
-            'id'   => $entry->id,
-            'word' => $data['word'],
-        ]);
-    }
+        if ($parent && $parent[0]) {
+            // Create an entry to be the parent
+            $parentEntry = LexiconEntry::factory()->create();
+        }
 
-    /**
-     * Test lexicon entry creation with a category.
-     */
-    public function testCanPostCreateLexiconEntryWithCategory() {
-        // Ensure lexical classes are present to utilize
-        $this->artisan('add-lexicon-settings');
-        $class = LexiconSetting::all()->first();
-
-        // Create a category for the entry to go into
-        $category = LexiconCategory::factory()->create();
-
-        // Define some basic data
+        // Generate or otherwise set up some test data
         $data = [
             'word'        => $this->faker->unique()->domainWord(),
             'meaning'     => $this->faker->unique()->domainWord(),
-            'class'       => $class->name,
-            'category_id' => $category->id,
+            'class'       => $this->class->name,
+            'definition'  => $withDefinition ? '<p>'.$this->faker->unique()->domainWord().'</p>' : null,
+            'category_id' => $withCategory ? $category->id : null,
+            'parent_id'   => [] + ($parent && $parent[0] ? [$parentEntry->id] : []) + ($parent && $parent[1] ? [null] : []),
+            'parent'      => [] + ($parent && $parent[0] ? [null] : []) + ($parent && $parent[1] ? [$this->faker->unique()->domainWord()] : []),
+            'autoconj'    => $conjData[0] ?? 0,
+            'conjdecl'    => $conjData ? ['Nominative Singular' => ($conjData[1] ? $this->faker->unique()->domainWord() : null)] : null,
         ];
 
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/create', $data);
+            ->actingAs($this->editor)
+            ->post('/language/lexicon/edit/'.($expected ? $entry->id : 3), $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_entries', [
-            'word'        => $data['word'],
-            'meaning'     => $data['meaning'],
-            'class'       => $data['class'],
-            'category_id' => $category->id,
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('lexicon_entries', [
+                'id'          => $entry->id,
+                'word'        => $data['word'],
+                'meaning'     => $data['meaning'],
+                'class'       => $data['class'],
+                'definition'  => $data['definition'],
+                'category_id' => $withCategory ? $category->id : null,
+                'data'        => $conjData ? '{"Nominative Singular":'.($conjData[1] ? '"'.($conjData[0] ? 'b'.$data['word'] : $data['conjdecl']['Nominative Singular']).'"' : 'null').'}' : null,
+            ]);
+
+            if ($parent) {
+                if ($parent[0]) {
+                    $this->assertDatabaseHas('lexicon_etymologies', [
+                        'entry_id'  => $entry->id,
+                        'parent_id' => $parentEntry->id,
+                    ]);
+                }
+
+                if ($parent[1]) {
+                    $this->assertDatabaseHas('lexicon_etymologies', [
+                        'entry_id' => $entry->id,
+                        'parent'   => $data['parent'][0],
+                    ]);
+                }
+            }
+        } else {
+            $response->assertSessionHasErrors();
+            if ($parent) {
+                $this->assertDatabaseEmpty('lexicon_etymologies');
+            }
+        }
     }
 
-    /**
-     * Test lexicon entry editing with a category.
-     */
-    public function testCanPostEditLexiconEntryWithCategory() {
-        // Make an entry to edit
-        $entry = LexiconEntry::factory()->create();
+    public static function postCreateEditEntryProvider() {
+        // $parent = [$entry, $word]
 
-        // Create a category for the entry to go into
-        $category = LexiconCategory::factory()->create();
-
-        // Define some basic data
-        $data = [
-            'word'        => $this->faker->unique()->domainWord(),
-            'meaning'     => $entry->meaning,
-            'class'       => $entry->class,
-            'category_id' => $category->id,
+        return [
+            'basic'                                   => [0, 0, null, null, 1],
+            'with definition'                         => [0, 1, null, null, 1],
+            'invalid'                                 => [0, 0, null, null, 0],
+            'with parent entry'                       => [0, 0, [1, 0], null, 1],
+            'with parent word'                        => [0, 0, [0, 1], null, 1],
+            'with parent entry and word'              => [0, 0, [1, 1], null, 1],
+            'with definition and parent entry'        => [0, 1, [1, 0], null, 1],
+            'with definition and parent word'         => [0, 1, [0, 1], null, 1],
+            'with definition, parent entry, and word' => [0, 1, [1, 1], null, 1],
+            'invalid with parent entry'               => [1, 0, [1, 0], null, 0],
+            'invalid with parent word'                => [1, 0, [0, 1], null, 0],
+            'invalid with parent entry and word'      => [1, 0, [1, 1], null, 0],
+            'with category'                           => [1, 0, null, null, 1],
+            'with category and definition'            => [1, 1, null, null, 1],
+            'invalid with category'                   => [1, 0, null, null, 0],
         ];
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_entries', [
-            'id'          => $entry->id,
-            'word'        => $data['word'],
-            'category_id' => $category->id,
-        ]);
     }
 
-    /**
-     * Test lexicon entry creation with a parent entry.
-     */
-    public function testCanPostCreateLexiconEntryWithParentEntry() {
-        // Ensure lexical classes are present to utilize
-        $this->artisan('add-lexicon-settings');
-        $class = LexiconSetting::all()->first();
+    public static function postConjugationProvider() {
+        // $conjData = [$isAuto, $withConj]
 
-        // Create an entry to be the parent
-        $parent = LexiconEntry::factory()->create();
-
-        // Define some basic data
-        $data = [
-            'word'      => $this->faker->unique()->domainWord(),
-            'meaning'   => $this->faker->unique()->domainWord(),
-            'class'     => $class->name,
-            'parent_id' => [0 => $parent->id],
+        return [
+            'without conjugation'  => [1, 0, null, [0, 0], 1],
+            'with conjugation'     => [1, 0, null, [0, 1], 1],
+            'with autoconjugation' => [1, 0, null, [1, 1], 1],
         ];
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/create', $data);
-
-        // Locate the newly created entry
-        $entry = LexiconEntry::where('word', $data['word'])->where('meaning', $data['meaning'])->first();
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_etymologies', [
-            'entry_id'  => $entry->id,
-            'parent_id' => $parent->id,
-        ]);
-    }
-
-    /**
-     * Test lexicon entry editing with a parent entry.
-     */
-    public function testCanPostEditLexiconEntryWithParentEntry() {
-        // Make an entry to edit
-        $entry = LexiconEntry::factory()->create();
-
-        // Create an entry to be the parent
-        $parent = LexiconEntry::factory()->create();
-
-        // Create a category for the entry to go into
-        $category = LexiconCategory::factory()->create();
-
-        // Define some basic data
-        $data = [
-            'word'      => $entry->word,
-            'meaning'   => $entry->meaning,
-            'class'     => $entry->class,
-            'parent_id' => [0 => $parent->id],
-        ];
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_etymologies', [
-            'entry_id'  => $entry->id,
-            'parent_id' => $parent->id,
-        ]);
-    }
-
-    /**
-     * Test lexicon entry creation with a parent off-site word.
-     */
-    public function testCanPostCreateLexiconEntryWithParentWord() {
-        // Ensure lexical classes are present to utilize
-        $this->artisan('add-lexicon-settings');
-        $class = LexiconSetting::all()->first();
-
-        // Define some basic data
-        $data = [
-            'word'      => $this->faker->unique()->domainWord(),
-            'meaning'   => $this->faker->unique()->domainWord(),
-            'class'     => $class->name,
-            'parent_id' => [0 => null],
-            'parent'    => [0 => $this->faker->unique()->domainWord()],
-        ];
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/create', $data);
-
-        // Locate the newly created entry
-        $entry = LexiconEntry::where('word', $data['word'])->where('meaning', $data['meaning'])->first();
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_etymologies', [
-            'entry_id' => $entry->id,
-            'parent'   => $data['parent'][0],
-        ]);
-    }
-
-    /**
-     * Test lexicon entry editing with a parent off-site word.
-     */
-    public function testCanPostEditLexiconEntryWithParentWord() {
-        // Make an entry to edit
-        $entry = LexiconEntry::factory()->create();
-
-        // Create a category for the entry to go into
-        $category = LexiconCategory::factory()->create();
-
-        // Define some basic data
-        $data = [
-            'word'      => $entry->word,
-            'meaning'   => $entry->meaning,
-            'class'     => $entry->class,
-            'parent_id' => [0 => null],
-            'parent'    => [0 => $this->faker->unique()->domainWord()],
-        ];
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_etymologies', [
-            'entry_id' => $entry->id,
-            'parent'   => $data['parent'][0],
-        ]);
-    }
-
-    /**
-     * Test lexicon entry editing with conjugation/declension data.
-     */
-    public function testCanPostEditLexiconEntryWithConjugation() {
-        // Make an entry to edit
-        $entry = LexiconEntry::factory()->create();
-
-        // Create a category with test data for the entry to go into
-        $category = LexiconCategory::factory()->testData($entry->lexicalClass->id)->create();
-
-        // Set the entry's category
-        $entry->update(['category_id' => $category->id]);
-
-        // Define some basic data
-        $data = [
-            'word'     => $entry->word,
-            'meaning'  => $entry->meaning,
-            'class'    => $entry->class,
-            'conjdecl' => ['Singular Nominative' => $this->faker->unique()->domainWord()],
-        ];
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_entries', [
-            'id'   => $entry->id,
-            'word' => $data['word'],
-            'data' => '{"Singular Nominative":"'.$data['conjdecl']['Singular Nominative'].'"}',
-        ]);
-    }
-
-    /**
-     * Test lexicon entry editing with empty conjugation/declension data.
-     */
-    public function testCanPostEditLexiconEntryWithEmptyConjugation() {
-        // Make an entry to edit
-        $entry = LexiconEntry::factory()->conjugationData()->create();
-
-        // Create a category for the entry to go into
-        $category = LexiconCategory::factory()->testData($entry->lexicalClass->id)->create();
-
-        // Set the entry's category
-        $entry->update(['category_id' => $category->id]);
-
-        // Define some basic data
-        $data = [
-            'word'     => $entry->word,
-            'meaning'  => $entry->meaning,
-            'class'    => $entry->class,
-            'conjdecl' => ['Singular Nominative' => null],
-        ];
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_entries', [
-            'id'   => $entry->id,
-            'word' => $data['word'],
-            'data' => '{"Singular Nominative":null}',
-        ]);
-    }
-
-    /**
-     * Test lexicon entry editing with conjugation/declension data.
-     */
-    public function testCanPostEditLexiconEntryWithAutoConjugation() {
-        // Make an entry to edit
-        $entry = LexiconEntry::factory()->create();
-
-        // Create a category with test data for the entry to go into
-        $category = LexiconCategory::factory()->extendedData($entry->lexicalClass->id)->create();
-
-        // Set the entry's category, and make sure the word is set appropriately;
-        // regex being fiddly, it's good to test with known values
-        $entry->update([
-            'word'        => 'test',
-            'category_id' => $category->id,
-        ]);
-
-        // Define some basic data
-        $data = [
-            'word'     => 'test',
-            'meaning'  => $entry->meaning,
-            'class'    => $entry->class,
-            'autoconj' => true,
-            'conjdecl' => ['Singular Nominative' => 'test'],
-        ];
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/edit/'.$entry->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_entries', [
-            'id'   => $entry->id,
-            'word' => $data['word'],
-            'data' => '{"Singular Nominative":"btest"}',
-        ]);
     }
 
     /**
      * Test lexicon entry deletion.
-     * This should work.
+     *
+     * @dataProvider getDeleteEntryProvider
+     *
+     * @param bool $withEntry
+     * @param int  $status
      */
-    public function testCanGetDeleteLexiconEntry() {
-        // Make an entry to delete
-        $entry = LexiconEntry::factory()->create();
+    public function testGetDeleteLexiconEntry($withEntry, $status) {
+        if ($withEntry) {
+            // Make an entry to delete
+            $entry = LexiconEntry::factory()->create();
+        }
 
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
-            ->get('/language/lexicon/delete/'.$entry->id);
+            ->actingAs($this->editor)
+            ->get('/language/lexicon/delete/'.($withEntry ? $entry->id : 2));
 
-        $response->assertStatus(200);
+        $response->assertStatus($status);
+    }
+
+    public static function getDeleteEntryProvider() {
+        return [
+            'valid'   => [1, 200],
+            'invalid' => [0, 404],
+        ];
     }
 
     /**
      * Test lexicon entry deletion.
-     * This should work.
+     *
+     * @dataProvider postDeleteEntryProvider
+     *
+     * @param bool $withParent
+     * @param bool $withChild
+     * @param bool $expected
      */
-    public function testCanPostDeleteLexiconEntry() {
+    public function testPostDeleteLexiconEntry($withParent, $withChild, $expected) {
         // Make an entry to delete
         $entry = LexiconEntry::factory()->create();
 
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
+        if ($withParent) {
+            $parent = LexiconEntry::factory()->create();
 
-        // Try to post data
+            // This shouldn't prevent deletion of the entry
+            // but should be deleted as a consequence
+            $etymology = LexiconEtymology::create([
+                'entry_id'  => $entry->id,
+                'parent_id' => $parent->id,
+            ]);
+        }
+
+        if ($withChild) {
+            $child = LexiconEntry::factory()->create();
+
+            // This, however, should prevent deletion of the entry
+            LexiconEtymology::create([
+                'entry_id'  => $child->id,
+                'parent_id' => $entry->id,
+            ]);
+        }
+
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->editor)
             ->post('/language/lexicon/delete/'.$entry->id);
 
-        // Verify that the appropriate change has occurred
-        $this->assertModelMissing($entry);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertModelMissing($entry);
+
+            if ($withParent) {
+                $this->assertModelMissing($etymology);
+            }
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertModelExists($entry);
+
+            if ($withParent) {
+                $this->assertModelExists($etymology);
+            }
+        }
     }
 
-    /**
-     * Test lexicon entry deletion with a child entry.
-     * This shouldn't work.
-     */
-    public function testCannotPostDeleteLexiconEntryWithChildEntry() {
-        // Make a parent to attempt to delete
-        $parent = LexiconEntry::factory()->create();
-
-        // Make an entry to be the child
-        $entry = LexiconEntry::factory()->create();
-
-        // Create an etymology record
-        LexiconEtymology::create([
-            'entry_id'  => $entry->id,
-            'parent_id' => $parent->id,
-        ]);
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/delete/'.$parent->id);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('lexicon_entries', [
-            'id'   => $parent->id,
-            'word' => $parent->word,
-        ]);
-    }
-
-    /**
-     * Test lexicon entry deletion with a parent entry.
-     * This should work.
-     */
-    public function testCanPostDeleteLexiconEntryWithParentEntry() {
-        // Make a parent to attempt to delete
-        $parent = LexiconEntry::factory()->create();
-
-        // Make an entry to be the child
-        $entry = LexiconEntry::factory()->create();
-
-        // Create an etymology record
-        $etymology = LexiconEtymology::create([
-            'entry_id'  => $entry->id,
-            'parent_id' => $parent->id,
-        ]);
-
-        // Make a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/language/lexicon/delete/'.$entry->id);
-
-        // Verify that the appropriate change has occurred
-        $this->assertModelMissing($etymology);
-        $this->assertModelMissing($entry);
+    public static function postDeleteEntryProvider() {
+        return [
+            'basic'                 => [0, 0, 1],
+            'with parent'           => [1, 0, 1],
+            'with child'            => [0, 1, 0],
+            'with parent and child' => [1, 1, 0],
+        ];
     }
 }

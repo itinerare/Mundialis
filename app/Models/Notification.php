@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Facades\Config;
 
 class Notification extends Model {
     use HasFactory;
@@ -65,7 +64,7 @@ class Notification extends Model {
      * @return array
      */
     public function getMessageAttribute() {
-        $notification = Config::get('mundialis.notifications.'.$this->notification_type_id);
+        $notification = config('mundialis.notifications.'.$this->notification_type_id);
 
         $message = $notification['message'];
 

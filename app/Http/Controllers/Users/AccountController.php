@@ -77,7 +77,7 @@ class AccountController extends Controller {
             flash('Avatar updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -100,7 +100,7 @@ class AccountController extends Controller {
             flash('Password updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -122,7 +122,7 @@ class AccountController extends Controller {
             flash('Email updated successfully..')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -146,7 +146,7 @@ class AccountController extends Controller {
             flash('2FA info generated. Please confirm to enable 2FA.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -191,7 +191,7 @@ class AccountController extends Controller {
             $request->session()->forget(['two_factor_secret', 'two_factor_recovery_codes']);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -213,7 +213,7 @@ class AccountController extends Controller {
             flash('2FA disabled succesfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -278,11 +278,11 @@ class AccountController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postWatchPage(Request $request, UserService $service, $id) {
-        if ($service->watchPage(Page::find($id), Auth::user())) {
+        if ($service->watchPage(Page::visible(Auth::user())->find($id), Auth::user())) {
             flash('Page watch status updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 

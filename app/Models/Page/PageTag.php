@@ -3,9 +3,11 @@
 namespace App\Models\Page;
 
 use App\Models\Model;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PageTag extends Model {
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -80,7 +82,7 @@ class PageTag extends Model {
     public function scopeTagSearch($query, $tag) {
         return $query->where(function ($query) use ($tag) {
             $i = 0;
-            foreach (Config::get('mundialis.page_tags') as $prefix) {
+            foreach (config('mundialis.page_tags') as $prefix) {
                 if ($i == 0) {
                     $query->where('tag', $tag)->orWhere('tag', $prefix['prefix'].$tag);
                 }
@@ -102,7 +104,7 @@ class PageTag extends Model {
     public function scopePrefixedTags($query) {
         return $query->where(function ($query) {
             $i = 0;
-            foreach (Config::get('mundialis.page_tags') as $prefix) {
+            foreach (config('mundialis.page_tags') as $prefix) {
                 if ($i == 0) {
                     $query->where('tag', 'regexp', $prefix['regex']);
                 }
@@ -128,7 +130,7 @@ class PageTag extends Model {
     public function getPrefixAttribute() {
         // Check the tag name against prefixes
         $matches = [];
-        foreach (Config::get('mundialis.page_tags') as $prefix) {
+        foreach (config('mundialis.page_tags') as $prefix) {
             if ($matches == []) {
                 preg_match($prefix['regex_alt'], $this->tag, $matches);
             }
@@ -150,7 +152,7 @@ class PageTag extends Model {
     public function getBaseTagAttribute() {
         // Check the tag name against prefixes
         $matches = [];
-        foreach (Config::get('mundialis.page_tags') as $prefix) {
+        foreach (config('mundialis.page_tags') as $prefix) {
             if ($matches == []) {
                 preg_match($prefix['regex_alt'], $this->tag, $matches);
             }
@@ -249,7 +251,7 @@ class PageTag extends Model {
         // Cycle through them, fetching the tags themselves
         foreach ($filter->get() as $tag) {
             $matches = [];
-            foreach (Config::get('mundialis.page_tags') as $prefix) {
+            foreach (config('mundialis.page_tags') as $prefix) {
                 preg_match($prefix['regex_alt'], $tag, $matches);
                 if ($matches != []) {
                     $tags[] = $matches[1];

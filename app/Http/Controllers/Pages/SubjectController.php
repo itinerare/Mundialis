@@ -14,7 +14,6 @@ use App\Models\Subject\TimeDivision;
 use App\Services\LexiconManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 
 class SubjectController extends Controller {
     /*
@@ -35,11 +34,11 @@ class SubjectController extends Controller {
      */
     public function getSubject($subject, Request $request) {
         $subjectKey = $subject;
-        $subject = Config::get('mundialis.subjects.'.$subject);
+        $subject = config('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
         if ($subject['key'] == 'language') {
-            $query = LexiconEntry::whereNull('category_id')->visible(Auth::check() ? Auth::user() : null);
+            $query = LexiconEntry::whereNull('category_id')->visible(Auth::user() ?? null);
             $sort = $request->only(['sort']);
 
             if ($request->get('class')) {
@@ -56,9 +55,14 @@ class SubjectController extends Controller {
                     $query->where('lexicon_entries.meaning', 'LIKE', '%'.$request->get('meaning').'%');
                 });
             }
-            if ($request->get('pronounciation')) {
+            if ($request->get('pronunciation')) {
                 $query->where(function ($query) use ($request) {
-                    $query->where('lexicon_entries.pronounciation', 'LIKE', '%'.$request->get('pronounciation').'%');
+                    $query->where('lexicon_entries.pronunciation', 'LIKE', '%'.$request->get('pronunciation').'%');
+                });
+            }
+            if ($request->get('category_id')) {
+                $query->where(function ($query) use ($request) {
+                    $query->where('lexicon_entries.class', $request->get('category_id'));
                 });
             }
 
@@ -118,7 +122,7 @@ class SubjectController extends Controller {
             abort(404);
         }
 
-        $query = $category->pages()->visible(Auth::check() ? Auth::user() : null);
+        $query = $category->pages()->visible(Auth::user() ?? null);
         $sort = $request->only(['sort']);
 
         if ($request->get('title')) {
@@ -177,12 +181,18 @@ class SubjectController extends Controller {
             abort(404);
         }
 
-        $query = $chronology->pages()->visible(Auth::check() ? Auth::user() : null);
+        $query = $chronology->pages()->visible(Auth::user() ?? null);
         $sort = $request->only(['sort']);
 
         if ($request->get('title')) {
             $query->where(function ($query) use ($request) {
                 $query->where('pages.title', 'LIKE', '%'.$request->get('title').'%');
+            });
+        }
+
+        if ($request->get('category_id')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('pages.category_id', $request->get('category_id'));
             });
         }
 
@@ -256,7 +266,7 @@ class SubjectController extends Controller {
             abort(404);
         }
 
-        $query = $category->entries()->visible(Auth::check() ? Auth::user() : null);
+        $query = $category->entries()->visible(Auth::user() ?? null);
         $sort = $request->only(['sort']);
 
         if ($request->get('class')) {
@@ -273,9 +283,14 @@ class SubjectController extends Controller {
                 $query->where('lexicon_entries.meaning', 'LIKE', '%'.$request->get('meaning').'%');
             });
         }
-        if ($request->get('pronounciation')) {
+        if ($request->get('pronunciation')) {
             $query->where(function ($query) use ($request) {
-                $query->where('lexicon_entries.pronounciation', 'LIKE', '%'.$request->get('pronounciation').'%');
+                $query->where('lexicon_entries.pronunciation', 'LIKE', '%'.$request->get('pronunciation').'%');
+            });
+        }
+        if ($request->get('category_id')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('lexicon_entries.class', $request->get('category_id'));
             });
         }
 
@@ -319,7 +334,7 @@ class SubjectController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getLexiconEntryModal($id) {
-        $entry = LexiconEntry::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        $entry = LexiconEntry::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$entry) {
             abort(404);
         }
@@ -389,7 +404,7 @@ class SubjectController extends Controller {
             return redirect()->to('language/lexicon/edit/'.$entry->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -427,7 +442,7 @@ class SubjectController extends Controller {
             flash('Lexicon entry deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();
