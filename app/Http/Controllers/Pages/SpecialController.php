@@ -106,7 +106,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getAllTags(Request $request) {
-        $query = PageTag::tag()->get()
+        $query = PageTag::tag()->with('page')->get()
             ->filter(function ($tag) {
                 if (Auth::check() && Auth::user()->canWrite) {
                     return 1;
