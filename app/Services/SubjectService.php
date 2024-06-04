@@ -10,6 +10,7 @@ use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\SubjectTemplate;
 use App\Models\Subject\TimeChronology;
 use App\Models\Subject\TimeDivision;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class SubjectService extends Service {
@@ -57,9 +58,9 @@ class SubjectService extends Service {
 
             // Either create or update template data
             if (!$template) {
-                $template = SubjectTemplate::create($data);
+                $template = SubjectTemplate::create(Arr::only($data, ['subject', 'data']));
             } else {
-                $template->update($data);
+                $template->update(Arr::only($data, ['subject', 'data']));
             }
 
             return $this->commitReturn($template);
