@@ -18,7 +18,7 @@ class AdminUserEditTest extends TestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->user = User::factory()->admin()->create();
+        $this->admin = User::factory()->admin()->create();
 
         // Create a user to view
         $this->subject = User::factory()->create();
@@ -28,7 +28,7 @@ class AdminUserEditTest extends TestCase {
      * Test user index access.
      */
     public function testGetAdminUserIndex() {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get('/admin/users')
             ->assertStatus(200);
     }
@@ -42,7 +42,7 @@ class AdminUserEditTest extends TestCase {
      * @param int  $status
      */
     public function testGetEditUser($withUser, $status) {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get('/admin/users/'.($withUser ? $this->subject->name : $this->faker()->domainWord()).'/edit')
             ->assertStatus($status);
     }
@@ -56,7 +56,7 @@ class AdminUserEditTest extends TestCase {
      * @param int  $status
      */
     public function testGetUserUpdates($withUser, $status) {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get('/admin/users/'.($withUser ? $this->subject->name : $this->faker()->domainWord()).'/updates')
             ->assertStatus($status);
     }
@@ -86,7 +86,7 @@ class AdminUserEditTest extends TestCase {
         // Generate some test data
         $username = $this->faker()->domainWord();
 
-        $response = $this->actingAs($this->user)
+        $response = $this->actingAs($this->admin)
             ->post('/admin/users/'.($withUser ? $subject->name : $this->faker()->domainWord()).'/basic', [
                 'name'    => $data[2] ? $username : $subject->name,
                 'rank_id' => $data[1],
@@ -129,7 +129,7 @@ class AdminUserEditTest extends TestCase {
      * @param int  $status
      */
     public function testGetBanUser($withUser, $status) {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get('/admin/users/'.($withUser ? $this->subject->name : $this->faker()->domainWord()).'/ban')
             ->assertStatus($status);
     }
@@ -143,7 +143,7 @@ class AdminUserEditTest extends TestCase {
      * @param int  $status
      */
     public function testGetConfirmBanUser($withUser, $status) {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get('/admin/users/'.($withUser ? $this->subject->name : $this->faker()->domainWord()).'/ban-confirm')
             ->assertStatus($status);
     }
@@ -161,7 +161,7 @@ class AdminUserEditTest extends TestCase {
         // Make a user of the specified ban status
         $subject = User::factory()->create(['is_banned' => $isBanned]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get('/admin/users/'.($withUser ? $subject->name : $this->faker()->domainWord()).'/unban-confirm')
             ->assertStatus($status);
     }
@@ -193,7 +193,7 @@ class AdminUserEditTest extends TestCase {
         // Generate test data
         $reason = $this->faker()->domainWord();
 
-        $response = $this->actingAs($this->user)
+        $response = $this->actingAs($this->admin)
             ->post('/admin/users/'.($withUser ? $subject->name : $this->faker()->domainWord()).'/ban', [
                 'ban_reason' => $withReason ? $reason : null,
             ]);
@@ -236,7 +236,7 @@ class AdminUserEditTest extends TestCase {
         // Generate test data
         $reason = $this->faker()->domainWord();
 
-        $response = $this->actingAs($this->user)
+        $response = $this->actingAs($this->admin)
             ->post('/admin/users/'.($withUser ? $subject->name : $this->faker()->domainWord()).'/ban', [
                 'ban_reason' => $withReason ? $reason : null,
             ]);
@@ -287,7 +287,7 @@ class AdminUserEditTest extends TestCase {
             'rank_id'   => Rank::where('sort', $rank)->first()->id,
         ]);
 
-        $response = $this->actingAs($this->user)
+        $response = $this->actingAs($this->admin)
             ->post('/admin/users/'.($withUser ? $subject->name : $this->faker()->domainWord()).'/unban');
 
         if ($expected) {

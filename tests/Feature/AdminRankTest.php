@@ -18,14 +18,14 @@ class AdminRankTest extends TestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->user = User::factory()->admin()->make();
+        $this->admin = User::factory()->admin()->make();
     }
 
     /**
      * Test rank index access.
      */
     public function testGetRankIndex() {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get('/admin/ranks')
             ->assertStatus(200);
     }
@@ -37,7 +37,7 @@ class AdminRankTest extends TestCase {
         $rank = Rank::orderBy('sort', 'ASC')->first();
 
         // Attempt page access
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get('/admin/ranks/edit/'.$rank->id)
             ->assertStatus(200);
     }
@@ -60,7 +60,7 @@ class AdminRankTest extends TestCase {
         $description = $this->faker->unique()->domainWord();
 
         $response = $this
-            ->actingAs($this->user)
+            ->actingAs($this->admin)
             ->post('/admin/ranks/edit/'.($expected ? $rank->id : 5), [
                 'name'        => $withName ? $name : $rank->name,
                 'description' => $withDesc ? $description : $rank->description,
