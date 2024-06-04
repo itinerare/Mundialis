@@ -561,7 +561,7 @@ class SubjectService extends Service {
             $data = $this->processLexiconData($data);
 
             // Create category
-            $category = LexiconCategory::create($data);
+            $category = LexiconCategory::create(Arr::only($data, ['parent_id', 'name', 'description', 'data']));
 
             return $this->commitReturn($category);
         } catch (\Exception $e) {
@@ -603,7 +603,7 @@ class SubjectService extends Service {
             }
 
             // Update category
-            $category->update($data);
+            $category->update(Arr::only($data, ['parent_id', 'name', 'description', 'data']));
 
             return $this->commitReturn($category);
         } catch (\Exception $e) {
