@@ -184,7 +184,7 @@ class Page extends Model {
      * Scope a query to only include visible pages.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param \App\Models\User\User                 $user
+     * @param User                                  $user
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -491,9 +491,9 @@ class Page extends Model {
     /**
      * Organize events in chronological order.
      *
-     * @param \App\Models\User\User $user
-     * @param int                   $chronology
-     * @param array                 $tags
+     * @param User  $user
+     * @param int   $chronology
+     * @param array $tags
      *
      * @return \Illuminate\Support\Collection
      */

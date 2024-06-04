@@ -2,7 +2,6 @@
 
 namespace App\Models\User;
 
-use App\Models\Model;
 use App\Models\Notification;
 use App\Models\Page\Page;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -153,7 +152,7 @@ class User extends Authenticatable implements MustVerifyEmail {
     /**
      * Check if a user can edit a specific page.
      *
-     * @param \App\Models\Page\Page $page
+     * @param Page $page
      *
      * @return bool
      */
