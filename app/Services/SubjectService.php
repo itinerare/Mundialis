@@ -121,7 +121,7 @@ class SubjectService extends Service {
             }
 
             // Create category
-            $category = SubjectCategory::create($data);
+            $category = SubjectCategory::create(Arr::only($data, ['subject', 'parent_id', 'name', 'description', 'data', 'summary', 'has_image']));
 
             // Handle image
             if ($image) {
@@ -209,7 +209,7 @@ class SubjectService extends Service {
             }
 
             // Update category
-            $category->update($data);
+            $category->update(Arr::only($data, ['subject', 'parent_id', 'name', 'description', 'data', 'summary', 'has_image']));
 
             // Handle image
             if ($image) {
