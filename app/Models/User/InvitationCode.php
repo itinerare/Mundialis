@@ -27,7 +27,7 @@ class InvitationCode extends Model {
      * @var array
      */
     protected $with = [
-        'user:id,name,is_banned', 'recipient:id,name,is_banned',
+        'user:id,name,rank_id,is_banned', 'recipient:id,name,rank_id,is_banned',
     ];
 
     /**
