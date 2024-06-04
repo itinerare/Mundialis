@@ -350,7 +350,7 @@ class PageManager extends Service {
             }
 
             // Update the page itself
-            $page->update($version->data);
+            $page->update(Arr::only($version->data, ['title', 'summary']));
 
             // Create a version logging the reset
             $version = $this->logPageVersion($page->id, $user->id, 'Page Reset to Ver. #'.$version->id, $reason, $version->data, false);
