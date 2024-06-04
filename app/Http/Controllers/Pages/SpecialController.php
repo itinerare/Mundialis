@@ -56,7 +56,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getAllPages(Request $request) {
-        $query = Page::visible(Auth::user() ?? null);
+        $query = Page::visible(Auth::user() ?? null)->with('category', 'parent', 'image', 'tags');
         $sort = $request->only(['sort']);
 
         if ($request->get('title')) {
@@ -265,7 +265,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRecentPages(Request $request) {
-        $query = PageVersion::orderBy('created_at', 'DESC')->get()->filter(function ($version) {
+        $query = PageVersion::orderBy('created_at', 'DESC')->with('page', 'user')->get()->filter(function ($version) {
             if (!$version->page || isset($version->page->deleted_at)) {
                 return 0;
             }
@@ -298,7 +298,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRecentImages(Request $request) {
-        $query = PageImageVersion::orderBy('updated_at', 'DESC')->get()->filter(function ($version) {
+        $query = PageImageVersion::orderBy('updated_at', 'DESC')->with('image', 'user')->get()->filter(function ($version) {
             if (!$version->image || isset($version->image->deleted_at)) {
                 return 0;
             }
@@ -355,7 +355,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUtilityTagPages(Request $request, $tag) {
-        $query = Page::visible(Auth::user() ?? null)->whereIn('id', PageTag::utilityTag()->tagSearch($tag)->pluck('page_id')->toArray());
+        $query = Page::visible(Auth::user() ?? null)->whereIn('id', PageTag::utilityTag()->tagSearch($tag)->pluck('page_id')->toArray())->with('category', 'parent', 'image', 'tags');
         $sort = $request->only(['sort']);
 
         if ($request->get('title')) {
