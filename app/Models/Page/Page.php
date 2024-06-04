@@ -36,8 +36,7 @@ class Page extends Model {
      * @var array
      */
     protected $with = [
-        'category', 'parent', 'versions',
-        'image', 'tags', 'protections',
+        'versions', 'protections',
     ];
 
     /**

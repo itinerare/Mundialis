@@ -75,7 +75,7 @@ class TimeChronology extends Model {
      * Get pages in this category.
      */
     public function pages() {
-        return $this->hasMany(Page::class, 'parent_id')->whereRelation('category', 'subject', 'time');
+        return $this->hasMany(Page::class, 'parent_id')->whereRelation('category', 'subject', 'time')->with('category', 'parent', 'image', 'tags');
     }
 
     /**********************************************************************************************

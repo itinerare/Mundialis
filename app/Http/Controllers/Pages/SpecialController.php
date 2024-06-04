@@ -184,7 +184,7 @@ class SpecialController extends Controller {
      */
     public function getMostTaggedPages(Request $request) {
         $query = Page::visible(Auth::user() ?? null)
-            ->whereHas('tags')->get()
+            ->whereHas('tags')->with('tags')->get()
             ->sortByDesc(function ($page) {
                 return $page->tags->count();
             });
