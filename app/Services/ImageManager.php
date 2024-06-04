@@ -436,7 +436,7 @@ class ImageManager extends Service {
                 }
 
                 // Save the processed image
-                $processImage->save($image->imagePath.'/'.$version->imageFileName, 100, $image->extension);
+                $processImage->save($image->imagePath.'/'.$version->imageFileName, 100, $imageData['extension']);
             } else {
                 // Otherwise, just create a new version
                 $version = $this->logImageVersion($image->id, $user->id, null, 'Image Info Updated', $data['reason'] ?? null, null, $data['is_minor'] ?? 0);
