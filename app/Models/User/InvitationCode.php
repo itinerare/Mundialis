@@ -20,6 +20,16 @@ class InvitationCode extends Model {
      * @var string
      */
     protected $table = 'invitation_codes';
+
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'user:id,name,is_banned', 'recipient:id,name,is_banned',
+    ];
+
     /**
      * Whether the model contains timestamps to be saved and updated.
      *
