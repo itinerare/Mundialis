@@ -175,7 +175,7 @@ class SpecialController extends Controller {
             abort(404);
         }
 
-        $query = PageImageVersion::where('page_image_id', $image->id);
+        $query = PageImageVersion::where('page_image_id', $image->id)->with('image', 'user');
         $sort = $request->only(['sort']);
 
         if ($request->get('user_id')) {
