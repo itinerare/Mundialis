@@ -178,7 +178,7 @@ class ImageManager extends Service {
             }
 
             // Update image
-            $image->update($data);
+            $image->update(Arr::only($data, ['description', 'is_visible']));
 
             // Send a notification to users that have watched this page
             if ($page->watchers->count()) {
@@ -354,7 +354,7 @@ class ImageManager extends Service {
 
             $this->handleImage($file['image'], $image->imagePath, $version->imageFileName);
             $this->handleImage($file['thumbnail'], $image->imagePath, $version->thumbnailFileName);
-        } elseif (!$create && File::exists($image->imagePath.'/'.$image->thumbnailFileName)) {
+        } elseif (!$create && File::exists($image->imagePath.'/'.$version->thumbnailFileName)) {
             unlink($image->imagePath.'/'.$version->thumbnailFileName);
             unlink($image->imagePath.'/'.$version->imageFileName);
         }
@@ -380,7 +380,7 @@ class ImageManager extends Service {
 
             // If there's no preexisting image, create one
             if (!$image) {
-                $image = PageImage::create($imageData);
+                $image = PageImage::create(Arr::only($imageData, ['description', 'is_visible']));
             }
 
             // If new or re-uploading an image
