@@ -19,14 +19,14 @@ class AdminSitePageTest extends TestCase {
         parent::setUp();
 
         $this->artisan('add-site-pages');
-        $this->user = User::factory()->admin()->make();
+        $this->admin = User::factory()->admin()->make();
     }
 
     /**
      * Test site page index access.
      */
     public function testGetSitePageIndex() {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get('/admin/pages')
             ->assertStatus(200);
     }
@@ -47,7 +47,7 @@ class AdminSitePageTest extends TestCase {
 
         // Try to post data
         $response = $this
-            ->actingAs($this->user)
+            ->actingAs($this->admin)
             ->post('/admin/pages/edit/'.$page->id, [
                 'text' => $text,
             ]);

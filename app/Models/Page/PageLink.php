@@ -2,6 +2,7 @@
 
 namespace App\Models\Page;
 
+use App\Models\Lexicon\LexiconEntry;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -43,10 +44,10 @@ class PageLink extends Model {
     public function parent() {
         switch ($this->parent_type) {
             case 'page':
-                return $this->belongsTo('App\Models\Page\Page');
+                return $this->belongsTo(Page::class);
                 break;
             case 'entry':
-                return $this->belongsTo('App\Models\Lexicon\LexiconEntry');
+                return $this->belongsTo(LexiconEntry::class);
         }
     }
 
@@ -56,10 +57,10 @@ class PageLink extends Model {
     public function linked() {
         switch ($this->linked_type) {
             case 'page':
-                return $this->belongsTo('App\Models\Page\Page', 'link_id');
+                return $this->belongsTo(Page::class, 'link_id');
                 break;
             case 'entry':
-                return $this->belongsTo('App\Models\Lexicon\LexiconEntry');
+                return $this->belongsTo(LexiconEntry::class);
         }
     }
 }

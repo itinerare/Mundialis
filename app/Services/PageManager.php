@@ -11,6 +11,7 @@ use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
 use App\Models\User\WatchedPage;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
@@ -61,7 +62,7 @@ class PageManager extends Service {
             }
 
             // Create page
-            $page = Page::create($data);
+            $page = Page::create(Arr::only($data, ['category_id', 'title', 'summary', 'is_visible', 'parent_id']));
 
             // If the page is wanted, update the existing page(s)
             if (PageLink::where('title', $page->displayTitle)->exists()) {
@@ -204,7 +205,7 @@ class PageManager extends Service {
             }
 
             // Update page
-            $page->update($data);
+            $page->update(Arr::only($data, ['category_id', 'title', 'summary', 'is_visible', 'parent_id']));
 
             // Send a notification to users that have watched this page
             if ($page->watchers->count()) {
@@ -349,7 +350,7 @@ class PageManager extends Service {
             }
 
             // Update the page itself
-            $page->update($version->data);
+            $page->update(Arr::only($version->data, ['title', 'summary']));
 
             // Create a version logging the reset
             $version = $this->logPageVersion($page->id, $user->id, 'Page Reset to Ver. #'.$version->id, $reason, $version->data, false);

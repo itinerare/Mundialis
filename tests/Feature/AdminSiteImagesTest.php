@@ -18,14 +18,14 @@ class AdminSiteImagesTest extends TestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->user = User::factory()->admin()->make();
+        $this->admin = User::factory()->admin()->make();
     }
 
     /**
      * Test site image index access.
      */
     public function testGetSiteImagesIndex() {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get('/admin/site-images')
             ->assertStatus(200);
     }
@@ -48,7 +48,7 @@ class AdminSiteImagesTest extends TestCase {
 
         // Try to post data
         $response = $this
-            ->actingAs($this->user)
+            ->actingAs($this->admin)
             ->post('/admin/site-images/upload', [
                 'file' => $this->file,
                 'key'  => $key,
@@ -84,7 +84,7 @@ class AdminSiteImagesTest extends TestCase {
 
         // Try to post data
         $response = $this
-            ->actingAs($this->user)
+            ->actingAs($this->admin)
             ->post('/admin/site-images/upload/css', [
                 'file' => $file,
             ]);

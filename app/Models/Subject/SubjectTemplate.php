@@ -72,6 +72,6 @@ class SubjectTemplate extends Model {
      * Get the categories for this subject.
      */
     public function categories() {
-        return $this->hasMany('App\Models\Subject\SubjectCategory', 'subject', 'subject');
+        return $this->hasMany(SubjectCategory::class, 'subject', 'subject');
     }
 }

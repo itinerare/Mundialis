@@ -17,14 +17,14 @@ class AdminInvitationTest extends TestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->user = User::factory()->admin()->create();
+        $this->admin = User::factory()->admin()->create();
     }
 
     /**
      * Test invitation code index access.
      */
     public function testGetInvitationIndex() {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get('/admin/invitations')
             ->assertStatus(200);
     }
@@ -35,7 +35,7 @@ class AdminInvitationTest extends TestCase {
     public function testPostCreateInvitation() {
         // Try to post data
         $response = $this
-            ->actingAs($this->user)
+            ->actingAs($this->admin)
             ->post('/admin/invitations/create');
 
         $response->assertSessionHasNoErrors();
@@ -53,7 +53,7 @@ class AdminInvitationTest extends TestCase {
     public function testPostDeleteInvitation($isUsed, $expected) {
         // Since invitation code generation is fairly straightforward,
         // simply use the function rather than a factory
-        $invitation = (new InvitationService)->generateInvitation($this->user);
+        $invitation = (new InvitationService)->generateInvitation($this->admin);
 
         if ($isUsed) {
             $recipient = User::factory()->create();
@@ -61,7 +61,7 @@ class AdminInvitationTest extends TestCase {
         }
 
         $response = $this
-            ->actingAs($this->user)
+            ->actingAs($this->admin)
             ->post('/admin/invitations/delete/'.$invitation->id);
 
         if ($expected) {

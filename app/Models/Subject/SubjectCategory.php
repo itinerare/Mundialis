@@ -3,6 +3,7 @@
 namespace App\Models\Subject;
 
 use App\Models\Model;
+use App\Models\Page\Page;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Config;
 
@@ -71,21 +72,21 @@ class SubjectCategory extends Model {
      * Get parent category of this category.
      */
     public function parent() {
-        return $this->belongsTo('App\Models\Subject\SubjectCategory', 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     /**
      * Get child categories of this category.
      */
     public function children() {
-        return $this->hasMany('App\Models\Subject\SubjectCategory', 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     /**
      * Get pages in this category.
      */
     public function pages() {
-        return $this->hasMany('App\Models\Page\Page', 'category_id');
+        return $this->hasMany(Page::class, 'category_id')->with('category', 'parent', 'image', 'tags');
     }
 
     /**********************************************************************************************

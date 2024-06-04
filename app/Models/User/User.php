@@ -2,6 +2,8 @@
 
 namespace App\Models\User;
 
+use App\Models\Notification;
+use App\Models\Page\Page;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -30,6 +32,15 @@ class User extends Authenticatable implements MustVerifyEmail {
     ];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'rank',
+    ];
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -46,31 +57,17 @@ class User extends Authenticatable implements MustVerifyEmail {
     **********************************************************************************************/
 
     /**
-     * Get user settings.
-     */
-    public function settings() {
-        return $this->hasOne('App\Models\User\UserSettings');
-    }
-
-    /**
-     * Get user-editable profile data.
-     */
-    public function profile() {
-        return $this->hasOne('App\Models\User\UserProfile');
-    }
-
-    /**
      * Get the user's notifications.
      */
     public function notifications() {
-        return $this->hasMany('App\Models\Notification');
+        return $this->hasMany(Notification::class);
     }
 
     /**
      * Get the user's rank data.
      */
     public function rank() {
-        return $this->belongsTo('App\Models\User\Rank');
+        return $this->belongsTo(Rank::class);
     }
 
     /**
@@ -78,8 +75,8 @@ class User extends Authenticatable implements MustVerifyEmail {
      */
     public function watched() {
         return $this->hasManyThrough(
-            'App\Models\Page\Page',
-            'App\Models\User\WatchedPage',
+            Page::class,
+            WatchedPage::class,
             'user_id',
             'id',
             'id',
@@ -164,7 +161,7 @@ class User extends Authenticatable implements MustVerifyEmail {
     /**
      * Check if a user can edit a specific page.
      *
-     * @param \App\Models\Page\Page $page
+     * @param Page $page
      *
      * @return bool
      */

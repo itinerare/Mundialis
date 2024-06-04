@@ -10,6 +10,7 @@ use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\SubjectTemplate;
 use App\Models\Subject\TimeChronology;
 use App\Models\Subject\TimeDivision;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class SubjectService extends Service {
@@ -57,9 +58,9 @@ class SubjectService extends Service {
 
             // Either create or update template data
             if (!$template) {
-                $template = SubjectTemplate::create($data);
+                $template = SubjectTemplate::create(Arr::only($data, ['subject', 'data']));
             } else {
-                $template->update($data);
+                $template->update(Arr::only($data, ['subject', 'data']));
             }
 
             return $this->commitReturn($template);
@@ -120,7 +121,7 @@ class SubjectService extends Service {
             }
 
             // Create category
-            $category = SubjectCategory::create($data);
+            $category = SubjectCategory::create(Arr::only($data, ['subject', 'parent_id', 'name', 'description', 'data', 'summary', 'has_image']));
 
             // Handle image
             if ($image) {
@@ -208,7 +209,7 @@ class SubjectService extends Service {
             }
 
             // Update category
-            $category->update($data);
+            $category->update(Arr::only($data, ['subject', 'parent_id', 'name', 'description', 'data', 'summary', 'has_image']));
 
             // Handle image
             if ($image) {
@@ -248,7 +249,7 @@ class SubjectService extends Service {
             // Permanently delete any remaining pages and associated data in the category,
             // as without the category/its data they will not be recoverable anyway
             if ($category->pages()->withTrashed()->count()) {
-                foreach ($category->pages()->withTrashed()->get() as $page) {
+                foreach (Page::where('category_id', $category->id)->with('images', 'relationships')->withTrashed()->get() as $page) {
                     if (!(new PageManager)->deletePage($page, $user, null, true)) {
                         throw new \Exception('Failed to force delete page.');
                     }
@@ -560,7 +561,7 @@ class SubjectService extends Service {
             $data = $this->processLexiconData($data);
 
             // Create category
-            $category = LexiconCategory::create($data);
+            $category = LexiconCategory::create(Arr::only($data, ['parent_id', 'name', 'description', 'data']));
 
             return $this->commitReturn($category);
         } catch (\Exception $e) {
@@ -602,7 +603,7 @@ class SubjectService extends Service {
             }
 
             // Update category
-            $category->update($data);
+            $category->update(Arr::only($data, ['parent_id', 'name', 'description', 'data']));
 
             return $this->commitReturn($category);
         } catch (\Exception $e) {

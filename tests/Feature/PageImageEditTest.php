@@ -176,8 +176,8 @@ class PageImageEditTest extends TestCase {
                 ]);
             }
 
-            $this->assertFileExists($image->imagePath.'/'.$image->imageFileName);
-            $this->assertFileExists($image->imagePath.'/'.$image->thumbnailFileName);
+            $this->assertFileExists($image->imagePath.'/'.$image->version->imageFileName);
+            $this->assertFileExists($image->imagePath.'/'.$image->version->thumbnailFileName);
 
             $this->service->testImages($image, $image->version, false);
         } else {
@@ -311,8 +311,8 @@ class PageImageEditTest extends TestCase {
             }
 
             if ($fileData) {
-                $this->assertFileExists($imageData['image']->imagePath.'/'.$imageData['image']->imageFileName);
-                $this->assertFileExists($imageData['image']->imagePath.'/'.$imageData['image']->thumbnailFileName);
+                $this->assertFileExists($imageData['image']->imagePath.'/'.$imageData['image']->version->imageFileName);
+                $this->assertFileExists($imageData['image']->imagePath.'/'.$imageData['image']->version->thumbnailFileName);
 
                 // Due to the way objects are handled in a test environment,
                 // it's simplest to just locate the new version directly

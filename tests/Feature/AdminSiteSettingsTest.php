@@ -17,14 +17,14 @@ class AdminSiteSettingsTest extends TestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->user = User::factory()->admin()->make();
+        $this->admin = User::factory()->admin()->make();
     }
 
     /**
      * Test site settings access.
      */
     public function testCanGetSiteSettingsIndex() {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get('/admin/site-settings')
             ->assertStatus(200);
     }
@@ -66,7 +66,7 @@ class AdminSiteSettingsTest extends TestCase {
     public function testPostEditSiteSetting($key, $value, $expected) {
         // Try to post data
         $response = $this
-            ->actingAs($this->user)
+            ->actingAs($this->admin)
             ->post('/admin/site-settings/'.$key, [$key.'_value' => $value]);
 
         if ($expected) {

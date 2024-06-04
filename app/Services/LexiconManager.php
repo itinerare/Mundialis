@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Lexicon\LexiconEntry;
 use App\Models\Lexicon\LexiconEtymology;
 use App\Models\Page\PageLink;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class LexiconManager extends Service {
@@ -35,7 +36,7 @@ class LexiconManager extends Service {
             }
 
             // Create entry
-            $entry = LexiconEntry::create($data);
+            $entry = LexiconEntry::create(Arr::only($data, ['category_id', 'class', 'word', 'meaning', 'pronounciation', 'definition', 'data', 'is_visible']));
 
             if (isset($data['definition'])) {
                 if (!$parseData = $this->parse_wiki_links((array) $data['definition'])) {
@@ -61,7 +62,8 @@ class LexiconManager extends Service {
             } else {
                 $data['parsed_definition'] = null;
             }
-            $entry->update($data);
+
+            $entry->update(Arr::only($data, ['parsed_definition']));
 
             // Process etymology data
             if (!$this->processEtymology($entry, $data)) {
@@ -137,7 +139,7 @@ class LexiconManager extends Service {
             }
 
             // Update entry
-            $entry->update($data);
+            $entry->update(Arr::only($data, ['category_id', 'class', 'word', 'meaning', 'pronounciation', 'definition', 'data', 'is_visible', 'parsed_definition']));
 
             return $this->commitReturn($entry);
         } catch (\Exception $e) {

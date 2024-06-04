@@ -3,6 +3,7 @@
 namespace App\Models\Page;
 
 use App\Models\Model;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PageProtection extends Model {
@@ -41,13 +42,13 @@ class PageProtection extends Model {
      * Get the page this version belongs to.
      */
     public function page() {
-        return $this->belongsTo('App\Models\Page\Page');
+        return $this->belongsTo(Page::class);
     }
 
     /**
      * Get the user this version belongs to.
      */
     public function user() {
-        return $this->belongsTo('App\Models\User\User');
+        return $this->belongsTo(User::class);
     }
 }

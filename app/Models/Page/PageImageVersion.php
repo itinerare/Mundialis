@@ -3,6 +3,7 @@
 namespace App\Models\Page;
 
 use App\Models\Model;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PageImageVersion extends Model {
@@ -52,14 +53,14 @@ class PageImageVersion extends Model {
      * Get the user this version belongs to.
      */
     public function user() {
-        return $this->belongsTo('App\Models\User\User');
+        return $this->belongsTo(User::class);
     }
 
     /**
      * Get the image this version belongs to.
      */
     public function image() {
-        return $this->belongsTo('App\Models\Page\PageImage', 'page_image_id')->withTrashed();
+        return $this->belongsTo(PageImage::class, 'page_image_id')->withTrashed();
     }
 
     /**********************************************************************************************

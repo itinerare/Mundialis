@@ -4,7 +4,10 @@ namespace App\Models\Page;
 
 use App\Models\Model;
 use App\Models\Subject\SubjectCategory;
+use App\Models\Subject\TimeChronology;
 use App\Models\Subject\TimeDivision;
+use App\Models\User\User;
+use App\Models\User\WatchedPage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -26,6 +29,15 @@ class Page extends Model {
      * @var string
      */
     protected $table = 'pages';
+
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'versions', 'protections',
+    ];
 
     /**
      * Whether the model contains timestamps to be saved and updated.
@@ -63,88 +75,88 @@ class Page extends Model {
      * Get the category this page belongs to.
      */
     public function category() {
-        return $this->belongsTo('App\Models\Subject\SubjectCategory', 'category_id');
+        return $this->belongsTo(SubjectCategory::class, 'category_id');
     }
 
     /**
      * Get the parent this page belongs to.
      */
     public function parent() {
-        if ($this->category->subject['key'] == 'time') {
-            return $this->belongsTo('App\Models\Subject\TimeChronology', 'parent_id');
+        if ($this->category && $this->category->subject['key'] == 'time') {
+            return $this->belongsTo(TimeChronology::class, 'parent_id');
         }
 
-        return $this->belongsTo('App\Models\Page\Page', 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     /**
      * Get this page's primary image.
      */
     public function image() {
-        return $this->hasOne('App\Models\Page\PageImage', 'id', 'image_id');
+        return $this->hasOne(PageImage::class, 'id', 'image_id');
     }
 
     /**
      * Get this page's images.
      */
     public function images() {
-        return $this->belongsToMany('App\Models\Page\PageImage')->using('App\Models\Page\PagePageImage')->withPivot('is_valid');
+        return $this->belongsToMany(PageImage::class)->using(PagePageImage::class)->withPivot('is_valid');
     }
 
     /**
      * Get this page's versions.
      */
     public function versions() {
-        return $this->hasMany('App\Models\Page\PageVersion');
+        return $this->hasMany(PageVersion::class);
     }
 
     /**
      * Get this page's protection records.
      */
     public function protections() {
-        return $this->hasMany('App\Models\Page\PageProtection');
+        return $this->hasMany(PageProtection::class);
     }
 
     /**
      * Get this page's tags.
      */
     public function tags() {
-        return $this->hasMany('App\Models\Page\PageTag')->where('type', '!=', 'utility');
+        return $this->hasMany(PageTag::class)->where('type', '!=', 'utility');
     }
 
     /**
      * Get this page's utility tags.
      */
     public function utilityTags() {
-        return $this->hasMany('App\Models\Page\PageTag')->where('type', 'utility');
+        return $this->hasMany(PageTag::class)->where('type', 'utility');
     }
 
     /**
      * Get this page's associated links.
      */
     public function links() {
-        return $this->hasMany('App\Models\Page\PageLink', 'parent_id')->where('parent_type', 'page');
+        return $this->hasMany(PageLink::class, 'parent_id')->where('parent_type', 'page');
     }
 
     /**
      * Get this page's associated links.
      */
     public function linked() {
-        return $this->hasMany('App\Models\Page\PageLink', 'link_id');
+        return $this->hasMany(PageLink::class, 'link_id');
     }
 
     /**
      * Get this page's relationships.
      */
     public function relationships() {
-        return $this->hasMany('App\Models\Page\PageRelationship', 'page_one_id', 'id');
+        return $this->hasMany(PageRelationship::class, 'page_one_id', 'id');
     }
 
     /**
      * Get this page's relationships.
      */
     public function related() {
-        return $this->hasMany('App\Models\Page\PageRelationship', 'page_two_id', 'id');
+        return $this->hasMany(PageRelationship::class, 'page_two_id', 'id');
     }
 
     /**
@@ -152,8 +164,8 @@ class Page extends Model {
      */
     public function watchers() {
         return $this->hasManyThrough(
-            'App\Models\User\User',
-            'App\Models\User\WatchedPage',
+            User::class,
+            WatchedPage::class,
             'page_id',
             'id',
             'id',
@@ -171,7 +183,7 @@ class Page extends Model {
      * Scope a query to only include visible pages.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param \App\Models\User\User                 $user
+     * @param User                                  $user
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -478,9 +490,9 @@ class Page extends Model {
     /**
      * Organize events in chronological order.
      *
-     * @param \App\Models\User\User $user
-     * @param int                   $chronology
-     * @param array                 $tags
+     * @param User  $user
+     * @param int   $chronology
+     * @param array $tags
      *
      * @return \Illuminate\Support\Collection
      */
