@@ -17,7 +17,7 @@ class LexiconEntry extends Model {
      * @var array
      */
     protected $fillable = [
-        'category_id', 'class', 'word', 'meaning', 'pronunciation', 'definition', 'parsed_definition', 'data',
+        'category_id', 'class', 'word', 'meaning', 'pronunciation', 'definition', 'parsed_definition', 'data', 'is_visible',
     ];
 
     /**
