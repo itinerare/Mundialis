@@ -1,4 +1,4 @@
-@if ($image->pivot && !$image->pivot->is_valid)
+@if (isset($image->pivot) && !$image->pivot->is_valid)
     <div class="alert alert-danger">
         This image is outdated for this page, and only noted here for recordkeeping purposes.
     </div>
