@@ -8,7 +8,10 @@
         <div>
             @if ($navbox['pages']->whereIn('category_id', $group->first()->category->children()->pluck('id')->toArray())->count())
                 @php
-                    $subcatPages = $navbox['pages']->whereIn('category_id', $group->first()->category->children()->pluck('id')->toArray());
+                    $subcatPages = $navbox['pages']->whereIn(
+                        'category_id',
+                        $group->first()->category->children()->pluck('id')->toArray(),
+                    );
                 @endphp
                 <div class="row pl-2">
                     <div class="col-sm-2 col-6 alert-dark text-light rounded pt-1">

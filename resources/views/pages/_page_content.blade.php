@@ -86,7 +86,12 @@
                     }
                     if (isset($page->category->template['fields'][$sectionKey])) {
                         foreach ($page->category->template['fields'][$sectionKey] as $fieldKey => $field) {
-                            if (isset($data[$fieldKey]) && ($field['type'] != 'checkbox' && $field['type'] != 'choice' && $field['type'] != 'multiple')) {
+                            if (
+                                isset($data[$fieldKey]) &&
+                                ($field['type'] != 'checkbox' &&
+                                    $field['type'] != 'choice' &&
+                                    $field['type'] != 'multiple')
+                            ) {
                                 $length = $length += strlen($data[$fieldKey]);
                             }
                         }
