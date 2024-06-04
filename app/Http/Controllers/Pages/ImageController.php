@@ -30,7 +30,7 @@ class ImageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageGallery(Request $request, $id) {
-        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->with('category', 'parent')->first();
         if (!$page) {
             abort(404);
         }
@@ -155,13 +155,13 @@ class ImageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreateImage($id) {
-        $page = Page::where('id', $id)->first();
+        $page = Page::where('id', $id)->with('category', 'parent')->first();
         if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
         // Collect pages and information and group them
-        $groupedPages = Page::orderBy('title')->where('id', '!=', $page->id)->get()->keyBy('id')->groupBy(function ($page) {
+        $groupedPages = Page::with('category')->orderBy('title')->where('id', '!=', $page->id)->get()->keyBy('id')->groupBy(function ($page) {
             return $page->category->subject['name'];
         }, $preserveKeys = true)->toArray();
 

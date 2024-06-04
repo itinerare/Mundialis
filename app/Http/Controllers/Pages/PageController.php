@@ -58,7 +58,7 @@ class PageController extends Controller {
             abort(404);
         }
 
-        $query = PageVersion::where('page_id', $page->id);
+        $query = PageVersion::where('page_id', $page->id)->with('user:id,name,rank_id,is_banned');
         $sort = $request->only(['sort']);
 
         if ($request->get('user_id')) {

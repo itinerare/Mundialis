@@ -28,7 +28,7 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageRelationships(Request $request, $id) {
-        $page = Page::visible(Auth::user() ?? null)->subject('People')->where('id', $id)->first();
+        $page = Page::visible(Auth::user() ?? null)->subject('People')->where('id', $id)->with('category')->first();
         if (!$page) {
             abort(404);
         }
@@ -80,7 +80,7 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageFamilyTree($id) {
-        $page = Page::visible(Auth::user() ?? null)->subject('People')->where('id', $id)->first();
+        $page = Page::visible(Auth::user() ?? null)->subject('People')->where('id', $id)->with('category')->first();
         if (!$page || !$page->personRelations()) {
             abort(404);
         }
@@ -100,7 +100,7 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreateRelationship($id) {
-        $page = Page::subject('People')->where('id', $id)->first();
+        $page = Page::subject('People')->where('id', $id)->with('category')->first();
         if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
@@ -124,7 +124,7 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditRelationship($pageId, $id) {
-        $page = Page::subject('People')->where('id', $pageId)->first();
+        $page = Page::subject('People')->where('id', $pageId)->with('category')->first();
         if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
@@ -136,7 +136,7 @@ class RelationshipController extends Controller {
         return view('pages.relationships._create_edit_relationship', [
             'relationship'        => $relationship,
             'page'                => $page,
-            'pageOptions'         => Page::where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
+            'pageOptions'         => Page::with('category')->where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
                 return $option->category->subject['key'] == $page->category->subject['key'];
             })->pluck('title', 'id'),
             'relationshipOptions' => config('mundialis.'.$page->category->subject['key'].'_relationships'),
@@ -190,7 +190,7 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeleteRelationship($pageId, $id) {
-        $page = Page::subject('People')->where('id', $pageId)->first();
+        $page = Page::subject('People')->where('id', $pageId)->with('category')->first();
         if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
