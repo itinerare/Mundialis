@@ -31,7 +31,7 @@ class PageImage extends Model {
      * @var array
      */
     protected $with = [
-        'versions',
+        'versions', 'pages:id,title,is_visible',
     ];
 
     /**
