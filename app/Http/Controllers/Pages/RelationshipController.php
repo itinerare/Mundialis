@@ -108,7 +108,7 @@ class RelationshipController extends Controller {
         return view('pages.relationships._create_edit_relationship', [
             'relationship'        => new PageRelationship,
             'page'                => $page,
-            'pageOptions'         => Page::where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
+            'pageOptions'         => Page::with('category')->where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
                 return $option->category->subject['key'] == $page->category->subject['key'];
             })->pluck('title', 'id'),
             'relationshipOptions' => config('mundialis.'.$page->category->subject['key'].'_relationships'),

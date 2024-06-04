@@ -204,7 +204,7 @@ class ImageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditImage($pageId, $id) {
-        $page = Page::where('id', $pageId)->first();
+        $page = Page::where('id', $pageId)->with('category', 'parent')->first();
         if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
@@ -214,7 +214,7 @@ class ImageController extends Controller {
         }
 
         // Collect pages and information and group them
-        $groupedPages = Page::orderBy('title')->where('id', '!=', $page->id)->get()->keyBy('id')->groupBy(function ($page) {
+        $groupedPages = Page::orderBy('title')->where('id', '!=', $page->id)->with('category')->get()->keyBy('id')->groupBy(function ($page) {
             return $page->category->subject['name'];
         }, $preserveKeys = true)->toArray();
 
