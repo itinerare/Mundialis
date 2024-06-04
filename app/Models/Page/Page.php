@@ -37,7 +37,7 @@ class Page extends Model {
      */
     protected $with = [
         'category', 'parent', 'versions',
-        'image', 'tags',
+        'image', 'tags', 'protections',
     ];
 
     /**
