@@ -17,7 +17,13 @@
                 'label-class' .
                 ($field['type'] == 'checkbox' ? ' ml-3' : '') .
                 (isset($field['rules']) && $field['rules'] ? ' ' . $field['rules'] : ''),
-        ]) !!} @if (isset($field['help']))
+        ]) !!}
+        @if (
+            !isset($field['rules']) ||
+                (!in_array('required', explode('|', $field['rules'])) || in_array('nullable', explode('|', $field['rules']))))
+            (Optional)
+        @endif
+        @if (isset($field['help']))
             {!! isset($field['is_subsection']) && $field['is_subsection']
                 ? ($field['is_subsection'] == 1
                     ? '</h4>'
