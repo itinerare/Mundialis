@@ -17,7 +17,7 @@ jobs:
     - name: Fetch release info
       id: info
       run: |
-        response=$(curl -s "https://code.itinerare.net/api/v1/repos/itinerare/Alcyone/releases")
+        response=$(curl -s "https://code.itinerare.net/api/v1/repos/itinerare/Mundialis/releases")
         name=$(echo "$response" | jq -r '.[0].name')
         tag=$(echo "$response" | jq -r '.[0].tag_name')
         url=$(echo "$response" | jq -r '.[0].html_url')
