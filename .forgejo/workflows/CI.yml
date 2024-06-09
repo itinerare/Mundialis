@@ -36,7 +36,7 @@ jobs:
       run: composer lint
 
     - name: Import GPG key
-      uses: https://github.com/crazy-max/ghaction-import-gpg@v4
+      uses: https://github.com/crazy-max/ghaction-import-gpg@v6
       with:
         gpg_private_key: ${{ secrets.CI_GPG }}
         git_user_signingkey: true
@@ -73,7 +73,7 @@ jobs:
       run: npm run format
       
     - name: Import GPG key
-      uses: https://github.com/crazy-max/ghaction-import-gpg@v4
+      uses: https://github.com/crazy-max/ghaction-import-gpg@v6
       with:
         gpg_private_key: ${{ secrets.CI_GPG }}
         git_user_signingkey: true
@@ -111,7 +111,7 @@ jobs:
       run: npm run prod
       
     - name: Import GPG key
-      uses: https://github.com/crazy-max/ghaction-import-gpg@v4
+      uses: https://github.com/crazy-max/ghaction-import-gpg@v6
       with:
         gpg_private_key: ${{ secrets.CI_GPG }}
         git_user_signingkey: true
