@@ -1,0 +1,40 @@
+name: Mirror Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+    - name: Fetch release info
+      id: info
+      run: |
+        response=$(curl -s "https://code.itinerare.net/api/v1/repos/itinerare/Alcyone/releases")
+        name=$(echo "$response" | jq -r '.[0].name')
+        tag=$(echo "$response" | jq -r '.[0].tag_name')
+        url=$(echo "$response" | jq -r '.[0].html_url')
+        description=$(echo "$response" | jq -r '.[0].body')
+
+        echo "name=$name" >> "$GITHUB_OUTPUT"
+        echo "tag=$name" >> "$GITHUB_OUTPUT"
+
+        echo "Mirrored from ${url}" > description.md
+        echo "" >> description.md
+        echo "${description}" >> description.md
+
+    - name: Create/update release
+      uses: ncipollo/release-action@v1
+      with:
+        makeLatest: true
+        allowUpdates: true
+        tag: ${{ steps.info.outputs.tag }}
+        name: ${{ steps.info.outputs.name }}
+        bodyFile: "description.md"
