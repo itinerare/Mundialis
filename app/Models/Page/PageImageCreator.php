@@ -3,6 +3,7 @@
 namespace App\Models\Page;
 
 use App\Models\Model;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PageImageCreator extends Model {
@@ -50,14 +51,14 @@ class PageImageCreator extends Model {
      * Get the image this creator belongs to.
      */
     public function image() {
-        return $this->belongsTo('App\Models\Page\PageImage');
+        return $this->belongsTo(PageImage::class);
     }
 
     /**
      * Get the user this creator belongs to.
      */
     public function user() {
-        return $this->belongsTo('App\Models\User\User');
+        return $this->belongsTo(User::class);
     }
 
     /**********************************************************************************************

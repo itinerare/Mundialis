@@ -7,7 +7,7 @@
 @section('pages-content')
     {!! breadcrumbs(
         ['Time & Events' => 'time'] +
-            ($chronology->parent ? [$chronology->parent->name => 'time/chronologies/' . $category->parent->id] : []) + [
+            ($chronology->parent ? [$chronology->parent->name => 'time/chronologies/' . $chronology->parent->id] : []) + [
                 $chronology->name => 'time/chronologies/' . $chronology->id,
             ],
     ) !!}

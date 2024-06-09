@@ -30,7 +30,7 @@ class TagController extends Controller {
     public function getTag(Request $request, $tag) {
         $tag = str_replace('_', ' ', $tag);
 
-        $query = Page::visible(Auth::check() ? Auth::user() : null)->whereIn('id', PageTag::tag()->tagSearch($tag)->pluck('page_id')->toArray());
+        $query = Page::visible(Auth::user() ?? null)->whereIn('id', PageTag::tag()->tagSearch($tag)->pluck('page_id')->toArray());
         $sort = $request->only(['sort']);
 
         if ($request->get('title')) {

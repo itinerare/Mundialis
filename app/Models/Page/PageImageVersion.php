@@ -3,6 +3,7 @@
 namespace App\Models\Page;
 
 use App\Models\Model;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PageImageVersion extends Model {
@@ -27,6 +28,15 @@ class PageImageVersion extends Model {
     protected $table = 'page_image_versions';
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'data' => 'array',
+    ];
+
+    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -43,14 +53,14 @@ class PageImageVersion extends Model {
      * Get the user this version belongs to.
      */
     public function user() {
-        return $this->belongsTo('App\Models\User\User');
+        return $this->belongsTo(User::class);
     }
 
     /**
      * Get the image this version belongs to.
      */
     public function image() {
-        return $this->belongsTo('App\Models\Page\PageImage', 'page_image_id')->withTrashed();
+        return $this->belongsTo(PageImage::class, 'page_image_id')->withTrashed();
     }
 
     /**********************************************************************************************
@@ -58,19 +68,6 @@ class PageImageVersion extends Model {
         ACCESSORS
 
     **********************************************************************************************/
-
-    /**
-     * Get the data attribute as an associative array.
-     *
-     * @return array
-     */
-    public function getDataAttribute() {
-        if (!isset($this->attributes['data'])) {
-            return null;
-        }
-
-        return json_decode($this->attributes['data'], true);
-    }
 
     /**
      * Gets the file name of the model's image.

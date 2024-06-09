@@ -62,13 +62,14 @@ class SubjectCategoryFactory extends Factory {
      * @param string $rules
      * @param string $choices
      * @param string $value
+     * @param string $help
      *
      * @return Factory
      */
-    public function infoboxField($key = 'test', $label = 'Test', $type = 'text', $rules = null, $choices = null, $value = null) {
-        return $this->state(function (array $attributes) use ($key, $label, $type, $rules, $choices, $value) {
+    public function infoboxField($key = 'test', $label = 'Test', $type = 'text', $rules = null, $choices = null, $value = null, $help = null) {
+        return $this->state(function (array $attributes) use ($key, $label, $type, $rules, $choices, $value, $help) {
             return [
-                'data' => '{"infobox":{"'.$key.'":{"label":"'.$label.'","type":"'.$type.'","rules":'.($rules ? '"'.$rules.'"' : 'null').',"choices":'.($choices ? $choices : 'null').',"value":'.($value ? '"'.$value.'"' : 'null').',"help":null}}}',
+                'data' => '{"infobox":{"'.$key.'":{"label":"'.$label.'","type":"'.$type.'","rules":'.($rules ? '"'.$rules.'"' : 'null').',"choices":'.($choices ? $choices : 'null').',"value":'.($value ? '"'.$value.'"' : 'null').',"help":'.($help ? '"'.$help.'"' : 'null').'}}}',
             ];
         });
     }
@@ -82,13 +83,14 @@ class SubjectCategoryFactory extends Factory {
      * @param string $rules
      * @param string $choices
      * @param string $value
+     * @param string $help
      *
      * @return Factory
      */
-    public function bodyField($key = 'test', $label = 'Test', $type = 'text', $rules = null, $choices = null, $value = null) {
-        return $this->state(function (array $attributes) use ($key, $label, $type, $rules, $choices, $value) {
+    public function bodyField($key = 'test', $label = 'Test', $type = 'text', $rules = null, $choices = null, $value = null, $help = null) {
+        return $this->state(function (array $attributes) use ($key, $label, $type, $rules, $choices, $value, $help) {
             return [
-                'data' => '{"sections":{"section":{"name":"Test Section"}},"fields":{"section":{"'.$key.'":{"label":"'.$label.'","type":"'.$type.'","rules":'.($rules ? '"'.$rules.'"' : 'null').',"choices":'.($choices ? $choices : 'null').',"value":'.($value ? '"'.$value.'"' : 'null').',"help":null,"is_subsection":"0"}}}}',
+                'data' => '{"sections":{"section":{"name":"Test Section"}},"fields":{"section":{"'.$key.'":{"label":"'.$label.'","type":"'.$type.'","rules":'.($rules ? '"'.$rules.'"' : 'null').',"choices":'.($choices ? $choices : 'null').',"value":'.($value ? '"'.$value.'"' : 'null').',"help":'.($help ? '"'.$help.'"' : 'null').',"is_subsection":"0"}}}}',
             ];
         });
     }

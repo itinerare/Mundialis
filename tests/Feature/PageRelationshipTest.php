@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Page\Page;
 use App\Models\Page\PageRelationship;
+use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,628 +14,301 @@ use Tests\TestCase;
 class PageRelationshipTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
-    /**
-     * Test page relationships access.
-     */
-    public function testCanGetRelationships() {
-        // Create a temporary user
-        $user = User::factory()->make();
+    protected function setUp(): void {
+        parent::setUp();
 
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
+        $this->category = SubjectCategory::factory()->subject('people')->create();
 
-        // Create a page in the category
-        $page = Page::factory()->category($category->id)->create();
+        $this->editor = User::factory()->editor()->create();
+        $this->page = Page::factory()->create();
+        PageVersion::factory()->user($this->editor->id)->page($this->page->id)->create();
 
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/relationships');
-
-        $response->assertStatus(200);
+        $this->person = Page::factory()->category($this->category->id)->create();
+        PageVersion::factory()->user($this->editor->id)->page($this->person->id)->create();
     }
 
     /**
      * Test page relationships access.
+     *
+     * @dataProvider getRelationshipsProvider
+     *
+     * @param bool $withPerson
+     * @param bool $withRelationship
+     * @param int  $status
      */
-    public function testCanGetRelationshipsWithRelationship() {
-        // Create a temporary user
-        $user = User::factory()->make();
-
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
+    public function testGetRelationships($withPerson, $withRelationship, $status) {
+        if ($withRelationship) {
+            $personTwo = Page::factory()->category($this->category->id)->create();
+            PageRelationship::factory()->pageOne($withPerson ? $this->person->id : $this->page->id)->pageTwo($personTwo->id)->create();
         }
 
-        // Create a relationship for the two pages
-        PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
+        $response = $this
+            ->get('/pages/'.($withPerson ? $this->person->id : $this->page->id).'/relationships');
 
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page[1]->id.'/relationships');
+        $response->assertStatus($status);
+    }
 
-        $response->assertStatus(200);
+    public static function getRelationshipsProvider() {
+        return [
+            'with person'                   => [1, 0, 200],
+            'with person with relationship' => [1, 1, 200],
+            'with other page'               => [0, 0, 404],
+        ];
     }
 
     /**
      * Test page relationship creation access.
+     *
+     * @dataProvider getCreateEditRelationshipProvider
+     *
+     * @param bool $withPerson
+     * @param int  $status
      */
-    public function testCanGetCreateRelationship() {
-        // Create a temporary editor
-        $user = User::factory()->editor()->make();
+    public function testGetCreateRelationship($withPerson, $status) {
+        $response = $this->actingAs($this->editor)
+            ->get('/pages/'.($withPerson ? $this->person->id : $this->page->id).'/relationships/create');
 
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a page in the category
-        $page = Page::factory()->category($category->id)->create();
-
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/relationships/create');
-
-        $response->assertStatus(200);
+        $response->assertStatus($status);
     }
 
     /**
      * Test page relationship editing access.
+     *
+     * @dataProvider getCreateEditRelationshipProvider
+     *
+     * @param bool $withPerson
+     * @param int  $status
      */
-    public function testCanGetEditRelationship() {
-        // Create a temporary editor
-        $user = User::factory()->editor()->make();
+    public function testGetEditRelationship($withPerson, $status) {
+        $personTwo = Page::factory()->category($this->category->id)->create();
+        $relationship = PageRelationship::factory()->pageOne($withPerson ? $this->person->id : $this->page->id)->pageTwo($personTwo->id)->create();
 
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
+        $response = $this->actingAs($this->editor)
+            ->get('/pages/'.($withPerson ? $this->person->id : $this->page->id).'/relationships/edit/'.$relationship->id);
 
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
-        }
+        $response->assertStatus($status);
+    }
 
-        // Create a relationship for the two pages
-        $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
-
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page[1]->id.'/relationships/edit/'.$relationship->id);
-
-        $response->assertStatus(200);
+    public static function getCreateEditRelationshipProvider() {
+        return [
+            'with person'     => [1, 200],
+            'with other page' => [0, 404],
+        ];
     }
 
     /**
-     * Test relationship creation with minimal data.
+     * Test relationship creation.
+     *
+     * @dataProvider postCreateEditRelationshipProvider
+     *
+     * @param bool  $withPerson
+     * @param array $relationshipData
+     * @param bool  $expected
      */
-    public function testCanPostCreateRelationship() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
+    public function testPostCreateRelationship($withPerson, $relationshipData, $expected) {
+        $personTwo = Page::factory()->category($this->category->id)->create();
 
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
-        }
-
-        // Define some basic data
         $data = [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one'    => 'platonic_friend',
-            'type_two'    => 'platonic_friend',
+            'page_one_id'   => ($withPerson ? $this->person->id : $this->page->id),
+            'page_two_id'   => $personTwo->id,
+            'type_one'      => $relationshipData[0],
+            'type_one_info' => $relationshipData[2] ? $this->faker->unique()->domainWord() : null,
+            'details_one'   => $relationshipData[4] ? $this->faker->unique()->domainWord() : null,
+            'type_two'      => $relationshipData[1],
+            'type_two_info' => $relationshipData[3] ? $this->faker->unique()->domainWord() : null,
+            'details_two'   => $relationshipData[5] ? $this->faker->unique()->domainWord() : null,
         ];
 
-        // Try to post data
         $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/create', $data);
+            ->actingAs($this->editor)
+            ->post('/pages/'.($withPerson ? $this->person->id : $this->page->id).'/relationships/create', $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_relationships', [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one'    => 'platonic_friend',
-            'type_two'    => 'platonic_friend',
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('page_relationships', [
+                'page_one_id'   => ($withPerson ? $this->person->id : $this->page->id),
+                'page_two_id'   => $personTwo->id,
+                'type_one'      => $relationshipData[0],
+                'type_one_info' => $data['type_one_info'],
+                'details_one'   => $data['details_one'],
+                'type_two'      => $relationshipData[1],
+                'type_two_info' => $data['type_two_info'],
+                'details_two'   => $data['details_two'],
+            ]);
+        } else {
+            if ($withPerson) {
+                $response->assertSessionHasErrors();
+            } else {
+                $response->assertStatus(404);
+            }
+
+            $this->assertDatabaseMissing('page_relationships', [
+                'page_one_id' => ($withPerson ? $this->person->id : $this->page->id),
+                'page_two_id' => $personTwo->id,
+            ]);
+        }
     }
 
     /**
-     * Test relationship editing with minimal data.
+     * Test relationship editing.
+     *
+     * @dataProvider postCreateEditRelationshipProvider
+     *
+     * @param bool  $withPerson
+     * @param array $relationshipData
+     * @param bool  $expected
      */
-    public function testCanPostEditRelationship() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
+    public function testPostEditRelationship($withPerson, $relationshipData, $expected) {
+        $personTwo = Page::factory()->category($this->category->id)->create();
+        $relationship = PageRelationship::factory()->pageOne($withPerson ? $this->person->id : $this->page->id)->pageTwo($personTwo->id)->familial()->create();
 
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
-        }
-
-        // Create a relationship for the two pages
-        $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
-
-        // Define some basic data
         $data = [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one'    => 'platonic_friend',
-            'type_two'    => 'platonic_friend',
+            'page_one_id'   => ($withPerson ? $this->person->id : $this->page->id),
+            'page_two_id'   => $personTwo->id,
+            'type_one'      => $relationshipData[0],
+            'type_one_info' => $relationshipData[2] ? $this->faker->unique()->domainWord() : null,
+            'details_one'   => $relationshipData[4] ? $this->faker->unique()->domainWord() : null,
+            'type_two'      => $relationshipData[1],
+            'type_two_info' => $relationshipData[3] ? $this->faker->unique()->domainWord() : null,
+            'details_two'   => $relationshipData[5] ? $this->faker->unique()->domainWord() : null,
         ];
 
-        // Try to post data
         $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/edit/'.$relationship->id, $data);
+            ->actingAs($this->editor)
+            ->post('/pages/'.($withPerson ? $this->person->id : $this->page->id).'/relationships/edit/'.$relationship->id, $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_relationships', [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one'    => 'platonic_friend',
-            'type_two'    => 'platonic_friend',
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('page_relationships', [
+                'page_one_id'   => ($withPerson ? $this->person->id : $this->page->id),
+                'page_two_id'   => $personTwo->id,
+                'type_one'      => $relationshipData[0],
+                'type_one_info' => $data['type_one_info'],
+                'details_one'   => $data['details_one'],
+                'type_two'      => $relationshipData[1],
+                'type_two_info' => $data['type_two_info'],
+                'details_two'   => $data['details_two'],
+            ]);
+        } else {
+            if ($withPerson) {
+                $response->assertSessionHasErrors();
+            } else {
+                $response->assertStatus(404);
+            }
+
+            $this->assertDatabaseMissing('page_relationships', [
+                'page_one_id'   => ($withPerson ? $this->person->id : $this->page->id),
+                'page_two_id'   => $personTwo->id,
+                'type_one'      => $relationshipData[0],
+                'type_one_info' => $data['type_one_info'],
+                'details_one'   => $data['details_one'],
+                'type_two'      => $relationshipData[1],
+                'type_two_info' => $data['type_two_info'],
+                'details_two'   => $data['details_two'],
+            ]);
+        }
     }
 
-    /**
-     * Test relationship creation with type info.
-     */
-    public function testCanPostCreateRelationshipWithTypeInfo() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
+    public static function postCreateEditRelationshipProvider() {
+        return [
+            // $relationshipData = [$typeOne, $typeTwo, $withInfoOne, $withInfoTwo, $withDetailsOne, $withDetailsTwo]
 
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
-        }
-
-        // Define some basic data
-        $data = [
-            'page_one_id'   => $page[1]->id,
-            'page_two_id'   => $page[2]->id,
-            'type_one'      => 'platonic_friend',
-            'type_one_info' => $this->faker->unique()->domainWord(),
-            'type_two'      => 'platonic_friend',
-            'type_two_info' => $this->faker->unique()->domainWord(),
+            'with person'                  => [1, ['platonic_friend', 'platonic_friend', 0, 0, 0, 0], 1],
+            'with info one'                => [1, ['platonic_friend', 'platonic_friend', 1, 0, 0, 0], 1],
+            'with info two'                => [1, ['platonic_friend', 'platonic_friend', 0, 1, 0, 0], 1],
+            'with both info'               => [1, ['platonic_friend', 'platonic_friend', 1, 1, 0, 0], 1],
+            'with details one'             => [1, ['platonic_friend', 'platonic_friend', 0, 0, 1, 0], 1],
+            'with details two'             => [1, ['platonic_friend', 'platonic_friend', 0, 0, 0, 1], 1],
+            'with both details'            => [1, ['platonic_friend', 'platonic_friend', 0, 0, 1, 1], 1],
+            'custom one without info'      => [1, ['custom', 'platonic_friend', 0, 0, 0, 0], 0],
+            'custom one with two info'     => [1, ['custom', 'platonic_friend', 0, 1, 0, 0], 0],
+            'custom one with info'         => [1, ['custom', 'platonic_friend', 1, 0, 0, 0], 1],
+            'custom one with details one'  => [1, ['custom', 'platonic_friend', 1, 0, 1, 0], 1],
+            'custom one with details two'  => [1, ['custom', 'platonic_friend', 1, 0, 0, 1], 1],
+            'custom one with both details' => [1, ['custom', 'platonic_friend', 1, 0, 1, 1], 1],
+            'custom two without info'      => [1, ['platonic_friend', 'custom', 0, 0, 0, 0], 0],
+            'custom two with one info'     => [1, ['platonic_friend', 'custom', 1, 0, 0, 0], 0],
+            'custom two with info'         => [1, ['platonic_friend', 'custom', 0, 1, 0, 0], 1],
+            'custom two with details one'  => [1, ['platonic_friend', 'custom', 0, 1, 1, 0], 1],
+            'custom two with details two'  => [1, ['platonic_friend', 'custom', 0, 1, 0, 1], 1],
+            'custom two with both details' => [1, ['platonic_friend', 'custom', 0, 1, 1, 1], 1],
+            'both custom without info'     => [1, ['custom', 'custom', 0, 0, 0, 0], 0],
+            'both custom with one info'    => [1, ['custom', 'custom', 1, 0, 0, 0], 0],
+            'both custom with two info'    => [1, ['custom', 'custom', 0, 1, 0, 0], 0],
+            'both custom with info'        => [1, ['custom', 'custom', 1, 1, 0, 0], 1],
+            'both custom with details one' => [1, ['custom', 'custom', 1, 1, 1, 0], 1],
+            'both custom with details two' => [1, ['custom', 'custom', 1, 1, 0, 1], 1],
+            'both custom with details'     => [1, ['custom', 'custom', 1, 1, 1, 1], 1],
+            'with other page'              => [0, ['platonic_friend', 'platonic_friend', 0, 0, 0, 0], 0],
         ];
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/create', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_relationships', [
-            'page_one_id'   => $page[1]->id,
-            'page_two_id'   => $page[2]->id,
-            'type_one'      => 'platonic_friend',
-            'type_one_info' => $data['type_one_info'],
-            'type_two'      => 'platonic_friend',
-            'type_two_info' => $data['type_two_info'],
-        ]);
     }
 
     /**
-     * Test relationship editing with type info.
+     * Test page relationship deletion access.
+     *
+     * @dataProvider getCreateEditRelationshipProvider
+     *
+     * @param bool $withPerson
+     * @param int  $status
      */
-    public function testCanPostEditRelationshipWithTypeInfo() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
+    public function testGetDeleteRelationship($withPerson, $status) {
+        $personTwo = Page::factory()->category($this->category->id)->create();
+        $relationship = PageRelationship::factory()->pageOne($withPerson ? $this->person->id : $this->page->id)->pageTwo($personTwo->id)->create();
 
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
+        $response = $this->actingAs($this->editor)
+            ->get('/pages/'.($withPerson ? $this->person->id : $this->page->id).'/relationships/delete/'.$relationship->id);
 
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
-        }
-
-        // Create a relationship for the two pages
-        $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
-
-        // Define some basic data
-        $data = [
-            'page_one_id'   => $page[1]->id,
-            'page_two_id'   => $page[2]->id,
-            'type_one'      => 'platonic_friend',
-            'type_one_info' => $this->faker->unique()->domainWord(),
-            'type_two'      => 'platonic_friend',
-            'type_two_info' => $this->faker->unique()->domainWord(),
-        ];
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/edit/'.$relationship->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_relationships', [
-            'page_one_id'   => $page[1]->id,
-            'page_two_id'   => $page[2]->id,
-            'type_one'      => 'platonic_friend',
-            'type_one_info' => $data['type_one_info'],
-            'type_two'      => 'platonic_friend',
-            'type_two_info' => $data['type_two_info'],
-        ]);
-    }
-
-    /**
-     * Test relationship creation with details.
-     */
-    public function testCanPostCreateRelationshipWithDetails() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
-        }
-
-        // Define some basic data
-        $data = [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one'    => 'platonic_friend',
-            'details_one' => $this->faker->unique()->domainWord(),
-            'type_two'    => 'platonic_friend',
-            'details_two' => $this->faker->unique()->domainWord(),
-        ];
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/create', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_relationships', [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one'    => 'platonic_friend',
-            'details_one' => $data['details_one'],
-            'type_two'    => 'platonic_friend',
-            'details_two' => $data['details_two'],
-        ]);
-    }
-
-    /**
-     * Test relationship editing with details.
-     */
-    public function testCanPostEditRelationshipWithDetails() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
-        }
-
-        // Create a relationship for the two pages
-        $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
-
-        // Define some basic data
-        $data = [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one'    => 'platonic_friend',
-            'details_one' => $this->faker->unique()->domainWord(),
-            'type_two'    => 'platonic_friend',
-            'details_two' => $this->faker->unique()->domainWord(),
-        ];
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/edit/'.$relationship->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_relationships', [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one'    => 'platonic_friend',
-            'details_one' => $data['details_one'],
-            'type_two'    => 'platonic_friend',
-            'details_two' => $data['details_two'],
-        ]);
-    }
-
-    /**
-     * Test relationship creation with a custom type and info.
-     */
-    public function testCanPostCreateRelationshipWithCustomType() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
-        }
-
-        // Define some basic data
-        $data = [
-            'page_one_id'   => $page[1]->id,
-            'page_two_id'   => $page[2]->id,
-            'type_one'      => 'custom',
-            'type_one_info' => $this->faker->unique()->domainWord(),
-            'type_two'      => 'custom',
-            'type_two_info' => $this->faker->unique()->domainWord(),
-        ];
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/create', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_relationships', [
-            'page_one_id'   => $page[1]->id,
-            'page_two_id'   => $page[2]->id,
-            'type_one'      => 'custom',
-            'type_one_info' => $data['type_one_info'],
-            'type_two'      => 'custom',
-            'type_two_info' => $data['type_two_info'],
-        ]);
-    }
-
-    /**
-     * Test relationship editing with a custom type and info.
-     */
-    public function testCanPostEditRelationshipWithCustomType() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
-        }
-
-        // Create a relationship for the two pages
-        $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
-
-        // Define some basic data
-        $data = [
-            'page_one_id'   => $page[1]->id,
-            'page_two_id'   => $page[2]->id,
-            'type_one'      => 'custom',
-            'type_one_info' => $this->faker->unique()->domainWord(),
-            'type_two'      => 'custom',
-            'type_two_info' => $this->faker->unique()->domainWord(),
-        ];
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/edit/'.$relationship->id, $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_relationships', [
-            'page_one_id'   => $page[1]->id,
-            'page_two_id'   => $page[2]->id,
-            'type_one'      => 'custom',
-            'type_one_info' => $data['type_one_info'],
-            'type_two'      => 'custom',
-            'type_two_info' => $data['type_two_info'],
-        ]);
-    }
-
-    /**
-     * Test relationship creation with a custom type but no info.
-     * This shouldn't work.
-     */
-    public function testCannotPostCreateRelationshipWithCustomTypeWithoutInfo() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
-        }
-
-        // Define some basic data
-        $data = [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one'    => 'custom',
-            'type_two'    => 'custom',
-        ];
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/create', $data);
-
-        // Directly verify that no change has occurred
-        $this->assertDatabaseMissing('page_relationships', [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one'    => 'custom',
-            'type_two'    => 'custom',
-        ]);
-    }
-
-    /**
-     * Test relationship creation with a custom type but no info.
-     * This shouldn't work.
-     */
-    public function testCannotPostEditRelationshipWithCustomTypeWithoutInfo() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
-        }
-
-        // Create a relationship for the two pages
-        $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
-
-        // Define some basic data
-        $data = [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one'    => 'custom',
-            'type_two'    => 'custom',
-        ];
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/edit/'.$relationship->id, $data);
-
-        // Directly verify that no change has occurred
-        $this->assertDatabaseHas('page_relationships', [
-            'page_one_id' => $page[1]->id,
-            'page_two_id' => $page[2]->id,
-            'type_one'    => 'platonic_friend',
-            'type_two'    => 'platonic_friend',
-        ]);
-    }
-
-    /******************************************************************************
-        DELETION
-    *******************************************************************************/
-
-    /**
-     * Test page relationship editing access.
-     */
-    public function testCanGetDeleteRelationship() {
-        // Create a temporary editor
-        $user = User::factory()->editor()->make();
-
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
-        }
-
-        // Create a relationship for the two pages
-        $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
-
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page[1]->id.'/relationships/delete/'.$relationship->id);
-
-        $response->assertStatus(200);
+        $response->assertStatus($status);
     }
 
     /**
      * Test relationship deletion.
      */
-    public function testCanPostDeleteRelationship() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
+    public function testPostDeleteRelationship() {
+        $personTwo = Page::factory()->category($this->category->id)->create();
+        $relationship = PageRelationship::factory()->pageOne($this->person->id)->pageTwo($personTwo->id)->create();
 
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
-        }
-
-        // Create a relationship for the two pages
-        $relationship = PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page[1]->id.'/relationships/delete/'.$relationship->id);
+            ->actingAs($this->editor)
+            ->post('/pages/'.$this->person->id.'/relationships/delete/'.$relationship->id);
 
-        // Verify that the appropriate change has occurred
+        $response->assertSessionHasNoErrors();
         $this->assertModelMissing($relationship);
     }
 
-    /******************************************************************************
-        FAMILY TREE ACCESS
-    *******************************************************************************/
-
     /**
      * Test page family tree access.
+     *
+     * @dataProvider getFamilyTreeProvider
+     *
+     * @param bool  $withPerson
+     * @param array $relationshipData
+     * @param bool  $status
      */
-    public function testCanGetFamilyTree() {
-        // Create a temporary user
-        $user = User::factory()->make();
+    public function testGetFamilyTree($withPerson, $relationshipData, $status) {
+        $personTwo = Page::factory()->category($this->category->id)->create();
 
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
+        if ($relationshipData[0]) {
+            $relationship = PageRelationship::factory()->pageOne($withPerson ? $this->person->id : $this->page->id)->pageTwo($personTwo->id);
 
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
+            if ($relationshipData[1]) {
+                $relationship = $relationship->familial();
+            }
+            $relationship = $relationship->create();
         }
 
-        // Create a familial relationship for the two pages
-        PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->familial()->create();
+        $response = $this
+            ->get('/pages/'.($withPerson ? $this->person->id : $this->page->id).'/relationships/tree');
 
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page[1]->id.'/relationships/tree');
-
-        $response->assertStatus(200);
+        $response->assertStatus($status);
     }
 
-    /**
-     * Test page family tree access without relationships.
-     * This shouldn't work.
-     */
-    public function testCannotGetFamilyTreeWithoutRelationships() {
-        // Create a temporary user
-        $user = User::factory()->make();
-
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a page in the category
-        $page = Page::factory()->category($category->id)->create();
-
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/relationships/tree');
-
-        $response->assertStatus(404);
-    }
-
-    /**
-     * Test page family tree access without any familial relationships.
-     * This shouldn't work.
-     */
-    public function testCannotGetFamilyTreeWithoutFamily() {
-        // Create a temporary user
-        $user = User::factory()->make();
-
-        // Create a category in the "People" subject
-        $category = SubjectCategory::factory()->subject('people')->create();
-
-        // Create a couple pages to link
-        for ($i = 1; $i <= 2; $i++) {
-            $page[$i] = Page::factory()->category($category->id)->create();
-        }
-
-        // Create a non-familial relationship for the two pages
-        PageRelationship::factory()->pageOne($page[1]->id)->pageTwo($page[2]->id)->create();
-
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page[1]->id.'/relationships/tree');
-
-        $response->assertStatus(404);
+    public static function getFamilyTreeProvider() {
+        return [
+            'with person with family'       => [1, [1, 1], 200],
+            'with person with friend'       => [1, [1, 0], 404],
+            'with person'                   => [1, [0, 0], 404],
+            'with other page'               => [0, [0, 0], 404],
+        ];
     }
 }

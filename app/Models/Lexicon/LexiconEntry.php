@@ -3,6 +3,9 @@
 namespace App\Models\Lexicon;
 
 use App\Models\Model;
+use App\Models\Page\PageLink;
+use App\Models\Subject\LexiconCategory;
+use App\Models\Subject\LexiconSetting;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LexiconEntry extends Model {
@@ -14,7 +17,7 @@ class LexiconEntry extends Model {
      * @var array
      */
     protected $fillable = [
-        'category_id', 'class', 'word', 'meaning', 'pronunciation', 'definition', 'parsed_definition', 'data',
+        'category_id', 'class', 'word', 'meaning', 'pronunciation', 'definition', 'parsed_definition', 'data', 'is_visible',
     ];
 
     /**
@@ -23,6 +26,15 @@ class LexiconEntry extends Model {
      * @var string
      */
     protected $table = 'lexicon_entries';
+
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'data' => 'array',
+    ];
 
     /**
      * Whether the model contains timestamps to be saved and updated.
@@ -63,35 +75,35 @@ class LexiconEntry extends Model {
      * Get the category this entry belongs to.
      */
     public function category() {
-        return $this->belongsTo('App\Models\Subject\LexiconCategory', 'category_id');
+        return $this->belongsTo(LexiconCategory::class, 'category_id');
     }
 
     /**
      * Get the part of speech this entry belongs to.
      */
     public function lexicalClass() {
-        return $this->belongsTo('App\Models\Subject\LexiconSetting', 'class', 'name');
+        return $this->belongsTo(LexiconSetting::class, 'class', 'name');
     }
 
     /**
      * Get this entry's roots.
      */
     public function etymologies() {
-        return $this->hasMany('App\Models\Lexicon\LexiconEtymology', 'entry_id');
+        return $this->hasMany(LexiconEtymology::class, 'entry_id');
     }
 
     /**
      * Get this entry's descendants.
      */
     public function descendants() {
-        return $this->hasMany('App\Models\Lexicon\LexiconEtymology', 'parent_id');
+        return $this->hasMany(LexiconEtymology::class, 'parent_id');
     }
 
     /**
      * Get this entry's associated links.
      */
     public function links() {
-        return $this->hasMany('App\Models\Page\PageLink', 'parent_id')->where('parent_type', 'entry');
+        return $this->hasMany(PageLink::class, 'parent_id')->where('parent_type', 'entry');
     }
 
     /**********************************************************************************************
@@ -121,19 +133,6 @@ class LexiconEntry extends Model {
         ACCESSORS
 
     **********************************************************************************************/
-
-    /**
-     * Get the data attribute as an associative array.
-     *
-     * @return array
-     */
-    public function getDataAttribute() {
-        if (!isset($this->attributes['data'])) {
-            return null;
-        }
-
-        return json_decode($this->attributes['data'], true);
-    }
 
     /**
      * Get the word linked to its category or to the subject.

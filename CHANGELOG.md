@@ -4,6 +4,203 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.3.0](https://code.itinerare.net/itinerare/Mundialis/compare/v2.2.6...v2.3.0) (2024-06-09)
+
+### Features
+
+* Allow cascade on subject template creation ([c7a1dc](https://code.itinerare.net/itinerare/Mundialis/commit/c7a1dc0bd6de43cbf2d0b4682b7a8bfe024d72e8))
+* Enable model safety features ([6d14f3](https://code.itinerare.net/itinerare/Mundialis/commit/6d14f3edd8708bbfd95c0df1825082241a7823bd))
+* Update to Laravel 10 ([4aaddb](https://code.itinerare.net/itinerare/Mundialis/commit/4aaddbc19726b1e6dc4e19272ce9bb62218cc9fb))
+
+##### Page Images
+
+* Add WebP, JPG to accepted formats ([be112f](https://code.itinerare.net/itinerare/Mundialis/commit/be112f9fac023b0c5a3e13b35f0810b8ea2f8743))
+
+##### Pages
+
+* Add unlinked pages special page ([cb0756](https://code.itinerare.net/itinerare/Mundialis/commit/cb0756b16640f2a825d7e7a85e4a62165513bbb7))
+* Indicate optional template fields ([3fe74c](https://code.itinerare.net/itinerare/Mundialis/commit/3fe74c6be025a235fa8c48e9d7f4c3cb7eb8a3d5))
+
+##### Tests
+
+* Add bool sequence function to TestCase ([051666](https://code.itinerare.net/itinerare/Mundialis/commit/051666cad6b879ffdff23c5d774edf1a03dede0a))
+* Add cleanup option to test image function ([bb9155](https://code.itinerare.net/itinerare/Mundialis/commit/bb9155360812b84fb7d9ec6bf119572b5620998c))
+* Add invalid to subject view test ([b94099](https://code.itinerare.net/itinerare/Mundialis/commit/b94099af2d67efd8fdb98bcc0ef1fad8735b5397))
+* Add page reset tests ([173919](https://code.itinerare.net/itinerare/Mundialis/commit/1739199dc26e4520425c34c276ffda5258a27b33))
+* Add service errors to Laravel session errors ([878f8c](https://code.itinerare.net/itinerare/Mundialis/commit/878f8cfc25f737a35f9d73b9342f44dadd722862))
+* Add unrelated category check to subject view tests ([6871aa](https://code.itinerare.net/itinerare/Mundialis/commit/6871aa409234b8582fbee3d9ccbc2560b78c3a41))
+* Add visibility checks to page view tests ([d4ff6a](https://code.itinerare.net/itinerare/Mundialis/commit/d4ff6aa3739e643c304df16b8cabdc973c4d5d82))
+* Perform basic site setup in TestCase ([98af6b](https://code.itinerare.net/itinerare/Mundialis/commit/98af6bf9f5f1315bdad721031b71a43eecf2cd5e))
+* Return gallery test to page view tests ([271081](https://code.itinerare.net/itinerare/Mundialis/commit/271081e2dd5f4045897d479407e5ceeae0936d1e))
+* Update access tests ([c9cb91](https://code.itinerare.net/itinerare/Mundialis/commit/c9cb91c8f684ec7d0fc190e21acae5952067a135), [3ec72c](https://code.itinerare.net/itinerare/Mundialis/commit/3ec72c31970d11d8aaf8ebecd631b6504733f1b7))
+* Update admin invitation tests ([3cb05d](https://code.itinerare.net/itinerare/Mundialis/commit/3cb05d497bb791bcf6a0f512a46326cf731b5610))
+* Update admin rank tests ([e7fef1](https://code.itinerare.net/itinerare/Mundialis/commit/e7fef125374cda82c4abfa05c3b0463ad822eeac))
+* Update admin site images tests ([e21390](https://code.itinerare.net/itinerare/Mundialis/commit/e213906bf007e61b3a8436dc513f20c6d6265eba))
+* Update admin site settings tests ([404834](https://code.itinerare.net/itinerare/Mundialis/commit/404834ac6b1a3ed2534551b249689e5ba95a8039))
+* Update admin user edit/ban tests ([706f64](https://code.itinerare.net/itinerare/Mundialis/commit/706f64ad7378ceb82ad4b5a73cc9d529f229455e))
+* Update auth password reset tests ([0e0ac0](https://code.itinerare.net/itinerare/Mundialis/commit/0e0ac0f7d38056a6db3079ec13cb7447c7c06172))
+* Update auth registration tests ([6b530f](https://code.itinerare.net/itinerare/Mundialis/commit/6b530f3a31c8476ca4b3cb34d0546689a5711ee8))
+* Update get deleted pages tests, move to page delete tests ([253a7a](https://code.itinerare.net/itinerare/Mundialis/commit/253a7af1c446f3f5a8497e5ee1e574cd13980915))
+* Update lexicon entry tests, factories ([f1f3af](https://code.itinerare.net/itinerare/Mundialis/commit/f1f3af807d6d8befef683906073ebb74bb113a33))
+* Update page create tests ([6e97c3](https://code.itinerare.net/itinerare/Mundialis/commit/6e97c35418e7500fbb83d101e907a41dabc08f3b))
+* Update page delete tests ([aa286c](https://code.itinerare.net/itinerare/Mundialis/commit/aa286c43f3bd44652242061f9b852c62dc28a276))
+* Update page edit field tests ([ba6fae](https://code.itinerare.net/itinerare/Mundialis/commit/ba6fae9f5c455ecdb2aba248fae8fb428ad2427b))
+* Update page edit tests ([a1615e](https://code.itinerare.net/itinerare/Mundialis/commit/a1615ef0e089e6c5c1f39b7dd464957e1ca458dd))
+* Update page image delete tests ([460e39](https://code.itinerare.net/itinerare/Mundialis/commit/460e397c292337d199ec505fda1ed3f047b80c06))
+* Update page image edit tests ([694a2e](https://code.itinerare.net/itinerare/Mundialis/commit/694a2e2195ebfc4f2876560f3c0d78c36ff487b4))
+* Update page image view tests ([35e7fb](https://code.itinerare.net/itinerare/Mundialis/commit/35e7fb34da9f9763415886d1e8a7f48fd2727cc5))
+* Update page link tests ([2e4126](https://code.itinerare.net/itinerare/Mundialis/commit/2e412687fca3bc82019136731209c68937b81dac))
+* Update page move tests ([f723bb](https://code.itinerare.net/itinerare/Mundialis/commit/f723bb01d42268f27c8bea46dd8634b05c0ad969))
+* Update page protect tests ([9c2715](https://code.itinerare.net/itinerare/Mundialis/commit/9c27154950051ad8e2e66cfeaf5abba28455f939))
+* Update page relationship tests ([5d95b7](https://code.itinerare.net/itinerare/Mundialis/commit/5d95b774aa75804e0c8fe87677f1d65bd4a18deb))
+* Update page tag tests ([43decd](https://code.itinerare.net/itinerare/Mundialis/commit/43decdd5f579dfd3af8365a3b68747dc296d6c2e))
+* Update page time tests ([a068dc](https://code.itinerare.net/itinerare/Mundialis/commit/a068dce4f2c62d3fbc7f68a599f9b7ddd3571ce2))
+* Update page view field tests ([638e3a](https://code.itinerare.net/itinerare/Mundialis/commit/638e3a263d3c0006dd9aa52075d002003b99fa57))
+* Update page view tests ([ee943d](https://code.itinerare.net/itinerare/Mundialis/commit/ee943dc082018adb5c8f6fb080f7d888b8bae1fd))
+* Update page watch tests ([f76f16](https://code.itinerare.net/itinerare/Mundialis/commit/f76f1647c94ae932f01836e727444ea5dc6ede5e))
+* Update special page tests ([19e0da](https://code.itinerare.net/itinerare/Mundialis/commit/19e0dafcd74187357300df5ce2a838329fd7e61c))
+* Update subject data category tests ([d55c32](https://code.itinerare.net/itinerare/Mundialis/commit/d55c32bb332225e683adcde0297d93d77d09d1dd))
+* Update subject data field tests ([a052ce](https://code.itinerare.net/itinerare/Mundialis/commit/a052ceb8b00e16c4ebec246382b0272a618f8d59))
+* Update subject data language tests ([b32532](https://code.itinerare.net/itinerare/Mundialis/commit/b325327c9f57591c3bbb98734c70d8d8ed11fd71))
+* Update subject data time tests ([12694a](https://code.itinerare.net/itinerare/Mundialis/commit/12694a9f0fb91c520261b710d5e1623176dbe41d))
+* Update subject template tests, add factory ([e09fb3](https://code.itinerare.net/itinerare/Mundialis/commit/e09fb32af38a18b3ac627130fe4e9777bde4a766))
+* Update subject view tests ([729a1e](https://code.itinerare.net/itinerare/Mundialis/commit/729a1e9be7b232be65f3256b45fefc2fd18c6a2b))
+* Update update admin site page tests ([5ba45d](https://code.itinerare.net/itinerare/Mundialis/commit/5ba45d6289ae07fe377681f53b9ddf17fef3889c))
+* Update user function tests ([f4acfe](https://code.itinerare.net/itinerare/Mundialis/commit/f4acfe2bbf8ef3f01aa082c4ad87f36352628723))
+* Update user notification tests ([f2a822](https://code.itinerare.net/itinerare/Mundialis/commit/f2a822dedf098c634fbefea9660f1c672bd68315))
+
+### Bug Fixes
+
+* Allow clearing category data ([e4a2e1](https://code.itinerare.net/itinerare/Mundialis/commit/e4a2e1b4976eeebf5dacd2b3bff95d76745312da))
+* Do not require template field default value to be a string ([0c524a](https://code.itinerare.net/itinerare/Mundialis/commit/0c524a630d01480a648af27a82536e7f2b11a08c))
+* Do not silently discard attributes when creating/editing subject categories ([506d8b](https://code.itinerare.net/itinerare/Mundialis/commit/506d8bdb6cd2a2f3fb0caa6e14feaa2d82da3aba))
+* Do not silently discard attributes when editing subject templates ([f7ec11](https://code.itinerare.net/itinerare/Mundialis/commit/f7ec115269229942c10714d3da56cf69ecc524de))
+* Eager load images, relationships when force deleting pages ([acc288](https://code.itinerare.net/itinerare/Mundialis/commit/acc288eba1daa54f765fa9a98080abc3a743f9d2))
+* Eager load page/page image details on index page ([b55cbe](https://code.itinerare.net/itinerare/Mundialis/commit/b55cbeb2b052b0761572c61fad866004b0f54ded))
+* Eager load tag pages for all tags page ([ece7f7](https://code.itinerare.net/itinerare/Mundialis/commit/ece7f706bf7167d80275cb13d13d6894cea5323f))
+* Eager load various page, etc relationships for special pages ([cf8bd2](https://code.itinerare.net/itinerare/Mundialis/commit/cf8bd26fab7d8853285a0cdbc3ae9dc567a38bb7))
+* Improve checks for category existence when deleting ([6a1a27](https://code.itinerare.net/itinerare/Mundialis/commit/6a1a2748bfc4a0764780ca82a9594b42892b3018))
+* Make category image field nullable ([b805c0](https://code.itinerare.net/itinerare/Mundialis/commit/b805c0502c460f4e5e1162e9c857f515b3688efb))
+* Update middleware ([6b4e97](https://code.itinerare.net/itinerare/Mundialis/commit/6b4e9764a4d3c4d74fc626aa63275468a230d9e5))
+* Validate field type when editing templates ([529f19](https://code.itinerare.net/itinerare/Mundialis/commit/529f19edcaa1bff0827cccd15681b1ae3b432b08))
+
+##### Invitations
+
+* Always eager load user/recipient ([9644ed](https://code.itinerare.net/itinerare/Mundialis/commit/9644ed8d6952a8e90af883d7927da108a65f564e))
+* Eager load user rank IDs ([f88914](https://code.itinerare.net/itinerare/Mundialis/commit/f88914fe5889d4bf0559839dab709cab41fcd5cb))
+
+##### Lang
+
+* Autoconj ignores if word is being changed ([10b44f](https://code.itinerare.net/itinerare/Mundialis/commit/10b44f2f2208089c25c3b46e2bd75ff742b9e61b))
+* Fix filtering lexicon entries by part of speech ([b3b73f](https://code.itinerare.net/itinerare/Mundialis/commit/b3b73f88d6c608cf232690c99460b098c206ee34))
+* Fix filtering lexicon entries by pronunciation ([061bee](https://code.itinerare.net/itinerare/Mundialis/commit/061beeede9b7d1bc0b5e6d404540c8c65e571ba6))
+* Remove erroneous references to lexicon category image and summary ([fca33f](https://code.itinerare.net/itinerare/Mundialis/commit/fca33fa6ff55410a2e99dae0cfc000fb9d9d47ab))
+
+##### Language
+
+* Allow clearing lexicon category data ([b7d3a4](https://code.itinerare.net/itinerare/Mundialis/commit/b7d3a4c419e683ec3fca93fc3055d6f00cadf86e))
+* Check if an entry exists in a lexicon category when attempting delete ([b4f712](https://code.itinerare.net/itinerare/Mundialis/commit/b4f712f50e2f4946c90c9af8f461de7498c58727))
+* Do not silently discard attributes when creating/editing lexicon categories ([11abbc](https://code.itinerare.net/itinerare/Mundialis/commit/11abbc83d76c3734c66d03d54bc1b08370110895))
+* Make delete lexicon category verbiage clearer ([2f39a8](https://code.itinerare.net/itinerare/Mundialis/commit/2f39a8d7f63649fb425bb8c29eac8811a2e87592))
+
+##### Lexicon
+
+* Do not silently discard attributes when creating/editing entries ([b40fab](https://code.itinerare.net/itinerare/Mundialis/commit/b40fab041b2530a18ccb7a57d71f82e478165313))
+
+##### Page Images
+
+* Always eager load basic page details ([b7800f](https://code.itinerare.net/itinerare/Mundialis/commit/b7800f46195bca904c81ea5248412fef335fbace))
+* Better visibility check on create/edit ([ac7655](https://code.itinerare.net/itinerare/Mundialis/commit/ac765589f43cc912b1e949221dab11c2b629391e))
+* Display format/size limit info in create/edit view ([285120](https://code.itinerare.net/itinerare/Mundialis/commit/285120a2411e33c18557131c07fc7c8df3432e97))
+* Do not silently discard attributes when creating/editing ([e4e796](https://code.itinerare.net/itinerare/Mundialis/commit/e4e7961f08962cbbce13cce5ea3deda82574de78))
+* Eager load versions, version users for deleted image view ([0932fc](https://code.itinerare.net/itinerare/Mundialis/commit/0932fcf1f2b0a9635b25386662b22a39e3c859af))
+* Eager load versions, version users for full image view ([212eed](https://code.itinerare.net/itinerare/Mundialis/commit/212eed266c05959178b36b71bbcb5c30f2c4d443))
+* Improve image info modal check for viewing in a page context ([b600aa](https://code.itinerare.net/itinerare/Mundialis/commit/b600aa25a0a896d353d6f3bdbede66dae7507b33))
+* Improve use cropper check in processing ([fa5a09](https://code.itinerare.net/itinerare/Mundialis/commit/fa5a09cb986dde50e09284641d421f2479abebbd))
+* Use extension from file when saving processed image ([3445ee](https://code.itinerare.net/itinerare/Mundialis/commit/3445ee3b1533e75b53f3338ae97682b8e856e5ff))
+
+##### Pages
+
+* 404 if attempting to edit a non-existent page ([bfc71f](https://code.itinerare.net/itinerare/Mundialis/commit/bfc71fc7039de61fff88443596f0ac8bec7cbdb4))
+* Add page visibility check to image visibility, recent images special page ([90f556](https://code.itinerare.net/itinerare/Mundialis/commit/90f556dd6eb24c3139dac4891c3e86468647d9ff))
+* Always eager load common page and image relations ([738aac](https://code.itinerare.net/itinerare/Mundialis/commit/738aacb66cf1d585280c7100a899a45ef4032838))
+* Always eager load page protections ([94b88c](https://code.itinerare.net/itinerare/Mundialis/commit/94b88c8a963b7b3485d98d70e1500f6123f442ac))
+* Better checks for category existence when creating a page ([09245c](https://code.itinerare.net/itinerare/Mundialis/commit/09245c042fd3530514214aae4080d6c2d636b5a6))
+* Cascade page protections to linked images ([6c239a](https://code.itinerare.net/itinerare/Mundialis/commit/6c239ab86e4517efa4c21cf8fae6be2ec6c9482d))
+* Check for version existence when resetting page ([4ab135](https://code.itinerare.net/itinerare/Mundialis/commit/4ab13520e1601811f8a259a647967d2cc6d3711d))
+* Check that page/image is deleted when getting/restoring a deleted page/image ([6c8e43](https://code.itinerare.net/itinerare/Mundialis/commit/6c8e439f096d91e7911f91ee5a5ba4831e549481))
+* Clean up page existence checks in ImageController ([095949](https://code.itinerare.net/itinerare/Mundialis/commit/095949e821e742b8e4197d83ac143d430b8172b3))
+* Do not silently discard attributes when creating/editing ([667335](https://code.itinerare.net/itinerare/Mundialis/commit/667335af8237fa6c64be36d3578f7cc90865c418))
+* Do not silently discard attributes when resetting page ([598108](https://code.itinerare.net/itinerare/Mundialis/commit/598108d9bf5aa5de2c693fb7bda5dcb4e9ace2f0))
+* Eager load category, parent for additional associated views ([3d361e](https://code.itinerare.net/itinerare/Mundialis/commit/3d361e87f2a6361bb0dacbfb9016e86401776269))
+* Eager load category, parent for associated views ([af2263](https://code.itinerare.net/itinerare/Mundialis/commit/af2263bfa6097eaf4c399b722fc23e93a31f24ad))
+* Ensure slugs beginning with numbers don't 404 ([b709b4](https://code.itinerare.net/itinerare/Mundialis/commit/b709b4fcc72f9930029477b4c79e02e2498d6467))
+* Fix linked to special page text ([bd7a17](https://code.itinerare.net/itinerare/Mundialis/commit/bd7a171f76bae51ed02b26794026689ec2729d61))
+* Fix most linked special page visibility check, display ([87f697](https://code.itinerare.net/itinerare/Mundialis/commit/87f69789c4a08a1039f464fd591c385a9d30287b))
+* Fix route error getting image info from special pages ([b2db94](https://code.itinerare.net/itinerare/Mundialis/commit/b2db94cc542ea2ed04854ccb9f56f7dc8219e703))
+* Fix route error getting tag page ([8c754d](https://code.itinerare.net/itinerare/Mundialis/commit/8c754d5255d40d27919fa672b35436cd5633d8c5))
+* Handle error better on trying to get delete page for an invalid page ([a168b1](https://code.itinerare.net/itinerare/Mundialis/commit/a168b1333b96c261972f59c5c2e1dbc5c5d78ff9))
+* Improve check for relationship existence when deleting it ([475dfb](https://code.itinerare.net/itinerare/Mundialis/commit/475dfb578fcfc66a30206dfda6bd68a9e9bd8469))
+* Improve page existence checks in controller ([59040d](https://code.itinerare.net/itinerare/Mundialis/commit/59040d95dc813df5e0b5171ff383041ae7944ef1))
+* Improve restore image page count checks ([2729ae](https://code.itinerare.net/itinerare/Mundialis/commit/2729ae196dad6ebe5ff4962a78a400331ad2a6f0))
+* Improve version lookup in postResetPage function ([caa50f](https://code.itinerare.net/itinerare/Mundialis/commit/caa50f44d853cb887f0639e4a8a66206f11e9158))
+* Move page exsistence checks from controller to service ([d3c417](https://code.itinerare.net/itinerare/Mundialis/commit/d3c417b70e27cffaa5b3b299ef3d48ccf9bf567d))
+* Only eager load parent, category, tags where relevant ([52265b](https://code.itinerare.net/itinerare/Mundialis/commit/52265b385d141b4c640863ff22b3cde276742df9))
+* Only show relationships for people pages ([355b65](https://code.itinerare.net/itinerare/Mundialis/commit/355b6590bf74f6beb39bcccf7ec84a11a7536103))
+* Validate create wanted page category ID selection ([54b016](https://code.itinerare.net/itinerare/Mundialis/commit/54b0162018fb21edfbdd89cdfd970b9b42b3e1d0))
+* Validate utility tag input against config file ([d772b4](https://code.itinerare.net/itinerare/Mundialis/commit/d772b4f6f0bfa0a8780ed481276f4dadbf2027c7))
+
+##### Routes
+
+* Fix issues reading routes in other files, get tag routes ([3e92f3](https://code.itinerare.net/itinerare/Mundialis/commit/3e92f3a4c35274476372f0c86f812924bbc09b38))
+* Resolve issues reading admin routes ([a64950](https://code.itinerare.net/itinerare/Mundialis/commit/a6495031304f88d46eb03c7203c027aa665be00b))
+* Rewrite in new syntax ([e548fe](https://code.itinerare.net/itinerare/Mundialis/commit/e548fe1a38450511486abc66a94ff29a63140a28))
+
+##### Tests
+
+* Add cleanup of users to test case ([11bc74](https://code.itinerare.net/itinerare/Mundialis/commit/11bc74bcde3190bd67c9c16228adbdb711257fcf))
+* Add fallbacks in subject template viewing/processing ([488d9d](https://code.itinerare.net/itinerare/Mundialis/commit/488d9d2dfce1326c2eb144699e38273cebc5469f))
+* Additional user ban errors not added to session errors ([dd12a3](https://code.itinerare.net/itinerare/Mundialis/commit/dd12a3f1ea93b7fc9e3dd21d565808878164a686))
+* Add pre-test cleanup to test files that need it ([9a4c6e](https://code.itinerare.net/itinerare/Mundialis/commit/9a4c6eb1525c1d4b2d767d8ee73ba6f30bd1b3df))
+* Add textbox tests to get create/edit page field tests ([ae9ca0](https://code.itinerare.net/itinerare/Mundialis/commit/ae9ca0e4ec64432ae07241940e1ff91e2ecbb247))
+* Clean up test images after page restore tests ([75af40](https://code.itinerare.net/itinerare/Mundialis/commit/75af40ec708ac51f856aeebcac350677220196cd))
+* Delete lexicon entries/etymologies before performing tests ([6a3d50](https://code.itinerare.net/itinerare/Mundialis/commit/6a3d5013a7388f7ef8643aef7442632205544402))
+* Delete notifications before performing send notification tests ([c37d9a](https://code.itinerare.net/itinerare/Mundialis/commit/c37d9a4c05138300a14543c960d56704cdb73a99))
+* Explicitly specify default values in user factory ([911b53](https://code.itinerare.net/itinerare/Mundialis/commit/911b53993155d33ed9f51b663d1f3bcb93d7816a))
+* Fix invalid testData json in page version factory ([204dac](https://code.itinerare.net/itinerare/Mundialis/commit/204dac295a7f712923aeb7f9ca553821788fc1ed))
+* Generate safer usernames in user factory ([2a032f](https://code.itinerare.net/itinerare/Mundialis/commit/2a032f4297c8b0df6813b8c8c6a673f353e697a5))
+* Make page titles used in page edit tests more unique ([a42bce](https://code.itinerare.net/itinerare/Mundialis/commit/a42bce1a0f87aef81d84b3764c9253789f4504dd))
+* Make user list test more flexible ([63e6fb](https://code.itinerare.net/itinerare/Mundialis/commit/63e6fb609831d34c7423e4f41b4ed29994ecc952))
+* Mark to-update tests as incomplete ([7ac212](https://code.itinerare.net/itinerare/Mundialis/commit/7ac2127ac0d90bf22268a4a0364f33da13a72c90))
+* More accurate mutliple choice field handling in page edit field tests ([c50660](https://code.itinerare.net/itinerare/Mundialis/commit/c5066091a226505102f5264025d8ab1f2e3700cd))
+* Remove boolean sequences function from test case ([1ac959](https://code.itinerare.net/itinerare/Mundialis/commit/1ac9598d5f67b8811a9c163b24a3b2929098eaf9))
+* Replace randomized invalid IDs with 9999 ([9c8237](https://code.itinerare.net/itinerare/Mundialis/commit/9c82370e2c6f8e5f3931b4c30920afeaddd3372e))
+* Resolve errors due to a larger volume of tests ([8daeed](https://code.itinerare.net/itinerare/Mundialis/commit/8daeed60d0088a6c2cd1608f486bd9de4a672f95))
+* Revert special page user list test ([df4037](https://code.itinerare.net/itinerare/Mundialis/commit/df4037bd516e654b4196c10eac51c46f2589364f))
+* Site setting errors not added to session errors ([291096](https://code.itinerare.net/itinerare/Mundialis/commit/29109692b160557a6f9e9baab460c782556f1d4e))
+* Specify filename from version in create image test checks ([5c7e11](https://code.itinerare.net/itinerare/Mundialis/commit/5c7e11b3bec605a5b35dcc6554de62b944bfcd3b))
+* Unlink file after user avatar test ([b108e6](https://code.itinerare.net/itinerare/Mundialis/commit/b108e632e4f7d065079ff703882f5b21ea9ef547))
+* Update password reset tests ([f3961d](https://code.itinerare.net/itinerare/Mundialis/commit/f3961d79ffe13f45a08555870cca5add5e3b52d8))
+* Use rank sort in admin user edit tests ([0e0ee8](https://code.itinerare.net/itinerare/Mundialis/commit/0e0ee85d6158776b4de2eca2eeaad211e86564df))
+* User editing errors not added to session errors ([10ef9a](https://code.itinerare.net/itinerare/Mundialis/commit/10ef9a7dcd4bda34bb13bee2b16f98469de10d23))
+
+##### Time
+
+* Check if a page exists in a chronology when attempting delete ([794524](https://code.itinerare.net/itinerare/Mundialis/commit/7945244ff1fa2c1ba9371f0f55e31b8c3e2094e9))
+* Fix chronology breadcrumbs with a parent ([add2af](https://code.itinerare.net/itinerare/Mundialis/commit/add2af58060033095faf34b3d300419a22dfb13a))
+* Fix filtering chronology pages by category ([28ff4e](https://code.itinerare.net/itinerare/Mundialis/commit/28ff4e0718c19f307490965057a0cc773e83cd81))
+* Remove erroneous references to chronology image and summary ([c8a23b](https://code.itinerare.net/itinerare/Mundialis/commit/c8a23b83ae5e7c7418601a76fcca725630991edb))
+
+##### Users
+
+* Always eager load rank ([a333c8](https://code.itinerare.net/itinerare/Mundialis/commit/a333c87f32c1c746bbd2fb3fdd9ba71d37cc6601))
+* Check if user exists when posting ban before checking ban status ([c21e63](https://code.itinerare.net/itinerare/Mundialis/commit/c21e630afa7b1acba529888f46cc58f5bff020b7))
+* Error on unban/confirmation re non-banned users ([4c5f7a](https://code.itinerare.net/itinerare/Mundialis/commit/4c5f7aba7da6b1f6b2bbcfdc1ea82e95c91f9a9f))
+* Improve page watch visibility/existence check ([ba8df4](https://code.itinerare.net/itinerare/Mundialis/commit/ba8df45a032b85bf902ea7af8fd824658b41bf22))
+
+
+---
+
 ## [2.2.6](https://code.itinerare.net/itinerare/Mundialis/compare/v2.2.5...v2.2.6) (2024-02-25)
 
 

@@ -11,6 +11,7 @@ use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeDivision;
 use App\Models\User\WatchedPage;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
@@ -30,12 +31,16 @@ class PageManager extends Service {
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return \App\Models\Page\Page|bool
+     * @return bool|Page
      */
     public function createPage($data, $user) {
         DB::beginTransaction();
 
         try {
+            if (!SubjectCategory::where('id', $data['category_id'])->exists()) {
+                throw new \Exception('Invalid category selected.');
+            }
+
             // More specific validation
             if (Page::withTrashed()->where('title', $data['title'])->where('category_id', $data['category_id'])->exists()) {
                 throw new \Exception('The page title has already been taken within this category.');
@@ -57,7 +62,7 @@ class PageManager extends Service {
             }
 
             // Create page
-            $page = Page::create($data);
+            $page = Page::create(Arr::only($data, ['category_id', 'title', 'summary', 'is_visible', 'parent_id']));
 
             // If the page is wanted, update the existing page(s)
             if (PageLink::where('title', $page->displayTitle)->exists()) {
@@ -73,7 +78,6 @@ class PageManager extends Service {
 
                     // Parse data and update version
                     $newData['data'] = $this->parse_wiki_links($versionData['data']);
-                    $version->data = json_encode($newData);
                     $version->save();
 
                     // And update the links themselves
@@ -132,13 +136,16 @@ class PageManager extends Service {
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return \App\Models\Page\Page|bool
+     * @return bool|Page
      */
     public function updatePage($page, $data, $user) {
         DB::beginTransaction();
 
         try {
-            // Ensure user can edit
+            if (!$page) {
+                throw new \Exception('Invalid page selected.');
+            }
+
             if (!$user->canEdit($page)) {
                 throw new \Exception('You don\'t have permission to edit this page.');
             }
@@ -198,7 +205,7 @@ class PageManager extends Service {
             }
 
             // Update page
-            $page->update($data);
+            $page->update(Arr::only($data, ['category_id', 'title', 'summary', 'is_visible', 'parent_id']));
 
             // Send a notification to users that have watched this page
             if ($page->watchers->count()) {
@@ -235,7 +242,10 @@ class PageManager extends Service {
         DB::beginTransaction();
 
         try {
-            // Check toggle
+            if (!$page) {
+                throw new \Exception('Invalid page selected.');
+            }
+
             if (!isset($data['is_protected'])) {
                 $data['is_protected'] = 0;
             }
@@ -273,7 +283,9 @@ class PageManager extends Service {
         DB::beginTransaction();
 
         try {
-            // Ensure user can edit
+            if (!$page) {
+                throw new \Exception('Invalid page selected.');
+            }
             if (!$user->canEdit($page)) {
                 throw new \Exception('You don\'t have permission to edit this page.');
             }
@@ -317,9 +329,19 @@ class PageManager extends Service {
         DB::beginTransaction();
 
         try {
-            // Ensure user can edit
+            if (!$page) {
+                throw new \Exception('Invalid page selected.');
+            }
             if (!$user->canEdit($page)) {
                 throw new \Exception('You don\'t have permission to edit this page.');
+            }
+            if (!$version) {
+                throw new \Exception('Invalid version selected.');
+            }
+
+            // Fallback for testing purposes
+            if (!is_array($version->data)) {
+                $version->data = json_decode($version->data, true);
             }
 
             // Double-check the title
@@ -328,7 +350,7 @@ class PageManager extends Service {
             }
 
             // Update the page itself
-            $page->update($version->data);
+            $page->update(Arr::only($version->data, ['title', 'summary']));
 
             // Create a version logging the reset
             $version = $this->logPageVersion($page->id, $user->id, 'Page Reset to Ver. #'.$version->id, $reason, $version->data, false);
@@ -358,7 +380,9 @@ class PageManager extends Service {
         DB::beginTransaction();
 
         try {
-            // Ensure user can edit
+            if (!$page) {
+                throw new \Exception('Invalid page selected.');
+            }
             if (!$user->canEdit($page)) {
                 throw new \Exception('You don\'t have permission to edit this page.');
             }
@@ -462,6 +486,14 @@ class PageManager extends Service {
         DB::beginTransaction();
 
         try {
+            if (!$page) {
+                throw new \Exception('Invalid page selected.');
+            }
+
+            if (!$page->deleted_at) {
+                throw new \Exception('This page has not been deleted.');
+            }
+
             // First, restore the page itself
             $page->restore();
 
@@ -499,7 +531,7 @@ class PageManager extends Service {
      * @param array  $data
      * @param bool   $isMinor
      *
-     * @return \App\Models\Page\PageVersion|bool
+     * @return bool|PageVersion
      */
     public function logPageVersion($pageId, $userId, $type, $reason, $data, $isMinor = false) {
         try {
@@ -509,7 +541,7 @@ class PageManager extends Service {
                 'type'     => $type,
                 'reason'   => $reason,
                 'is_minor' => $isMinor,
-                'data'     => json_encode($data),
+                'data'     => $data,
             ]);
 
             return $version;
@@ -647,7 +679,7 @@ class PageManager extends Service {
                 foreach ($data['utility_tag'] as $tag) {
                     // Utility tag options are already set by the config,
                     // but just in case, perform some extra validation
-                    if (Config::get('mundialis.utility_tags.'.$tag) == null) {
+                    if (config('mundialis.utility_tags.'.$tag) == null) {
                         throw new \Exception('One or more of the specified utility tags is invalid.');
                     }
                 }
@@ -707,7 +739,7 @@ class PageManager extends Service {
                 // that a duplicate hub tag is not being added
                 foreach ($data['page_tag'] as $tag) {
                     $matches = [];
-                    preg_match(Config::get('mundialis.page_tags.hub.regex_alt'), $tag, $matches);
+                    preg_match(config('mundialis.page_tags.hub.regex_alt'), $tag, $matches);
                     if ($matches != []) {
                         if (PageTag::tag()->where('tag', $tag)->where('page_id', '!=', $page->id)->exists()) {
                             throw new \Exception('A hub already exists for the tag '.$matches[1].'.');

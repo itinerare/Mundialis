@@ -60,14 +60,14 @@ class PageRelationship extends Model {
      * Get one of the pages this relationship belongs to.
      */
     public function pageOne() {
-        return $this->belongsTo('App\Models\Page\Page', 'page_one_id');
+        return $this->belongsTo(Page::class, 'page_one_id');
     }
 
     /**
      * Get one of the pages this relationship belongs to.
      */
     public function pageTwo() {
-        return $this->belongsTo('App\Models\Page\Page', 'page_two_id');
+        return $this->belongsTo(Page::class, 'page_two_id');
     }
 
     /**********************************************************************************************
@@ -89,7 +89,7 @@ class PageRelationship extends Model {
         }
 
         // Get relevant config file
-        $config = Config::get('mundialis.'.$this->pageOne->category->subject['key'].'_relationships');
+        $config = config('mundialis.'.$this->pageOne->category->subject['key'].'_relationships');
 
         // Cycle through its groups
         foreach ($config as $group) {
@@ -114,7 +114,7 @@ class PageRelationship extends Model {
         }
 
         // Get relevant config file
-        $config = Config::get('mundialis.'.$this->pageTwo->category->subject['key'].'_relationships');
+        $config = config('mundialis.'.$this->pageTwo->category->subject['key'].'_relationships');
 
         // Cycle through its groups
         foreach ($config as $group) {

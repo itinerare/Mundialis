@@ -5,24 +5,24 @@
 @endsection
 
 @section('pages-content')
-    {!! breadcrumbs(['Special' => 'special', 'Wanted Pages' => 'special/wanted-pages']) !!}
+    {!! breadcrumbs(['Special' => 'special', 'Wanted Pages' => 'special/linked-pages']) !!}
 
     <h1>Special: Most Linked-To Pages</h1>
 
-    <p>This is a list of all wanted pages. Note that this list only counts links made within page content.</p>
+    <p>This is a list of the most linked-to pages. Note that this list only counts links made within page content.</p>
 
     {!! $pages->render() !!}
 
     <ul>
         @foreach ($pages as $group)
             <li>
-                {!! $group->first()->linkedPage->displayName !!} ({{ $group->count() }} link{{ $group->count() != 1 ? 's' : '' }}) <a
+                {!! $group->first()->linked->displayName !!} ({{ $group->count() }} link{{ $group->count() != 1 ? 's' : '' }}) <a
                     class="collapse-toggle collapsed" href="#group-{{ $group->first()->id }}" data-toggle="collapse">Show <i
                         class="fas fa-caret-right"></i></a></h3>
                 <div class="collapse" id="group-{{ $group->first()->id }}">
                     <ul>
                         @foreach ($group as $link)
-                            <li>{!! $link->page->displayName !!}</li>
+                            <li>{!! $link->parent->displayName !!}</li>
                         @endforeach
                     </ul>
                 </div>

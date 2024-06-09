@@ -9,7 +9,6 @@ use App\Models\Subject\TimeDivision;
 use App\Services\RelationshipManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 
 class RelationshipController extends Controller {
     /*
@@ -29,7 +28,7 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageRelationships(Request $request, $id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        $page = Page::visible(Auth::user() ?? null)->subject('People')->where('id', $id)->with('category')->first();
         if (!$page) {
             abort(404);
         }
@@ -81,11 +80,8 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageFamilyTree($id) {
-        $page = Page::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
-        if (!$page) {
-            abort(404);
-        }
-        if (!$page->personRelations()) {
+        $page = Page::visible(Auth::user() ?? null)->subject('People')->where('id', $id)->with('category')->first();
+        if (!$page || !$page->personRelations()) {
             abort(404);
         }
 
@@ -104,21 +100,18 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreateRelationship($id) {
-        $page = Page::where('id', $id)->first();
-        if (!$page) {
-            abort(404);
-        }
-        if (!Auth::user()->canEdit($page)) {
+        $page = Page::subject('People')->where('id', $id)->with('category')->first();
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
         return view('pages.relationships._create_edit_relationship', [
             'relationship'        => new PageRelationship,
             'page'                => $page,
-            'pageOptions'         => Page::where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
+            'pageOptions'         => Page::with('category')->where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
                 return $option->category->subject['key'] == $page->category->subject['key'];
             })->pluck('title', 'id'),
-            'relationshipOptions' => Config::get('mundialis.'.$page->category->subject['key'].'_relationships'),
+            'relationshipOptions' => config('mundialis.'.$page->category->subject['key'].'_relationships'),
         ]);
     }
 
@@ -131,11 +124,8 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditRelationship($pageId, $id) {
-        $page = Page::where('id', $pageId)->first();
-        if (!$page) {
-            abort(404);
-        }
-        if (!Auth::user()->canEdit($page)) {
+        $page = Page::subject('People')->where('id', $pageId)->with('category')->first();
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
         $relationship = PageRelationship::where('id', $id)->first();
@@ -146,10 +136,10 @@ class RelationshipController extends Controller {
         return view('pages.relationships._create_edit_relationship', [
             'relationship'        => $relationship,
             'page'                => $page,
-            'pageOptions'         => Page::where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
+            'pageOptions'         => Page::with('category')->where('id', '!=', $page->id)->get()->filter(function ($option) use ($page) {
                 return $option->category->subject['key'] == $page->category->subject['key'];
             })->pluck('title', 'id'),
-            'relationshipOptions' => Config::get('mundialis.'.$page->category->subject['key'].'_relationships'),
+            'relationshipOptions' => config('mundialis.'.$page->category->subject['key'].'_relationships'),
         ]);
     }
 
@@ -171,11 +161,8 @@ class RelationshipController extends Controller {
             'type_two', 'type_two_info', 'details_two',
         ]);
 
-        $page = Page::where('id', $pageId)->first();
-        if (!Auth::user()->canEdit($page)) {
-            abort(404);
-        }
-        if (!$page) {
+        $page = Page::subject('People')->where('id', $pageId)->first();
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
@@ -187,7 +174,7 @@ class RelationshipController extends Controller {
             return redirect()->to('pages/'.$page->id.'/relationships');
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -203,11 +190,8 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeleteRelationship($pageId, $id) {
-        $page = Page::where('id', $pageId)->first();
-        if (!$page) {
-            abort(404);
-        }
-        if (!Auth::user()->canEdit($page)) {
+        $page = Page::subject('People')->where('id', $pageId)->with('category')->first();
+        if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
         $relationship = PageRelationship::where('id', $id)->first();
@@ -231,11 +215,16 @@ class RelationshipController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeleteRelationship(Request $request, RelationshipManager $service, $pageId, $id) {
-        if ($id && $service->deletePageRelationship(PageRelationship::find($id), Auth::user())) {
-            flash('Image deleted successfully.')->success();
+        $relationship = PageRelationship::where('id', $id)->first();
+        if (!$relationship) {
+            abort(404);
+        }
+
+        if ($id && $service->deletePageRelationship($relationship, Auth::user())) {
+            flash('Relationship deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 

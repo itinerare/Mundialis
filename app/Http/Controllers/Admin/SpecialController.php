@@ -29,7 +29,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUnwatchedPages(Request $request) {
-        $query = Page::visible(Auth::check() ? Auth::user() : null)->get()
+        $query = Page::with('watchers')->get()
             ->filter(function ($page) {
                 return $page->watchers->count() == 0;
             })->sortBy('title');
@@ -80,7 +80,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeletedPage($id) {
-        $page = Page::withTrashed()->where('id', $id)->first();
+        $page = Page::withTrashed()->whereNotNull('deleted_at')->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -100,7 +100,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRestorePage($id) {
-        $page = Page::withTrashed()->find($id);
+        $page = Page::withTrashed()->whereNotNull('deleted_at')->find($id);
 
         return view('admin.special._restore_page', [
             'page' => $page,
@@ -120,7 +120,7 @@ class SpecialController extends Controller {
             flash('Page restored successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();
@@ -170,12 +170,12 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeletedImage(Request $request, $id) {
-        $image = PageImage::withTrashed()->where('id', $id)->first();
+        $image = PageImage::withTrashed()->whereNotNull('deleted_at')->where('id', $id)->first();
         if (!$image) {
             abort(404);
         }
 
-        $query = PageImageVersion::where('page_image_id', $image->id);
+        $query = PageImageVersion::where('page_image_id', $image->id)->with('image', 'user');
         $sort = $request->only(['sort']);
 
         if ($request->get('user_id')) {
@@ -210,10 +210,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRestoreImage($id) {
-        $image = PageImage::withTrashed()->find($id);
-        if (!$image->pages->count()) {
-            abort(404);
-        }
+        $image = PageImage::withTrashed()->whereNotNull('deleted_at')->has('pages')->find($id);
 
         return view('admin.special._restore_image', [
             'image' => $image,
@@ -229,16 +226,13 @@ class SpecialController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postRestoreImage(Request $request, ImageManager $service, $id) {
-        $image = PageImage::withTrashed()->find($id);
-        if (!$image->pages->count()) {
-            abort(404);
-        }
+        $image = PageImage::withTrashed()->has('pages')->find($id);
 
         if ($id && $service->restorePageImage($image, Auth::user(), $request->get('reason'))) {
             flash('Image restored successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();

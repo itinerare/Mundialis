@@ -11,8 +11,8 @@ use App\Models\Page\PagePageImage;
 use App\Models\User\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 
 class ImageManager extends Service {
@@ -32,7 +32,7 @@ class ImageManager extends Service {
      * @param Page  $page
      * @param User  $user
      *
-     * @return \App\Models\Page\PageImage|bool
+     * @return bool|PageImage
      */
     public function createPageImage($data, $page, $user) {
         DB::beginTransaction();
@@ -109,7 +109,7 @@ class ImageManager extends Service {
      * @param array     $data
      * @param User      $user
      *
-     * @return \App\Models\Page\Page|bool
+     * @return bool|Page
      */
     public function updatePageImage($page, $image, $data, $user) {
         DB::beginTransaction();
@@ -122,6 +122,10 @@ class ImageManager extends Service {
 
             if (!$page->images()->where('page_image_id', $image->id)->exists()) {
                 throw new \Exception('This image does not belong to this page.');
+            }
+
+            if ($image->isProtected && !$user->isAdmin) {
+                throw new \Exception('One or more pages this image is linked to are protected; you do not have permission to edit it.');
             }
 
             // Process toggles
@@ -174,7 +178,7 @@ class ImageManager extends Service {
             }
 
             // Update image
-            $image->update($data);
+            $image->update(Arr::only($data, ['description', 'is_visible']));
 
             // Send a notification to users that have watched this page
             if ($page->watchers->count()) {
@@ -211,6 +215,14 @@ class ImageManager extends Service {
         DB::beginTransaction();
 
         try {
+            if (!$image) {
+                throw new \Exception('Invalid image selected.');
+            }
+
+            if (!$image->deleted_at) {
+                throw new \Exception('This image has not been deleted.');
+            }
+
             // First, restore the image itself
             $image->restore();
 
@@ -242,6 +254,10 @@ class ImageManager extends Service {
         DB::beginTransaction();
 
         try {
+            if ($image->isProtected && !$user->isAdmin) {
+                throw new \Exception('One or more pages this image is linked to are protected; you cannot delete it.');
+            }
+
             // Unset this image ID from any pages where it is the active image
             if (Page::where('image_id', $image->id)->exists()) {
                 Page::where('image_id', $image->id)->update(['image_id' => null]);
@@ -295,7 +311,7 @@ class ImageManager extends Service {
      * @param array  $data
      * @param bool   $isMinor
      *
-     * @return \App\Models\Page\PageImageVersion|bool
+     * @return bool|PageImageVersion
      */
     public function logImageVersion($imageId, $userId, $imageData, $type, $reason, $data, $isMinor = false) {
         try {
@@ -311,7 +327,7 @@ class ImageManager extends Service {
                 'type'          => $type,
                 'reason'        => $reason,
                 'is_minor'      => $isMinor,
-                'data'          => json_encode($data),
+                'data'          => $data,
             ]);
 
             return $version;
@@ -324,21 +340,24 @@ class ImageManager extends Service {
 
     /**
      * Generates and saves test images for page image test purposes.
-     * This is a workaround for normal image processing depending on Intervention.
      *
      * @param PageImage        $image
      * @param PageImageVersion $version
+     * @param bool             $create
      *
      * @return bool
      */
-    public function testImages($image, $version) {
-        // Generate the fake files to save
-        $file['image'] = UploadedFile::fake()->image('test_image.png');
-        $file['thumbnail'] = UploadedFile::fake()->image('test_thumb.png');
+    public function testImages($image, $version, $create = true) {
+        if ($create) {
+            $file['image'] = UploadedFile::fake()->image('test_image.png');
+            $file['thumbnail'] = UploadedFile::fake()->image('test_thumb.png');
 
-        // Save the files in line with usual image handling.
-        $this->handleImage($file['image'], $image->imagePath, $version->imageFileName);
-        $this->handleImage($file['thumbnail'], $image->imagePath, $version->thumbnailFileName);
+            $this->handleImage($file['image'], $image->imagePath, $version->imageFileName);
+            $this->handleImage($file['thumbnail'], $image->imagePath, $version->thumbnailFileName);
+        } elseif (!$create && File::exists($image->imagePath.'/'.$version->thumbnailFileName)) {
+            unlink($image->imagePath.'/'.$version->thumbnailFileName);
+            unlink($image->imagePath.'/'.$version->imageFileName);
+        }
 
         return true;
     }
@@ -351,17 +370,17 @@ class ImageManager extends Service {
      * @param User      $user
      * @param PageImage $image
      *
-     * @return \App\Models\Page\PageImage|bool
+     * @return bool|PageImage
      */
     private function handlePageImage($data, $page, $user, $image = null) {
         try {
             // Process data stored on the image
             $imageData['description'] = $data['description'] ?? null;
-            $imageData['is_visible'] = isset($data['is_visible']);
+            $imageData['is_visible'] = $data['is_visible'] ?? 0;
 
             // If there's no preexisting image, create one
             if (!$image) {
-                $image = PageImage::create($imageData);
+                $image = PageImage::create(Arr::only($imageData, ['description', 'is_visible']));
             }
 
             // If new or re-uploading an image
@@ -386,21 +405,21 @@ class ImageManager extends Service {
                 }
 
                 // Save image
-                if (!$this->handleImage($data['image'], $image->imageDirectory, $version->imageFileName)) {
+                if (!$this->handleImage($data['image'], $image->imagePath, $version->imageFileName)) {
                     throw new \Exception('An error occurred while handling image file.');
                 }
 
                 // Save thumbnail
-                if (isset($data['use_cropper'])) {
+                if (isset($data['use_cropper']) && $data['use_cropper']) {
                     $this->cropThumbnail(Arr::only($data, ['x0', 'x1', 'y0', 'y1']), $image, $version);
-                } elseif (!$this->handleImage($data['thumbnail'], $image->imageDirectory, $version->thumbnailFileName)) {
+                } elseif (!$this->handleImage($data['thumbnail'], $image->imagePath, $version->thumbnailFileName)) {
                     throw new \Exception('An error occurred while handling thumbnail file.');
                 }
 
                 // Trim transparent parts of image.
                 $processImage = Image::make($image->imagePath.'/'.$version->imageFileName)->trim('transparent');
 
-                if (Config::get('mundialis.settings.image_thumbnail_automation') == 1) {
+                if (config('mundialis.settings.image_thumbnail_automation') == 1) {
                     // Make the image be square
                     $imageWidth = $processImage->width();
                     $imageHeight = $processImage->height();
@@ -417,7 +436,7 @@ class ImageManager extends Service {
                 }
 
                 // Save the processed image
-                $processImage->save($image->imagePath.'/'.$version->imageFileName, 100, $image->extension);
+                $processImage->save($image->imagePath.'/'.$version->imageFileName, 100, $imageData['extension']);
             } else {
                 // Otherwise, just create a new version
                 $version = $this->logImageVersion($image->id, $user->id, null, 'Image Info Updated', $data['reason'] ?? null, null, $data['is_minor'] ?? 0);
@@ -544,7 +563,7 @@ class ImageManager extends Service {
 
             // Update version with archival data
             $version->update([
-                'data' => json_encode($imageData['version']),
+                'data' => $imageData['version'],
             ]);
 
             return $image;
@@ -565,11 +584,11 @@ class ImageManager extends Service {
     private function cropThumbnail($points, $pageImage, $version) {
         $image = Image::make($pageImage->imagePath.'/'.$version->imageFileName);
 
-        if (Config::get('mundialis.settings.watermark_image_thumbnails') == 1) {
+        if (config('mundialis.settings.watermark_image_thumbnails') == 1) {
             // Trim transparent parts of image
             $image->trim('transparent');
 
-            if (Config::get('mundialis.settings.image_thumbnail_automation') == 1) {
+            if (config('mundialis.settings.image_thumbnail_automation') == 1) {
                 // Make the image be square
                 $imageWidth = $image->width();
                 $imageHeight = $image->height();
@@ -585,8 +604,8 @@ class ImageManager extends Service {
                 }
             }
 
-            $cropWidth = Config::get('mundialis.settings.image_thumbnails.width');
-            $cropHeight = Config::get('mundialis.settings.image_thumbnails.height');
+            $cropWidth = config('mundialis.settings.image_thumbnails.width');
+            $cropHeight = config('mundialis.settings.image_thumbnails.height');
 
             $imageWidthOld = $image->width();
             $imageHeightOld = $image->height();
@@ -616,13 +635,13 @@ class ImageManager extends Service {
             $cropWidth = $points['x1'] - $points['x0'];
             $cropHeight = $points['y1'] - $points['y0'];
 
-            if (Config::get('mundialis.settings.image_thumbnail_automation') == 0) {
+            if (config('mundialis.settings.image_thumbnail_automation') == 0) {
                 // Crop according to the selected area
                 $image->crop($cropWidth, $cropHeight, $points['x0'], $points['y0']);
             }
 
             // Resize to fit the thumbnail size
-            $image->resize(Config::get('mundialis.settings.image_thumbnails.width'), Config::get('mundialis.settings.image_thumbnails.height'));
+            $image->resize(config('mundialis.settings.image_thumbnails.width'), config('mundialis.settings.image_thumbnails.height'));
         }
 
         // Save the thumbnail

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User\Rank;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -10,160 +11,163 @@ use Tests\TestCase;
 class AccessTest extends TestCase {
     use RefreshDatabase;
 
-    // These tests check that visitor/user access to different routes is as expected
-    // In other words, they are a cursory check of middleware functionality
+    /******************************************************************************
+        ACCESS/MIDDLEWARE
+    *******************************************************************************/
 
-    /**
-     * Test most basic site access.
-     */
-    public function testCanAccessSite() {
-        // Attempt to access the site on the most basic level
-        $response = $this
-            ->get('/')
-            ->assertStatus(200);
+    protected function setUp(): void {
+        parent::setUp();
     }
 
     /**
-     * Test visitor access when the site is closed.
+     * Test getting the main page.
+     *
+     * @dataProvider accessProvider
+     *
+     * @param bool $user
+     * @param int  $status
      */
-    public function testVisitorCannotReadWhenClosed() {
-        // Ensure site settings are present to modify
-        $this->artisan('add-site-settings');
+    public function testGetIndex($user, $status) {
+        if ($user) {
+            $response = $this->actingAs($this->user)->get('/');
+        } else {
+            $response = $this->get('/');
+        }
 
-        // Set the site to private to test
-        DB::table('site_settings')->where('key', 'visitors_can_read')->update(['value' => 0]);
+        $response->assertStatus($status);
+    }
 
-        // Attempt page access
-        $response = $this
-            ->get('/misc')
-            ->assertStatus(302);
+    public static function accessProvider() {
+        return [
+            'visitor' => [0, 200],
+            'user'    => [1, 200],
+        ];
     }
 
     /**
-     * Test visitor access when the site is open.
+     * Test site read access as per site settings.
+     *
+     * @dataProvider readAccessProvider
+     *
+     * @param bool $user
+     * @param bool $isOpen
+     * @param int  $status
      */
-    public function testVisitorCanReadWhenOpen() {
-        // Ensure site settings are present to modify
-        $this->artisan('add-site-settings');
+    public function testReadAccess($user, $isOpen, $status) {
+        // Adjust site settings accordingly
+        DB::table('site_settings')->where('key', 'visitors_can_read')->update(['value' => $isOpen]);
 
-        // Set the site to open to test
-        DB::table('site_settings')->where('key', 'visitors_can_read')->update(['value' => 1]);
+        if ($user) {
+            $response = $this->actingAs($this->user)->get('/misc');
+        } else {
+            $response = $this->get('/misc');
+        }
 
-        // Attempt page access
-        $response = $this
-            ->get('/misc')
-            ->assertStatus(200);
+        $response->assertStatus($status);
+    }
+
+    public static function readAccessProvider() {
+        return [
+            'visitor, site open'   => [0, 1, 200],
+            'visitor, site closed' => [0, 0, 302],
+            'user, site open'      => [1, 1, 200],
+            'user, site closed'    => [1, 0, 200],
+        ];
     }
 
     /**
-     * Ensure visitor cannot access member-only routes.
+     * Test access to account settings.
+     * This should be representative of all member routes.
+     *
+     * @dataProvider memberAccessProvider
+     *
+     * @param bool $user
+     * @param int  $rank
+     * @param int  $status
      */
-    public function testVisitorCannotGetAccountSettings() {
-        $response = $this
-            ->get('/account/settings')
-            ->assertStatus(302);
+    public function testMemberRouteAccess($user, $rank, $status) {
+        if ($user) {
+            $user = User::factory()->make([
+                'rank_id' => Rank::where('sort', $rank)->first()->id,
+            ]);
+            $response = $this->actingAs($user)->get('/account/settings');
+        } else {
+            $response = $this->get('/account/settings');
+        }
+
+        $response->assertStatus($status);
+    }
+
+    public static function memberAccessProvider() {
+        return [
+            'visitor' => [0, 0, 302],
+            'user'    => [1, 0, 200],
+            'editor'  => [1, 1, 200],
+            'admin'   => [1, 2, 200],
+        ];
     }
 
     /**
-     * Ensure visitor cannot access editor routes.
+     * Test access to lexicon entry creation.
+     * This should be representative of all editor routes.
+     *
+     * @dataProvider editorAccessProvider
+     *
+     * @param bool $user
+     * @param int  $rank
+     * @param int  $status
      */
-    public function testVisitorCannotGetWrite() {
-        $response = $this
-            ->get('/language/lexicon/create')
-            ->assertStatus(302);
+    public function testEditorRouteAccess($user, $rank, $status) {
+        if ($user) {
+            $user = User::factory()->make([
+                'rank_id' => Rank::where('sort', $rank)->first()->id,
+            ]);
+            $response = $this->actingAs($user)->get('/language/lexicon/create');
+        } else {
+            $response = $this->get('/language/lexicon/create');
+        }
+
+        $response->assertStatus($status);
+    }
+
+    public static function editorAccessProvider() {
+        return [
+            'visitor' => [0, 0, 302],
+            'user'    => [1, 0, 302],
+            'editor'  => [1, 1, 200],
+            'admin'   => [1, 2, 200],
+        ];
     }
 
     /**
-     * Ensure visitor cannot access admin routes.
+     * Test access to the admin dashboard.
+     * This should be representative of all admin-only routes.
+     *
+     * @dataProvider adminAccessProvider
+     *
+     * @param bool $user
+     * @param int  $rank
+     * @param int  $status
      */
-    public function testVisitorCannotGetAdminIndex() {
-        $response = $this
-            ->get('/admin')
-            ->assertStatus(302);
+    public function testAdminRouteAccess($user, $rank, $status) {
+        if ($user) {
+            $user = User::factory()->make([
+                'rank_id' => Rank::where('sort', $rank)->first()->id,
+            ]);
+            $response = $this->actingAs($user)->get('/admin');
+        } else {
+            $response = $this->get('/admin');
+        }
+
+        $response->assertStatus($status);
     }
 
-    /**
-     * Ensure user can access member-only routes.
-     */
-    public function testUserCanGetUserSettings() {
-        // Make a temporary user
-        $user = User::factory()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/account/settings')
-            ->assertStatus(200);
-    }
-
-    /**
-     * Ensure user cannot access editor routes.
-     */
-    public function testUserCannotGetWrite() {
-        // Make a temporary user
-        $user = User::factory()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/language/lexicon/create')
-            ->assertStatus(302);
-    }
-
-    /**
-     * Ensure user cannot access admin routes.
-     */
-    public function testUserCannotGetAdminIndex() {
-        // Make a temporary user
-        $user = User::factory()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/admin')
-            ->assertStatus(302);
-    }
-
-    /**
-     * Ensure editor can access editor routes.
-     */
-    public function testEditorCanGetWrite() {
-        // Make a temporary user
-        $user = User::factory()->editor()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/language/lexicon/create')
-            ->assertStatus(200);
-    }
-
-    /**
-     * Ensure editor cannot access admin routes.
-     */
-    public function testEditorCannotGetAdminIndex() {
-        // Make a temporary user
-        $user = User::factory()->editor()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/admin')
-            ->assertStatus(302);
-    }
-
-    /**
-     * Ensure admin can access editor routes.
-     */
-    public function testAdminCanGetWrite() {
-        // Make a temporary user
-        $user = User::factory()->admin()->make();
-
-        $response = $this->actingAs($user)
-            ->get('/language/lexicon/create')
-            ->assertStatus(200);
-    }
-
-    /**
-     * Ensure admin can access admin routes.
-     */
-    public function testAdminCanGetAdminIndex() {
-        // Make a temporary user
-        $user = User::factory()->admin()->make();
-
-        // Try to access admin dashboard
-        $response = $this->actingAs($user)
-            ->get('/admin')
-            ->assertStatus(200);
+    public static function adminAccessProvider() {
+        return [
+            'visitor' => [0, 0, 302],
+            'user'    => [1, 0, 302],
+            'editor'  => [1, 1, 302],
+            'admin'   => [1, 2, 200],
+        ];
     }
 }

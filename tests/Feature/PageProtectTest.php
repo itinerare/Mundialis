@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Page\Page;
 use App\Models\Page\PageProtection;
+use App\Models\Page\PageVersion;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -12,138 +13,77 @@ use Tests\TestCase;
 class PageProtectTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->page = Page::factory()->create();
+        $this->editor = User::factory()->editor()->create();
+        PageVersion::factory()->user($this->editor->id)->page($this->page->id)->create();
+
+        $this->admin = User::factory()->admin()->create();
+    }
+
     /**
      * Test page protection access.
+     *
+     * @dataProvider getProtectPageProvider
+     *
+     * @param bool $isValid
      */
-    public function testCanGetProtectPage() {
-        // Create a temporary admin
-        $user = User::factory()->admin()->make();
-        // Create a page to protect
-        $page = Page::factory()->create();
+    public function testGetProtectPage($isValid) {
+        $response = $this->actingAs($this->admin)
+            ->get('/pages/'.($isValid ? $this->page->id : 9999).'/protect');
 
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/protect');
+        $response->assertStatus($isValid ? 200 : 404);
+    }
 
-        $response->assertStatus(200);
+    public static function getProtectPageProvider() {
+        return [
+            'valid'   => [1],
+            'invalid' => [0],
+        ];
     }
 
     /**
      * Test page protection.
+     *
+     * @dataProvider postProtectPageProvider
+     *
+     * @param bool $isProtected
+     * @param bool $newState
+     * @param bool $withReason
      */
-    public function testCanPostProtectPage() {
-        // Make a page to protect
-        $page = Page::factory()->create();
-
-        // Make a persistent admin
-        $user = User::factory()->admin()->create();
+    public function testPostProtectPage($isProtected, $newState, $withReason) {
+        if ($isProtected) {
+            PageProtection::factory()->page($this->page->id)->user($this->admin->id)->create();
+        }
 
         $data = [
-            'is_protected' => 1,
-            'reason'       => null,
+            'is_protected' => $newState,
+            'reason'       => $withReason ? $this->faker->unique()->domainWord() : null,
         ];
 
-        // Try to post
         $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/protect', $data);
+            ->actingAs($this->admin)
+            ->post('/pages/'.$this->page->id.'/protect', $data);
 
-        // Directly verify that the appropriate change has occurred
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('page_protections', [
-            'page_id'      => $page->id,
-            'user_id'      => $user->id,
-            'is_protected' => 1,
-        ]);
-    }
-
-    /**
-     * Test page protection with a reason.
-     */
-    public function testCanPostProtectPageWithReason() {
-        // Make a page to protect
-        $page = Page::factory()->create();
-
-        // Make a persistent admin
-        $user = User::factory()->admin()->create();
-
-        $data = [
-            'is_protected' => 1,
-            'reason'       => $this->faker->unique()->domainWord(),
-        ];
-
-        // Try to post
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/protect', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_protections', [
-            'page_id'      => $page->id,
-            'user_id'      => $user->id,
-            'is_protected' => 1,
+            'page_id'      => $this->page->id,
+            'user_id'      => $this->admin->id,
+            'is_protected' => $newState,
             'reason'       => $data['reason'],
         ]);
     }
 
-    /**
-     * Test page unprotection.
-     */
-    public function testCanPostUnprotectPage() {
-        // Make a page to protect
-        $page = Page::factory()->create();
-
-        // Make a persistent admin
-        $user = User::factory()->admin()->create();
-
-        // Create a protection record
-        PageProtection::factory()->page($page->id)->user($user->id)->create();
-
-        $data = [
-            'is_protected' => 0,
-            'reason'       => null,
+    public static function postProtectPageProvider() {
+        return [
+            'protect unprotected page'            => [0, 1, 0],
+            'protect page with reason'            => [0, 1, 1],
+            'update protected page with reason'   => [1, 1, 1],
+            'unprotect protected page'            => [1, 0, 0],
+            'unprotect page with reason'          => [1, 0, 1],
+            'update unprotected page with reason' => [0, 0, 1],
         ];
-
-        // Try to post
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/protect', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_protections', [
-            'page_id'      => $page->id,
-            'user_id'      => $user->id,
-            'is_protected' => 0,
-        ]);
-    }
-
-    /**
-     * Test page unprotection with a reason.
-     */
-    public function testCanPostUnprotectPageWithReason() {
-        // Make a page to protect
-        $page = Page::factory()->create();
-
-        // Make a persistent admin
-        $user = User::factory()->admin()->create();
-
-        // Create a protection record
-        PageProtection::factory()->page($page->id)->user($user->id)->create();
-
-        $data = [
-            'is_protected' => 0,
-            'reason'       => $this->faker->unique()->domainWord(),
-        ];
-
-        // Try to post
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/protect', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_protections', [
-            'page_id'      => $page->id,
-            'user_id'      => $user->id,
-            'is_protected' => 0,
-            'reason'       => $data['reason'],
-        ]);
     }
 }

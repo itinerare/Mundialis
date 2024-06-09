@@ -86,9 +86,9 @@ class UserController extends Controller {
     public function postUserBasicInfo(Request $request, $name) {
         $user = User::where('name', $name)->first();
         if (!$user) {
-            flash('Invalid user.')->error();
+            (new UserService)->addError('Invalid user.');
         } elseif ($user->rank->sort == 2) {
-            flash('You cannot edit the information of an admin.')->error();
+            (new UserService)->addError('You cannot edit the information of an admin.');
         } else {
             $request->validate([
                 'name' => 'required|between:3,25',
@@ -100,7 +100,7 @@ class UserController extends Controller {
                 UserUpdateLog::create(['staff_id' => Auth::user()->id, 'user_id' => $user->id, 'data' => json_encode($logData), 'type' => 'Name/Rank Change']);
                 flash('Updated user\'s information successfully.')->success();
             } else {
-                flash('Failed to update user\'s information.')->error();
+                (new UserService)->addError('Failed to update user\'s information.');
             }
         }
 
@@ -111,9 +111,9 @@ class UserController extends Controller {
         $user = User::where('name', $name)->first();
 
         if (!$user) {
-            flash('Invalid user.')->error();
+            (new UserService)->addError('Invalid user.');
         } else {
-            flash('Failed to update user\'s account information.')->error();
+            (new UserService)->addError('Failed to update user\'s account information.');
         }
 
         return redirect()->back();
@@ -179,16 +179,15 @@ class UserController extends Controller {
 
     public function postBan(Request $request, UserService $service, $name) {
         $user = User::where('name', $name)->first();
-        $wasBanned = $user->is_banned;
         if (!$user) {
-            flash('Invalid user.')->error();
+            (new UserService)->addError('Invalid user.');
         } elseif ($user->rank->sort == 2) {
-            flash('You cannot ban an admin.')->error();
+            (new UserService)->addError('You cannot ban an admin.');
         } elseif ($service->ban(['ban_reason' => $request->get('ban_reason')], $user, Auth::user())) {
-            flash($wasBanned ? 'User ban reason edited successfully.' : 'User banned successfully.')->success();
+            flash($user->is_banned ? 'User ban reason edited successfully.' : 'User banned successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -205,7 +204,7 @@ class UserController extends Controller {
     public function getUnbanConfirmation($name) {
         $user = User::where('name', $name)->first();
 
-        if (!$user) {
+        if (!$user || !$user->is_banned) {
             abort(404);
         }
 
@@ -218,14 +217,16 @@ class UserController extends Controller {
         $user = User::where('name', $name)->first();
 
         if (!$user) {
-            flash('Invalid user.')->error();
+            (new UserService)->addError('Invalid user.');
+        } elseif (!$user->is_banned) {
+            (new UserService)->addError('This user is not banned.');
         } elseif ($user->rank->sort == 2) {
-            flash('You cannot unban an admin.')->error();
+            (new UserService)->addError('You cannot unban an admin.');
         } elseif ($service->unban($user, Auth::user())) {
             flash('User unbanned successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 

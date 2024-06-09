@@ -2,6 +2,7 @@
 
 namespace App\Models\Subject;
 
+use App\Models\Lexicon\LexiconEntry;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -23,6 +24,15 @@ class LexiconCategory extends Model {
      * @var string
      */
     protected $table = 'lexicon_categories';
+
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'data' => 'array',
+    ];
 
     /**
      * Whether the model contains timestamps to be saved and updated.
@@ -49,25 +59,31 @@ class LexiconCategory extends Model {
         'name' => 'required',
     ];
 
+    /**********************************************************************************************
+
+        RELATIONS
+
+    **********************************************************************************************/
+
     /**
      * Get parent category of this category.
      */
     public function parent() {
-        return $this->belongsTo('App\Models\Subject\LexiconCategory', 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     /**
      * Get child categories of this category.
      */
     public function children() {
-        return $this->hasMany('App\Models\Subject\LexiconCategory', 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     /**
      * Get entries in this category.
      */
     public function entries() {
-        return $this->hasMany('App\Models\Lexicon\LexiconEntry', 'category_id');
+        return $this->hasMany(LexiconEntry::class, 'category_id');
     }
 
     /**********************************************************************************************
@@ -75,19 +91,6 @@ class LexiconCategory extends Model {
         ACCESSORS
 
     **********************************************************************************************/
-
-    /**
-     * Get the data attribute as an associative array.
-     *
-     * @return array
-     */
-    public function getDataAttribute() {
-        if (!isset($this->attributes['data'])) {
-            return null;
-        }
-
-        return json_decode($this->attributes['data'], true);
-    }
 
     /**
      * Get the category's url.

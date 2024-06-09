@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Config;
 
 class CopyDefaultImages extends Command {
     /**
@@ -36,7 +35,7 @@ class CopyDefaultImages extends Command {
         $this->info('* COPY DEFAULT IMAGES *');
         $this->info('***********************'."\n");
 
-        $images = Config::get('mundialis.image_files');
+        $images = config('mundialis.image_files');
 
         $sourceDir = base_path().'/data/images/';
         $destDir = public_path().'/images/';

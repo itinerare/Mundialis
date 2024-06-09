@@ -15,118 +15,124 @@ class UserFunctionTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
     /******************************************************************************
-        SETTINGS
+        USER / SETTINGS
     *******************************************************************************/
+
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->user = User::factory()->create();
+    }
 
     /**
      * Test profile editing.
      */
-    public function testCanPostEditProfile() {
-        // Make a persistent user
-        $user = User::factory()->create();
+    public function testPostEditProfile() {
+        // Generate some test data
+        $text = '<p>'.$this->faker->unique()->domainWord().'</p>';
 
-        // Attempt to post data
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->user)
             ->post('account/profile', [
-                'profile_text' => 'Profile editing test',
+                'profile_text' => $text,
             ]);
 
-        // Directly verify that the appropriate change has occurred
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('users', [
-            'name'         => $user->name,
-            'profile_text' => 'Profile editing test',
+            'id'           => $this->user->id,
+            'profile_text' => $text,
         ]);
     }
 
     /**
      * Test avatar editing.
      */
-    public function testCanPostEditAvatar() {
-        // Make a temporary user
-        $user = User::factory()->create();
-
-        // Fake public disk
+    public function testPostEditAvatar() {
+        // Fake public disk & create a fake image
         Storage::fake('public');
-
-        // Create a fake file
         $file = UploadedFile::fake()->image('test_image.png');
 
         // Remove the current avatar if it exists
-        if (File::exists(public_path('images/avatars/'.$user->id.'.png'))) {
-            unlink('public/images/avatars/'.$user->id.'.png');
+        if (File::exists(public_path('images/avatars/'.$this->user->id.'.png'))) {
+            unlink('public/images/avatars/'.$this->user->id.'.png');
         }
 
-        // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->post('/account/avatar', [
                 'avatar' => $file,
             ]);
 
+        $response->assertSessionHasNoErrors();
         // Check that the file is now present
         $this->
-            assertTrue(File::exists(public_path('images/avatars/'.$user->id.'.png')));
+            assertTrue(File::exists(public_path('images/avatars/'.$this->user->id.'.png')));
+
+        unlink(public_path('images/avatars/'.$this->user->id.'.png'));
     }
 
     /**
      * Test email editing.
+     *
+     * @dataProvider userEditProvider
+     *
+     * @param bool $isValid
+     * @param bool $expected
      */
-    public function testCanPostEditEmail() {
-        // Make a persistent user
-        $user = User::factory()->create();
+    public function testPostEditEmail($isValid, $expected) {
+        // Generate some test data
+        if ($isValid) {
+            $email = $this->faker->unique()->safeEmail();
+        } else {
+            $email = $this->faker->domainWord();
+        }
 
-        // Generate an email address
-        $email = $this->faker->unique()->safeEmail();
-
-        // Attempt to post data
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->user)
             ->post('account/email', [
                 'email' => $email,
             ]);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('users', [
-            'name'  => $user->name,
-            'email' => $email,
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('users', [
+                'id'    => $this->user->id,
+                'email' => $email,
+            ]);
+        } else {
+            $response->assertSessionHasErrors();
+        }
     }
 
     /**
-     * Test password editing with a valid password.
-     * This should work.
+     * Test password editing.
+     *
+     * @dataProvider userEditProvider
+     *
+     * @param bool $isValid
+     * @param bool $expected
      */
-    public function testCanPostEditValidPassword() {
-        // Make a persistent user
+    public function testPostEditPassword($isValid, $expected) {
+        // Make a persistent user with a simple password
         $user = User::factory()->simplePass()->create();
 
-        // Attempt to post data
         $response = $this->actingAs($user)
             ->post('account/password', [
                 'old_password'              => 'simple_password',
                 'new_password'              => 'password',
-                'new_password_confirmation' => 'password',
+                'new_password_confirmation' => $isValid ? 'password' : 'not_password',
             ]);
 
-        $this->
-            assertTrue(Hash::check('password', $user->fresh()->password));
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertTrue(Hash::check('password', $user->fresh()->password));
+        } else {
+            $response->assertSessionHasErrors();
+        }
     }
 
-    /**
-     * Test password editing with an invalid password.
-     * This shouldn't work.
-     */
-    public function testCannotPostEditInvalidPassword() {
-        // Make a persistent user
-        $user = User::factory()->simplePass()->create();
-
-        // Attempt to post data
-        $response = $this->actingAs($user)
-            ->post('account/password', [
-                'old_password'              => 'simple_password',
-                'new_password'              => 'password',
-                'new_password_confirmation' => 'not_password',
-            ]);
-
-        $response->assertSessionHasErrors();
+    public static function userEditProvider() {
+        return [
+            'valid'   => [1, 1],
+            'invalid' => [0, 0],
+        ];
     }
 }

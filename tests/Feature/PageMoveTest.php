@@ -13,84 +13,91 @@ use Tests\TestCase;
 class PageMoveTest extends TestCase {
     use RefreshDatabase, WithFaker;
 
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->page = Page::factory()->create();
+        $this->editor = User::factory()->editor()->create();
+        PageVersion::factory()->user($this->editor->id)->page($this->page->id)->create();
+    }
+
     /**
      * Test page move access.
+     *
+     * @dataProvider getMovePageProvider
+     *
+     * @param bool $isValid
      */
-    public function testCanGetMovePage() {
-        // Create a temporary editor
-        $user = User::factory()->editor()->make();
-        // Create a page to move
-        $page = Page::factory()->create();
+    public function testGetMovePage($isValid) {
+        $response = $this->actingAs($this->editor)
+            ->get('/pages/'.($isValid ? $this->page->id : 9999).'/move');
 
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/move');
+        $response->assertStatus($isValid ? 200 : 404);
+    }
 
-        $response->assertStatus(200);
+    public static function getMovePageProvider() {
+        return [
+            'valid'   => [1],
+            'invalid' => [0],
+        ];
     }
 
     /**
      * Test page moving.
+     *
+     * @dataProvider postMovePageProvider
+     *
+     * @param bool $withPage
+     * @param bool $withReason
+     * @param bool $withConflict
+     * @param bool $expected
      */
-    public function testCanPostMovePage() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Make a page to move & version
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($user->id)->create();
-
-        // Make a category to move the page to
+    public function testPostMovePage($withPage, $withReason, $withConflict, $expected) {
         $category = SubjectCategory::factory()->create();
+        $oldCategory = $this->page->category;
+
+        if ($withConflict) {
+            Page::factory()->category($category->id)->create([
+                'title' => $this->page->title,
+            ]);
+        }
 
         $data = [
             'category_id' => $category->id,
-            'reason'      => null,
+            'reason'      => $withReason ? $this->faker->unique()->domainWord() : null,
         ];
 
-        // Try to post
         $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/move', $data);
+            ->actingAs($this->editor)
+            ->post('/pages/'.($withPage ? $this->page->id : 9999).'/move', $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('pages', [
-            'id'          => $page->id,
-            'category_id' => $category->id,
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('pages', [
+                'id'          => $this->page->id,
+                'category_id' => $category->id,
+            ]);
+
+            $this->assertDatabaseHas('page_versions', [
+                'page_id' => $this->page->id,
+                'type'    => 'Page Moved from '.$oldCategory->name.' to '.$category->name,
+                'reason'  => $data['reason'],
+            ]);
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertDatabaseHas('pages', [
+                'id'          => $this->page->id,
+                'category_id' => $oldCategory->id,
+            ]);
+        }
     }
 
-    /**
-     * Test page moving with a reason.
-     */
-    public function testCanPostMovePageWithReason() {
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Make a page to move & version
-        $page = Page::factory()->create();
-        PageVersion::factory()->page($page->id)->user($user->id)->create();
-
-        // Make a category to move the page to
-        $category = SubjectCategory::factory()->create();
-
-        // Note the old category (though this won't update regardless)
-        $oldCategory = $page->category;
-
-        $data = [
-            'category_id' => $category->id,
-            'reason'      => $this->faker->unique()->domainWord(),
+    public static function postMovePageProvider() {
+        return [
+            'with page'     => [1, 0, 0, 1],
+            'with reason'   => [1, 1, 0, 1],
+            'with conflict' => [1, 0, 1, 0],
+            'without page'  => [0, 0, 0, 0],
         ];
-
-        // Try to post
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/move', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_versions', [
-            'page_id' => $page->id,
-            'type'    => 'Page Moved from '.$oldCategory->name.' to '.$category->name,
-            'reason'  => $data['reason'],
-        ]);
     }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Page\Page;
+use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,339 +13,256 @@ use Tests\TestCase;
 class PageEditTest extends TestCase {
     use RefreshDatabase, withFaker;
 
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->editor = User::factory()->editor()->create();
+    }
+
     /**
      * Test page creation access.
+     *
+     * @dataProvider getCreatePageProvider
+     *
+     * @param bool $withCategory
+     * @param int  $status
      */
-    public function testCanGetCreatePage() {
-        // Create a temporary editor
-        $user = User::factory()->editor()->make();
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->create();
+    public function testGetCreatePage($withCategory, $status) {
+        if ($withCategory) {
+            $category = SubjectCategory::factory()->create();
+        }
 
-        $response = $this->actingAs($user)
-            ->get('/pages/create/'.$category->id);
+        $response = $this->actingAs($this->editor)
+            ->get('/pages/create/'.($withCategory ? $category->id : 9999));
 
-        $response->assertStatus(200);
+        $response->assertStatus($status);
+    }
+
+    public static function getCreatePageProvider() {
+        return [
+            'with category'    => [1, 200],
+            'without category' => [0, 404],
+        ];
     }
 
     /**
      * Test page editing access.
+     *
+     * @dataProvider getEditPageProvider
+     *
+     * @param bool $withPage
+     * @param int  $status
      */
-    public function testCanGetEditPage() {
-        // Create a temporary editor
-        $user = User::factory()->editor()->make();
-        // Create a page to edit
-        $page = Page::factory()->create();
+    public function testGetEditPage($withPage, $status) {
+        if ($withPage) {
+            $page = Page::factory()->create();
+        }
 
-        $response = $this->actingAs($user)
-            ->get('/pages/'.$page->id.'/edit');
+        $response = $this->actingAs($this->editor)
+            ->get('/pages/'.($withPage ? $page->id : 9999).'/edit');
 
-        $response->assertStatus(200);
+        $response->assertStatus($status);
+    }
+
+    public static function getEditPageProvider() {
+        return [
+            'with page'    => [1, 200],
+            'without page' => [0, 404],
+        ];
     }
 
     /**
-     * Test page creation with minimal data.
-     * Specifically, this tests editing of the basic page model,
-     * rather than information stored on the page version.
+     * Test page creation.
+     *
+     * @dataProvider postCreateEditPageProvider
+     * @dataProvider postCreatePageProvider
+     *
+     * @param bool $withCategory
+     * @param bool $withTitle
+     * @param bool $withSummary
+     * @param bool $withData
+     * @param bool $withParent
+     * @param bool $withUtilityTag
+     * @param bool $withPageTag
+     * @param bool $expected
      */
-    public function testCanPostCreateEmptyPage() {
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->create();
+    public function testPostCreatePage($withCategory, $withTitle, $withSummary, $withData, $withParent, $withUtilityTag, $withPageTag, $expected) {
+        if ($withCategory) {
+            $category = SubjectCategory::factory()->testData()->create();
+        }
 
-        // Define some basic data
+        if ($withParent) {
+            $parent = Page::factory()->create();
+            PageVersion::factory()->page($parent->id)->user($this->editor->id)->create();
+        }
+
         $data = [
-            'title'       => $this->faker->unique()->domainWord(),
-            'summary'     => null,
-            'category_id' => $category->id,
+            'title'               => $withTitle ? $this->faker->unique()->domainWord().$this->faker->unique()->domainWord() : null,
+            'summary'             => $withSummary ? $this->faker->unique()->domainWord() : null,
+            'category_id'         => $withCategory ? $category->id : null,
+            'parent_id'           => $withParent ? $parent->id : null,
+            'test_category_field' => $withData ? $this->faker->unique()->domainWord() : null,
+            'utility_tag'         => $withUtilityTag ? [0 => 'wip'] : null,
+            'page_tag'            => $withPageTag ? $this->faker->unique()->domainWord() : null,
         ];
 
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->editor)
             ->post('/pages/create', $data);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('pages', [
-            'category_id' => $category->id,
-            'title'       => $data['title'],
-        ]);
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('pages', [
+                'category_id' => $category->id,
+                'title'       => $data['title'],
+                'parent_id'   => $withParent ? $parent->id : null,
+            ]);
+
+            $page = Page::where('title', $data['title'])->where('category_id', $category->id)->first();
+
+            $this->assertDatabaseHas('page_versions', [
+                'page_id' => $page->id,
+                'data'    => '{"data":{"description":null,"test_category_field":'.($withData ? '"'.$data['test_category_field'].'"' : 'null').',"parsed":{"description":null,"test_category_field":'.($withData ? '"'.$data['test_category_field'].'"' : 'null').'}},"title":"'.$data['title'].'","is_visible":0,"summary":'.($withSummary ? '"'.$data['summary'].'"' : 'null').',"utility_tag":'.($withUtilityTag ? '["'.$data['utility_tag'][0].'"]' : 'null').',"page_tag":'.($withPageTag ? '["'.$data['page_tag'].'"]' : 'null').($withParent ? ',"parent_id":'.$parent->id : '').'}',
+            ]);
+
+            if ($withUtilityTag) {
+                $this->assertDatabaseHas('page_tags', [
+                    'page_id' => $page->id,
+                    'type'    => 'utility',
+                    'tag'     => $data['utility_tag'][0],
+                ]);
+            }
+
+            if ($withPageTag) {
+                $this->assertDatabaseHas('page_tags', [
+                    'page_id' => $page->id,
+                    'type'    => 'page_tag',
+                    'tag'     => $data['page_tag'],
+                ]);
+            }
+        } else {
+            $response->assertSessionHasErrors();
+            $this->assertDatabaseMissing('pages', [
+                'title' => $data['title'],
+            ] + ($withCategory ? [
+                'category_id' => $category->id,
+            ] : []));
+        }
     }
 
-    /**
-     * Test page editing with minimal data.
-     * Specifically, this tests editing of the basic page model,
-     * rather than information stored on the page version.
-     */
-    public function testCanPostEditEmptyPage() {
-        $page = Page::factory()->create();
-
-        // Define some basic data
-        $data = [
-            'title'   => $this->faker->unique()->domainWord(),
-            'summary' => null,
+    public static function postCreatePageProvider() {
+        return [
+            'without category' => [0, 1, 0, 0, 0, 0, 0, 0],
         ];
-
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/edit', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('pages', [
-            'id'    => $page->id,
-            'title' => $data['title'],
-        ]);
     }
 
     /**
-     * Test page creation with data.
+     * Test page editing.
+     *
+     * @dataProvider postCreateEditPageProvider
+     * @dataProvider postEditPageProvider
+     *
+     * @param bool $withPage
+     * @param bool $withTitle
+     * @param bool $withSummary
+     * @param bool $withData
+     * @param bool $withParent
+     * @param bool $withUtilityTag
+     * @param bool $withPageTag
+     * @param bool $expected
      */
-    public function testCanPostCreatePage() {
-        // Create a category for the page to go into
+    public function testPostEditPage($withPage, $withTitle, $withSummary, $withData, $withParent, $withUtilityTag, $withPageTag, $expected) {
         $category = SubjectCategory::factory()->testData()->create();
 
-        // Define some basic data
+        if ($withPage) {
+            $page = Page::factory()->category($category->id)->create();
+        }
+
+        if ($withParent) {
+            $parent = Page::factory()->create();
+            PageVersion::factory()->page($parent->id)->user($this->editor->id)->create();
+        }
+
         $data = [
-            'title'               => $this->faker->unique()->domainWord(),
-            'summary'             => null,
-            'category_id'         => $category->id,
-            'test_category_field' => $this->faker->unique()->domainWord(),
+            'title'               => $withTitle ? $this->faker->unique()->domainWord().$this->faker->unique()->domainWord() : null,
+            'summary'             => $withSummary ? $this->faker->unique()->domainWord() : null,
+            'parent_id'           => $withParent ? $parent->id : null,
+            'test_category_field' => $withData ? $this->faker->unique()->domainWord() : null,
+            'utility_tag'         => $withUtilityTag ? [0 => 'wip'] : null,
+            'page_tag'            => $withPageTag ? $this->faker->unique()->domainWord() : null,
         ];
 
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
         $response = $this
-            ->actingAs($user)
-            ->post('/pages/create', $data);
+            ->actingAs($this->editor)
+            ->post('/pages/'.($withPage ? $page->id : 9999).'/edit', $data);
 
-        $page = Page::where('title', $data['title'])->where('category_id', $category->id)->first();
+        if ($expected) {
+            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('pages', [
+                'id'        => $page->id,
+                'title'     => $data['title'],
+                'parent_id' => $withParent ? $parent->id : null,
+            ]);
 
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_versions', [
-            'page_id' => $page->id,
-            'data'    => '{"data":{"description":null,"test_category_field":"'.$data['test_category_field'].'","parsed":{"description":null,"test_category_field":"'.$data['test_category_field'].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
-        ]);
+            $this->assertDatabaseHas('page_versions', [
+                'page_id' => $page->id,
+                'data'    => '{"data":{"description":null,"test_category_field":'.($withData ? '"'.$data['test_category_field'].'"' : 'null').',"parsed":{"description":null,"test_category_field":'.($withData ? '"'.$data['test_category_field'].'"' : 'null').'}},"title":"'.$data['title'].'","is_visible":0,"summary":'.($withSummary ? '"'.$data['summary'].'"' : 'null').',"utility_tag":'.($withUtilityTag ? '["'.$data['utility_tag'][0].'"]' : 'null').',"page_tag":'.($withPageTag ? '["'.$data['page_tag'].'"]' : 'null').($withParent ? ',"parent_id":'.$parent->id : '').'}',
+            ]);
+
+            if ($withUtilityTag) {
+                $this->assertDatabaseHas('page_tags', [
+                    'page_id' => $page->id,
+                    'type'    => 'utility',
+                    'tag'     => $data['utility_tag'][0],
+                ]);
+            }
+
+            if ($withPageTag) {
+                $this->assertDatabaseHas('page_tags', [
+                    'page_id' => $page->id,
+                    'type'    => 'page_tag',
+                    'tag'     => $data['page_tag'],
+                ]);
+            }
+        } else {
+            if ($withPage) {
+                $response->assertSessionHasErrors();
+                $this->assertDatabaseMissing('pages', [
+                    'id'    => $page->id,
+                    'title' => $data['title'],
+                ]);
+            } else {
+                $response->assertStatus(404);
+            }
+        }
     }
 
-    /**
-     * Test page editing with data.
-     */
-    public function testCanPostEditPage() {
-        $category = SubjectCategory::factory()->testData()->create();
-        $page = Page::factory()->category($category->id)->create();
-
-        // Define some basic data
-        $data = [
-            'title'               => $this->faker->unique()->domainWord(),
-            'summary'             => null,
-            'test_category_field' => $this->faker->unique()->domainWord(),
+    public static function postCreateEditPageProvider() {
+        return [
+            'basic'                     => [1, 1, 0, 0, 0, 0, 0, 1],
+            'with summary'              => [1, 1, 1, 0, 0, 0, 0, 1],
+            'with data'                 => [1, 1, 0, 1, 0, 0, 0, 1],
+            'with parent'               => [1, 1, 0, 0, 1, 0, 0, 1],
+            'with utility tag'          => [1, 1, 0, 0, 0, 1, 0, 1],
+            'with page tag'             => [1, 1, 0, 0, 0, 0, 1, 1],
+            'with summary, data'        => [1, 1, 1, 1, 0, 0, 0, 1],
+            'with summary, parent'      => [1, 1, 1, 0, 1, 0, 0, 1],
+            'with summary, utility tag' => [1, 1, 1, 0, 0, 1, 0, 1],
+            'with summary, page tag'    => [1, 1, 1, 0, 0, 0, 1, 1],
+            'with data, parent'         => [1, 1, 0, 1, 1, 0, 0, 1],
+            'with data, utility tag'    => [1, 1, 0, 1, 0, 1, 0, 1],
+            'with data, page tag'       => [1, 1, 0, 1, 0, 0, 1, 1],
+            'with parent, utility tag'  => [1, 1, 0, 0, 1, 1, 0, 1],
+            'with parent, page tag'     => [1, 1, 0, 0, 1, 0, 1, 1],
+            'with utility, page tag'    => [1, 1, 0, 0, 0, 1, 1, 1],
+            'with all'                  => [1, 1, 1, 1, 1, 1, 1, 1],
+            'without title'             => [1, 0, 0, 0, 0, 0, 0, 0],
         ];
-
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/edit', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_versions', [
-            'page_id' => $page->id,
-            'data'    => '{"data":{"description":null,"test_category_field":"'.$data['test_category_field'].'","parsed":{"description":null,"test_category_field":"'.$data['test_category_field'].'"}},"title":"'.$data['title'].'","is_visible":0,"summary":null,"utility_tag":null,"page_tag":null}',
-        ]);
     }
 
-    /**
-     * Test page creation with a parent.
-     */
-    public function testCanPostCreatePageWithParent() {
-        $parent = Page::factory()->create();
-        $category = SubjectCategory::factory()->create();
-
-        // Define some basic template data
-        $data = [
-            'title'       => $this->faker->unique()->domainWord(),
-            'summary'     => null,
-            'category_id' => $category->id,
-            'parent_id'   => $parent->id,
+    public static function postEditPageProvider() {
+        return [
+            'without page' => [0, 1, 0, 0, 0, 0, 0, 0],
         ];
-
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/create', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('pages', [
-            'category_id' => $category->id,
-            'title'       => $data['title'],
-            'parent_id'   => $parent->id,
-        ]);
-    }
-
-    /**
-     * Test page editing with a parent.
-     */
-    public function testCanPostEditPageWithParent() {
-        $page = Page::factory()->create();
-        $parent = Page::factory()->create();
-
-        // Define some basic template data
-        $data = [
-            'title'     => $this->faker->unique()->domainWord(),
-            'summary'   => null,
-            'parent_id' => $parent->id,
-        ];
-
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/edit', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('pages', [
-            'id'        => $page->id,
-            'title'     => $data['title'],
-            'parent_id' => $parent->id,
-        ]);
-    }
-
-    /**
-     * Test page creation with utility tags.
-     */
-    public function testCanPostCreatePageWithUtilityTags() {
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->create();
-
-        // Define some basic data
-        $data = [
-            'title'       => $this->faker->unique()->domainWord(),
-            'summary'     => null,
-            'category_id' => $category->id,
-            'utility_tag' => [0 => 'wip'],
-        ];
-
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/create', $data);
-
-        $page = Page::where('title', $data['title'])->where('category_id', $category->id)->first();
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_tags', [
-            'page_id' => $page->id,
-            'type'    => 'utility',
-            'tag'     => 'wip',
-        ]);
-    }
-
-    /**
-     * Test page editing with utility tags.
-     */
-    public function testCanPostEditPageWithUtilityTags() {
-        $page = Page::factory()->create();
-
-        // Define some basic data
-        $data = [
-            'title'       => $this->faker->unique()->domainWord(),
-            'summary'     => null,
-            'utility_tag' => [0 => 'wip'],
-        ];
-
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/edit', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_tags', [
-            'page_id' => $page->id,
-            'type'    => 'utility',
-            'tag'     => 'wip',
-        ]);
-    }
-
-    /**
-     * Test page creation with page tags.
-     */
-    public function testCanPostCreatePageWithPageTags() {
-        // Create a category for the page to go into
-        $category = SubjectCategory::factory()->create();
-
-        // Define some basic data
-        $data = [
-            'title'       => $this->faker->unique()->domainWord(),
-            'summary'     => null,
-            'category_id' => $category->id,
-            'page_tag'    => $this->faker->unique()->domainWord(),
-        ];
-
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/create', $data);
-
-        $page = Page::where('title', $data['title'])->where('category_id', $category->id)->first();
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_tags', [
-            'page_id' => $page->id,
-            'type'    => 'page_tag',
-            'tag'     => $data['page_tag'],
-        ]);
-    }
-
-    /**
-     * Test page editing with page tags.
-     */
-    public function testCanPostEditPageWithPageTags() {
-        $page = Page::factory()->create();
-
-        // Define some basic data
-        $data = [
-            'title'    => $this->faker->unique()->domainWord(),
-            'summary'  => null,
-            'page_tag' => $this->faker->unique()->domainWord(),
-        ];
-
-        // Make a persistent editor
-        $user = User::factory()->editor()->create();
-
-        // Try to post data
-        $response = $this
-            ->actingAs($user)
-            ->post('/pages/'.$page->id.'/edit', $data);
-
-        // Directly verify that the appropriate change has occurred
-        $this->assertDatabaseHas('page_tags', [
-            'page_id' => $page->id,
-            'type'    => 'page_tag',
-            'tag'     => $data['page_tag'],
-        ]);
     }
 }

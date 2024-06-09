@@ -12,7 +12,6 @@ use App\Models\Subject\TimeDivision;
 use App\Services\SubjectService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 
 class SubjectController extends Controller {
     /*
@@ -37,7 +36,7 @@ class SubjectController extends Controller {
      */
     public function getSubjectIndex($subject) {
         $subjectKey = $subject;
-        $subject = Config::get('mundialis.subjects.'.$subject);
+        $subject = config('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
         return view('admin.subjects.subject', [
@@ -55,10 +54,15 @@ class SubjectController extends Controller {
      */
     public function getEditTemplate($subject) {
         $subjectKey = $subject;
-        $subject = Config::get('mundialis.subjects.'.$subject);
+        $subject = config('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
         $template = SubjectTemplate::where('subject', $subject['key'])->first();
+
+        // Fallback for testing purposes
+        if (isset($template->data) && !is_array($template->data)) {
+            $template->data = json_decode($template->data, true);
+        }
 
         return view('admin.subjects.template', [
             'subject'  => $subject,
@@ -87,7 +91,7 @@ class SubjectController extends Controller {
             flash('Template updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -103,7 +107,7 @@ class SubjectController extends Controller {
      */
     public function getCreateCategory($subject) {
         $subjectKey = $subject;
-        $subject = Config::get('mundialis.subjects.'.$subject);
+        $subject = config('mundialis.subjects.'.$subject);
         $subject['key'] = $subjectKey;
 
         return view('admin.subjects.create_edit_category', [
@@ -159,7 +163,7 @@ class SubjectController extends Controller {
             return redirect()->to('admin/data/categories/edit/'.$category->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -191,12 +195,12 @@ class SubjectController extends Controller {
      */
     public function postDeleteCategory(Request $request, SubjectService $service, $id) {
         $category = SubjectCategory::find($id);
-        $subject = $category->subject;
+        $subject = $category?->subject;
         if ($id && $service->deleteCategory($category, Auth::user())) {
             flash('Category deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
 
             return redirect()->back();
@@ -218,7 +222,7 @@ class SubjectController extends Controller {
             flash('Category order updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -257,7 +261,7 @@ class SubjectController extends Controller {
             flash('Divisions updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -327,7 +331,7 @@ class SubjectController extends Controller {
             return redirect()->to('admin/data/time/chronology/edit/'.$chronology->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -362,7 +366,7 @@ class SubjectController extends Controller {
             flash('Chronology deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -381,7 +385,7 @@ class SubjectController extends Controller {
             flash('Chronology order updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -420,7 +424,7 @@ class SubjectController extends Controller {
             flash('Lexicon settings updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -495,7 +499,7 @@ class SubjectController extends Controller {
             return redirect()->to('admin/data/language/lexicon-categories/edit/'.$category->id);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -530,7 +534,7 @@ class SubjectController extends Controller {
             flash('Category deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 
@@ -549,7 +553,7 @@ class SubjectController extends Controller {
             flash('Lexicon category order updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
-                flash($error)->error();
+                $service->addError($error);
             }
         }
 

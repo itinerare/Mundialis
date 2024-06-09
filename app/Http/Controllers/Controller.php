@@ -20,7 +20,7 @@ class Controller extends BaseController {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getIndex() {
-        $pageVersions = PageVersion::orderBy('created_at', 'DESC')->get()->filter(function ($version) {
+        $pageVersions = PageVersion::with('page', 'user')->orderBy('created_at', 'DESC')->get()->filter(function ($version) {
             if (!$version->page || isset($version->page->deleted_at)) {
                 return 0;
             }
@@ -31,7 +31,7 @@ class Controller extends BaseController {
             return $version->page->is_visible;
         });
 
-        $imageVersions = PageImageVersion::orderBy('updated_at', 'DESC')->get()->filter(function ($version) {
+        $imageVersions = PageImageVersion::with('image', 'user')->orderBy('updated_at', 'DESC')->get()->filter(function ($version) {
             if (!$version->image || isset($version->image->deleted_at)) {
                 return 0;
             }

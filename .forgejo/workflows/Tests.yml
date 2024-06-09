@@ -4,14 +4,6 @@ on:
   push:
     branches:
       - '**'
-  pull_request:
-    branches:
-      - '**'
-    types:
-      - opened
-      - edited
-      - synchronize
-      - reopened
 
 jobs:
   laravel-tests:
@@ -29,7 +21,7 @@ jobs:
         extensions: gd, imagick
 
     - name: Checkout code
-      uses: https://github.com/actions/checkout@v4
+      uses: actions/checkout@v4
 
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"

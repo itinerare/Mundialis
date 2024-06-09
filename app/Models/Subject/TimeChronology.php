@@ -3,6 +3,7 @@
 namespace App\Models\Subject;
 
 use App\Models\Model;
+use App\Models\Page\Page;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TimeChronology extends Model {
@@ -60,21 +61,21 @@ class TimeChronology extends Model {
      * Get parent category of this category.
      */
     public function parent() {
-        return $this->belongsTo('App\Models\Subject\TimeChronology', 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     /**
      * Get child categories of this category.
      */
     public function children() {
-        return $this->hasMany('App\Models\Subject\TimeChronology', 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     /**
      * Get pages in this category.
      */
     public function pages() {
-        return $this->hasMany('App\Models\Page\Page', 'parent_id')->whereIn('category_id', SubjectCategory::where('subject', 'time')->pluck('id')->toArray());
+        return $this->hasMany(Page::class, 'parent_id')->whereRelation('category', 'subject', 'time')->with('category', 'parent', 'image', 'tags');
     }
 
     /**********************************************************************************************

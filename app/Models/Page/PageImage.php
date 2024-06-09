@@ -26,6 +26,15 @@ class PageImage extends Model {
     protected $table = 'page_images';
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'versions', 'pages:id,title,is_visible',
+    ];
+
+    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -40,7 +49,7 @@ class PageImage extends Model {
     public static $createRules = [
         'creator_id.*'  => 'nullable|required_without:creator_url.*',
         'creator_url.*' => 'nullable|required_without:creator_id.*|url',
-        'image'         => 'required|mimes:jpeg,gif,png|max:20000',
+        'image'         => 'required|mimes:jpg,jpeg,gif,png,webp|max:20000',
     ];
 
     /**
@@ -51,7 +60,7 @@ class PageImage extends Model {
     public static $updateRules = [
         'creator_id.*'  => 'nullable|required_without:creator_url.*',
         'creator_url.*' => 'nullable|required_without:creator_id.*|url',
-        'image'         => 'nullable|mimes:jpeg,gif,png|max:20000',
+        'image'         => 'nullable|mimes:jpg,jpeg,gif,png,webp|max:20000',
     ];
 
     /**********************************************************************************************
@@ -64,21 +73,21 @@ class PageImage extends Model {
      * Get the page this image belongs to.
      */
     public function creators() {
-        return $this->hasMany('App\Models\Page\PageImageCreator');
+        return $this->hasMany(PageImageCreator::class);
     }
 
     /**
      * Get the page this image belongs to.
      */
     public function pages() {
-        return $this->belongsToMany('App\Models\Page\Page')->using('App\Models\Page\PagePageImage')->withPivot('is_valid');
+        return $this->belongsToMany(Page::class)->using(PagePageImage::class)->withPivot('is_valid');
     }
 
     /**
      * Get this image's versions.
      */
     public function versions() {
-        return $this->hasMany('App\Models\Page\PageImageVersion');
+        return $this->hasMany(PageImageVersion::class);
     }
 
     /**********************************************************************************************
@@ -100,7 +109,7 @@ class PageImage extends Model {
             return $query;
         }
 
-        return $query->where('is_visible', 1);
+        return $query->where('is_visible', 1)->whereRelation('pages', 'is_visible', 1);
     }
 
     /**********************************************************************************************
@@ -125,6 +134,15 @@ class PageImage extends Model {
      */
     public function getImageVersionAttribute() {
         return $this->versions()->whereNotNull('hash')->orderBy('created_at', 'DESC')->first();
+    }
+
+    /**
+     * Checks whether any of the image's associated pages are protected.
+     *
+     * @return bool
+     */
+    public function getIsProtectedAttribute() {
+        return $this->pages()->whereRelation('protections', 'is_protected', 1)->exists();
     }
 
     /**

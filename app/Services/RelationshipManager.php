@@ -64,7 +64,7 @@ class RelationshipManager extends Service {
      * @param array            $data
      * @param User             $user
      *
-     * @return \App\Models\Page\Page|bool
+     * @return bool|Page
      */
     public function updatePageRelationship($relationship, $data, $user) {
         DB::beginTransaction();

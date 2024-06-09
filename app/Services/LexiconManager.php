@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Lexicon\LexiconEntry;
 use App\Models\Lexicon\LexiconEtymology;
 use App\Models\Page\PageLink;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class LexiconManager extends Service {
@@ -23,7 +24,7 @@ class LexiconManager extends Service {
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return \App\Models\Lexicon\LexiconEntry|bool
+     * @return bool|LexiconEntry
      */
     public function createLexiconEntry($data, $user) {
         DB::beginTransaction();
@@ -35,7 +36,7 @@ class LexiconManager extends Service {
             }
 
             // Create entry
-            $entry = LexiconEntry::create($data);
+            $entry = LexiconEntry::create(Arr::only($data, ['category_id', 'class', 'word', 'meaning', 'pronounciation', 'definition', 'data', 'is_visible']));
 
             if (isset($data['definition'])) {
                 if (!$parseData = $this->parse_wiki_links((array) $data['definition'])) {
@@ -61,7 +62,8 @@ class LexiconManager extends Service {
             } else {
                 $data['parsed_definition'] = null;
             }
-            $entry->update($data);
+
+            $entry->update(Arr::only($data, ['parsed_definition']));
 
             // Process etymology data
             if (!$this->processEtymology($entry, $data)) {
@@ -83,7 +85,7 @@ class LexiconManager extends Service {
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
-     * @return \App\Models\Lexicon\LexiconEntry|bool
+     * @return bool|LexiconEntry
      */
     public function updateLexiconEntry($entry, $data, $user) {
         DB::beginTransaction();
@@ -137,7 +139,7 @@ class LexiconManager extends Service {
             }
 
             // Update entry
-            $entry->update($data);
+            $entry->update(Arr::only($data, ['category_id', 'class', 'word', 'meaning', 'pronounciation', 'definition', 'data', 'is_visible', 'parsed_definition']));
 
             return $this->commitReturn($entry);
         } catch (\Exception $e) {
@@ -243,6 +245,11 @@ class LexiconManager extends Service {
 
         // Auto-conjugation/declension
         if ($data['autoconj']) {
+            // Fallback for testing purposes
+            if (!is_array($entry->category->data)) {
+                $entry->category->data = json_decode($entry->category->data, true);
+            }
+
             $conjData = $entry->category->data[$entry->lexicalClass->id]['conjugation'] ?? null;
 
             // This option should only be offered in the first place if the data exists,
@@ -253,17 +260,17 @@ class LexiconManager extends Service {
                     // If this is the first combination and there are no settings for it,
                     // Substitute in the word itself
                     if ($key == 0 && !isset($conjData[$key])) {
-                        $data['conjdecl'][$combination] = $entry->word;
+                        $data['conjdecl'][$combination] = $data['word'];
                     }
 
                     // Otherwise, check to see if instructions exist, then process the word
                     elseif (isset($conjData[$key])) {
                         foreach ($conjData[$key]['criteria'] as $conjKey=>$criteria) {
                             $matches = [];
-                            preg_match('/'.$criteria.'/', $entry->word, $matches);
+                            preg_match('/'.$criteria.'/', $data['word'], $matches);
                             if ($matches != []) {
-                                $data['conjdecl'][$combination] = preg_replace(isset($conjData[$key]['regex'][$conjKey]) ? '/'.$conjData[$key]['regex'][$conjKey].'/' : '/'.$conjData[$key]['regex'][0].'/', $conjData[$key]['replacement'][$conjKey], lcfirst($entry->word));
-                                if ($entry->word != lcfirst($entry->word)) {
+                                $data['conjdecl'][$combination] = preg_replace(isset($conjData[$key]['regex'][$conjKey]) ? '/'.$conjData[$key]['regex'][$conjKey].'/' : '/'.$conjData[$key]['regex'][0].'/', $conjData[$key]['replacement'][$conjKey], lcfirst($data['word']));
+                                if ($data['word'] != lcfirst($data['word'])) {
                                     $data['conjdecl'][$combination] = ucfirst($data['conjdecl'][$combination]);
                                 }
                                 break;
@@ -276,9 +283,6 @@ class LexiconManager extends Service {
             }
         }
 
-        // Process inputs for recording
-        $data['data'] = json_encode($data['conjdecl']);
-
-        return $data['data'];
+        return $data['conjdecl'];
     }
 }
