@@ -15,7 +15,7 @@
         "laravel/helpers": "^1.4",
         "laravel/tinker": "^2.5",
         "laravelcollective/html": "^6.0",
-        "spatie/laravel-backup": "^8.0"
+        "spatie/laravel-backup": "^9.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
