@@ -22,7 +22,7 @@ jobs:
         php-version: 8.1
 
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: https://code.itinerare.net/internal/checkout@v4
       with:
         repository: ${{ github.event.pull_request.head.repo.full_name }}
         ref: ${{ github.event.pull_request.head.ref }}
@@ -55,7 +55,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: https://code.itinerare.net/internal/checkout@v4
       with:
         repository: ${{ github.event.pull_request.head.repo.full_name }}
         ref: ${{ github.event.pull_request.head.ref }}
