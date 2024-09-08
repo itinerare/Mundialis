@@ -71,7 +71,7 @@ jobs:
 
     - name: Run blade-formatter
       run: npm run format
-      
+
     - name: Import GPG key
       uses: https://github.com/crazy-max/ghaction-import-gpg@v6
       with:
@@ -93,7 +93,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: https://code.itinerare.net/internal/checkout@v4
       with:
         repository: ${{ github.event.pull_request.head.repo.full_name }}
         ref: ${{ github.event.pull_request.head.ref }}
@@ -109,7 +109,7 @@ jobs:
 
     - name: Run Mix
       run: npm run prod
-      
+
     - name: Import GPG key
       uses: https://github.com/crazy-max/ghaction-import-gpg@v6
       with:
