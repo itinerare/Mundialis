@@ -60,7 +60,7 @@ There are additionally three types of impermanent branches. Each branch of these
 - **Hotfix branches**
     - These follow the naming scheme `hotfix/HOTFIX-NAME-HERE`.
     - These contain emergency bugfixes, e.g. fixes for critical issues or security vulnerabilities.
-    - These are directly branched off of `main`/the current release and merged back into master when complete.
+    - These are directly branched off of `main`/the current release and merged back into main when complete.
     - In such an event, `main` is merged back into `develop` as well to incorporate fixes.
 
 In summary:
