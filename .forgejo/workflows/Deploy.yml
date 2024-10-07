@@ -1,0 +1,31 @@
+name: Deploy to demo site
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  deploy:
+    runs-on: docker
+
+    steps:
+      - name: Checkout code
+        uses: https://code.itinerare.net/internal/checkout@v4
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Deploy
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
+          cd "${{ vars.DEPLOY_APP_PATH }}"
+          git pull
+          composer install --ignore-platform-reqs
+          php artisan migrate --force
+          php artisan optimize
+          php artisan optimize
+          ENDSSH
