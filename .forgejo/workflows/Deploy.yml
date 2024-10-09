@@ -10,9 +10,6 @@ jobs:
     runs-on: docker
 
     steps:
-      - name: Checkout code
-        uses: https://code.itinerare.net/internal/checkout@v4
-
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
@@ -23,9 +20,11 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
           cd "${{ vars.DEPLOY_APP_PATH }}"
+          php artisan down --render="errors::503" --refresh=30
           git pull
-          composer install --ignore-platform-reqs
+          composer install -no --no-dev --ignore-platform-reqs
           php artisan migrate --force
           php artisan optimize
           php artisan optimize
+          php artisan up
           ENDSSH
