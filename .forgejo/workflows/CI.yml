@@ -1,4 +1,4 @@
-name: Lint & Build Mix Assets
+name: CI
 
 on:
   pull_request:
@@ -7,13 +7,53 @@ on:
       - 'develop'
     types:
       - opened
-      - edited
       - synchronize
       - reopened
 
 jobs:
+  laravel-tests:
+    strategy:
+      matrix:
+        target: ['8.1', '8.2']
+
+    runs-on: docker
+
+    steps:
+    - name: Set up PHP
+      uses: https://github.com/shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.target }}
+        extensions: gd, imagick
+
+    - name: Checkout code
+      uses: https://code.itinerare.net/internal/checkout@v4
+
+    - name: Copy .env
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+    - name: Install dependencies
+      env:
+        COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH_JSON }}
+      run: composer install --no-ansi --no-interaction --no-scripts --prefer-dist --ignore-platform-reqs
+
+    - name: Generate key
+      run: php artisan key:generate
+
+    - name: Set directory permissions
+      run: chmod -R 777 storage bootstrap/cache
+
+    - name: Run tests
+      run: php artisan test
+      env:
+        DB_HOST: ${{ vars.MYSQL_HOST }}
+        DB_PORT: 3306
+        DB_DATABASE: mundialis_test
+        DB_USERNAME: forgejo_runner
+        DB_PASSWORD: ${{ secrets.MYSQL_PASS }}
+
   pint:
     runs-on: docker
+    needs: laravel-tests
 
     steps:
     - name: Set up PHP
@@ -22,7 +62,7 @@ jobs:
         php-version: 8.1
 
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: https://code.itinerare.net/internal/checkout@v4
       with:
         repository: ${{ github.event.pull_request.head.repo.full_name }}
         ref: ${{ github.event.pull_request.head.ref }}
@@ -36,7 +76,7 @@ jobs:
       run: composer lint
 
     - name: Import GPG key
-      uses: https://github.com/crazy-max/ghaction-import-gpg@v4
+      uses: https://github.com/crazy-max/ghaction-import-gpg@v6
       with:
         gpg_private_key: ${{ secrets.CI_GPG }}
         git_user_signingkey: true
@@ -52,10 +92,11 @@ jobs:
 
   blade-formatter:
     runs-on: docker
+    needs: laravel-tests
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: https://code.itinerare.net/internal/checkout@v4
       with:
         repository: ${{ github.event.pull_request.head.repo.full_name }}
         ref: ${{ github.event.pull_request.head.ref }}
@@ -71,9 +112,9 @@ jobs:
 
     - name: Run blade-formatter
       run: npm run format
-      
+
     - name: Import GPG key
-      uses: https://github.com/crazy-max/ghaction-import-gpg@v4
+      uses: https://github.com/crazy-max/ghaction-import-gpg@v6
       with:
         gpg_private_key: ${{ secrets.CI_GPG }}
         git_user_signingkey: true
@@ -90,10 +131,11 @@ jobs:
 
   rebuild-mix-assets:
     runs-on: docker
+    needs: laravel-tests
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: https://code.itinerare.net/internal/checkout@v4
       with:
         repository: ${{ github.event.pull_request.head.repo.full_name }}
         ref: ${{ github.event.pull_request.head.ref }}
@@ -109,9 +151,9 @@ jobs:
 
     - name: Run Mix
       run: npm run prod
-      
+
     - name: Import GPG key
-      uses: https://github.com/crazy-max/ghaction-import-gpg@v4
+      uses: https://github.com/crazy-max/ghaction-import-gpg@v6
       with:
         gpg_private_key: ${{ secrets.CI_GPG }}
         git_user_signingkey: true

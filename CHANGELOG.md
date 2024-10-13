@@ -4,6 +4,15 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.4.0](https://code.itinerare.net/itinerare/Mundialis/compare/v2.3.0...v2.4.0) (2024-10-13)
+
+### Features
+
+* Add error pages ([91d9cb](https://code.itinerare.net/itinerare/Mundialis/commit/91d9cbcf60eac76f55646e8d727de6dfafcc1128))
+
+
+---
+
 ## [2.3.0](https://code.itinerare.net/itinerare/Mundialis/compare/v2.2.6...v2.3.0) (2024-06-09)
 
 ### Features
