@@ -46,10 +46,12 @@
                 {!! Form::select(
                     'sort',
                     [
+                        'sort' => 'Manual Order',
+                        'reverse-sort' => 'Manual Order (Reverse)',
                         'newest' => 'Newest First',
                         'oldest' => 'Oldest First',
                     ],
-                    Request::get('sort') ?: 'newest',
+                    Request::get('sort') ?: 'sort',
                     ['class' => 'form-control'],
                 ) !!}
             </div>

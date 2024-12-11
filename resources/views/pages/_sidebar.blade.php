@@ -10,7 +10,7 @@
             <div class="sidebar-item"><a href="{{ url('pages/' . $page->id . '/history') }}"
                     class="{{ set_active('pages/' . $page->id . '/history*') }}">History</a></div>
             <div class="sidebar-item"><a href="{{ url('pages/' . $page->id . '/gallery') }}"
-                    class="{{ set_active('pages/' . $page->id . '/gallery*') }}">Gallery</a></div>
+                    class="{{ set_active('pages/' . $page->id . '/gallery') }}">Gallery</a></div>
             @if ($page->category->subject['key'] == 'people')
                 <div class="sidebar-item"><a href="{{ url('pages/' . $page->id . '/relationships') }}"
                         class="{{ set_active('pages/' . $page->id . '/relationships*') }}">Relationships</a></div>
@@ -24,6 +24,8 @@
                         class="{{ set_active('pages/' . $page->id . '/edit') }}">Edit Page</a></div>
                 <div class="sidebar-item"><a href="{{ url('pages/' . $page->id . '/gallery/create') }}"
                         class="{{ set_active('pages/' . $page->id . '/gallery/create') }}">Upload Image</a></div>
+                <div class="sidebar-item"><a href="{{ url('pages/' . $page->id . '/gallery/sort') }}"
+                        class="{{ set_active('pages/' . $page->id . '/gallery/sort') }}">Reorder Images</a></div>
                 @if (Auth::user()->isAdmin)
                     <div class="sidebar-item"><a href="{{ url('pages/' . $page->id . '/protect') }}"
                             class="{{ set_active('pages/' . $page->id . '/protect') }}">{{ $page->protection ? 'Edit Page Protection' : 'Protect Page' }}</a>

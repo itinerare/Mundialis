@@ -62,6 +62,10 @@ Route::prefix('pages')->group(function () {
             ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
         Route::post('{page_id}/gallery/delete/{id}', 'postDeleteImage')
             ->where(['page_id' => '[0-9]+', 'id' => '[0-9]+']);
+        Route::get('{id}/gallery/sort', 'getSortImages')
+            ->whereNumber('id');
+        Route::post('{id}/gallery/sort', 'postSortImages')
+            ->whereNumber('id');
     });
 
     Route::controller(RelationshipController::class)->group(function () {
