@@ -363,6 +363,48 @@ class ImageManager extends Service {
     }
 
     /**
+     * Sorts a page's images.
+     *
+     * @param array $data
+     * @param Page  $page
+     * @param User  $user
+     *
+     * @return bool
+     */
+    public function sortImages($data, $page, $user) {
+        DB::beginTransaction();
+
+        try {
+            if (!$page) {
+                throw new \Exception('Invalid page selected.');
+            }
+
+            $ids = array_reverse(explode(',', $data['sort']));
+            $images = PageImage::whereIn('id', $ids)->where('is_visible', 1)->orderBy(DB::raw('FIELD(id, '.implode(',', $ids).')'))->whereHas('pages', function ($query) use ($page) {
+                $query->where('pages.id', $page->id);
+            })->get();
+
+            if (count($images) != count($ids)) {
+                throw new \Exception('Invalid image(s) included in sorting order.');
+            }
+
+            $count = 0;
+            foreach ($images as $image) {
+                $page->images()->updateExistingPivot($image->id, [
+                    'sort' => $count,
+                ]);
+                $count++;
+            }
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
      * Handles page image data.
      *
      * @param array     $data

@@ -100,7 +100,7 @@ class Page extends Model {
      * Get this page's images.
      */
     public function images() {
-        return $this->belongsToMany(PageImage::class)->using(PagePageImage::class)->withPivot('is_valid');
+        return $this->belongsToMany(PageImage::class)->using(PagePageImage::class)->withPivot('is_valid', 'sort');
     }
 
     /**

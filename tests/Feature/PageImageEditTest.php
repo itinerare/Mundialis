@@ -518,6 +518,82 @@ class PageImageEditTest extends TestCase {
     }
 
     /**
+     * Test image sort access.
+     *
+     * @dataProvider getSortImagesProvider
+     *
+     * @param bool $withPage
+     * @param bool $withImages
+     * @param int  $status
+     */
+    public function testGetSortImages($withPage, $withImages, $status) {
+        if ($withPage) {
+            $page = Page::factory()->create();
+        }
+
+        if ($withImages) {
+            for ($i = 0; $i < 2; $i++) {
+                $imageData[$i] = $this->createImage($page);
+            }
+        }
+
+        $response = $this->actingAs($this->editor)
+            ->get('/pages/'.($withPage ? $page->id : 9999).'/gallery/sort');
+
+        $response->assertStatus($status);
+
+        if ($withImages) {
+            // Just check that the images are displayed on the page
+            foreach ($imageData as $image) {
+                $response->assertSee($image['image']->thumbnailUrl);
+
+                $this->service->testImages($image['image'], $image['version'], false);
+            }
+        }
+    }
+
+    public static function getSortImagesProvider() {
+        return [
+            'with page'         => [1, 0, 200],
+            'with page, images' => [1, 1, 200],
+            'without page'      => [0, 0, 404],
+        ];
+    }
+
+    /**
+     * Test sorting images.
+     */
+    public function testPostSortImages() {
+        $page = Page::factory()->create();
+
+        for ($i = 0; $i < 2; $i++) {
+            $imageData[$i] = $this->createImage($page);
+            $sort[] = $imageData[$i]['image']->id;
+        }
+
+        $data = ['sort' => implode(',', $sort)];
+
+        $response = $this
+            ->actingAs($this->editor)
+            ->post('/pages/'.$page->id.'/gallery/sort', $data);
+
+        $response->assertSessionHasNoErrors();
+
+        $count = 1;
+
+        foreach ($imageData as $image) {
+            $this->assertDatabaseHas('page_page_image', [
+                'page_id'       => $page->id,
+                'page_image_id' => $image['image']->id,
+                'sort'          => $count,
+            ]);
+            $count--;
+
+            $this->service->testImages($image['image'], $image['version'], false);
+        }
+    }
+
+    /**
      * Creates an image and associated records.
      *
      * @param Page|null $page

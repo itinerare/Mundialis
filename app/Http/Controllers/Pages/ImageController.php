@@ -53,6 +53,12 @@ class ImageController extends Controller {
 
         if (isset($sort['sort'])) {
             switch ($sort['sort']) {
+                case 'sort':
+                    $query->orderBy('sort', 'DESC')->orderBy('created_at', 'DESC');
+                    break;
+                case 'reverse-sort':
+                    $query->orderBy('sort', 'ASC')->orderBy('created_at', 'DESC');
+                    break;
                 case 'newest':
                     $query->orderBy('created_at', 'DESC');
                     break;
@@ -61,7 +67,7 @@ class ImageController extends Controller {
                     break;
             }
         } else {
-            $query->orderBy('created_at', 'DESC');
+            $query->orderBy('sort', 'DESC')->orderBy('created_at', 'DESC');
         }
 
         return view('pages.images.gallery', [
@@ -326,5 +332,50 @@ class ImageController extends Controller {
         }
 
         return redirect()->to('pages/'.$pageId.'/gallery');
+    }
+
+    /**
+     * Shows the reorder images view for a page.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getSortImages($id) {
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->with('category', 'parent')->first();
+        if (!$page) {
+            abort(404);
+        }
+
+        $query = $page->images()->visible(Auth::user() ?? null)->orderBy('is_valid', 'DESC')->orderBy('sort', 'DESC');
+
+        return view('pages.images.sort', [
+            'page'   => $page,
+            'images' => $query->get(),
+        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+            'dateHelper' => new TimeDivision,
+        ] : []));
+    }
+
+    /**
+     * Sorts a page's images.
+     *
+     * @param App\Services\ImageManager $service
+     * @param int                       $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postSortImages(Request $request, ImageManager $service, $id) {
+        if ($service->sortImages($request->only(['sort']), Page::where('id', $id)->first(), Auth::user())) {
+            flash('Page images sorted successfully.')->success();
+
+            return redirect()->back();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                $service->addError($error);
+            }
+        }
+
+        return redirect()->back();
     }
 }

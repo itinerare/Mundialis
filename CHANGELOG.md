@@ -4,6 +4,22 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.5.0](https://code.itinerare.net/itinerare/Mundialis/compare/v2.4.0...v2.5.0) (2024-12-16)
+
+### Features
+
+
+##### Page Images
+
+* Add ability to reorder page images; closes #489 ([3dc3f6](https://code.itinerare.net/itinerare/Mundialis/commit/3dc3f6c67f2796c59ff566547d45453f49c36df0))
+
+##### Tests
+
+* Add support for sorting to page image tests ([b091a9](https://code.itinerare.net/itinerare/Mundialis/commit/b091a98aa142ff63c45aefebd83752c042cd2460))
+
+
+---
+
 ## [2.4.0](https://code.itinerare.net/itinerare/Mundialis/compare/v2.3.0...v2.4.0) (2024-10-13)
 
 ### Features
