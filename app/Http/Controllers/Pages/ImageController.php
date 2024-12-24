@@ -347,7 +347,7 @@ class ImageController extends Controller {
             abort(404);
         }
 
-        $query = $page->images()->visible(Auth::user() ?? null)->orderBy('is_valid', 'DESC')->orderBy('sort', 'DESC');
+        $query = $page->images()->orderBy('sort', 'DESC');
 
         return view('pages.images.sort', [
             'page'   => $page,

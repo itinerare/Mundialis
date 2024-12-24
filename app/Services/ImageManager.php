@@ -380,7 +380,7 @@ class ImageManager extends Service {
             }
 
             $ids = array_reverse(explode(',', $data['sort']));
-            $images = PageImage::whereIn('id', $ids)->where('is_visible', 1)->orderBy(DB::raw('FIELD(id, '.implode(',', $ids).')'))->whereHas('pages', function ($query) use ($page) {
+            $images = PageImage::whereIn('id', $ids)->orderBy(DB::raw('FIELD(id, '.implode(',', $ids).')'))->whereHas('pages', function ($query) use ($page) {
                 $query->where('pages.id', $page->id);
             })->get();
 
