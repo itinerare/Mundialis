@@ -562,13 +562,26 @@ class PageImageEditTest extends TestCase {
 
     /**
      * Test sorting images.
+     *
+     * @dataProvider postSortImagesProvider
+     *
+     * @param array $isVisible
+     * @param array $isValid
      */
-    public function testPostSortImages() {
+    public function testPostSortImages($isVisible, $isValid) {
         $page = Page::factory()->create();
 
         for ($i = 0; $i < 2; $i++) {
             $imageData[$i] = $this->createImage($page);
             $sort[] = $imageData[$i]['image']->id;
+
+            $imageData[$i]['image']->update([
+                'is_visible' => $isVisible[$i],
+            ]);
+
+            $imageData[$i]['image']->pages()->updateExistingPivot($page->id, [
+                'is_valid' => $isValid[$i],
+            ]);
         }
 
         $data = ['sort' => implode(',', $sort)];
@@ -581,16 +594,29 @@ class PageImageEditTest extends TestCase {
 
         $count = 1;
 
-        foreach ($imageData as $image) {
+        foreach ($imageData as $key => $image) {
             $this->assertDatabaseHas('page_page_image', [
                 'page_id'       => $page->id,
                 'page_image_id' => $image['image']->id,
+                'is_valid'      => $isValid[$key],
                 'sort'          => $count,
             ]);
             $count--;
 
             $this->service->testImages($image['image'], $image['version'], false);
         }
+    }
+
+    public static function postSortImagesProvider() {
+        return [
+            'one hidden, valid'       => [[0, 1], [1, 1]],
+            'one visible, invalid'    => [[1, 1], [0, 1]],
+            'one hidden, invalid'     => [[0, 1], [0, 1]],
+            'both visible, valid'     => [[1, 1], [1, 1]],
+            'both hidden, valid'      => [[0, 0], [1, 1]],
+            'both visible, invalid'   => [[1, 1], [0, 0]],
+            'both invisible, invalid' => [[0, 0], [0, 0]],
+        ];
     }
 
     /**
