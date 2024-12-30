@@ -4,6 +4,18 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.5.1](https://code.itinerare.net/itinerare/Mundialis/compare/v2.5.0...v2.5.1) (2024-12-30)
+
+### Bug Fixes
+
+
+##### Page Images
+
+* Remove visibility checks when sorting images ([c1a966](https://code.itinerare.net/itinerare/Mundialis/commit/c1a966b3d554b2f322fda02beec0f7e30c8c6af7))
+
+
+---
+
 ## [2.5.0](https://code.itinerare.net/itinerare/Mundialis/compare/v2.4.0...v2.5.0) (2024-12-16)
 
 ### Features
