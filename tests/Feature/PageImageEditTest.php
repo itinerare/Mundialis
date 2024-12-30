@@ -522,11 +522,13 @@ class PageImageEditTest extends TestCase {
      *
      * @dataProvider getSortImagesProvider
      *
-     * @param bool $withPage
-     * @param bool $withImages
-     * @param int  $status
+     * @param bool       $withPage
+     * @param bool       $withImages
+     * @param array|null $isVisible
+     * @param array|null $isValid
+     * @param int        $status
      */
-    public function testGetSortImages($withPage, $withImages, $status) {
+    public function testGetSortImages($withPage, $withImages, $isVisible, $isValid, $status) {
         if ($withPage) {
             $page = Page::factory()->create();
         }
@@ -534,6 +536,14 @@ class PageImageEditTest extends TestCase {
         if ($withImages) {
             for ($i = 0; $i < 2; $i++) {
                 $imageData[$i] = $this->createImage($page);
+
+                $imageData[$i]['image']->update([
+                    'is_visible' => $isVisible[$i],
+                ]);
+
+                $imageData[$i]['image']->pages()->updateExistingPivot($page->id, [
+                    'is_valid' => $isValid[$i],
+                ]);
             }
         }
 
@@ -554,9 +564,15 @@ class PageImageEditTest extends TestCase {
 
     public static function getSortImagesProvider() {
         return [
-            'with page'         => [1, 0, 200],
-            'with page, images' => [1, 1, 200],
-            'without page'      => [0, 0, 404],
+            'with page'                        => [1, 0, null, null, 200],
+            'with page, images'                => [1, 1, [1, 1], [1, 1], 200],
+            'with page, hidden image'          => [1, 1, [0, 1], [1, 1], 200],
+            'with page, hidden images'         => [1, 1, [0, 0], [1, 1], 200],
+            'with page, invalid image'         => [1, 1, [1, 1], [0, 1], 200],
+            'with page, invalid images'        => [1, 1, [1, 1], [0, 0], 200],
+            'with page, hidden invalid image'  => [1, 1, [0, 1], [0, 1], 200],
+            'with page, hidden invalid images' => [1, 1, [0, 0], [0, 0], 200],
+            'without page'                     => [0, 0, null, null, 404],
         ];
     }
 
