@@ -4195,16 +4195,16 @@
         },
         {
             "name": "spatie/dropbox-api",
-            "version": "1.22.0",
+            "version": "1.23.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/dropbox-api.git",
-                "reference": "5b012d68568a560d1cd8888c0be2c2805c4b7c65"
+                "reference": "120ff475d7b03d3700a884c295b3b9503c4ddf8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/dropbox-api/zipball/5b012d68568a560d1cd8888c0be2c2805c4b7c65",
-                "reference": "5b012d68568a560d1cd8888c0be2c2805c4b7c65",
+                "url": "https://api.github.com/repos/spatie/dropbox-api/zipball/120ff475d7b03d3700a884c295b3b9503c4ddf8d",
+                "reference": "120ff475d7b03d3700a884c295b3b9503c4ddf8d",
                 "shasum": ""
             },
             "require": {
@@ -4215,8 +4215,8 @@
             },
             "require-dev": {
                 "laravel/pint": "^1.10.1",
-                "phpstan/phpstan": "^1.10.16",
-                "phpunit/phpunit": "^9.4"
+                "pestphp/pest": "^2.6.3",
+                "phpstan/phpstan": "^1.10.16"
             },
             "type": "library",
             "autoload": {
@@ -4253,7 +4253,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/dropbox-api/issues",
-                "source": "https://github.com/spatie/dropbox-api/tree/1.22.0"
+                "source": "https://github.com/spatie/dropbox-api/tree/1.23.0"
             },
             "funding": [
                 {
@@ -4265,20 +4265,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-06-08T07:13:00+00:00"
+            "time": "2025-01-06T09:31:59+00:00"
         },
         {
             "name": "spatie/flysystem-dropbox",
-            "version": "3.0.1",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/flysystem-dropbox.git",
-                "reference": "766879111204a6e49412b5ff5989a6654e1b8ae0"
+                "reference": "e6bf18e4dcfe5b21945bdc8b633f7e4c3ae4b9eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/flysystem-dropbox/zipball/766879111204a6e49412b5ff5989a6654e1b8ae0",
-                "reference": "766879111204a6e49412b5ff5989a6654e1b8ae0",
+                "url": "https://api.github.com/repos/spatie/flysystem-dropbox/zipball/e6bf18e4dcfe5b21945bdc8b633f7e4c3ae4b9eb",
+                "reference": "e6bf18e4dcfe5b21945bdc8b633f7e4c3ae4b9eb",
                 "shasum": ""
             },
             "require": {
@@ -4321,7 +4321,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/flysystem-dropbox/issues",
-                "source": "https://github.com/spatie/flysystem-dropbox/tree/3.0.1"
+                "source": "https://github.com/spatie/flysystem-dropbox/tree/3.0.2"
             },
             "funding": [
                 {
@@ -4333,7 +4333,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-07-17T07:48:52+00:00"
+            "time": "2025-01-06T14:05:49+00:00"
         },
         {
             "name": "spatie/laravel-backup",
