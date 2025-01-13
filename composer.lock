@@ -1029,25 +1029,25 @@
         },
         {
             "name": "graham-campbell/guzzle-factory",
-            "version": "v7.0.1",
+            "version": "v7.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GrahamCampbell/Guzzle-Factory.git",
-                "reference": "134f6ca38ad0c948ed7c22552a286bb56b5a5b35"
+                "reference": "b0a273dabe1f90004e76ca4ab8671b10caaa1dd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GrahamCampbell/Guzzle-Factory/zipball/134f6ca38ad0c948ed7c22552a286bb56b5a5b35",
-                "reference": "134f6ca38ad0c948ed7c22552a286bb56b5a5b35",
+                "url": "https://api.github.com/repos/GrahamCampbell/Guzzle-Factory/zipball/b0a273dabe1f90004e76ca4ab8671b10caaa1dd3",
+                "reference": "b0a273dabe1f90004e76ca4ab8671b10caaa1dd3",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "^7.8.1",
-                "guzzlehttp/psr7": "^2.6.2",
+                "guzzlehttp/guzzle": "^7.9.2",
+                "guzzlehttp/psr7": "^2.7.0",
                 "php": "^7.4.15 || ^8.0.2"
             },
             "require-dev": {
-                "graham-campbell/analyzer": "^4.1",
+                "graham-campbell/analyzer": "^4.2.1",
                 "phpunit/phpunit": "^9.6.14 || ^10.5.1"
             },
             "type": "library",
@@ -1078,7 +1078,7 @@
             ],
             "support": {
                 "issues": "https://github.com/GrahamCampbell/Guzzle-Factory/issues",
-                "source": "https://github.com/GrahamCampbell/Guzzle-Factory/tree/v7.0.1"
+                "source": "https://github.com/GrahamCampbell/Guzzle-Factory/tree/v7.0.2"
             },
             "funding": [
                 {
@@ -1090,7 +1090,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-12-03T20:50:24+00:00"
+            "time": "2025-01-12T01:44:21+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -2778,12 +2778,12 @@
             "version": "2.72.6",
             "source": {
                 "type": "git",
-                "url": "https://github.com/briannesbitt/Carbon.git",
+                "url": "https://github.com/CarbonPHP/carbon.git",
                 "reference": "1e9d50601e7035a4c61441a208cb5bed73e108c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/1e9d50601e7035a4c61441a208cb5bed73e108c5",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/1e9d50601e7035a4c61441a208cb5bed73e108c5",
                 "reference": "1e9d50601e7035a4c61441a208cb5bed73e108c5",
                 "shasum": ""
             },
