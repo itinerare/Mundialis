@@ -140,7 +140,7 @@ class UserService extends Service {
 
             if ($user->avatar !== 'default.jpg') {
                 $file = 'images/avatars/'.$user->avatar;
-                //$destinationPath = 'uploads/' . $id . '/';
+                // $destinationPath = 'uploads/' . $id . '/';
 
                 if (File::exists($file)) {
                     if (!unlink($file)) {
