@@ -43,7 +43,7 @@
             @if (Auth::check())
                 {!! Form::open(['url' => 'account/watched-pages/' . $page->id, 'id' => 'watchForm']) !!}
                 <div class="sidebar-item"><a href="#"
-                        onclick="document.getElementById('watchForm').submit();">{{ Auth::user()->watched->where('id', $page->id)->first()? 'Unw': 'W' }}atch
+                        onclick="document.getElementById('watchForm').submit();">{{ Auth::user()->watched->where('id', $page->id)->first() ? 'Unw' : 'W' }}atch
                         Page</a></div>
                 {!! Form::close() !!}
             @endif
