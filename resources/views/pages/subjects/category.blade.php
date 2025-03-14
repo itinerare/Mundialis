@@ -24,7 +24,7 @@
     @if ($category->children()->count())
         <h2>Sub-Categories</h2>
         @include('pages.subjects._category_index_content', [
-            'categories' => $category->children()->paginate(10),
+            'categories' => $subcategories,
         ])
 
         <hr />
