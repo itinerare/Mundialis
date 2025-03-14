@@ -214,7 +214,7 @@ class PageTag extends Model {
             return true;
         }
         // Else check if there are prefixed tags for this tag
-        elseif ($this->tagSearch($this->tag)->prefixedTags()->count()) {
+        elseif ($this->tagSearch($this->tag)->prefixedTags()->whereRelation('page', 'deleted_at', null)->count()) {
             return true;
         } else {
             return false;
