@@ -296,11 +296,11 @@ class PageTag extends Model {
         // Fetch context pages and group by subject
         if (isset($info['context'])) {
             foreach ($info['context'] as $contextTag) {
-                if ($contextTag->page && $contextTag->page->is_visible || ($user && $user->canWrite)) {
+                if ($contextTag->page && ($contextTag->page->is_visible || ($user && $user->canWrite))) {
                     $info['pages'][] = $contextTag->page;
                 }
             }
-            $info['pages'] = collect($info['pages']);
+            $info['pages'] = collect($info['pages'] ?? []);
             foreach ($info['pages'] as $page) {
                 $info['subjects'][$page->category->subject['key']][] = $page;
             }
