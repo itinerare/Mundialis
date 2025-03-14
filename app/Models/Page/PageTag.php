@@ -30,7 +30,7 @@ class PageTag extends Model {
      * @var array
      */
     protected $with = [
-        'page:id,category_id,title,summary,is_visible,deleted_at',
+        'page:id,category_id,title,summary,is_visible',
     ];
 
     /**
@@ -214,7 +214,7 @@ class PageTag extends Model {
             return true;
         }
         // Else check if there are prefixed tags for this tag
-        elseif ($this->tagSearch($this->tag)->prefixedTags()->whereRelation('page', 'deleted_at', null)->count()) {
+        elseif ($this->tagSearch($this->tag)->prefixedTags()->has('page')->count()) {
             return true;
         } else {
             return false;
