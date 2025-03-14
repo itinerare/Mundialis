@@ -30,7 +30,7 @@ class PageTag extends Model {
      * @var array
      */
     protected $with = [
-        'page:id,category_id,title,summary,is_visible',
+        'page:id,category_id,title,summary,is_visible,deleted_at',
     ];
 
     /**
