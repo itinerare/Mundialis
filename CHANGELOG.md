@@ -4,6 +4,27 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.6.1](https://code.itinerare.net/itinerare/Mundialis/compare/v2.6.0...v2.6.1) (2025-03-17)
+
+### Bug Fixes
+
+
+##### Pages
+
+* Always check for page when collecting context tag pages; closes #491 ([862624](https://code.itinerare.net/itinerare/Mundialis/commit/86262411007f3063e541773cec8cb6e339db5690))
+* Eager load basic page properties with tags ([ce54c8](https://code.itinerare.net/itinerare/Mundialis/commit/ce54c81fa091f630c6e168dd3df404f1d1b26671))
+* Eager load common page relations on tag index ([601023](https://code.itinerare.net/itinerare/Mundialis/commit/601023fa54d38d893f3232b574c463afe003a300))
+* Filter deleted pages when checking if tag has a navbox ([d208d7](https://code.itinerare.net/itinerare/Mundialis/commit/d208d7350d1f9ab0b7a556afc13b00b463128e6b))
+* Include deleted_at when eager loading tag pages ([192ecf](https://code.itinerare.net/itinerare/Mundialis/commit/192ecf403d7aa748082c5dae21abfefcb9759514))
+
+##### Subjects
+
+* Eager load parent in admin subject category index ([d521bc](https://code.itinerare.net/itinerare/Mundialis/commit/d521bc8d45bef584326eea7ab7eaac2778d9c703))
+* Paginate subcategories on category pages separately; closes #490 ([e77166](https://code.itinerare.net/itinerare/Mundialis/commit/e77166f0e8445a4fb03c1d157b308e4e1ff2d11b))
+
+
+---
+
 ## [2.6.0](https://code.itinerare.net/itinerare/Mundialis/compare/v2.5.1...v2.6.0) (2025-01-13)
 
 ### Features

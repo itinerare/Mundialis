@@ -23,6 +23,16 @@ class PageTag extends Model {
      * @var string
      */
     protected $table = 'page_tags';
+
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'page:id,category_id,title,summary,is_visible',
+    ];
+
     /**
      * Whether the model contains timestamps to be saved and updated.
      *
@@ -204,7 +214,7 @@ class PageTag extends Model {
             return true;
         }
         // Else check if there are prefixed tags for this tag
-        elseif ($this->tagSearch($this->tag)->prefixedTags()->count()) {
+        elseif ($this->tagSearch($this->tag)->prefixedTags()->has('page')->count()) {
             return true;
         } else {
             return false;
@@ -296,11 +306,11 @@ class PageTag extends Model {
         // Fetch context pages and group by subject
         if (isset($info['context'])) {
             foreach ($info['context'] as $contextTag) {
-                if ($contextTag->page && $contextTag->page->is_visible || ($user && $user->canWrite)) {
+                if ($contextTag->page && ($contextTag->page->is_visible || ($user && $user->canWrite))) {
                     $info['pages'][] = $contextTag->page;
                 }
             }
-            $info['pages'] = collect($info['pages']);
+            $info['pages'] = collect($info['pages'] ?? []);
             foreach ($info['pages'] as $page) {
                 $info['subjects'][$page->category->subject['key']][] = $page;
             }
