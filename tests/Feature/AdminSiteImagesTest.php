@@ -60,7 +60,7 @@ class AdminSiteImagesTest extends TestCase {
             assertTrue(File::exists(public_path('images/'.$key.'.png')));
 
         // Replace with default images for tidiness
-        $this->artisan('copy-default-images');
+        $this->artisan('app:copy-default-images');
     }
 
     public static function siteImageProvider() {

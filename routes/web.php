@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\IndexController;
 use App\Http\Controllers\Users\AccountController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(Controller::class)->group(function () {
+Route::controller(IndexController::class)->group(function () {
     Route::get('/', 'getIndex')->name('home');
     Route::prefix('info')->group(function () {
         Route::get('privacy', 'getPrivacyPolicy');

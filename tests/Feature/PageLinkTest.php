@@ -180,7 +180,7 @@ class PageLinkTest extends TestCase {
                 break;
         }
 
-        $this->artisan('add-lexicon-settings');
+        $this->artisan('app:add-lexicon-settings');
         $class = LexiconSetting::all()->first();
 
         $data = [

@@ -35,7 +35,7 @@ class AdminSiteSettingsTest extends TestCase {
      */
     public function testCanPostEditSiteSetting() {
         // Ensure site settings are present to modify
-        $this->artisan('add-site-settings');
+        $this->artisan('app:add-site-settings');
 
         // Make a temporary user
         $user = User::factory()->admin()->make();

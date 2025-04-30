@@ -24,7 +24,7 @@ class LexiconEntryTest extends TestCase {
 
         $this->editor = User::factory()->editor()->make();
         // Ensure lexical classes are present to utilize
-        $this->artisan('add-lexicon-settings');
+        $this->artisan('app:add-lexicon-settings');
         $this->class = LexiconSetting::all()->first();
 
         // Delete any entries/etymologies to ensure that counts are accurate

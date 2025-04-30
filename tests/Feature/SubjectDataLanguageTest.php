@@ -261,7 +261,7 @@ class SubjectDataLanguageTest extends TestCase {
     #[DataProvider('postLexiconCategoryProvider')]
     public function testPostCreateLexiconCategory($withName, $withParent, $withDescription, $withData, $expected) {
         // Ensure lexical classes are present to utilize
-        $this->artisan('add-lexicon-settings');
+        $this->artisan('app:add-lexicon-settings');
 
         if ($withParent) {
             $parent = LexiconCategory::factory()->create();
@@ -322,7 +322,7 @@ class SubjectDataLanguageTest extends TestCase {
     #[DataProvider('postLexiconCategoryProvider')]
     public function testPostEditLexiconCategory($withName, $withParent, $withDescription, $withData, $expected) {
         // Ensure lexical classes are present to utilize
-        $this->artisan('add-lexicon-settings');
+        $this->artisan('app:add-lexicon-settings');
 
         $category = LexiconCategory::factory()->create();
 
@@ -398,7 +398,7 @@ class SubjectDataLanguageTest extends TestCase {
      */
     public function testPostEditLexiconCategoryWithExtendedData() {
         // Ensure lexical classes are present to utilize
-        $this->artisan('add-lexicon-settings');
+        $this->artisan('app:add-lexicon-settings');
 
         $category = LexiconCategory::factory()->testData()->create();
         $class = LexiconSetting::all()->first();

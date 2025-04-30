@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -49,6 +50,13 @@ class AppServiceProvider extends ServiceProvider {
                 $config
             );
         });
+
+        // Load class aliases
+        AliasLoader::getInstance([
+            'Settings'      => \App\Facades\Settings::class,
+            'Notifications' => \App\Facades\Notifications::class,
+            'Image'         => \Intervention\Image\Facades\Image::class,
+        ]);
 
         /*
          * Paginate a standard Laravel Collection.

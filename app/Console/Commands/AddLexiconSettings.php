@@ -11,7 +11,7 @@ class AddLexiconSettings extends Command {
      *
      * @var string
      */
-    protected $signature = 'add-lexicon-settings';
+    protected $signature = 'app:add-lexicon-settings';
 
     /**
      * The console command description.
