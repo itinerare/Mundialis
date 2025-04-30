@@ -24,7 +24,7 @@
                         <h3 class="card-heading">{{ $image['name'] }} <a href="{{ asset('images/' . $image['filename']) }}"
                                 class="btn btn-info btn-sm float-right">View Current</a></h3>
                         <p>{{ $image['description'] }}</p>
-                        {!! Form::open(['url' => 'admin/site-images/upload', 'files' => true]) !!}
+                        {!! Form::open(['action' => '/admin/site-images/upload', 'files' => true]) !!}
                         <div class="d-flex">
                             {!! Form::file('file', ['class' => 'form-control mr-2']) !!}
                             {!! Form::submit('Upload', ['class' => 'btn btn-primary']) !!}
@@ -49,7 +49,7 @@
                         <a href="{{ asset('css/custom.css') }}" class="btn btn-info btn-sm float-right">View Current</a>
                     @endif
                 </h3>
-                {!! Form::open(['url' => 'admin/site-images/upload/css', 'files' => true]) !!}
+                {!! Form::open(['action' => '/admin/site-images/upload/css', 'files' => true]) !!}
                 <div class="d-flex">
                     {!! Form::file('file', ['class' => 'form-control mr-2']) !!}
                     {!! Form::submit('Upload', ['class' => 'btn btn-primary']) !!}

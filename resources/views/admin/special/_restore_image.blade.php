@@ -1,11 +1,11 @@
 @if ($image)
-    {!! Form::open(['url' => 'admin/special/deleted-images/' . $image->id . '/restore']) !!}
+    {!! Form::open(['action' => '/admin/special/deleted-images/' . $image->id . '/restore']) !!}
 
     <p>You are about to restore image <strong>#{{ $image->id }}</strong>. Please provide a reason why you are
         restoring the image.</p>
 
     <div class="form-group">
-        {!! Form::label('Reason (Optional)') !!} {!! add_help(
+        {!! Form::label('reason', 'Reason (Optional)') !!} {!! add_help(
             'A short summary of why you are restoring the image. Optional, but recommended for recordkeeping and communication purposes.',
         ) !!}
         {!! Form::text('reason', null, ['class' => 'form-control']) !!}

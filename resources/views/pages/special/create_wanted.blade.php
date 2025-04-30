@@ -16,9 +16,9 @@
     <p>Select a category to place the new page into. This will impact the template used for the page, among other things.
     </p>
 
-    {!! Form::open(['url' => 'special/create-wanted']) !!}
+    {!! Form::open(['action' => '/special/create-wanted']) !!}
     <div class="form-group">
-        {!! Form::label('Category') !!}
+        {!! Form::label('category_id', 'Category') !!}
         {!! Form::select('category_id', $categories, old('category_id'), [
             'class' => 'form-control select-category',
             'placeholder' => 'Select a Category',

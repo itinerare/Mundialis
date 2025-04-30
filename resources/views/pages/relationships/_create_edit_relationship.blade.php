@@ -19,7 +19,10 @@
     ]) !!}
 
     <div class="form-group">
-        {!! Form::label('Other ' . $page->category->subject['term']) !!}
+        {!! Form::label(
+            !$relationship->id || $relationship->page_one_id == $page->id ? 'page_two_id' : 'page_one_id',
+            'Other ' . $page->category->subject['term'],
+        ) !!}
         {!! Form::select(
             !$relationship->id || $relationship->page_one_id == $page->id ? 'page_two_id' : 'page_one_id',
             $pageOptions,
@@ -42,7 +45,10 @@
         other {{ strtolower($page->category->subject['term']) }}.</p>
 
     <div class="form-group">
-        {!! Form::label('Relationship Type') !!}
+        {!! Form::label(
+            $relationship->page_one_id != $page->id && $relationship->id ? 'type_two' : 'type_one',
+            'Relationship Type',
+        ) !!}
         {!! Form::select(
             $relationship->page_one_id != $page->id && $relationship->id ? 'type_two' : 'type_one',
             $relationshipOptions,
@@ -56,7 +62,10 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('Info (Semi-Optional)') !!} {!! add_help(
+        {!! Form::label(
+            $relationship->page_one_id != $page->id && $relationship->id ? 'type_two_info' : 'type_one_info',
+            'Info (Semi-Optional)',
+        ) !!} {!! add_help(
             'Any additional specifications for the relationship. If \'custom\' is selected avove, this field is <strong>required</strong>.',
         ) !!}
         {!! Form::text(
@@ -67,7 +76,10 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('Details (Optional)') !!}
+        {!! Form::label(
+            $relationship->page_one_id != $page->id && $relationship->id ? 'details_two' : 'details_one',
+            'Details (Optional)',
+        ) !!}
         {!! Form::textarea(
             $relationship->page_one_id != $page->id && $relationship->id ? 'details_two' : 'details_one',
             $relationship->page_one_id != $page->id ? $relationship->details_two : $relationship->details_one,
@@ -81,7 +93,10 @@
         this {{ strtolower($page->category->subject['term']) }}.</p>
 
     <div class="form-group">
-        {!! Form::label('Relationship Type') !!}
+        {!! Form::label(
+            $relationship->page_one_id == $page->id || !$relationship->id ? 'type_two' : 'type_one',
+            'Relationship Type',
+        ) !!}
         {!! Form::select(
             $relationship->page_one_id == $page->id || !$relationship->id ? 'type_two' : 'type_one',
             $relationshipOptions,
@@ -95,7 +110,10 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('Info (Semi-Optional)') !!} {!! add_help(
+        {!! Form::label(
+            $relationship->page_one_id == $page->id || !$relationship->id ? 'type_two_info' : 'type_one_info',
+            'Info (Semi-Optional)',
+        ) !!} {!! add_help(
             'Any additional specifications for the relationship. If \'custom\' is selected avove, this field is <strong>required</strong>.',
         ) !!}
         {!! Form::text(
@@ -106,7 +124,10 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('Details (Optional)') !!}
+        {!! Form::label(
+            $relationship->page_one_id == $page->id || !$relationship->id ? 'details_two' : 'details_one',
+            'Details (Optional)',
+        ) !!}
         {!! Form::textarea(
             $relationship->page_one_id == $page->id || !$relationship->id ? 'details_two' : 'details_one',
             $relationship->page_one_id == $page->id ? $relationship->details_two : $relationship->details_one,

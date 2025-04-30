@@ -17,9 +17,9 @@
     <p>Please enter the email address associated with your account. An email will be sent to this address to reset your
         password.</p>
 
-    {!! Form::open(['url' => 'forgot-password']) !!}
+    {!! Form::open(['action' => '/forgot-password']) !!}
     <div class="form-group row">
-        {!! Form::label('Email', null, ['class' => 'col-md-3 col-form-label text-md-right']) !!}
+        {!! Form::label('email', 'Email', ['class' => 'col-md-3 col-form-label text-md-right']) !!}
         <div class="col-md-7">
             {!! Form::text('email', null, ['class' => 'form-control']) !!}
         </div>

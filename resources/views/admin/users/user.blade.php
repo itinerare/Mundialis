@@ -23,7 +23,7 @@
     </ul>
 
     <h3>Basic Info</h3>
-    {!! Form::open(['url' => 'admin/users/' . $user->name . '/basic']) !!}
+    {!! Form::open(['action' => '/admin/users/' . $user->name . '/basic']) !!}
     <div class="form-group row">
         <label class="col-md-2 col-form-label">Username</label>
         <div class="col-md-10">
@@ -51,7 +51,7 @@
 
     <h3>Account</h3>
 
-    {!! Form::open(['url' => 'admin/users/' . $user->name . '/account']) !!}
+    {!! Form::open(['action' => '/admin/users/' . $user->name . '/account']) !!}
     <div class="form-group row">
         <label class="col-md-2 col-form-label">Email Address</label>
         <div class="col-md-10">

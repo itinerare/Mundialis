@@ -12,7 +12,7 @@
     <p>Invitation keys can be used to register an account. Users will be able to register by entering the code that is
         generated with the key. Generated invitations can be deleted only if they have not been used.</p>
 
-    {!! Form::open(['url' => 'admin/invitations/create', 'class' => 'text-right mb-3']) !!}
+    {!! Form::open(['action' => '/admin/invitations/create', 'class' => 'text-right mb-3']) !!}
     {!! Form::submit('Generate New Invitation', ['class' => 'btn btn-primary']) !!}
     {!! Form::close() !!}
     @if (!count($invitations))
@@ -48,7 +48,7 @@
                     <div class="col-6 col-md-3">{!! pretty_date($invitation->created_at, false) !!}</div>
                     <div class="col-6 col-md-1">
                         @if (!$invitation->recipient_id)
-                            {!! Form::open(['url' => 'admin/invitations/delete/' . $invitation->id]) !!}
+                            {!! Form::open(['action' => '/admin/invitations/delete/' . $invitation->id]) !!}
                             {!! Form::submit('Delete', ['class' => 'btn btn-danger  py-0 px-1']) !!}
                             {!! Form::close() !!}
                         @endif

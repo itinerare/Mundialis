@@ -1,5 +1,5 @@
 @if ($relationship)
-    {!! Form::open(['url' => 'pages/' . $page->id . '/relationships/delete/' . $relationship->id]) !!}
+    {!! Form::open(['action' => '/pages/' . $page->id . '/relationships/delete/' . $relationship->id]) !!}
 
     <p>You are about to delete the relationship between {!! $relationship->pageOne->displayName !!} and {!! $relationship->pageTwo->displayName !!}. This is not
         reversible.</p>

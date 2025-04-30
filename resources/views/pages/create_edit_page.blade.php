@@ -31,19 +31,19 @@
         </div>
     @endif
 
-    {!! Form::open(['url' => $page->id ? 'pages/' . $page->id . '/edit' : 'pages/create', 'id' => 'pageForm']) !!}
+    {!! Form::open(['action' => $page->id ? 'pages/' . $page->id . '/edit' : 'pages/create', 'id' => 'pageForm']) !!}
 
     <h2>Basic Information</h2>
 
     <div class="form-group">
-        {!! Form::label('Title') !!}
+        {!! Form::label('title', 'Title') !!}
         {!! Form::text('title', $page->id ? $page->title : str_replace('_', ' ', Request::get('title')), [
             'class' => 'form-control',
         ]) !!}
     </div>
 
     <div class="form-group">
-        {!! Form::label('Summary (Optional)') !!} {!! add_help('A short summary of the page\'s contents. This will be displayed on the page index.') !!}
+        {!! Form::label('summary', 'Summary (Optional)') !!} {!! add_help('A short summary of the page\'s contents. This will be displayed on the page index.') !!}
         {!! Form::text('summary', $page->summary, ['class' => 'form-control']) !!}
     </div>
 
@@ -60,7 +60,7 @@
     </ul>
 
     <div class="form-group">
-        {!! Form::label('Introduction (Optional)') !!} {!! add_help(
+        {!! Form::label('description', 'Introduction (Optional)') !!} {!! add_help(
             'The introduction is the first thing displayed on the page, before all other content (but beside the infobox). It\'s recommended to put a general overview of the page\'s contents here.',
         ) !!}
         {!! Form::textarea('description', isset($page->data['description']) ? $page->data['description'] : null, [
@@ -139,7 +139,7 @@
     </p>
 
     <div class="form-group">
-        {!! Form::label('Tags (Optional)') !!} {!! add_help('Enter one or more tags.') !!}
+        {!! Form::label('page_tag', 'Tags (Optional)') !!} {!! add_help('Enter one or more tags.') !!}
         {!! Form::text('page_tag', null, [
             'class' => 'form-control tag-list',
             'multiple',
@@ -183,7 +183,7 @@
                         <p>Please provide some information about your edit before confirming it! This will be added to the
                             page's version history.</p>
                         <div class="form-group">
-                            {!! Form::label('Reason (Optional)') !!} {!! add_help(
+                            {!! Form::label('reason', 'Reason (Optional)') !!} {!! add_help(
                                 'A short summary of what was edited and why. Optional, but recommended for recordkeeping and communication purposes.',
                             ) !!}
                             {!! Form::text('reason', null, ['class' => 'form-control']) !!}

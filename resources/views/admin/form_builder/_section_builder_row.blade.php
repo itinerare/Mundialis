@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md">
             <div class="form-group">
-                {!! Form::label('Section Key') !!}
+                {!! Form::label('section_key[]', 'Section Key') !!}
                 {!! Form::text('section_key[]', null, [
                     'class' => 'form-control',
                     'placeholder' => 'Internal key. Can\'t be duplicated in a template',
@@ -13,7 +13,7 @@
         </div>
         <div class="col-md">
             <div class="form-group">
-                {!! Form::label('Section Name') !!}
+                {!! Form::label('section_name[]', 'Section Name') !!}
                 {!! Form::text('section_name[]', null, ['class' => 'form-control', 'placeholder' => 'Section name/header']) !!}
             </div>
         </div>

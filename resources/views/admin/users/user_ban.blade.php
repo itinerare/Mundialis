@@ -27,9 +27,9 @@
     <p>Banning the user will prevent them from using site features. Note that if the site is private, this includes reading
         the site.</p>
 
-    {!! Form::open(['url' => 'admin/users/' . $user->name . '/ban', 'id' => 'banForm']) !!}
+    {!! Form::open(['action' => '/admin/users/' . $user->name . '/ban', 'id' => 'banForm']) !!}
     <div class="form-group">
-        {!! Form::label('Reason (Optional; no HTML)') !!}
+        {!! Form::label('ban_reason', 'Reason (Optional; no HTML)') !!}
         {!! Form::textarea('ban_reason', $user->ban_reason, ['class' => 'form-control']) !!}
     </div>
     <div class="text-right">
