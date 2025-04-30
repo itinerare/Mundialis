@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    @if (isset($status) || isset($errors))
+    @if (isset($status) || (isset($errors) && count($errors)))
         <div class="alert alert-success">
             Form submitted successfully. If this email address is registered to an account, you will receive a password
             reset email.
