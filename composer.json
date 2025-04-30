@@ -5,16 +5,16 @@
     "license": "Parity-7.0",
     "require": {
         "php": "^8.2",
-        "alban/laravel-collective-spatie-html-parser": "^1.1",
+        "alban/laravel-collective-spatie-html-parser": "dev-master",
         "guzzlehttp/guzzle": "^7.2",
         "intervention/image": "^2.5",
         "laracasts/flash": "^3.2",
         "laravel/fortify": "^1.7",
-        "laravel/framework": "^11.0",
+        "laravel/framework": "^12.0",
         "laravel/helpers": "^1.4",
         "laravel/tinker": "^2.8",
         "spatie/flysystem-dropbox": "^3.0.0",
-        "spatie/laravel-backup": "^8.0",
+        "spatie/laravel-backup": "^9.2",
         "spatie/laravel-html": "^3.5"
     },
     "require-dev": {
@@ -23,10 +23,16 @@
         "laravel/sail": "^1.18",
         "marcocesarato/php-conventional-changelog": "^1.10",
         "mockery/mockery": "^1.4.2",
-        "nunomaduro/collision": "^8.1",
+        "nunomaduro/collision": "^8.6",
         "phpunit/phpunit": "^11.0",
         "spatie/laravel-ignition": "^2.0"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://code.itinerare.net/internal/laravel-collective-spatie-html-parser"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "App\\": "app/",
