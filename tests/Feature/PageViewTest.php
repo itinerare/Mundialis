@@ -8,6 +8,7 @@ use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageViewTest extends TestCase {
@@ -22,14 +23,13 @@ class PageViewTest extends TestCase {
     /**
      * Test page access.
      *
-     * @dataProvider getPageProvider
-     *
      * @param string $subject
      * @param bool   $withPage
      * @param bool   $asEditor
      * @param bool   $isVisible
      * @param int    $status
      */
+    #[DataProvider('getPageProvider')]
     public function testGetPage($subject, $withPage, $asEditor, $isVisible, $status) {
         if ($withPage) {
             $category = SubjectCategory::factory()->subject($subject)->create();
@@ -80,14 +80,13 @@ class PageViewTest extends TestCase {
     /**
      * Test page history access.
      *
-     * @dataProvider getPageProvider
-     *
      * @param string $subject
      * @param bool   $withPage
      * @param bool   $asEditor
      * @param bool   $isVisible
      * @param int    $status
      */
+    #[DataProvider('getPageProvider')]
     public function testGetPageHistory($subject, $withPage, $asEditor, $isVisible, $status) {
         if ($withPage) {
             $category = SubjectCategory::factory()->subject($subject)->create();
@@ -108,14 +107,13 @@ class PageViewTest extends TestCase {
     /**
      * Test page gallery access.
      *
-     * @dataProvider getPageProvider
-     *
      * @param string $subject
      * @param bool   $withPage
      * @param bool   $asEditor
      * @param bool   $isVisible
      * @param int    $status
      */
+    #[DataProvider('getPageProvider')]
     public function testGetPageGallery($subject, $withPage, $asEditor, $isVisible, $status) {
         if ($withPage) {
             $category = SubjectCategory::factory()->subject($subject)->create();
@@ -136,14 +134,13 @@ class PageViewTest extends TestCase {
     /**
      * Test page "what links here" access.
      *
-     * @dataProvider getPageProvider
-     *
      * @param string $subject
      * @param bool   $withPage
      * @param bool   $asEditor
      * @param bool   $isVisible
      * @param int    $status
      */
+    #[DataProvider('getPageProvider')]
     public function testCanGetPageLinks($subject, $withPage, $asEditor, $isVisible, $status) {
         if ($withPage) {
             $category = SubjectCategory::factory()->subject($subject)->create();

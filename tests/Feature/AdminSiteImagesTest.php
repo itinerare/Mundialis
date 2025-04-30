@@ -6,6 +6,7 @@ use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AdminSiteImagesTest extends TestCase {
@@ -33,10 +34,9 @@ class AdminSiteImagesTest extends TestCase {
     /**
      * Test image uploading.
      *
-     * @dataProvider siteImageProvider
-     *
      * @param string $key
      */
+    #[DataProvider('siteImageProvider')]
     public function testPostUploadImage($key) {
         // Remove the current file if it exists
         if (File::exists(public_path('images/'.$key.'.png'))) {

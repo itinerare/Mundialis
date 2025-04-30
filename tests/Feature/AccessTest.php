@@ -6,6 +6,7 @@ use App\Models\User\Rank;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AccessTest extends TestCase {
@@ -22,11 +23,10 @@ class AccessTest extends TestCase {
     /**
      * Test getting the main page.
      *
-     * @dataProvider accessProvider
-     *
      * @param bool $user
      * @param int  $status
      */
+    #[DataProvider('accessProvider')]
     public function testGetIndex($user, $status) {
         if ($user) {
             $response = $this->actingAs($this->user)->get('/');
@@ -47,12 +47,11 @@ class AccessTest extends TestCase {
     /**
      * Test site read access as per site settings.
      *
-     * @dataProvider readAccessProvider
-     *
      * @param bool $user
      * @param bool $isOpen
      * @param int  $status
      */
+    #[DataProvider('readAccessProvider')]
     public function testReadAccess($user, $isOpen, $status) {
         // Adjust site settings accordingly
         DB::table('site_settings')->where('key', 'visitors_can_read')->update(['value' => $isOpen]);
@@ -79,12 +78,11 @@ class AccessTest extends TestCase {
      * Test access to account settings.
      * This should be representative of all member routes.
      *
-     * @dataProvider memberAccessProvider
-     *
      * @param bool $user
      * @param int  $rank
      * @param int  $status
      */
+    #[DataProvider('memberAccessProvider')]
     public function testMemberRouteAccess($user, $rank, $status) {
         if ($user) {
             $user = User::factory()->make([
@@ -111,12 +109,11 @@ class AccessTest extends TestCase {
      * Test access to lexicon entry creation.
      * This should be representative of all editor routes.
      *
-     * @dataProvider editorAccessProvider
-     *
      * @param bool $user
      * @param int  $rank
      * @param int  $status
      */
+    #[DataProvider('editorAccessProvider')]
     public function testEditorRouteAccess($user, $rank, $status) {
         if ($user) {
             $user = User::factory()->make([
@@ -143,12 +140,11 @@ class AccessTest extends TestCase {
      * Test access to the admin dashboard.
      * This should be representative of all admin-only routes.
      *
-     * @dataProvider adminAccessProvider
-     *
      * @param bool $user
      * @param int  $rank
      * @param int  $status
      */
+    #[DataProvider('adminAccessProvider')]
     public function testAdminRouteAccess($user, $rank, $status) {
         if ($user) {
             $user = User::factory()->make([

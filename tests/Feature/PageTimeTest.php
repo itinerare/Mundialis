@@ -9,6 +9,7 @@ use App\Models\Subject\TimeDivision;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageTimeTest extends TestCase {
@@ -81,12 +82,11 @@ class PageTimeTest extends TestCase {
     /**
      * Tests timeline access.
      *
-     * @dataProvider getTimelineProvider
-     *
      * @param bool $withDivision
      * @param bool $withEvent
      * @param bool $status
      */
+    #[DataProvider('getTimelineProvider')]
     public function testGetTimeline($withDivision, $withEvent, $status) {
         // Ensure no time divisions or versions remain from prior tests
         TimeDivision::query()->delete();

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Queue;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AuthPasswordResetTest extends TestCase {
@@ -36,11 +37,10 @@ class AuthPasswordResetTest extends TestCase {
     /**
      * Test password reset email.
      *
-     * @dataProvider passwordResetProvider
-     *
      * @param bool $isValid
      * @param bool $expected
      */
+    #[DataProvider('passwordResetProvider')]
     public function testPostPasswordResetEmail($isValid, $expected) {
         if ($isValid) {
             Notification::fake();

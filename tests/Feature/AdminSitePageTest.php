@@ -6,6 +6,7 @@ use App\Models\SitePage;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AdminSitePageTest extends TestCase {
@@ -34,10 +35,9 @@ class AdminSitePageTest extends TestCase {
     /**
      * Test site page editing.
      *
-     * @dataProvider sitePageProvider
-     *
      * @param string $key
      */
+    #[DataProvider('sitePageProvider')]
     public function testPostEditSitePage($key) {
         // Get the information for the page
         $page = SitePage::where('key', $key)->first();

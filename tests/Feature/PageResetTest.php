@@ -7,6 +7,7 @@ use App\Models\Page\PageVersion;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageResetTest extends TestCase {
@@ -24,10 +25,9 @@ class PageResetTest extends TestCase {
     /**
      * Test page reset access.
      *
-     * @dataProvider getResetPageProvider
-     *
      * @param bool $withPage
      */
+    #[DataProvider('getResetPageProvider')]
     public function testGetResetPage($withPage) {
         $response = $this->actingAs($this->editor)
             ->get('/pages/'.($withPage ? $this->page->id : 9999).'/history/'.$this->oldVersion->id.'/reset');
@@ -51,12 +51,11 @@ class PageResetTest extends TestCase {
     /**
      * Test page resetting.
      *
-     * @dataProvider postResetPageProvider
-     *
      * @param bool $withPage
      * @param bool $withReason
      * @param bool $expected
      */
+    #[DataProvider('postResetPageProvider')]
     public function testPostResetPage($withPage, $withReason, $expected) {
         $data = [
             'reason' => $withReason ? $this->faker->unique()->domainWord() : null,

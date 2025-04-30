@@ -8,6 +8,7 @@ use App\Models\Page\PageVersion;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageProtectTest extends TestCase {
@@ -26,10 +27,9 @@ class PageProtectTest extends TestCase {
     /**
      * Test page protection access.
      *
-     * @dataProvider getProtectPageProvider
-     *
      * @param bool $isValid
      */
+    #[DataProvider('getProtectPageProvider')]
     public function testGetProtectPage($isValid) {
         $response = $this->actingAs($this->admin)
             ->get('/pages/'.($isValid ? $this->page->id : 9999).'/protect');
@@ -47,12 +47,11 @@ class PageProtectTest extends TestCase {
     /**
      * Test page protection.
      *
-     * @dataProvider postProtectPageProvider
-     *
      * @param bool $isProtected
      * @param bool $newState
      * @param bool $withReason
      */
+    #[DataProvider('postProtectPageProvider')]
     public function testPostProtectPage($isProtected, $newState, $withReason) {
         if ($isProtected) {
             PageProtection::factory()->page($this->page->id)->user($this->admin->id)->create();

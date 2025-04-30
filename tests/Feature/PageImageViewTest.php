@@ -10,6 +10,7 @@ use App\Models\Page\PagePageImage;
 use App\Models\User\User;
 use App\Services\ImageManager;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageImageViewTest extends TestCase {
@@ -26,13 +27,12 @@ class PageImageViewTest extends TestCase {
     /**
      * Test image modal access.
      *
-     * @dataProvider getImageProvider
-     *
      * @param bool $withImage
      * @param bool $asEditor
      * @param bool $isVisible
      * @param int  $status
      */
+    #[DataProvider('getImageProvider')]
     public function testGetImageModal($withImage, $asEditor, $isVisible, $status) {
         $page = Page::factory()->create();
         if ($withImage) {
@@ -56,13 +56,12 @@ class PageImageViewTest extends TestCase {
     /**
      * Test image page access.
      *
-     * @dataProvider getImageProvider
-     *
      * @param bool $withImage
      * @param bool $asEditor
      * @param bool $isVisible
      * @param int  $status
      */
+    #[DataProvider('getImageProvider')]
     public function testGetImagePage($withImage, $asEditor, $isVisible, $status) {
         $page = Page::factory()->create();
         if ($withImage) {

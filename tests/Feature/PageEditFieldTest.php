@@ -7,6 +7,7 @@ use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageEditFieldTest extends TestCase {
@@ -21,13 +22,12 @@ class PageEditFieldTest extends TestCase {
     /**
      * Test page creation access with an infobox field.
      *
-     * @dataProvider getPageWithFieldProvider
-     *
      * @param string $fieldType
      * @param bool   $withRule
      * @param bool   $withValue
      * @param bool   $withHelp
      */
+    #[DataProvider('getPageWithFieldProvider')]
     public function testGetCreatePageWithInfoboxField($fieldType, $withRule, $withValue, $withHelp) {
         $this->getPageWithField(0, 'infobox', $fieldType, $withRule, $withValue, $withHelp);
     }
@@ -35,13 +35,12 @@ class PageEditFieldTest extends TestCase {
     /**
      * Test page editing access with an infobox field.
      *
-     * @dataProvider getPageWithFieldProvider
-     *
      * @param string $fieldType
      * @param bool   $withRule
      * @param bool   $withValue
      * @param bool   $withHelp
      */
+    #[DataProvider('getPageWithFieldProvider')]
     public function testGetEditPageWithInfoboxField($fieldType, $withRule, $withValue, $withHelp) {
         $this->getPageWithField(1, 'infobox', $fieldType, $withRule, $withValue, $withHelp);
     }
@@ -49,14 +48,13 @@ class PageEditFieldTest extends TestCase {
     /**
      * Test page creation access with a main body field.
      *
-     * @dataProvider getPageWithFieldProvider
-     * @dataProvider getPageWithTemplateFieldProvider
-     *
      * @param string $fieldType
      * @param bool   $withRule
      * @param bool   $withValue
      * @param bool   $withHelp
      */
+    #[DataProvider('getPageWithFieldProvider')]
+    #[DataProvider('getPageWithTemplateFieldProvider')]
     public function testGetCreatePageWithTemplateField($fieldType, $withRule, $withValue, $withHelp) {
         $this->getPageWithField(0, 'body', $fieldType, $withRule, $withValue, $withHelp);
     }
@@ -64,14 +62,13 @@ class PageEditFieldTest extends TestCase {
     /**
      * Test page editing access with a main body field.
      *
-     * @dataProvider getPageWithFieldProvider
-     * @dataProvider getPageWithTemplateFieldProvider
-     *
      * @param string $fieldType
      * @param bool   $withRule
      * @param bool   $withValue
      * @param bool   $withHelp
      */
+    #[DataProvider('getPageWithFieldProvider')]
+    #[DataProvider('getPageWithTemplateFieldProvider')]
     public function testGetEditPageWithTemplateField($fieldType, $withRule, $withValue, $withHelp) {
         $this->getPageWithField(1, 'body', $fieldType, $withRule, $withValue, $withHelp);
     }
@@ -129,14 +126,13 @@ class PageEditFieldTest extends TestCase {
     /**
      * Test page creation with an infobox field.
      *
-     * @dataProvider postPageWithFieldProvider
-     *
      * @param string $fieldType
      * @param bool   $withRule
      * @param bool   $withValue
      * @param bool   $withInput
      * @param bool   $expected
      */
+    #[DataProvider('postPageWithFieldProvider')]
     public function testPostCreatePageWithInfoboxField($fieldType, $withRule, $withValue, $withInput, $expected) {
         $this->postPageWithField(0, 'infobox', $fieldType, $withRule, $withValue, $withInput, $expected);
     }
@@ -144,14 +140,13 @@ class PageEditFieldTest extends TestCase {
     /**
      * Test page editing with an infobox field.
      *
-     * @dataProvider postPageWithFieldProvider
-     *
      * @param string $fieldType
      * @param bool   $withRule
      * @param bool   $withValue
      * @param bool   $withInput
      * @param bool   $expected
      */
+    #[DataProvider('postPageWithFieldProvider')]
     public function testPostEditPageWithInfoboxField($fieldType, $withRule, $withValue, $withInput, $expected) {
         $this->postPageWithField(1, 'infobox', $fieldType, $withRule, $withValue, $withInput, $expected);
     }
@@ -159,15 +154,14 @@ class PageEditFieldTest extends TestCase {
     /**
      * Test page creation with a main body field.
      *
-     * @dataProvider postPageWithFieldProvider
-     * @dataProvider postPageWithTemplateFieldProvider
-     *
      * @param string $fieldType
      * @param bool   $withRule
      * @param bool   $withValue
      * @param bool   $withInput
      * @param bool   $expected
      */
+    #[DataProvider('postPageWithFieldProvider')]
+    #[DataProvider('postPageWithTemplateFieldProvider')]
     public function testPostCreatePageWithTemplateField($fieldType, $withRule, $withValue, $withInput, $expected) {
         $this->postPageWithField(0, 'body', $fieldType, $withRule, $withValue, $withInput, $expected);
     }
@@ -175,15 +169,14 @@ class PageEditFieldTest extends TestCase {
     /**
      * Test page editing with a main body field.
      *
-     * @dataProvider postPageWithFieldProvider
-     * @dataProvider postPageWithTemplateFieldProvider
-     *
      * @param string $fieldType
      * @param bool   $withRule
      * @param bool   $withValue
      * @param bool   $withInput
      * @param bool   $expected
      */
+    #[DataProvider('postPageWithFieldProvider')]
+    #[DataProvider('postPageWithTemplateFieldProvider')]
     public function testPostEditPageWithTemplateField($fieldType, $withRule, $withValue, $withInput, $expected) {
         $this->postPageWithField(1, 'body', $fieldType, $withRule, $withValue, $withInput, $expected);
     }

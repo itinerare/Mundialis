@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class SubjectDataFieldTest extends TestCase {
@@ -23,13 +24,12 @@ class SubjectDataFieldTest extends TestCase {
     /**
      * Test subject template editing with an infobox field.
      *
-     * @dataProvider postEditFieldProvider
-     *
      * @param string $fieldType
      * @param bool   $withRule
      * @param bool   $withValue
      * @param bool   $withHelp
      */
+    #[DataProvider('postEditFieldProvider')]
     public function testPostEditInfoboxField($fieldType, $withRule, $withValue, $withHelp) {
         if ($fieldType == 'choice' || $fieldType == 'multiple') {
             for ($i = 1; $i <= 2; $i++) {
@@ -80,14 +80,13 @@ class SubjectDataFieldTest extends TestCase {
     /**
      * Test subject template editing with a main body field.
      *
-     * @dataProvider postEditFieldProvider
-     * @dataProvider postEditTemplateFieldProvider
-     *
      * @param string $fieldType
      * @param bool   $withRule
      * @param bool   $withValue
      * @param bool   $withHelp
      */
+    #[DataProvider('postEditFieldProvider')]
+    #[DataProvider('postEditTemplateFieldProvider')]
     public function testPostEditTemplateField($fieldType, $withRule, $withValue, $withHelp) {
         if ($fieldType == 'choice' || $fieldType == 'multiple') {
             for ($i = 1; $i <= 2; $i++) {

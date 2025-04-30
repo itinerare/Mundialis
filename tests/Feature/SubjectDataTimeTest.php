@@ -9,6 +9,7 @@ use App\Models\Subject\TimeDivision;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class SubjectDataTimeTest extends TestCase {
@@ -36,10 +37,9 @@ class SubjectDataTimeTest extends TestCase {
     /**
      * Test time divisions access.
      *
-     * @dataProvider getTimeDivisionsProvider
-     *
      * @param bool $withDivision
      */
+    #[DataProvider('getTimeDivisionsProvider')]
     public function testGetEditTimeDivisions($withDivision) {
         if ($withDivision) {
             $division = TimeDivision::factory()->create();
@@ -68,14 +68,13 @@ class SubjectDataTimeTest extends TestCase {
     /**
      * Test time division creation.
      *
-     * @dataProvider postTimeDivisionsProvider
-     *
      * @param bool $withName
      * @param bool $withAbbreviation
      * @param bool $withUnit
      * @param bool $dateEnabled
      * @param bool $expected
      */
+    #[DataProvider('postTimeDivisionsProvider')]
     public function testPostCreateTimeDivision($withName, $withAbbreviation, $withUnit, $dateEnabled, $expected) {
         $data = [
             'name'         => [0 => $withName ? $this->faker->unique()->domainWord() : null],
@@ -107,15 +106,14 @@ class SubjectDataTimeTest extends TestCase {
     /**
      * Test time division editing.
      *
-     * @dataProvider postTimeDivisionsProvider
-     * @dataProvider postEditTimeDivisionsProvider
-     *
      * @param bool $withName
      * @param bool $withAbbreviation
      * @param bool $withUnit
      * @param bool $dateEnabled
      * @param bool $expected
      */
+    #[DataProvider('postTimeDivisionsProvider')]
+    #[DataProvider('postEditTimeDivisionsProvider')]
     public function testPostEditTimeDivisions($withName, $withAbbreviation, $withUnit, $dateEnabled, $expected) {
         for ($i = 0; $i <= 1; $i++) {
             $division[$i] = TimeDivision::factory()->create();
@@ -203,10 +201,9 @@ class SubjectDataTimeTest extends TestCase {
     /**
      * Test time chronologies access.
      *
-     * @dataProvider getTimeChronologiesProvider
-     *
      * @param bool $withChronology
      */
+    #[DataProvider('getTimeChronologiesProvider')]
     public function testGetTimeChronologies($withChronology) {
         if ($withChronology) {
             $chronology = TimeChronology::factory()->create();
@@ -235,10 +232,9 @@ class SubjectDataTimeTest extends TestCase {
     /**
      * Test time chronology create access.
      *
-     * @dataProvider getTimeChronologiesProvider
-     *
      * @param bool $withChronology
      */
+    #[DataProvider('getTimeChronologiesProvider')]
     public function testGetCreateTimeChronology($withChronology) {
         if ($withChronology) {
             $chronology = TimeChronology::factory()->create();
@@ -260,10 +256,9 @@ class SubjectDataTimeTest extends TestCase {
     /**
      * Test time chronology edit access.
      *
-     * @dataProvider getTimeChronologiesProvider
-     *
      * @param bool $withChronology
      */
+    #[DataProvider('getTimeChronologiesProvider')]
     public function testGetEditTimeChronology($withChronology) {
         $chronology = TimeChronology::factory()->create();
 
@@ -287,14 +282,13 @@ class SubjectDataTimeTest extends TestCase {
     /**
      * Test time chronology creation.
      *
-     * @dataProvider postTimeChronologyProvider
-     *
      * @param bool $withName
      * @param bool $withAbbreviation
      * @param bool $withParent
      * @param bool $withDescription
      * @param bool $expected
      */
+    #[DataProvider('postTimeChronologyProvider')]
     public function testPostCreateTimeChronology($withName, $withAbbreviation, $withParent, $withDescription, $expected) {
         if ($withParent) {
             $parent = TimeChronology::factory()->create();
@@ -333,14 +327,13 @@ class SubjectDataTimeTest extends TestCase {
     /**
      * Test time chronology editing.
      *
-     * @dataProvider postTimeChronologyProvider
-     *
      * @param bool $withName
      * @param bool $withAbbreviation
      * @param bool $withParent
      * @param bool $withDescription
      * @param bool $expected
      */
+    #[DataProvider('postTimeChronologyProvider')]
     public function testPostEditTimeChronology($withName, $withAbbreviation, $withParent, $withDescription, $expected) {
         $chronology = TimeChronology::factory()->create();
 
@@ -397,10 +390,9 @@ class SubjectDataTimeTest extends TestCase {
     /**
      * Test chronology delete access.
      *
-     * @dataProvider getTimeChronologiesProvider
-     *
      * @param bool $withChronology
      */
+    #[DataProvider('getTimeChronologiesProvider')]
     public function testGetDeleteTimeChronology($withChronology) {
         $chronology = TimeChronology::factory()->create();
 
@@ -418,13 +410,12 @@ class SubjectDataTimeTest extends TestCase {
     /**
      * Test chronology deletion.
      *
-     * @dataProvider postDeleteTimeChronologyProvider
-     *
      * @param bool $withChronology
      * @param bool $withChild
      * @param bool $withPage
      * @param bool $expected
      */
+    #[DataProvider('postDeleteTimeChronologyProvider')]
     public function testPostDeleteTimeChronology($withChronology, $withChild, $withPage, $expected) {
         $chronology = TimeChronology::factory()->create();
 

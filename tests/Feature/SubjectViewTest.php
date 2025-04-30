@@ -12,6 +12,7 @@ use App\Models\Subject\TimeChronology;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class SubjectViewTest extends TestCase {
@@ -30,13 +31,12 @@ class SubjectViewTest extends TestCase {
     /**
      * Test subject page access.
      *
-     * @dataProvider getSubjectProvider
-     *
      * @param string $subject
      * @param bool   $withCategory
      * @param bool   $withUnrelated
      * @param bool   $withExtra
      */
+    #[DataProvider('getSubjectProvider')]
     public function testGetViewSubject($subject, $withCategory, $withUnrelated, $withExtra) {
         if ($withCategory) {
             if ($subject == 'misc' && SubjectCategory::query()->count()) {
@@ -125,14 +125,13 @@ class SubjectViewTest extends TestCase {
     /**
      * Test subject category access.
      *
-     * @dataProvider getCategoryProvider
-     * @dataProvider categorySearchProvider
-     *
      * @param bool       $asEditor
      * @param bool       $withChild
      * @param array|null $pageData
      * @param array|null $searchData
      */
+    #[DataProvider('getCategoryProvider')]
+    #[DataProvider('categorySearchProvider')]
     public function testGetSubjectCategory($asEditor, $withChild, $pageData, $searchData) {
         $category = SubjectCategory::factory()->create();
 
@@ -221,15 +220,14 @@ class SubjectViewTest extends TestCase {
     /**
      * Test time chronology access.
      *
-     * @dataProvider getCategoryProvider
-     * @dataProvider categorySearchProvider
-     * @dataProvider chronologySearchProvider
-     *
      * @param bool       $asEditor
      * @param bool       $withChild
      * @param array|null $pageData
      * @param array|null $searchData
      */
+    #[DataProvider('getCategoryProvider')]
+    #[DataProvider('categorySearchProvider')]
+    #[DataProvider('chronologySearchProvider')]
     public function testGetTimeChronology($asEditor, $withChild, $pageData, $searchData) {
         $chronology = TimeChronology::factory()->create();
 
@@ -303,14 +301,13 @@ class SubjectViewTest extends TestCase {
     /**
      * Test lexicon entry display and search on the language page itself.
      *
-     * @dataProvider getCategoryProvider
-     * @dataProvider lexiconSearchProvider
-     *
      * @param bool       $asEditor
      * @param bool       $withChild
      * @param array|null $entryData
      * @param array|null $searchData
      */
+    #[DataProvider('getCategoryProvider')]
+    #[DataProvider('lexiconSearchProvider')]
     public function testGetLanguageLexicon($asEditor, $withChild, $entryData, $searchData) {
         if ($entryData && $entryData[0]) {
             $entry = LexiconEntry::factory()->create(['is_visible' => $entryData[1]]);
@@ -362,14 +359,13 @@ class SubjectViewTest extends TestCase {
     /**
      * Test lexicon category access.
      *
-     * @dataProvider getCategoryProvider
-     * @dataProvider lexiconSearchProvider
-     *
      * @param bool       $asEditor
      * @param bool       $withChild
      * @param array|null $entryData
      * @param array|null $searchData
      */
+    #[DataProvider('getCategoryProvider')]
+    #[DataProvider('lexiconSearchProvider')]
     public function testGetLexiconCategory($asEditor, $withChild, $entryData, $searchData) {
         $category = LexiconCategory::factory()->create();
 

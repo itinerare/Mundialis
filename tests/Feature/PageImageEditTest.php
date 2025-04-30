@@ -12,6 +12,7 @@ use App\Services\ImageManager;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageImageEditTest extends TestCase {
@@ -28,11 +29,10 @@ class PageImageEditTest extends TestCase {
     /**
      * Test image creation access.
      *
-     * @dataProvider getCreateImageProvider
-     *
      * @param bool $withPage
      * @param int  $status
      */
+    #[DataProvider('getCreateImageProvider')]
     public function testGetCreateImage($withPage, $status) {
         if ($withPage) {
             $page = Page::factory()->create();
@@ -54,11 +54,10 @@ class PageImageEditTest extends TestCase {
     /**
      * Test image editing access.
      *
-     * @dataProvider getEditImageProvider
-     *
      * @param bool $withImage
      * @param int  $status
      */
+    #[DataProvider('getEditImageProvider')]
     public function testCanGetEditImage($withImage, $status) {
         $page = Page::factory()->create();
         if ($withImage) {
@@ -85,8 +84,6 @@ class PageImageEditTest extends TestCase {
     /**
      * Test page image uploading.
      *
-     * @dataProvider postCreateImageProvider
-     *
      * @param array $fileData
      * @param bool  $withDescription
      * @param array $creatorData
@@ -95,6 +92,7 @@ class PageImageEditTest extends TestCase {
      * @param bool  $isActive
      * @param bool  $expected
      */
+    #[DataProvider('postCreateImageProvider')]
     public function testPostCreateImage($fileData, $withDescription, $creatorData, $isVisible, $isValid, $isActive, $expected) {
         $page = Page::factory()->create();
 
@@ -214,8 +212,6 @@ class PageImageEditTest extends TestCase {
     /**
      * Test page image editing.
      *
-     * @dataProvider postEditImageProvider
-     *
      * @param bool       $withImage
      * @param array|null $fileData
      * @param bool       $withDescription
@@ -225,6 +221,7 @@ class PageImageEditTest extends TestCase {
      * @param bool       $isActive
      * @param bool       $expected
      */
+    #[DataProvider('postEditImageProvider')]
     public function testPostEditImage($withImage, $fileData, $withDescription, $creatorData, $isVisible, $isValid, $isActive, $expected) {
         $page = Page::factory()->create();
         if ($withImage) {
@@ -468,10 +465,9 @@ class PageImageEditTest extends TestCase {
     /**
      * Test image page detachment.
      *
-     * @dataProvider detachImagePageProvider
-     *
      * @param bool $isActive
      */
+    #[DataProvider('detachImagePageProvider')]
     public function testDetachImagePage($isActive) {
         for ($i = 0; $i <= 1; $i++) {
             $page[$i] = Page::factory()->create();
@@ -520,14 +516,13 @@ class PageImageEditTest extends TestCase {
     /**
      * Test image sort access.
      *
-     * @dataProvider getSortImagesProvider
-     *
      * @param bool       $withPage
      * @param bool       $withImages
      * @param array|null $isVisible
      * @param array|null $isValid
      * @param int        $status
      */
+    #[DataProvider('getSortImagesProvider')]
     public function testGetSortImages($withPage, $withImages, $isVisible, $isValid, $status) {
         if ($withPage) {
             $page = Page::factory()->create();
@@ -579,11 +574,10 @@ class PageImageEditTest extends TestCase {
     /**
      * Test sorting images.
      *
-     * @dataProvider postSortImagesProvider
-     *
      * @param array $isVisible
      * @param array $isValid
      */
+    #[DataProvider('postSortImagesProvider')]
     public function testPostSortImages($isVisible, $isValid) {
         $page = Page::factory()->create();
 

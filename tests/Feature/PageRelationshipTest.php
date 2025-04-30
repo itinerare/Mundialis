@@ -9,6 +9,7 @@ use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageRelationshipTest extends TestCase {
@@ -30,12 +31,11 @@ class PageRelationshipTest extends TestCase {
     /**
      * Test page relationships access.
      *
-     * @dataProvider getRelationshipsProvider
-     *
      * @param bool $withPerson
      * @param bool $withRelationship
      * @param int  $status
      */
+    #[DataProvider('getRelationshipsProvider')]
     public function testGetRelationships($withPerson, $withRelationship, $status) {
         if ($withRelationship) {
             $personTwo = Page::factory()->category($this->category->id)->create();
@@ -59,11 +59,10 @@ class PageRelationshipTest extends TestCase {
     /**
      * Test page relationship creation access.
      *
-     * @dataProvider getCreateEditRelationshipProvider
-     *
      * @param bool $withPerson
      * @param int  $status
      */
+    #[DataProvider('getCreateEditRelationshipProvider')]
     public function testGetCreateRelationship($withPerson, $status) {
         $response = $this->actingAs($this->editor)
             ->get('/pages/'.($withPerson ? $this->person->id : $this->page->id).'/relationships/create');
@@ -74,11 +73,10 @@ class PageRelationshipTest extends TestCase {
     /**
      * Test page relationship editing access.
      *
-     * @dataProvider getCreateEditRelationshipProvider
-     *
      * @param bool $withPerson
      * @param int  $status
      */
+    #[DataProvider('getCreateEditRelationshipProvider')]
     public function testGetEditRelationship($withPerson, $status) {
         $personTwo = Page::factory()->category($this->category->id)->create();
         $relationship = PageRelationship::factory()->pageOne($withPerson ? $this->person->id : $this->page->id)->pageTwo($personTwo->id)->create();
@@ -99,12 +97,11 @@ class PageRelationshipTest extends TestCase {
     /**
      * Test relationship creation.
      *
-     * @dataProvider postCreateEditRelationshipProvider
-     *
      * @param bool  $withPerson
      * @param array $relationshipData
      * @param bool  $expected
      */
+    #[DataProvider('postCreateEditRelationshipProvider')]
     public function testPostCreateRelationship($withPerson, $relationshipData, $expected) {
         $personTwo = Page::factory()->category($this->category->id)->create();
 
@@ -152,12 +149,11 @@ class PageRelationshipTest extends TestCase {
     /**
      * Test relationship editing.
      *
-     * @dataProvider postCreateEditRelationshipProvider
-     *
      * @param bool  $withPerson
      * @param array $relationshipData
      * @param bool  $expected
      */
+    #[DataProvider('postCreateEditRelationshipProvider')]
     public function testPostEditRelationship($withPerson, $relationshipData, $expected) {
         $personTwo = Page::factory()->category($this->category->id)->create();
         $relationship = PageRelationship::factory()->pageOne($withPerson ? $this->person->id : $this->page->id)->pageTwo($personTwo->id)->familial()->create();
@@ -246,11 +242,10 @@ class PageRelationshipTest extends TestCase {
     /**
      * Test page relationship deletion access.
      *
-     * @dataProvider getCreateEditRelationshipProvider
-     *
      * @param bool $withPerson
      * @param int  $status
      */
+    #[DataProvider('getCreateEditRelationshipProvider')]
     public function testGetDeleteRelationship($withPerson, $status) {
         $personTwo = Page::factory()->category($this->category->id)->create();
         $relationship = PageRelationship::factory()->pageOne($withPerson ? $this->person->id : $this->page->id)->pageTwo($personTwo->id)->create();
@@ -279,12 +274,11 @@ class PageRelationshipTest extends TestCase {
     /**
      * Test page family tree access.
      *
-     * @dataProvider getFamilyTreeProvider
-     *
      * @param bool  $withPerson
      * @param array $relationshipData
      * @param bool  $status
      */
+    #[DataProvider('getFamilyTreeProvider')]
     public function testGetFamilyTree($withPerson, $relationshipData, $status) {
         $personTwo = Page::factory()->category($this->category->id)->create();
 

@@ -6,6 +6,7 @@ use App\Models\User\Rank;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AdminRankTest extends TestCase {
@@ -45,12 +46,11 @@ class AdminRankTest extends TestCase {
     /**
      * Test rank editing.
      *
-     * @dataProvider rankEditProvider
-     *
      * @param bool $withName
      * @param bool $withDesc
      * @param bool $expected
      */
+    #[DataProvider('rankEditProvider')]
     public function testPostEditRank($withName, $withDesc, $expected) {
         // Get the the lowest/member rank
         $rank = Rank::orderBy('sort', 'ASC')->first();

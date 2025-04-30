@@ -10,6 +10,7 @@ use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageLinkTest extends TestCase {
@@ -38,11 +39,10 @@ class PageLinkTest extends TestCase {
     /**
      * Test page creation with a wiki-style link.
      *
-     * @dataProvider postWithLinkProvider
-     *
      * @param string $type
      * @param bool   $withLabel
      */
+    #[DataProvider('postWithLinkProvider')]
     public function testPostCreatePageWithLink($type, $withLabel) {
         $category = SubjectCategory::factory()->create();
 
@@ -104,11 +104,10 @@ class PageLinkTest extends TestCase {
     /**
      * Test page editing with a wiki-style link.
      *
-     * @dataProvider postWithLinkProvider
-     *
      * @param string $type
      * @param bool   $withLabel
      */
+    #[DataProvider('postWithLinkProvider')]
     public function testPostEditPageWithLink($type, $withLabel) {
         for ($i = 1; $i <= 2; $i++) {
             $linkName[$i] = $this->faker->unique()->domainWord();
@@ -156,11 +155,10 @@ class PageLinkTest extends TestCase {
     /**
      * Test lexicon entry creation with a page link.
      *
-     * @dataProvider postWithLinkProvider
-     *
      * @param string $type
      * @param bool   $withLabel
      */
+    #[DataProvider('postWithLinkProvider')]
     public function testPostCreateLexiconEntryWithLink($type, $withLabel) {
         for ($i = 1; $i <= 2; $i++) {
             $linkName[$i] = $this->faker->unique()->domainWord();
@@ -216,11 +214,10 @@ class PageLinkTest extends TestCase {
     /**
      * Test lexicon entry editing with a page link.
      *
-     * @dataProvider postWithLinkProvider
-     *
      * @param string $type
      * @param bool   $withLabel
      */
+    #[DataProvider('postWithLinkProvider')]
     public function testPostEditLexiconEntryWithLink($type, $withLabel) {
         for ($i = 1; $i <= 2; $i++) {
             $linkName[$i] = $this->faker->unique()->domainWord();

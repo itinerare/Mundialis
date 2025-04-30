@@ -9,6 +9,7 @@ use App\Models\Subject\LexiconSetting;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class LexiconEntryTest extends TestCase {
@@ -34,12 +35,11 @@ class LexiconEntryTest extends TestCase {
     /**
      * Test lexicon entry access.
      *
-     * @dataProvider getEntryProvider
-     *
      * @param bool       $isValid
      * @param array|null $data
      * @param int        $status
      */
+    #[DataProvider('getEntryProvider')]
     public function testGetLexiconEntry($isValid, $data, $status) {
         // Create an entry to view
         $entry = LexiconEntry::factory();
@@ -67,7 +67,7 @@ class LexiconEntryTest extends TestCase {
         }
 
         $response = $this->actingAs($this->editor)
-            ->get('/language/lexicon/entries/'.($isValid ? $entry->id : 2));
+            ->get('/language/lexicon/entries/'.($isValid ? $entry->id : 9999));
 
         $response->assertStatus($status);
     }
@@ -96,10 +96,9 @@ class LexiconEntryTest extends TestCase {
     /**
      * Test lexicon entry creation access.
      *
-     * @dataProvider getCreateEntryProvider
-     *
      * @param bool $withCategory
      */
+    #[DataProvider('getCreateEntryProvider')]
     public function testGetCreateLexiconEntry($withCategory) {
         if ($withCategory) {
             // Create a category
@@ -122,11 +121,10 @@ class LexiconEntryTest extends TestCase {
     /**
      * Test lexicon entry edit access.
      *
-     * @dataProvider getEditEntryProvider
-     *
      * @param bool $isValid
      * @param int  $status
      */
+    #[DataProvider('getEditEntryProvider')]
     public function testGetEditLexiconEntry($isValid, $status) {
         if ($isValid) {
             // Make an entry to edit
@@ -134,7 +132,7 @@ class LexiconEntryTest extends TestCase {
         }
 
         $response = $this->actingAs($this->editor)
-            ->get('/language/lexicon/edit/'.($isValid ? $entry->id : 2));
+            ->get('/language/lexicon/edit/'.($isValid ? $entry->id : 9999));
 
         $response->assertStatus($status);
     }
@@ -149,14 +147,13 @@ class LexiconEntryTest extends TestCase {
     /**
      * Test lexicon entry creation.
      *
-     * @dataProvider postCreateEditEntryProvider
-     *
      * @param bool       $withCategory
      * @param bool       $withDefinition
      * @param array|null $parent
      * @param array|null $conjData
      * @param bool       $expected
      */
+    #[DataProvider('postCreateEditEntryProvider')]
     public function testPostCreateLexiconEntry($withCategory, $withDefinition, $parent, $conjData, $expected) {
         if ($withCategory) {
             // Create a category for the entry to go into
@@ -223,15 +220,14 @@ class LexiconEntryTest extends TestCase {
     /**
      * Test lexicon entry editing.
      *
-     * @dataProvider postCreateEditEntryProvider
-     * @dataProvider postConjugationProvider
-     *
      * @param bool       $withCategory
      * @param bool       $withDefinition
      * @param array|null $parent
      * @param array|null $conjData
      * @param bool       $expected
      */
+    #[DataProvider('postCreateEditEntryProvider')]
+    #[DataProvider('postConjugationProvider')]
     public function testPostEditLexiconEntry($withCategory, $withDefinition, $parent, $conjData, $expected) {
         // Make an entry to edit
         $entry = LexiconEntry::factory()->create();
@@ -276,7 +272,7 @@ class LexiconEntryTest extends TestCase {
 
         $response = $this
             ->actingAs($this->editor)
-            ->post('/language/lexicon/edit/'.($expected ? $entry->id : 3), $data);
+            ->post('/language/lexicon/edit/'.($expected ? $entry->id : 9999), $data);
 
         if ($expected) {
             $response->assertSessionHasNoErrors();
@@ -348,11 +344,10 @@ class LexiconEntryTest extends TestCase {
     /**
      * Test lexicon entry deletion.
      *
-     * @dataProvider getDeleteEntryProvider
-     *
      * @param bool $withEntry
      * @param int  $status
      */
+    #[DataProvider('getDeleteEntryProvider')]
     public function testGetDeleteLexiconEntry($withEntry, $status) {
         if ($withEntry) {
             // Make an entry to delete
@@ -361,7 +356,7 @@ class LexiconEntryTest extends TestCase {
 
         $response = $this
             ->actingAs($this->editor)
-            ->get('/language/lexicon/delete/'.($withEntry ? $entry->id : 2));
+            ->get('/language/lexicon/delete/'.($withEntry ? $entry->id : 9999));
 
         $response->assertStatus($status);
     }
@@ -376,12 +371,11 @@ class LexiconEntryTest extends TestCase {
     /**
      * Test lexicon entry deletion.
      *
-     * @dataProvider postDeleteEntryProvider
-     *
      * @param bool $withParent
      * @param bool $withChild
      * @param bool $expected
      */
+    #[DataProvider('postDeleteEntryProvider')]
     public function testPostDeleteLexiconEntry($withParent, $withChild, $expected) {
         // Make an entry to delete
         $entry = LexiconEntry::factory()->create();

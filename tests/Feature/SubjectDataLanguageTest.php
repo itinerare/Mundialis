@@ -8,6 +8,7 @@ use App\Models\Subject\LexiconSetting;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class SubjectDataLanguageTest extends TestCase {
@@ -34,10 +35,9 @@ class SubjectDataLanguageTest extends TestCase {
     /**
      * Test lexicon settings access.
      *
-     * @dataProvider getLexiconSettingsProvider
-     *
      * @param bool $withClass
      */
+    #[DataProvider('getLexiconSettingsProvider')]
     public function testGetLexiconSettings($withClass) {
         if ($withClass) {
             $class = LexiconSetting::create([
@@ -69,12 +69,11 @@ class SubjectDataLanguageTest extends TestCase {
     /**
      * Test lexicon setting creation.
      *
-     * @dataProvider postLexiconSettingsProvider
-     *
      * @param bool $withName
      * @param bool $withAbbreviation
      * @param bool $expected
      */
+    #[DataProvider('postLexiconSettingsProvider')]
     public function testPostCreateLexiconSetting($withName, $withAbbreviation, $expected) {
         $data = [
             'name'         => [0 => $withName ? $this->faker->unique()->domainWord() : null],
@@ -102,12 +101,11 @@ class SubjectDataLanguageTest extends TestCase {
     /**
      * Test lexicon setting editing.
      *
-     * @dataProvider postLexiconSettingsProvider
-     *
      * @param bool $withName
      * @param bool $withAbbreviation
      * @param bool $expected
      */
+    #[DataProvider('postLexiconSettingsProvider')]
     public function testPostEditLexiconSettings($withName, $withAbbreviation, $expected) {
         for ($i = 0; $i <= 1; $i++) {
             $class[$i] = LexiconSetting::create([
@@ -173,10 +171,9 @@ class SubjectDataLanguageTest extends TestCase {
     /**
      * Test lexicon categories access.
      *
-     * @dataProvider getLexiconCategoriesProvider
-     *
      * @param bool $withCategory
      */
+    #[DataProvider('getLexiconCategoriesProvider')]
     public function testGetLexiconCategories($withCategory) {
         if ($withCategory) {
             $category = LexiconCategory::factory()->create();
@@ -205,10 +202,9 @@ class SubjectDataLanguageTest extends TestCase {
     /**
      * Test create lexicon category access.
      *
-     * @dataProvider getLexiconCategoriesProvider
-     *
      * @param bool $withCategory
      */
+    #[DataProvider('getLexiconCategoriesProvider')]
     public function testGetCreateLexiconCategory($withCategory) {
         if ($withCategory) {
             $category = LexiconCategory::factory()->create();
@@ -230,10 +226,9 @@ class SubjectDataLanguageTest extends TestCase {
     /**
      * Test edit lexicon category access.
      *
-     * @dataProvider getLexiconCategoriesProvider
-     *
      * @param bool $withCategory
      */
+    #[DataProvider('getLexiconCategoriesProvider')]
     public function testGetEditLexiconCategory($withCategory) {
         $category = LexiconCategory::factory()->create();
 
@@ -257,14 +252,13 @@ class SubjectDataLanguageTest extends TestCase {
     /**
      * Test lexicon category creation.
      *
-     * @dataProvider postLexiconCategoryProvider
-     *
      * @param bool $withName
      * @param bool $withParent
      * @param bool $withDescription
      * @param bool $withData
      * @param bool $expected
      */
+    #[DataProvider('postLexiconCategoryProvider')]
     public function testPostCreateLexiconCategory($withName, $withParent, $withDescription, $withData, $expected) {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
@@ -319,14 +313,13 @@ class SubjectDataLanguageTest extends TestCase {
     /**
      * Test lexicon category editing.
      *
-     * @dataProvider postLexiconCategoryProvider
-     *
      * @param bool $withName
      * @param bool $withParent
      * @param bool $withDescription
      * @param bool $withData
      * @param bool $expected
      */
+    #[DataProvider('postLexiconCategoryProvider')]
     public function testPostEditLexiconCategory($withName, $withParent, $withDescription, $withData, $expected) {
         // Ensure lexical classes are present to utilize
         $this->artisan('add-lexicon-settings');
@@ -519,10 +512,9 @@ class SubjectDataLanguageTest extends TestCase {
     /**
      * Test lexicon category delete access.
      *
-     * @dataProvider getLexiconCategoriesProvider
-     *
      * @param bool $withCategory
      */
+    #[DataProvider('getLexiconCategoriesProvider')]
     public function testGetDeleteLexiconCategory($withCategory) {
         $category = LexiconCategory::factory()->create();
 
@@ -540,13 +532,12 @@ class SubjectDataLanguageTest extends TestCase {
     /**
      * Test lexicon category deletion.
      *
-     * @dataProvider postDeleteLexiconCategoryProvider
-     *
      * @param bool  $withCategory
      * @param bool  $withChild
      * @param bool  $expected
      * @param mixed $withEntry
      */
+    #[DataProvider('postDeleteLexiconCategoryProvider')]
     public function testPostDeleteLexiconCategory($withCategory, $withChild, $withEntry, $expected) {
         $category = LexiconCategory::factory()->create();
 

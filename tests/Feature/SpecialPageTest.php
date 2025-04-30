@@ -16,6 +16,7 @@ use App\Services\ImageManager;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class SpecialPageTest extends TestCase {
@@ -50,12 +51,11 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests untagged pages access.
      *
-     * @dataProvider getTaggedPagesProvider
-     *
      * @param int  $pages
      * @param int  $tagged
      * @param bool $isVisible
      */
+    #[DataProvider('getTaggedPagesProvider')]
     public function testGetUntaggedPages($pages, $tagged, $isVisible) {
         if ($pages) {
             for ($i = 1; $i <= $pages; $i++) {
@@ -96,12 +96,11 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests most tagged pages access.
      *
-     * @dataProvider getTaggedPagesProvider
-     *
      * @param int  $pages
      * @param int  $tagged
      * @param bool $isVisible
      */
+    #[DataProvider('getTaggedPagesProvider')]
     public function testGetMostTaggedPages($pages, $tagged, $isVisible) {
         if ($pages) {
             for ($i = 1; $i <= $pages; $i++) {
@@ -158,11 +157,10 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests least revised pages access.
      *
-     * @dataProvider getRevisedPagesProvider
-     *
      * @param bool $withPages
      * @param bool $isVisible
      */
+    #[DataProvider('getRevisedPagesProvider')]
     public function testGetLeastRevisedPages($withPages, $isVisible) {
         if ($withPages) {
             // By default, the pagination is set to 20 results per page
@@ -202,11 +200,10 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests most revised pages access.
      *
-     * @dataProvider getRevisedPagesProvider
-     *
      * @param bool $withPages
      * @param bool $isVisible
      */
+    #[DataProvider('getRevisedPagesProvider')]
     public function testGetMostRevisedPages($withPages, $isVisible) {
         if ($withPages) {
             // By default, the pagination is set to 20 results per page
@@ -254,12 +251,11 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests unlinked pages access.
      *
-     * @dataProvider getLinkedPagesProvider
-     *
      * @param int  $pages
      * @param int  $linked
      * @param bool $isVisible
      */
+    #[DataProvider('getLinkedPagesProvider')]
     public function testGetUnlinkedPages($pages, $linked, $isVisible) {
         if ($pages) {
             for ($i = 1; $i <= $pages; $i++) {
@@ -301,12 +297,11 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests most linked pages access.
      *
-     * @dataProvider getLinkedPagesProvider
-     *
      * @param int  $pages
      * @param int  $linked
      * @param bool $isVisible
      */
+    #[DataProvider('getLinkedPagesProvider')]
     public function testGetMostLinkedPages($pages, $linked, $isVisible) {
         if ($pages) {
             for ($i = 1; $i <= $pages; $i++) {
@@ -364,11 +359,10 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests recently edited pages access.
      *
-     * @dataProvider getRecentlyEditedProvider
-     *
      * @param array|null $pageData
      * @param mixed|null $mode
      */
+    #[DataProvider('getRecentlyEditedProvider')]
     public function testGetRecentlyEditedPages($pageData, $mode) {
         if ($pageData) {
             $page = Page::factory()->create([
@@ -401,12 +395,11 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests recently edited images access.
      *
-     * @dataProvider getRecentlyEditedProvider
-     * @dataProvider getRecentlyEditedImagesProvider
-     *
      * @param array|null $imageData
      * @param mixed|null $mode
      */
+    #[DataProvider('getRecentlyEditedProvider')]
+    #[DataProvider('getRecentlyEditedImagesProvider')]
     public function testGetRecentlyEditedImages($imageData, $mode) {
         if ($imageData) {
             $service = new ImageManager;
@@ -491,11 +484,10 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests wanted pages access.
      *
-     * @dataProvider getWantedPagesProvider
-     *
      * @param bool $withLink
      * @param bool $isVisible
      */
+    #[DataProvider('getWantedPagesProvider')]
     public function testGetWantedPages($withLink, $isVisible) {
         if ($withLink) {
             $page = Page::factory()->create([
@@ -546,10 +538,9 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests create wanted page access.
      *
-     * @dataProvider postCreateWantedPageProvider
-     *
      * @param bool $withCategory
      */
+    #[DataProvider('postCreateWantedPageProvider')]
     public function testPostCreateWantedPage($withCategory) {
         $page = Page::factory()->create();
         $link = PageLink::factory()->parent($page->id)->wanted()->create();
@@ -579,11 +570,10 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests protected pages access.
      *
-     * @dataProvider getProtectedPagesProvider
-     *
      * @param bool $withPage
      * @param bool $isVisible
      */
+    #[DataProvider('getProtectedPagesProvider')]
     public function testGetProtectedPages($withPage, $isVisible) {
         if ($withPage) {
             $admin = User::factory()->admin()->create();
@@ -621,12 +611,11 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests utility tag page access.
      *
-     * @dataProvider getUtilityTagProvider
-     *
      * @param string $tag
      * @param bool   $withPage
      * @param bool   $isVisible
      */
+    #[DataProvider('getUtilityTagProvider')]
     public function testGetUtilityTagPage($tag, $withPage, $isVisible) {
         if ($withPage) {
             $page = Page::factory()->create([
@@ -675,10 +664,9 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests unwatched pages access.
      *
-     * @dataProvider getUnwatchedPagesProvider
-     *
      * @param bool $withPage
      */
+    #[DataProvider('getUnwatchedPagesProvider')]
     public function testGetUnwatchedPages($withPage) {
         $admin = User::factory()->admin()->make();
 
@@ -714,11 +702,10 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests all pages access.
      *
-     * @dataProvider getAllPagesProvider
-     *
      * @param bool $withPage
      * @param bool $isVisible
      */
+    #[DataProvider('getAllPagesProvider')]
     public function testGetAllPages($withPage, $isVisible) {
         if ($withPage) {
             $page = Page::factory()->create([
@@ -754,11 +741,10 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests all tags access.
      *
-     * @dataProvider getAllTagsProvider
-     *
      * @param bool $withTag
      * @param bool $isVisible
      */
+    #[DataProvider('getAllTagsProvider')]
     public function testGetAllTags($withTag, $isVisible) {
         if ($withTag) {
             $page = Page::factory()->create([
@@ -796,12 +782,11 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests all images access.
      *
-     * @dataProvider getAllImagesProvider
-     *
      * @param bool $withImage
      * @param bool $isVisible
      * @param bool $pageVisible
      */
+    #[DataProvider('getAllImagesProvider')]
     public function testGetAllImages($withImage, $isVisible, $pageVisible) {
         if ($withImage) {
             $service = new ImageManager;
@@ -870,11 +855,10 @@ class SpecialPageTest extends TestCase {
     /**
      * Tests random page access.
      *
-     * @dataProvider getRandomPageProvider
-     *
      * @param bool $withPage
      * @param bool $isVisible
      */
+    #[DataProvider('getRandomPageProvider')]
     public function testGetRandomPage($withPage, $isVisible) {
         if ($withPage) {
             $page = Page::factory()->create([

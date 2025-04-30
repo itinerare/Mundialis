@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User\User;
 use App\Services\InvitationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AdminInvitationTest extends TestCase {
@@ -45,11 +46,10 @@ class AdminInvitationTest extends TestCase {
     /**
      * Test invitation code deletion.
      *
-     * @dataProvider deleteInvitationProvider
-     *
      * @param bool $isUsed
      * @param bool $expected
      */
+    #[DataProvider('deleteInvitationProvider')]
     public function testPostDeleteInvitation($isUsed, $expected) {
         // Since invitation code generation is fairly straightforward,
         // simply use the function rather than a factory

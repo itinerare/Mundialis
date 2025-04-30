@@ -7,6 +7,7 @@ use App\Models\Page\PageVersion;
 use App\Models\User\User;
 use App\Models\User\WatchedPage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageWatchTest extends TestCase {
@@ -25,10 +26,9 @@ class PageWatchTest extends TestCase {
     /**
      * Test watched pages access.
      *
-     * @dataProvider getWatchedPagesProvider
-     *
      * @param bool $withPage
      */
+    #[DataProvider('getWatchedPagesProvider')]
     public function testGetWatchedPages($withPage) {
         if ($withPage) {
             WatchedPage::factory()->user($this->user->id)->page($this->page->id)->create();
@@ -53,11 +53,10 @@ class PageWatchTest extends TestCase {
     /**
      * Test watching a page.
      *
-     * @dataProvider postWatchPageProvider
-     *
      * @param bool $withWatch
      * @param bool $withPage
      */
+    #[DataProvider('postWatchPageProvider')]
     public function testPostWatchPage($withWatch, $withPage) {
         if ($withWatch) {
             WatchedPage::factory()->user($this->user->id)->page($this->page->id)->create();
