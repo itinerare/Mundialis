@@ -31,7 +31,7 @@
         </div>
     @endif
 
-    {!! Form::open(['action' => $page->id ? 'pages/' . $page->id . '/edit' : 'pages/create', 'id' => 'pageForm']) !!}
+    {!! Form::open(['action' => $page->id ? '/pages/' . $page->id . '/edit' : '/pages/create', 'id' => 'pageForm']) !!}
 
     <h2>Basic Information</h2>
 

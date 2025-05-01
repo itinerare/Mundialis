@@ -22,7 +22,7 @@
         @endif
     </h1>
 
-    {!! Form::open(['action' => $entry->id ? 'language/lexicon/edit/' . $entry->id : 'language/lexicon/create']) !!}
+    {!! Form::open(['action' => $entry->id ? '/language/lexicon/edit/' . $entry->id : '/language/lexicon/create']) !!}
 
     <div class="row">
         <div class="col-md">
