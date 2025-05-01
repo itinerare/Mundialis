@@ -25,14 +25,6 @@ class SpecialPageTest extends TestCase {
         parent::setUp();
 
         $this->editor = User::factory()->editor()->create();
-
-        // Delete any pages/page links present due to other tests
-        if (Page::query()->count()) {
-            Page::query()->delete();
-        }
-        if (PageLink::query()->count()) {
-            PageLink::query()->delete();
-        }
     }
 
     /******************************************************************************

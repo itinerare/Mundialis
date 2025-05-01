@@ -20,14 +20,6 @@ class PageLinkTest extends TestCase {
 
         $this->editor = User::factory()->editor()->create();
 
-        // Delete any pages/versions present due to other tests
-        if (Page::query()->count()) {
-            Page::query()->delete();
-        }
-        if (PageVersion::query()->count()) {
-            PageVersion::query()->delete();
-        }
-
         $this->page = Page::factory()->create();
         PageVersion::factory()->page($this->page->id)->user($this->editor->id)->create();
 
