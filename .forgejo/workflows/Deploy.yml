@@ -26,5 +26,6 @@ jobs:
           php artisan migrate --force
           php artisan optimize
           php artisan optimize
+          php artisan app:add-site-settings
           php artisan up
           ENDSSH
