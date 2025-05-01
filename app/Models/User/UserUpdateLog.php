@@ -20,6 +20,7 @@ class UserUpdateLog extends Model {
      * @var string
      */
     protected $table = 'user_update_log';
+
     /**
      * The primary key of the model.
      *

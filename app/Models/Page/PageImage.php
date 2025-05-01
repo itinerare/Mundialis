@@ -26,15 +26,6 @@ class PageImage extends Model {
     protected $table = 'page_images';
 
     /**
-     * The relationships that should always be loaded.
-     *
-     * @var array
-     */
-    protected $with = [
-        'versions', 'pages:id,title,is_visible',
-    ];
-
-    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string

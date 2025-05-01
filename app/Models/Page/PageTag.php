@@ -25,15 +25,6 @@ class PageTag extends Model {
     protected $table = 'page_tags';
 
     /**
-     * The relationships that should always be loaded.
-     *
-     * @var array
-     */
-    protected $with = [
-        'page:id,category_id,title,summary,is_visible',
-    ];
-
-    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string

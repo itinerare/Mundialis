@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider {
         Model::preventSilentlyDiscardingAttributes();
 
         // While automatic eager loading should prevent this from being relevant,
-        // leave this enabled in non-production environments as a safeguard
+        // leave this enabled in non-production environments to help catch any errors
         Model::preventLazyLoading(!$this->app->isProduction());
         Model::automaticallyEagerLoadRelationships();
 

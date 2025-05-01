@@ -31,15 +31,6 @@ class Page extends Model {
     protected $table = 'pages';
 
     /**
-     * The relationships that should always be loaded.
-     *
-     * @var array
-     */
-    protected $with = [
-        'versions', 'protections',
-    ];
-
-    /**
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
