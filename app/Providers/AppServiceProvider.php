@@ -32,9 +32,10 @@ class AppServiceProvider extends ServiceProvider {
         Model::preventAccessingMissingAttributes();
         Model::preventSilentlyDiscardingAttributes();
 
-        // Since this is a performance concern only, don’t halt
-        // production for violations.
+        // While automatic eager loading should prevent this from being relevant,
+        // leave this enabled in non-production environments as a safeguard
         Model::preventLazyLoading(!$this->app->isProduction());
+        Model::automaticallyEagerLoadRelationships();
 
         Schema::defaultStringLength(191);
         Paginator::useBootstrap();
