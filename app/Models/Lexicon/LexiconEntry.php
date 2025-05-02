@@ -103,7 +103,7 @@ class LexiconEntry extends Model {
      * Get this entry's associated links.
      */
     public function links() {
-        return $this->hasMany(PageLink::class, 'parent_id')->where('parent_type', 'entry');
+        return $this->morphMany(PageLink::class, 'parent');
     }
 
     /**********************************************************************************************

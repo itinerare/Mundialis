@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -57,6 +58,13 @@ class AppServiceProvider extends ServiceProvider {
             'Settings'      => \App\Facades\Settings::class,
             'Notifications' => \App\Facades\Notifications::class,
             'Image'         => \Intervention\Image\Facades\Image::class,
+        ]);
+
+        // Set custom polymorphic types for pages and entries,
+        // for use by page links
+        Relation::enforceMorphMap([
+            'page'  => 'App\Models\Page\Page',
+            'entry' => 'App\Models\Lexicon\LexiconEntry',
         ]);
 
         /*

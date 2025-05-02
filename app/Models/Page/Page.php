@@ -126,14 +126,14 @@ class Page extends Model {
      * Get this page's associated links.
      */
     public function links() {
-        return $this->hasMany(PageLink::class, 'parent_id')->where('parent_type', 'page');
+        return $this->morphMany(PageLink::class, 'parent');
     }
 
     /**
      * Get this page's associated links.
      */
     public function linked() {
-        return $this->hasMany(PageLink::class, 'link_id');
+        return $this->morphMany(PageLink::class, 'linked', 'linked_type', 'link_id');
     }
 
     /**

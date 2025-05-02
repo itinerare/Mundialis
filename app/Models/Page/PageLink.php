@@ -2,7 +2,6 @@
 
 namespace App\Models\Page;
 
-use App\Models\Lexicon\LexiconEntry;
 use App\Models\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -42,25 +41,13 @@ class PageLink extends Model {
      * Get the parent this link belongs to.
      */
     public function parent() {
-        switch ($this->parent_type) {
-            case 'page':
-                return $this->belongsTo(Page::class);
-                break;
-            case 'entry':
-                return $this->belongsTo(LexiconEntry::class);
-        }
+        return $this->morphTo();
     }
 
     /**
      * Get the object this link goes to.
      */
     public function linked() {
-        switch ($this->linked_type) {
-            case 'page':
-                return $this->belongsTo(Page::class, 'link_id');
-                break;
-            case 'entry':
-                return $this->belongsTo(LexiconEntry::class);
-        }
+        return $this->morphTo('linked', 'linked_type', 'link_id');
     }
 }
