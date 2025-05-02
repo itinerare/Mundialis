@@ -188,85 +188,79 @@ abstract class Service {
      * @return array
      */
     public function parse_wiki_links($data) {
-        try {
-            $data['parsed'] = $data;
+        $data['parsed'] = $data;
 
-            foreach ($data['parsed'] as $key=>$item) {
-                $i = 1;
-                // Test content against both a wiki-style link pattern without label and one with
-                foreach (['/\[\[([A-Za-z0-9_-_\s!-@~-ʷ]+)\]\]/', '/\[\[([A-Za-z0-9_-_\s!-@~-ʷ]+)\|([A-Za-z0-9_-_\s!-@~-ʷ]+)\]\]/'] as $pattern) {
-                    $i2 = 0;
+        foreach ($data['parsed'] as $key=>$item) {
+            $i = 1;
+            // Test content against both a wiki-style link pattern without label and one with
+            foreach (['/\[\[([A-Za-z0-9_-_\s!-@~-ʷ]+)\]\]/', '/\[\[([A-Za-z0-9_-_\s!-@~-ʷ]+)\|([A-Za-z0-9_-_\s!-@~-ʷ]+)\]\]/'] as $pattern) {
+                $i2 = 0;
 
-                    $matches = null;
-                    $links = [];
-                    if (is_string($item)) {
-                        $count = preg_match_all($pattern, $item, $matches);
-                    }
-                    if (isset($count) && $count && isset($matches[1])) {
-                        foreach ($matches[1] as $match) {
-                            // A bunch of special characters...
-                            $replacements = [
-                                '&Agrave'  => 'À', '&agrave;' => 'à', '&Aacute;' => 'Á', '&aacute;' => 'á', '&Acirc;' => 'Â', '&acirc;' => 'â', '&Atilde;' => 'Ã', '&atilde;' => 'ã',
-                                '&Auml;'   => 'Ä', '&auml;' => 'ä', '&Aring;' => 'Å', '&aring;' => 'å', '&AElig;' => 'Æ', '&aelig;' => 'æ', '&Ccedil;' => 'Ç', '&ccedil;' => 'ç',
-                                '&ETH;'    => 'Ð', '&eth;' => 'ð', '&Egrave;' => 'È', '&egrave;' => 'è', '&Eacute;' => 'É', '&eacute;' => 'é', '&Ecirc;' => 'Ê', '&ecirc;' => 'ê',
-                                '&Euml;'   => 'Ë', '&euml;' => 'ë', '&Igrave;' => 'Ì', '&igrave;' => 'ì', '&Iacute;' => 'Í', '&iacute;' => 'í', '&Icirc;' => 'Î', '&icirc;' => 'î',
-                                '&Iuml;'   => 'Ï', '&iuml;' => 'ï', '&Ntilde;' => 'Ñ', '&ntilde;' => 'ñ', '&Ograve;' => 'Ò', '&ograve;' => 'ò', '&Oacute;' => 'Ó', '&oacute;' => 'ó',
-                                '&Ocirc;'  => 'Ô', '&ocirc;' => 'ô', '&Otilde;' => 'Õ', '&otilde;' => 'õ', '&Ouml;' => 'Ö', '&ouml;' => 'ö', '&Oslash;' => 'Ø', '&oslash;' => 'ø',
-                                '&OElig;'  => 'Œ', '&oelig;' => 'œ', '&szlig;' => 'ß', '&THORN;' => 'Þ', '&thorn;' => 'þ', '&Ugrave;' => 'Ù', '&ugrave;' => 'ù', '&Uacute;' => 'Ú',
-                                '&uacute;' => 'ú', '&Ucirc;' => 'Û', '&ucirc;' => 'û', '&Uuml;' => 'Ü', '&uuml;' => 'ü', '&Yacute;' => 'Ý', '&yacute;' => 'ý', '&Yuml;' => 'Ÿ', '&yuml;' => 'ÿ',
-                            ];
-                            // And replace any if found in the match
-                            $replaced = str_replace(array_keys($replacements), array_values($replacements), $match);
-
-                            // Attempt to locate an associated page
-                            $page = Page::get()->where('displayTitle', $replaced)->first();
-
-                            // Make a version of the match suitable for regex replacement
-                            $regexMatch = str_replace('(', '\(', $match);
-                            $regexMatch = str_replace(')', '\)', $regexMatch);
-
-                            // If there is a page, simply substitute out the text for a proper link
-                            if ($page) {
-                                if ($i == 1) {
-                                    $item = preg_replace('/\[\['.$regexMatch.'\]\]/', $page->displayName, $item);
-                                } elseif ($i == 2) {
-                                    $item = preg_replace('/\[\['.$regexMatch.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.$page->url.'" class="text-primary"'.($page->summary ? ' data-toggle="tooltip" title="'.$page->summary.'"' : '').'>'.$matches[$i][$i2].'</a>', $item);
-                                }
-                                // And make a note that the page is being linked to
-                                $data['links'][] = [
-                                    'link_id' => $page->id,
-                                ];
-                            } else {
-                                if ($i == 1) {
-                                    $item = preg_replace('/\[\['.$regexMatch.'\]\]/', '<a href="'.url('special/create-wanted/'.str_replace(' ', '_', $match)).'" class="text-danger">'.$match.'</a>', $item);
-                                } elseif ($i == 2) {
-                                    $item = preg_replace('/\[\['.$regexMatch.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.url('special/create-wanted/'.str_replace(' ', '_', $match)).'" class="text-danger">'.$matches[$i][$i2].'</a>', $item);
-                                }
-
-                                // If there's no page yet, log a placeholder link
-                                // This won't do much, but it will store two pieces of info:
-                                // 1. That the linked-to page is wanted
-                                // 2. That this specific page tried to link to it
-                                // which will help generate maintenance reports and, when the
-                                // page is created, help update this page.
-                                $data['links'][] = [
-                                    'title' => $match,
-                                ];
-                            }
-                            $i2++;
-                        }
-                    }
-                    $i++;
+                $matches = null;
+                $links = [];
+                if (is_string($item)) {
+                    $count = preg_match_all($pattern, $item, $matches);
                 }
-                $data['parsed'][$key] = $item;
-            }
+                if (isset($count) && $count && isset($matches[1])) {
+                    foreach ($matches[1] as $match) {
+                        // A bunch of special characters...
+                        $replacements = [
+                            '&Agrave'  => 'À', '&agrave;' => 'à', '&Aacute;' => 'Á', '&aacute;' => 'á', '&Acirc;' => 'Â', '&acirc;' => 'â', '&Atilde;' => 'Ã', '&atilde;' => 'ã',
+                            '&Auml;'   => 'Ä', '&auml;' => 'ä', '&Aring;' => 'Å', '&aring;' => 'å', '&AElig;' => 'Æ', '&aelig;' => 'æ', '&Ccedil;' => 'Ç', '&ccedil;' => 'ç',
+                            '&ETH;'    => 'Ð', '&eth;' => 'ð', '&Egrave;' => 'È', '&egrave;' => 'è', '&Eacute;' => 'É', '&eacute;' => 'é', '&Ecirc;' => 'Ê', '&ecirc;' => 'ê',
+                            '&Euml;'   => 'Ë', '&euml;' => 'ë', '&Igrave;' => 'Ì', '&igrave;' => 'ì', '&Iacute;' => 'Í', '&iacute;' => 'í', '&Icirc;' => 'Î', '&icirc;' => 'î',
+                            '&Iuml;'   => 'Ï', '&iuml;' => 'ï', '&Ntilde;' => 'Ñ', '&ntilde;' => 'ñ', '&Ograve;' => 'Ò', '&ograve;' => 'ò', '&Oacute;' => 'Ó', '&oacute;' => 'ó',
+                            '&Ocirc;'  => 'Ô', '&ocirc;' => 'ô', '&Otilde;' => 'Õ', '&otilde;' => 'õ', '&Ouml;' => 'Ö', '&ouml;' => 'ö', '&Oslash;' => 'Ø', '&oslash;' => 'ø',
+                            '&OElig;'  => 'Œ', '&oelig;' => 'œ', '&szlig;' => 'ß', '&THORN;' => 'Þ', '&thorn;' => 'þ', '&Ugrave;' => 'Ù', '&ugrave;' => 'ù', '&Uacute;' => 'Ú',
+                            '&uacute;' => 'ú', '&Ucirc;' => 'Û', '&ucirc;' => 'û', '&Uuml;' => 'Ü', '&uuml;' => 'ü', '&Yacute;' => 'Ý', '&yacute;' => 'ý', '&Yuml;' => 'Ÿ', '&yuml;' => 'ÿ',
+                        ];
+                        // And replace any if found in the match
+                        $replaced = str_replace(array_keys($replacements), array_values($replacements), $match);
 
-            return $this->commitReturn($data);
-        } catch (\Exception $e) {
-            $this->setError('error', $e->getMessage());
+                        // Attempt to locate an associated page
+                        $page = Page::get()->where('displayTitle', $replaced)->first();
+
+                        // Make a version of the match suitable for regex replacement
+                        $regexMatch = str_replace('(', '\(', $match);
+                        $regexMatch = str_replace(')', '\)', $regexMatch);
+
+                        // If there is a page, simply substitute out the text for a proper link
+                        if ($page) {
+                            if ($i == 1) {
+                                $item = preg_replace('/\[\['.$regexMatch.'\]\]/', $page->displayName, $item);
+                            } elseif ($i == 2) {
+                                $item = preg_replace('/\[\['.$regexMatch.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.$page->url.'" class="text-primary"'.($page->summary ? ' data-toggle="tooltip" title="'.$page->summary.'"' : '').'>'.$matches[$i][$i2].'</a>', $item);
+                            }
+                            // And make a note that the page is being linked to
+                            $data['links'][] = [
+                                'link_id' => $page->id,
+                            ];
+                        } else {
+                            if ($i == 1) {
+                                $item = preg_replace('/\[\['.$regexMatch.'\]\]/', '<a href="'.url('special/create-wanted/'.str_replace(' ', '_', $match)).'" class="text-danger">'.$match.'</a>', $item);
+                            } elseif ($i == 2) {
+                                $item = preg_replace('/\[\['.$regexMatch.'\|'.$matches[$i][$i2].'\]\]/', '<a href="'.url('special/create-wanted/'.str_replace(' ', '_', $match)).'" class="text-danger">'.$matches[$i][$i2].'</a>', $item);
+                            }
+
+                            // If there's no page yet, log a placeholder link
+                            // This won't do much, but it will store two pieces of info:
+                            // 1. That the linked-to page is wanted
+                            // 2. That this specific page tried to link to it
+                            // which will help generate maintenance reports and, when the
+                            // page is created, help update this page.
+                            $data['links'][] = [
+                                'title' => $match,
+                            ];
+                        }
+                        $i2++;
+                    }
+                }
+                $i++;
+            }
+            $data['parsed'][$key] = $item;
         }
 
-        return $this->rollbackReturn(false);
+        return $data;
     }
 
     /**
