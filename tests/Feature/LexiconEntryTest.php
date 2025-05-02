@@ -7,13 +7,12 @@ use App\Models\Lexicon\LexiconEtymology;
 use App\Models\Subject\LexiconCategory;
 use App\Models\Subject\LexiconSetting;
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class LexiconEntryTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     /******************************************************************************
         LANGUAGE / LEXICON

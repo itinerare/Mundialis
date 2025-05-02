@@ -6,13 +6,12 @@ use App\Models\Page\Page;
 use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageViewFieldTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     /**
      * Test page access with an infobox field.

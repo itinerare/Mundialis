@@ -9,14 +9,13 @@ use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
 use App\Models\User\User;
 use App\Services\ImageManager;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageImageEditTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     protected function setUp(): void {
         parent::setUp();

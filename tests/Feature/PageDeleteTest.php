@@ -14,13 +14,12 @@ use App\Models\Subject\SubjectCategory;
 use App\Models\User\Rank;
 use App\Models\User\User;
 use App\Services\ImageManager;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageDeleteTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     protected function setUp(): void {
         parent::setUp();

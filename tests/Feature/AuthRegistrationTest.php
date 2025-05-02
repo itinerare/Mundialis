@@ -4,14 +4,11 @@ namespace Tests\Feature;
 
 use App\Models\User\User;
 use App\Services\InvitationService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AuthRegistrationTest extends TestCase {
-    use RefreshDatabase;
-
     // These tests center on basic user authentication
     // They are modified from https://github.com/dwightwatson/laravel-auth-tests
 

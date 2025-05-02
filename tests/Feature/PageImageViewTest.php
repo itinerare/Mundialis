@@ -9,13 +9,10 @@ use App\Models\Page\PageImageVersion;
 use App\Models\Page\PagePageImage;
 use App\Models\User\User;
 use App\Services\ImageManager;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageImageViewTest extends TestCase {
-    use RefreshDatabase;
-
     protected function setUp(): void {
         parent::setUp();
 

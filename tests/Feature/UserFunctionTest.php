@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
@@ -13,7 +12,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class UserFunctionTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     /******************************************************************************
         USER / SETTINGS

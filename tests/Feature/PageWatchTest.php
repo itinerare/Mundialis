@@ -6,13 +6,10 @@ use App\Models\Page\Page;
 use App\Models\Page\PageVersion;
 use App\Models\User\User;
 use App\Models\User\WatchedPage;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageWatchTest extends TestCase {
-    use RefreshDatabase;
-
     protected function setUp(): void {
         parent::setUp();
 

@@ -12,13 +12,12 @@ use App\Models\Page\PageVersion;
 use App\Models\User\User;
 use App\Models\User\WatchedPage;
 use App\Services\ImageManager;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class UserNotificationTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     /******************************************************************************
         USER / NOTIFICATIONS

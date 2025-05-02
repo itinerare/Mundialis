@@ -4,14 +4,11 @@ namespace Tests\Feature;
 
 use App\Models\User\Rank;
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AccessTest extends TestCase {
-    use RefreshDatabase;
-
     /******************************************************************************
         ACCESS/MIDDLEWARE
     *******************************************************************************/

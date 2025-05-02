@@ -4,13 +4,10 @@ namespace Tests\Feature;
 
 use App\Models\User\User;
 use App\Services\InvitationService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AdminInvitationTest extends TestCase {
-    use RefreshDatabase;
-
     /******************************************************************************
         ADMIN / INVITATIONS
     *******************************************************************************/

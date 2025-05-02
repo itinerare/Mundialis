@@ -7,13 +7,12 @@ use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\TimeChronology;
 use App\Models\Subject\TimeDivision;
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class SubjectDataTimeTest extends TestCase {
-    use RefreshDatabase, withFaker;
+    use WithFaker;
 
     protected function setUp(): void {
         parent::setUp();

@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\User\User;
 use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
@@ -13,8 +12,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AuthPasswordResetTest extends TestCase {
-    use RefreshDatabase;
-
     // These tests center on basic user authentication
     // They are modified from https://github.com/dwightwatson/laravel-auth-tests
 

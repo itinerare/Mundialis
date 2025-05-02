@@ -6,7 +6,6 @@ use App\Models\Page\Page;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\SubjectTemplate;
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
@@ -15,7 +14,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class SubjectDataTest extends TestCase {
-    use RefreshDatabase, withFaker;
+    use WithFaker;
 
     protected function setUp(): void {
         parent::setUp();

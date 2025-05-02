@@ -3,15 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AdminSiteImagesTest extends TestCase {
-    use RefreshDatabase;
-
     /******************************************************************************
         ADMIN / SITE IMAGES
     *******************************************************************************/
