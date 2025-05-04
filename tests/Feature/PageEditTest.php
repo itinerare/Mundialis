@@ -22,13 +22,14 @@ class PageEditTest extends TestCase {
     /**
      * Test page creation access.
      *
-     * @param bool $withCategory
-     * @param int  $status
+     * @param string $subject
+     * @param bool   $withCategory
+     * @param int    $status
      */
     #[DataProvider('getCreatePageProvider')]
-    public function testGetCreatePage($withCategory, $status) {
+    public function testGetCreatePage($subject, $withCategory, $status) {
         if ($withCategory) {
-            $category = SubjectCategory::factory()->create();
+            $category = SubjectCategory::factory()->subject($subject)->create();
         }
 
         $response = $this->actingAs($this->editor)
@@ -39,21 +40,33 @@ class PageEditTest extends TestCase {
 
     public static function getCreatePageProvider() {
         return [
-            'with category'    => [1, 200],
-            'without category' => [0, 404],
+            'person with category'   => ['people', 1, 200],
+            'place with category'    => ['places', 1, 200],
+            'species with category'  => ['species', 1, 200],
+            'thing with category'    => ['things', 1, 200],
+            'concept with category'  => ['concepts', 1, 200],
+            'event with category'    => ['time', 1, 200],
+            'language with category' => ['language', 1, 200],
+            'misc with category'     => ['misc', 1, 200],
+            'misc without category'  => ['misc', 0, 404],
         ];
     }
 
     /**
      * Test page editing access.
      *
-     * @param bool $withPage
-     * @param int  $status
+     * @param string $subject
+     * @param bool   $withPage
+     * @param int    $status
      */
     #[DataProvider('getEditPageProvider')]
-    public function testGetEditPage($withPage, $status) {
+    public function testGetEditPage($subject, $withPage, $status) {
         if ($withPage) {
-            $page = Page::factory()->create();
+            $category = SubjectCategory::factory()->subject($subject)->create();
+
+            $page = Page::factory()->category($category->id)->create();
+            PageVersion::factory()->page($page->id)
+                ->user(User::factory()->editor()->create()->id)->create();
         }
 
         $response = $this->actingAs($this->editor)
@@ -64,8 +77,15 @@ class PageEditTest extends TestCase {
 
     public static function getEditPageProvider() {
         return [
-            'with page'    => [1, 200],
-            'without page' => [0, 404],
+            'person with page'   => ['people', 1, 200],
+            'place with page'    => ['places', 1, 200],
+            'species with page'  => ['species', 1, 200],
+            'thing with page'    => ['things', 1, 200],
+            'concept with page'  => ['concepts', 1, 200],
+            'event with page'    => ['time', 1, 200],
+            'language with page' => ['language', 1, 200],
+            'misc with page'     => ['misc', 1, 200],
+            'misc without page'  => ['misc', 0, 404],
         ];
     }
 

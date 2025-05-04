@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Page\Page;
 use App\Models\Page\PageProtection;
 use App\Models\Page\PageVersion;
+use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -26,10 +27,16 @@ class PageProtectTest extends TestCase {
     /**
      * Test page protection access.
      *
-     * @param bool $isValid
+     * @param string $subject
+     * @param bool   $isValid
      */
     #[DataProvider('getProtectPageProvider')]
-    public function testGetProtectPage($isValid) {
+    public function testGetProtectPage($subject, $isValid) {
+        if ($subject != 'misc') {
+            $category = SubjectCategory::factory()->subject($subject)->create();
+            $this->page->update(['category_id' => $category->id]);
+        }
+
         $response = $this->actingAs($this->admin)
             ->get('/pages/'.($isValid ? $this->page->id : 9999).'/protect');
 
@@ -38,8 +45,15 @@ class PageProtectTest extends TestCase {
 
     public static function getProtectPageProvider() {
         return [
-            'valid'   => [1],
-            'invalid' => [0],
+            'valid person'   => ['people', 1],
+            'valid place'    => ['places', 1],
+            'valid species'  => ['species', 1],
+            'valid thing'    => ['things', 1],
+            'valid concept'  => ['concepts', 1],
+            'valid event'    => ['time', 1],
+            'valid language' => ['language', 1],
+            'valid misc'     => ['misc', 1],
+            'invalid misc'   => ['misc', 0],
         ];
     }
 
