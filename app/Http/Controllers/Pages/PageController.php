@@ -40,7 +40,7 @@ class PageController extends Controller {
 
         return view('pages.page', [
             'page' => $page,
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -82,7 +82,7 @@ class PageController extends Controller {
             'page'     => $page,
             'versions' => $query->paginate(20)->appends($request->query()),
             'users'    => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -111,7 +111,7 @@ class PageController extends Controller {
         return view('pages.page_links_here', [
             'page'  => $page,
             'links' => $query->paginate(20)->appends($request->query()),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -134,7 +134,7 @@ class PageController extends Controller {
         return view('pages.page_version', [
             'page'    => $page,
             'version' => $version,
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -311,7 +311,7 @@ class PageController extends Controller {
             'page'        => $page,
             'protections' => $query->paginate(20)->appends($request->query()),
             'users'       => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -379,7 +379,7 @@ class PageController extends Controller {
         return view('pages.page_move', [
             'page'       => $page,
             'categories' => $sortedCategories,
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }

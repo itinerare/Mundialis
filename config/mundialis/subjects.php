@@ -34,6 +34,7 @@ return [
                 ],
             ],
         ],
+        'hasDates' => true,
     ],
 
     'places'   => [
@@ -90,6 +91,7 @@ return [
                 ],
             ],
         ],
+        'hasDates' => true,
     ],
 
     'language' => [

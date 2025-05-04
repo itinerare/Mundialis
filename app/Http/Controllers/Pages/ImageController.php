@@ -74,7 +74,7 @@ class ImageController extends Controller {
             'page'   => $page,
             'images' => $query->paginate(20)->appends($request->query()),
             'users'  => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -196,7 +196,7 @@ class ImageController extends Controller {
             'page'        => $page,
             'pageOptions' => $sortedPages,
             'users'       => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -249,7 +249,7 @@ class ImageController extends Controller {
             'page'        => $page,
             'pageOptions' => $sortedPages,
             'users'       => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -352,7 +352,7 @@ class ImageController extends Controller {
         return view('pages.images.sort', [
             'page'   => $page,
             'images' => $query->get(),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }

@@ -67,7 +67,7 @@ class RelationshipController extends Controller {
         return view('pages.relationships.relationships', [
             'page'          => $page,
             'relationships' => $query->paginate(20)->appends($request->query()),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -87,7 +87,7 @@ class RelationshipController extends Controller {
 
         return view('pages.relationships.family_tree', [
             'page' => $page,
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
