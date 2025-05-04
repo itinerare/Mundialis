@@ -73,6 +73,32 @@ return [
         'term'        => 'Thing',
     ],
 
+    'factions' => [
+        'name'        => 'Factions',
+        'description' => 'Pages for this subject represent groups or organizations of people within your project. Depending on the scale and scope of your project, these can represent anything from small groups to whole societies.',
+        'term'        => 'Faction',
+        'segments'    => [
+            'general properties' => [
+                'parent' => [
+                    'name'        => 'Parent Faction (Optional)',
+                    'description' => 'The parent faction, group, or organization that the faction being edited exists within.',
+                ],
+            ],
+            'infobox' => [
+                'formation-dissolution' => [
+                    'name'        => 'Formation & Dissolution (Optional)',
+                    'description' => 'These allow setting of the time and place of the faction\'s formation and/or dissolution. If both are set, and both times are within the same <a href="/admin/data/time/chronology">chronology</a>, the site will attempt to calculate age at time of dissolution (assuming that the greatest <a href="/admin/data/time/divisions">division of time</a> corresponds to years). This can be overridden by manually setting an age. Date settings use either a single generic year field (if no divisions of time are set) or date fields constructed according to the divisions enabled for use in dates.',
+                ],
+            ],
+        ],
+        'hasDates' => true,
+        'editing'  => [
+            'factionOptions'    => true,
+            'placeOptions'      => true,
+            'chronologyOptions' => true,
+        ],
+    ],
+
     'concepts' => [
         'name'        => 'Concepts',
         'description' => 'Pages for this subject represent abstract concepts within or relevant to your project. This covers an immense amount of potential material; everything from natural laws to social constructs, laws, and culture. Time and language are technically part of this umbrella as well, though are represented independently.',

@@ -615,9 +615,29 @@ class PageManager extends Service {
                 // Record parent location
                 $data['parent_id'] = $data['parent_id'] ?? null;
                 break;
+            case 'factions':
+                // Record parent faction
+                $data['parent_id'] = $data['parent_id'] ?? null;
+
+                // Record formation and dissolution data
+                foreach (['formation', 'dissolution'] as $segment) {
+                    if (isset($data[$segment.'_place_id']) || isset($data[$segment.'_chronology_id'])) {
+                        $data['data'][$segment] = [
+                            'place'      => $data[$segment.'_place_id'] ?? null,
+                            'chronology' => $data[$segment.'_chronology_id'] ?? null,
+                        ];
+                    }
+                    foreach ((new TimeDivision)->dateFields() as $key=>$field) {
+                        if (isset($data[$segment.'_'.$key])) {
+                            $data['data'][$segment]['date'][$key] = $data[$segment.'_'.$key] ?? null;
+                        }
+                    }
+                }
+                break;
             case 'time':
                 // Record chronology
                 $data['parent_id'] = $data['parent_id'] ?? null;
+
                 // Record dates
                 foreach (['start', 'end'] as $segment) {
                     foreach ((new TimeDivision)->dateFields() as $key=>$field) {

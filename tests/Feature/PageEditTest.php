@@ -81,6 +81,7 @@ class PageEditTest extends TestCase {
             'place with page'    => ['places', 1, 200],
             'species with page'  => ['species', 1, 200],
             'thing with page'    => ['things', 1, 200],
+            'faction with page'  => ['factions', 1, 200],
             'concept with page'  => ['concepts', 1, 200],
             'event with page'    => ['time', 1, 200],
             'language with page' => ['language', 1, 200],

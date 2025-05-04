@@ -159,6 +159,8 @@ class PageController extends Controller {
             'placeOptions' => Page::subject('places')->pluck('title', 'id'),
         ] : []) + (config('mundialis.subjects.'.$category->subject['key'].'.editing.chronologyOptions') ? [
             'chronologyOptions' => TimeChronology::pluck('name', 'id'),
+        ] : []) + (config('mundialis.subjects.'.$category->subject['key'].'.editing.factionOptions') ? [
+            'factionOptions' => Page::subject('factions')->pluck('title', 'id'),
         ] : []));
     }
 
@@ -182,6 +184,8 @@ class PageController extends Controller {
             'placeOptions' => Page::subject('places')->where('id', '!=', $page->id)->pluck('title', 'id'),
         ] : []) + (config('mundialis.subjects.'.$page->category->subject['key'].'.editing.chronologyOptions') ? [
             'chronologyOptions' => TimeChronology::pluck('name', 'id'),
+        ] : []) + (config('mundialis.subjects.'.$page->category->subject['key'].'.editing.factionOptions') ? [
+            'factionOptions' => Page::subject('factions')->where('id', '!=', $page->id)->pluck('title', 'id'),
         ] : []));
     }
 
@@ -241,6 +245,15 @@ class PageController extends Controller {
             if ($category->subject['key'] == 'people') {
                 $answerArray[] = 'people_name';
                 foreach (['birth', 'death'] as $segment) {
+                    $answerArray[] = $segment.'_place_id';
+                    $answerArray[] = $segment.'_chronology_id';
+                    foreach ((new TimeDivision)->dateFields() as $key=>$field) {
+                        $answerArray[] = $segment.'_'.$key;
+                    }
+                }
+            }
+            if ($category->subject['key'] == 'factions') {
+                foreach (['formation', 'dissolution'] as $segment) {
                     $answerArray[] = $segment.'_place_id';
                     $answerArray[] = $segment.'_chronology_id';
                     foreach ((new TimeDivision)->dateFields() as $key=>$field) {

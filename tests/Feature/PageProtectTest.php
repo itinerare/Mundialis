@@ -49,6 +49,7 @@ class PageProtectTest extends TestCase {
             'valid place'    => ['places', 1],
             'valid species'  => ['species', 1],
             'valid thing'    => ['things', 1],
+            'valid faction'  => ['factions', 1],
             'valid concept'  => ['concepts', 1],
             'valid event'    => ['time', 1],
             'valid language' => ['language', 1],
