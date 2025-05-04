@@ -379,7 +379,9 @@ class PageController extends Controller {
         return view('pages.page_move', [
             'page'       => $page,
             'categories' => $sortedCategories,
-        ]);
+        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+            'dateHelper' => new TimeDivision,
+        ] : []));
     }
 
     /**
