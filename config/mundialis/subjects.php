@@ -34,7 +34,9 @@ return [
                 ],
             ],
         ],
+        // Whether or not dates are displayed on and around pages in this subject/if a helper class for date display must be provided.
         'hasDates' => true,
+        // Which common options (chronologies, places, etc.) need to be provided when creating or editing pages in this subject.
         'editing'  => [
             'placeOptions'      => true,
             'chronologyOptions' => true,
