@@ -35,6 +35,10 @@ return [
             ],
         ],
         'hasDates' => true,
+        'editing'  => [
+            'placeOptions'      => true,
+            'chronologyOptions' => true,
+        ],
     ],
 
     'places'   => [
@@ -48,6 +52,9 @@ return [
                     'description' => 'The location that the location being edited exists within. For instance, countries exist within continents, neighborhoods exist within cities, etc.',
                 ],
             ],
+        ],
+        'editing' => [
+            'placeOptions' => true,
         ],
     ],
 
@@ -92,6 +99,9 @@ return [
             ],
         ],
         'hasDates' => true,
+        'editing'  => [
+            'chronologyOptions' => true,
+        ],
     ],
 
     'language' => [

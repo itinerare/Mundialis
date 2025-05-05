@@ -155,12 +155,9 @@ class PageController extends Controller {
         return view('pages.create_edit_page', [
             'page'     => new Page,
             'category' => $category,
-        ] + ($category->subject['key'] == 'places' ? [
+        ] + (config('mundialis.subjects.'.$category->subject['key'].'.editing.placeOptions') ? [
             'placeOptions' => Page::subject('places')->pluck('title', 'id'),
-        ] : []) + ($category->subject['key'] == 'time' ? [
-            'chronologyOptions' => TimeChronology::pluck('name', 'id'),
-        ] : []) + ($category->subject['key'] == 'people' ? [
-            'placeOptions'      => Page::subject('places')->pluck('title', 'id'),
+        ] : []) + (config('mundialis.subjects.'.$category->subject['key'].'.editing.chronologyOptions') ? [
             'chronologyOptions' => TimeChronology::pluck('name', 'id'),
         ] : []));
     }
@@ -181,12 +178,9 @@ class PageController extends Controller {
         return view('pages.create_edit_page', [
             'page'     => $page,
             'category' => $page->category,
-        ] + ($page->category->subject['key'] == 'places' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.editing.placeOptions') ? [
             'placeOptions' => Page::subject('places')->where('id', '!=', $page->id)->pluck('title', 'id'),
-        ] : []) + ($page->category->subject['key'] == 'time' ? [
-            'chronologyOptions' => TimeChronology::pluck('name', 'id'),
-        ] : []) + ($page->category->subject['key'] == 'people' ? [
-            'placeOptions'      => Page::subject('places')->pluck('title', 'id'),
+        ] : []) + (config('mundialis.subjects.'.$page->category->subject['key'].'.editing.chronologyOptions') ? [
             'chronologyOptions' => TimeChronology::pluck('name', 'id'),
         ] : []));
     }
