@@ -4,6 +4,43 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [3.0.0-rc.1](https://code.itinerare.net/itinerare/Mundialis/compare/v2.6.1...v3.0.0-rc.1) (2025-05-05)
+
+### ⚠ BREAKING CHANGES
+
+* Rebuild on Laravel 11 application skeleton ([685eb7](https://code.itinerare.net/itinerare/Mundialis/commit/685eb784ca8f964ba0ae985f63bc31a1a9a656d2))
+* Update to Laravel 11 ([ef26e8](https://code.itinerare.net/itinerare/Mundialis/commit/ef26e889f8c042044b490078d7ddf04f7db454d0))
+
+### Features
+
+* Enable automatic eager loading ([469b0f](https://code.itinerare.net/itinerare/Mundialis/commit/469b0f1d316f06fcce9d6ea430b34dead069f82f))
+
+### Bug Fixes
+
+* Adjust form syntax ([7e5921](https://code.itinerare.net/itinerare/Mundialis/commit/7e59212989d1144290a66133e6188c768a3b182d))
+* Correct page, lexicon entry create/edit form urls ([2d0779](https://code.itinerare.net/itinerare/Mundialis/commit/2d0779264d6c1019ccf6d83bb2964e463fc0ce7d))
+* Don't handle wiki link parsing in a transaction ([d07385](https://code.itinerare.net/itinerare/Mundialis/commit/d07385796fdd2a6e916428c66848850eb74375eb))
+* Revert example .env session driver value ([b869b1](https://code.itinerare.net/itinerare/Mundialis/commit/b869b13d861a4e714850cc8720b8073b9aa9d36e))
+* Update example .env ([ab0867](https://code.itinerare.net/itinerare/Mundialis/commit/ab0867e5762782304c242d9f46d09975e3dccc87))
+* Use polymorphic relationships for page links ([8404c5](https://code.itinerare.net/itinerare/Mundialis/commit/8404c5a774474f8225e744eca7b62d542574486f))
+
+##### Pages
+
+* Provide dateHelper on move page view for people, time pages ([7d40ee](https://code.itinerare.net/itinerare/Mundialis/commit/7d40ee3925749426c3e2188ada618fbaf5bea96d))
+
+##### Tests
+
+* Remove unnecessary DB cleanup from some test files ([c2c4e5](https://code.itinerare.net/itinerare/Mundialis/commit/c2c4e5309138766265bf846976c3c75b7d87f5c7))
+* Update PHPUnit, tests ([915125](https://code.itinerare.net/itinerare/Mundialis/commit/9151255a75451c157b39fbdd4a08e0e59074df11))
+* Use LazilyRefreshDatabase on base test case ([045ebb](https://code.itinerare.net/itinerare/Mundialis/commit/045ebb85f257fe7c7244d2a251437cbb89159253))
+
+##### Users
+
+* Refine forgot password message check ([35dc82](https://code.itinerare.net/itinerare/Mundialis/commit/35dc827e45a4efee711160ff7a132de24e53e7b5))
+
+
+---
+
 ## [2.6.1](https://code.itinerare.net/itinerare/Mundialis/compare/v2.6.0...v2.6.1) (2025-03-17)
 
 ### Bug Fixes
