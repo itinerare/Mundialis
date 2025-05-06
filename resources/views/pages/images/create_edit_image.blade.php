@@ -23,9 +23,9 @@
     @endif
 
     {!! Form::open([
-        'url' => $image->id
-            ? 'pages/' . $page->id . '/gallery/edit/' . $image->id
-            : 'pages/' . $page->id . '/gallery/create',
+        'action' => $image->id
+            ? '/pages/' . $page->id . '/gallery/edit/' . $image->id
+            : '/pages/' . $page->id . '/gallery/create',
         'files' => true,
         'id' => 'imageForm',
     ]) !!}

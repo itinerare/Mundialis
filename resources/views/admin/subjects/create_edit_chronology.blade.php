@@ -21,9 +21,9 @@
     </h1>
 
     {!! Form::open([
-        'url' => $chronology->id
-            ? 'admin/data/time/chronology/edit/' . $chronology->id
-            : 'admin/data/time/chronology/create',
+        'action' => $chronology->id
+            ? '/admin/data/time/chronology/edit/' . $chronology->id
+            : '/admin/data/time/chronology/create',
     ]) !!}
 
     <div class="row">
