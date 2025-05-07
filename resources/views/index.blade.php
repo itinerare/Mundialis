@@ -10,23 +10,22 @@
 
 @section('content')
     @if (Settings::get('visitors_can_read') || Auth::check())
+        <div class="mb-4">
+            {!! $page ? $page->text : 'Please finish set up!' !!}
+        </div>
+
+        <p>
+            Select a subject from the side- or navigation bar to browse!
+            @if (Auth::user() && Auth::user()->canWrite)
+                Or consider contributing by making a <a href="{{ url('special/wanted-pages') }}">wanted page</a> or
+                working on pages flagged for maintenance.
+            @endif
+        </p>
         <div class="row">
-            <div class="col-md">
-                <div class="mb-4">
-                    {!! $page ? $page->text : 'Please finish set up!' !!}
-                </div>
-
-                <p>
-                    Select a subject from the side- or navigation bar to browse!
-                    @if (Auth::user() && Auth::user()->canWrite)
-                        Or consider contributing by making a <a href="{{ url('special/wanted-pages') }}">wanted page</a> or
-                        working on pages flagged for maintenance.
-                    @endif
-                </p>
-
+            <div class="col-md-6">
                 @include('widgets._recent_pages')
             </div>
-            <div class="col-md-5">
+            <div class="col-md-6">
                 @include('widgets._recent_images')
             </div>
         </div>

@@ -1,4 +1,4 @@
-<div class="card mb-4">
+<div class="card mb-4 h-100">
     <div class="card-header">
         <h4>Recent Images</h4>
     </div>
@@ -16,7 +16,7 @@
                         @if ($version->image)
                             <a href="{{ url('special/get-image/' . $version->image->id) }}"
                                 class="image-link mw-100"><img src="{{ $version->image->thumbnailUrl }}"
-                                    class="img-thumbnail mw-100" /></a>
+                                    class="img-thumbnail mw-100" style="max-height: 50px;" /></a>
                         @else
                             Deleted image
                         @endif
