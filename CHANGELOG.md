@@ -4,6 +4,20 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [3.0.0-rc.2](https://code.itinerare.net/itinerare/Mundialis/compare/v3.0.0-rc.1...v3.0.0-rc.2) (2025-05-12)
+
+### Bug Fixes
+
+* Finesse landing page display ([22f407](https://code.itinerare.net/itinerare/Mundialis/commit/22f407a323715566d143a5bb02e613eb69821e96))
+* Update more form opens; closes #492 ([f52ff1](https://code.itinerare.net/itinerare/Mundialis/commit/f52ff1b8b60bd0ea09381cbbc8550c7aab05fb73))
+
+##### Subjects
+
+* Improve page terminology on subject page ([44fbb9](https://code.itinerare.net/itinerare/Mundialis/commit/44fbb962a83328d11f1b97b6f066c37e123fd354))
+
+
+---
+
 ## [3.0.0-rc.1](https://code.itinerare.net/itinerare/Mundialis/compare/v2.6.1...v3.0.0-rc.1) (2025-05-05)
 
 ### ⚠ BREAKING CHANGES
