@@ -13,9 +13,9 @@
     </p>
 
     {!! Form::open([
-        'url' => $relationship->id
-            ? 'pages/' . $page->id . '/relationships/edit/' . $relationship->id
-            : 'pages/' . $page->id . '/relationships/create',
+        'action' => $relationship->id
+            ? '/pages/' . $page->id . '/relationships/edit/' . $relationship->id
+            : '/pages/' . $page->id . '/relationships/create',
     ]) !!}
 
     <div class="form-group">

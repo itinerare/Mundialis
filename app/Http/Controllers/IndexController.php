@@ -39,7 +39,7 @@ class IndexController extends Controller {
         return view('index', [
             'page'          => SitePage::where('key', 'about')->first(),
             'pageVersions'  => $pageVersions->take(10),
-            'imageVersions' => $imageVersions->take(10),
+            'imageVersions' => $imageVersions->take(5),
         ]);
     }
 

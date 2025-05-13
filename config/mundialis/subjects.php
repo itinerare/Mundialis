@@ -64,6 +64,7 @@ return [
         'name'        => 'Flora & Fauna',
         'description' => 'Pages for this subject represent species, plant and/or animal, within or relevant to your project.',
         'term'        => 'Species',
+        'term_plural' => 'Species',
     ],
 
     'things'   => [
@@ -82,6 +83,7 @@ return [
         'name'        => 'Time & Events',
         'description' => 'Pages for this subject correspond to individual events. While categories are used much like other subjects, this subject also has separate chronology settings that are used to order large spans of time (and events within them) as well as settings for divisions of time.',
         'term'        => 'Event',
+        'term_plural' => 'Events',
         'pages'       => [
             // This is used to generate links/interface with the generic views; routes etc must
             // be manually set as these correspond to particular/specialized functions
@@ -110,6 +112,7 @@ return [
         'name'        => 'Language',
         'description' => 'Pages for this subject cover concepts about and around language, such as grammar, etc. However, the heart of this subject is the lexicon system, which allows you to categorize and enter vocabulary used within your project. This can be as simple as some special terms that are important or unqiue to your project, or as elaborate as whole languages or linguistic structures. Lexicon settings cover the parts of speech (noun, verb, etc.) used, while lexicon categories allow for organization of words-- as well as some advanced functions like specifying cases and auto-conjucation/declension.',
         'term'        => 'Lang. Page',
+        'term_plural' => 'Lang. Pages',
         'pages'       => [
             'lexicon-settings'   => '<i class="fas fa-list-ul"></i> Lexicon Settings',
             'lexicon-categories' => '<i class="far fa-list-alt"></i> Lexicon Categories',
@@ -119,6 +122,7 @@ return [
     'misc'     => [
         'name'        => 'Miscellaneous',
         'term'        => 'Misc. Page',
+        'term_plural' => 'Misc. Pages',
         'description' => 'While the other subjects should be broad enough to cover most if not all use cases, this subject-of-sorts is here in the event that some content falls outside the others nonetheless.',
     ],
 ];

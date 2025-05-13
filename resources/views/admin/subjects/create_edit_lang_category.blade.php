@@ -21,9 +21,9 @@
     </h1>
 
     {!! Form::open([
-        'url' => $category->id
-            ? 'admin/data/language/lexicon-categories/edit/' . $category->id
-            : 'admin/data/language/lexicon-categories/create',
+        'action' => $category->id
+            ? '/admin/data/language/lexicon-categories/edit/' . $category->id
+            : '/admin/data/language/lexicon-categories/create',
     ]) !!}
 
     <h2>Basic Information</h2>

@@ -20,9 +20,9 @@
     </h1>
 
     {!! Form::open([
-        'url' => $category->id
-            ? 'admin/data/categories/edit/' . $category->id
-            : 'admin/data/' . $subject['key'] . '/create',
+        'action' => $category->id
+            ? '/admin/data/categories/edit/' . $category->id
+            : '/admin/data/' . $subject['key'] . '/create',
         'files' => true,
     ]) !!}
 
