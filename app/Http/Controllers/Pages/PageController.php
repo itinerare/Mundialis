@@ -229,37 +229,60 @@ class PageController extends Controller {
                     $request[$key] = 0;
                 }
             }
-            if ($category->subject['key'] == 'time') {
-                foreach (['start', 'end'] as $segment) {
-                    foreach ((new TimeDivision)->dateFields() as $key=>$field) {
-                        $answerArray[] = 'date_'.$segment.'_'.$key;
-                        if (isset($field['rules'])) {
-                            $validationRules['date_'.$segment.'_'.$key] = $field['rules'];
+
+            switch ($category->subject['key']) {
+                case 'people':
+                    $answerArray[] = 'people_name';
+
+                    foreach (['birth', 'death'] as $segment) {
+                        $answerArray[] = $segment.'_place_id';
+                        $validationRules[$segment.'_place_id'] = ['nullable', Rule::exists('pages', 'id')->where(function ($query) {
+                            $query->whereNull('deleted_at');
+                        })];
+
+                        $answerArray[] = $segment.'_chronology_id';
+                        $validationRules[$segment.'_chronology_id'] = ['nullable', 'exists:time_chronology,id'];
+                        foreach ((new TimeDivision)->dateFields() as $key=>$field) {
+                            $answerArray[] = $segment.'_'.$key;
                         }
-                        if ($field['type'] == 'checkbox' && !isset($request['date_'.$segment.'_'.$key])) {
-                            $request['date_'.$segment.'_'.$key] = 0;
+                    }
+                    break;
+                case 'places':
+                    $validationRules['parent_id'] = ['nullable', Rule::exists('pages', 'id')->where(function ($query) {
+                        $query->whereNull('deleted_at');
+                    })];
+                    break;
+                case 'factions':
+                    $validationRules['parent_id'] = ['nullable', Rule::exists('pages', 'id')->where(function ($query) {
+                        $query->whereNull('deleted_at');
+                    })];
+
+                    foreach (['formation', 'dissolution'] as $segment) {
+                        $answerArray[] = $segment.'_place_id';
+                        $validationRules[$segment.'_place_id'] = ['nullable', Rule::exists('pages', 'id')->where(function ($query) {
+                            $query->whereNull('deleted_at');
+                        })];
+
+                        $answerArray[] = $segment.'_chronology_id';
+                        $validationRules[$segment.'_chronology_id'] = ['nullable', 'exists:time_chronology,id'];
+                        foreach ((new TimeDivision)->dateFields() as $key=>$field) {
+                            $answerArray[] = $segment.'_'.$key;
                         }
                     }
-                }
-            }
-            if ($category->subject['key'] == 'people') {
-                $answerArray[] = 'people_name';
-                foreach (['birth', 'death'] as $segment) {
-                    $answerArray[] = $segment.'_place_id';
-                    $answerArray[] = $segment.'_chronology_id';
-                    foreach ((new TimeDivision)->dateFields() as $key=>$field) {
-                        $answerArray[] = $segment.'_'.$key;
+                    break;
+                case 'time':
+                    $validationRules['parent_id'] = ['nullable', 'exists:time_chronology,id'];
+
+                    foreach (['start', 'end'] as $segment) {
+                        foreach ((new TimeDivision)->dateFields() as $key=>$field) {
+                            $answerArray[] = 'date_'.$segment.'_'.$key;
+                            $validationRules['date_'.$segment.'_'.$key] = ['nullable', 'numeric'];
+                        }
                     }
-                }
-            }
-            if ($category->subject['key'] == 'factions') {
-                foreach (['formation', 'dissolution'] as $segment) {
-                    $answerArray[] = $segment.'_place_id';
-                    $answerArray[] = $segment.'_chronology_id';
-                    foreach ((new TimeDivision)->dateFields() as $key=>$field) {
-                        $answerArray[] = $segment.'_'.$key;
-                    }
-                }
+                    break;
+                default:
+                    // Do nothing
+                    break;
             }
         }
 

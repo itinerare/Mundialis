@@ -47,7 +47,9 @@ class PageManager extends Service {
             }
 
             // Process data for storage
-            $data = $this->processPageData($data);
+            if (!$data = $this->processPageData($data)) {
+                throw new \Exception('An error occurred while processing page data.');
+            }
 
             // Parse data for wiki-style links
             if (!$data['data'] = $this->parse_wiki_links($data['data'])) {
@@ -164,7 +166,9 @@ class PageManager extends Service {
             }
 
             // Process data for storage
-            $data = $this->processPageData($data, $page);
+            if (!$data = $this->processPageData($data, $page)) {
+                throw new \Exception('An error occurred while processing page data.');
+            }
 
             // Parse data for wiki-style links
             if (!$data['data'] = $this->parse_wiki_links($data['data'])) {
@@ -563,10 +567,10 @@ class PageManager extends Service {
     /**
      * Processes page data for storage.
      *
-     * @param array                $data
-     * @param App\Models\Page\Page $page
+     * @param array                     $data
+     * @param App\Models\Page\Page|null $page
      *
-     * @return array
+     * @return array|bool
      */
     private function processPageData($data, $page = null) {
         // Fetch category-- either from the page if it already exists, or from the category ID
@@ -599,6 +603,13 @@ class PageManager extends Service {
                 // Record birth and death data
                 foreach (['birth', 'death'] as $segment) {
                     if (isset($data[$segment.'_place_id']) || isset($data[$segment.'_chronology_id'])) {
+                        if (isset($data[$segment.'_place_id'])) {
+                            // Check that page indicated is a valid place
+                            if (!Page::subject('places')->where('id', $data[$segment.'_place_id'])->exists()) {
+                                return false;
+                            }
+                        }
+
                         $data['data'][$segment] = [
                             'place'      => $data[$segment.'_place_id'] ?? null,
                             'chronology' => $data[$segment.'_chronology_id'] ?? null,
@@ -612,16 +623,32 @@ class PageManager extends Service {
                 }
                 break;
             case 'places':
-                // Record parent location
-                $data['parent_id'] = $data['parent_id'] ?? null;
+                if (isset($data['parent_id'])) {
+                    // Check that page indicated is a valid place
+                    if (!Page::subject('places')->where('id', $data['parent_id'])->exists()) {
+                        return false;
+                    }
+                }
                 break;
             case 'factions':
-                // Record parent faction
-                $data['parent_id'] = $data['parent_id'] ?? null;
+                if (isset($data['parent_id'])) {
+                    // Check that page indicated is a valid faction
+                    if (!Page::subject('factions')->where('id', $data['parent_id'])->exists()) {
+                        return false;
+                    }
+                }
+                break;
 
                 // Record formation and dissolution data
                 foreach (['formation', 'dissolution'] as $segment) {
                     if (isset($data[$segment.'_place_id']) || isset($data[$segment.'_chronology_id'])) {
+                        if (isset($data[$segment.'_place_id'])) {
+                            // Check that page indicated is a valid place
+                            if (!Page::subject('places')->where('id', $data[$segment.'_place_id'])->exists()) {
+                                return false;
+                            }
+                        }
+
                         $data['data'][$segment] = [
                             'place'      => $data[$segment.'_place_id'] ?? null,
                             'chronology' => $data[$segment.'_chronology_id'] ?? null,
@@ -635,9 +662,6 @@ class PageManager extends Service {
                 }
                 break;
             case 'time':
-                // Record chronology
-                $data['parent_id'] = $data['parent_id'] ?? null;
-
                 // Record dates
                 foreach (['start', 'end'] as $segment) {
                     foreach ((new TimeDivision)->dateFields() as $key=>$field) {
