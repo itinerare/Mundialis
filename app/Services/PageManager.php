@@ -625,7 +625,7 @@ class PageManager extends Service {
     }
 
     /**
-     * Processes tags.
+     * Processes page links.
      *
      * @param Page  $page
      * @param array $data
