@@ -68,6 +68,8 @@ class PageManager extends Service {
                 // If the page is wanted, update the existing page(s)
                 foreach (PageLink::whereHas('parent')->where('parent_type', 'page')->where('title', $page->displayTitle)->get() as $link) {
                     $version = PageVersion::find($link->parent->version->id);
+
+                    // Process existing version data
                     $versionData = $version->data;
                     if (isset($versionData['data']['parsed'])) {
                         unset($versionData['data']['parsed']);
@@ -75,10 +77,16 @@ class PageManager extends Service {
                     if (isset($versionData['data']['links'])) {
                         unset($versionData['data']['links']);
                     }
-
-                    // Parse data and update version
                     $versionData['data'] = $this->parse_wiki_links($versionData['data']);
-                    $version->update(['data' => $versionData]);
+
+                    // Create a new version
+                    $link->parent->versions()->create([
+                        'user_id'  => $user->id,
+                        'type'     => 'Links Updated',
+                        'reason'   => 'A linked-to wanted page was created.',
+                        'is_minor' => 1,
+                        'data'     => $versionData,
+                    ]);
 
                     // And update the links themselves
                     $link->update([
