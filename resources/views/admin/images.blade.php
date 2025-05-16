@@ -45,8 +45,9 @@
     <div class="card mb-3">
         <div class="card-body">
             <div>
-                <h3 class="card-heading">CSS @if (Storage::fileExists('/css/custom.css'))
-                        <a href="{{ Storage::url('css/custom.css') }}" class="btn btn-info btn-sm float-right">View Current</a>
+                <h3 class="card-heading">CSS
+                    @if (Storage::fileExists('/css/custom.css'))
+                        <a href="{{ Storage::url('/css/custom.css') }}" class="btn btn-info btn-sm float-right">View Current</a>
                     @endif
                 </h3>
                 {!! Form::open(['action' => '/admin/site-images/upload/css', 'files' => true]) !!}

@@ -114,7 +114,7 @@ class FileManager extends Service {
      * @return bool
      */
     public function uploadCss($file) {
-        Storage::putFile('/css/custom.css', $file);
+        Storage::putFile(file_get_contents('/css/custom.css'), $file);
 
         return true;
     }
