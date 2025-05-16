@@ -353,9 +353,9 @@ class ImageManager extends Service {
             $file['image'] = UploadedFile::fake()->image('test_image.png');
             $file['thumbnail'] = UploadedFile::fake()->image('test_thumb.png');
 
-            $this->handleImage($file['image'], $image->imagePath, $version->imageFileName);
-            $this->handleImage($file['thumbnail'], $image->imagePath, $version->thumbnailFileName);
-        } elseif (!$create && File::exists($image->imagePath.'/'.$version->thumbnailFileName)) {
+            $this->handleImage(file_get_contents($file['image']), $image->imagePath, $version->imageFileName);
+            $this->handleImage(file_get_contents($file['thumbnail']), $image->imagePath, $version->thumbnailFileName);
+        } elseif (!$create && Storage::fileExists($image->imagePath.'/'.$version->thumbnailFileName)) {
             Storage::delete($image->imagePath.'/'.$version->thumbnailFileName);
             Storage::delete($image->imagePath.'/'.$version->imageFileName);
         }

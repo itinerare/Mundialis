@@ -11,6 +11,8 @@ use App\Models\User\User;
 use App\Services\ImageManager;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
@@ -173,8 +175,10 @@ class PageImageEditTest extends TestCase {
                 ]);
             }
 
-            $this->assertFileExists($image->imagePath.'/'.$image->version->imageFileName);
-            $this->assertFileExists($image->imagePath.'/'.$image->version->thumbnailFileName);
+            Log::info('/'.$image->imagePath.'/'.$image->version->imageFileName);
+
+            $this->assertTrue(Storage::fileExists('/'.$image->imagePath.'/'.$image->version->imageFileName));
+            $this->assertTrue(Storage::fileExists('/'.$image->imagePath.'/'.$image->version->thumbnailFileName));
 
             $this->service->testImages($image, $image->version, false);
         } else {
@@ -307,8 +311,10 @@ class PageImageEditTest extends TestCase {
             }
 
             if ($fileData) {
-                $this->assertFileExists($imageData['image']->imagePath.'/'.$imageData['image']->version->imageFileName);
-                $this->assertFileExists($imageData['image']->imagePath.'/'.$imageData['image']->version->thumbnailFileName);
+                Log::info($imageData['image']->imagePath.'/'.$imageData['image']->version->imageFileName);
+
+                $this->assertTrue(Storage::fileExists('/'.$imageData['image']->imagePath.'/'.$imageData['image']->version->imageFileName));
+                $this->assertTrue(Storage::fileExists('/'.$imageData['image']->imagePath.'/'.$imageData['image']->version->thumbnailFileName));
 
                 // Due to the way objects are handled in a test environment,
                 // it's simplest to just locate the new version directly

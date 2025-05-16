@@ -45,13 +45,13 @@ class CopyAssetsToS3 extends Command {
             $this->line('Copying '.count($files).' files from /'.$directory.'...');
     
             foreach ($files as $file) {
-                Storage::disk($to)->writeStream($file, Storage::disk($from)->readStream($file));
+                Storage::disk($from)->put($file, Storage::disk($to));
             }
         }
 
         if (Storage::disk($from)->exists('/css/custom.css')) {
             $this->line('Copying /css/custom.css...');
-            Storage::disk($to)->writeStream('/css/custom.css', Storage::disk($from)->readStream('/css/custom.css'));
+            Storage::disk($from)->put('/css/custom.css', Storage::disk($to));
         }
     }
 }
