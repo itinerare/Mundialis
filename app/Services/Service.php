@@ -6,7 +6,6 @@ use App\Models\Page\Page;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
@@ -388,7 +387,7 @@ abstract class Service {
             this->setError('error', 'Failed to upload image.');
 
             return false;
-        };
+        }
 
         return true;
     }

@@ -75,7 +75,7 @@ class FileManager extends Service {
 
             return false;
         }
-        
+
         if (count(Storage::allFiles($dir.'/'.$oldName))) {
             $this->setError('error', 'Cannot delete a folder that contains files.');
 

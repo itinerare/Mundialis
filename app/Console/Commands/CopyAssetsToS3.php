@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
 class CopyAssetsToS3 extends Command {
-   /**
+    /**
      * The name and signature of the console command.
      *
      * @var string
@@ -36,14 +36,14 @@ class CopyAssetsToS3 extends Command {
 
         $directories = ['files', 'images'];
 
-        foreach($directories as $directory){
+        foreach ($directories as $directory) {
             if (!Storage::disk($from)->exists($directory)) {
                 continue;
             }
 
             $files = Storage::disk($from)->allFiles($directory);
             $this->line('Copying '.count($files).' files from /'.$directory.'...');
-    
+
             foreach ($files as $file) {
                 Storage::disk($from)->put($file, Storage::disk($to));
             }
