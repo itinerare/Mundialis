@@ -20,13 +20,13 @@
         <h2>General Settings</h2>
         <div class="row">
             <div class="col-md-6 mb-2">
-                {!! Form::open(['url' => 'admin/site-settings/visitors_can_read']) !!}
+                {!! Form::open(['action' => '/admin/site-settings/visitors_can_read']) !!}
                 <div class="form-group h-100">
                     {!! Form::checkbox('value', 1, $settings->where('key', 'visitors_can_read')->first()->value, [
                         'class' => 'form-check-input mb-3',
                         'data-toggle' => 'toggle',
                     ]) !!}
-                    <strong>{!! Form::label('Visitors can Read') !!}:</strong>
+                    <strong>{!! Form::label('value', 'Visitors can Read') !!}:</strong>
                     {{ $settings->where('key', 'visitors_can_read')->first()->description }}<br />
                     <div class="form-group text-right mb-3">
                         {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
@@ -35,13 +35,13 @@
                 {!! Form::close() !!}
             </div>
             <div class="col-md-6 mb-2">
-                {!! Form::open(['url' => 'admin/site-settings/is_registration_open']) !!}
+                {!! Form::open(['action' => '/admin/site-settings/is_registration_open']) !!}
                 <div class="form-group h-100">
                     {!! Form::checkbox('value', 1, $settings->where('key', 'is_registration_open')->first()->value, [
                         'class' => 'form-check-input mb-3',
                         'data-toggle' => 'toggle',
                     ]) !!}
-                    <strong>{!! Form::label('Is Registration Open') !!}:</strong>
+                    <strong>{!! Form::label('value', 'Is Registration Open') !!}:</strong>
                     {{ $settings->where('key', 'is_registration_open')->first()->description }}
                 </div>
                 <div class="form-group text-right mb-3">

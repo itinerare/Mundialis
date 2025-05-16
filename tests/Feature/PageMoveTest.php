@@ -6,12 +6,12 @@ use App\Models\Page\Page;
 use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageMoveTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     protected function setUp(): void {
         parent::setUp();
@@ -24,11 +24,16 @@ class PageMoveTest extends TestCase {
     /**
      * Test page move access.
      *
-     * @dataProvider getMovePageProvider
-     *
-     * @param bool $isValid
+     * @param string $subject
+     * @param bool   $isValid
      */
-    public function testGetMovePage($isValid) {
+    #[DataProvider('getMovePageProvider')]
+    public function testGetMovePage($subject, $isValid) {
+        if ($subject != 'misc') {
+            $category = SubjectCategory::factory()->subject($subject)->create();
+            $this->page->update(['category_id' => $category->id]);
+        }
+
         $response = $this->actingAs($this->editor)
             ->get('/pages/'.($isValid ? $this->page->id : 9999).'/move');
 
@@ -37,21 +42,27 @@ class PageMoveTest extends TestCase {
 
     public static function getMovePageProvider() {
         return [
-            'valid'   => [1],
-            'invalid' => [0],
+            'valid person'   => ['people', 1],
+            'valid place'    => ['places', 1],
+            'valid species'  => ['species', 1],
+            'valid thing'    => ['things', 1],
+            'valid concept'  => ['concepts', 1],
+            'valid event'    => ['time', 1],
+            'valid language' => ['language', 1],
+            'valid misc'     => ['misc', 1],
+            'invalid misc'   => ['misc', 0],
         ];
     }
 
     /**
      * Test page moving.
      *
-     * @dataProvider postMovePageProvider
-     *
      * @param bool $withPage
      * @param bool $withReason
      * @param bool $withConflict
      * @param bool $expected
      */
+    #[DataProvider('postMovePageProvider')]
     public function testPostMovePage($withPage, $withReason, $withConflict, $expected) {
         $category = SubjectCategory::factory()->create();
         $oldCategory = $this->page->category;

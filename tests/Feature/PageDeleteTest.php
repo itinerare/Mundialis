@@ -14,12 +14,12 @@ use App\Models\Subject\SubjectCategory;
 use App\Models\User\Rank;
 use App\Models\User\User;
 use App\Services\ImageManager;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageDeleteTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     protected function setUp(): void {
         parent::setUp();
@@ -34,10 +34,9 @@ class PageDeleteTest extends TestCase {
     /**
      * Test page deletion access.
      *
-     * @dataProvider getDeletePageProvider
-     *
      * @param bool $isValid
      */
+    #[DataProvider('getDeletePageProvider')]
     public function testGetDeletePage($isValid) {
         $response = $this->actingAs($this->editor)
             ->get('/pages/'.($isValid ? $this->page->id : 9999).'/delete');
@@ -61,14 +60,13 @@ class PageDeleteTest extends TestCase {
     /**
      * Test (soft) page deletion.
      *
-     * @dataProvider postDeletePageProvider
-     *
      * @param int  $rank
      * @param bool $withProtection
      * @param bool $withChild
      * @param bool $withReason
      * @param bool $expected
      */
+    #[DataProvider('postDeletePageProvider')]
     public function testPostSoftDeletePage($rank, $withProtection, $withChild, $withReason, $expected) {
         $user = User::factory()->create([
             'rank_id' => Rank::where('sort', $rank)->first()->id,
@@ -127,10 +125,9 @@ class PageDeleteTest extends TestCase {
     /**
      * Test (soft) page deletion with associated images.
      *
-     * @dataProvider postDeletePageWithImagesProvider
-     *
      * @param int $pages
      */
+    #[DataProvider('postDeletePageWithImagesProvider')]
     public function testPostSoftDeletePageWithImages($pages) {
         for ($i = 1; $i <= $pages; $i++) {
             // Make a page
@@ -205,11 +202,10 @@ class PageDeleteTest extends TestCase {
     /**
      * Tests deleted pages access.
      *
-     * @dataProvider getDeletedPagesProvider
-     *
      * @param bool $withPage
      * @param bool $isDeleted
      */
+    #[DataProvider('getDeletedPagesProvider')]
     public function testGetDeletedPages($withPage, $isDeleted) {
         if ($withPage) {
             $page = Page::factory();
@@ -250,10 +246,9 @@ class PageDeleteTest extends TestCase {
     /**
      * Test deleted page access.
      *
-     * @dataProvider getDeletePageProvider
-     *
      * @param bool $isValid
      */
+    #[DataProvider('getDeletePageProvider')]
     public function testGetDeletedPage($isValid) {
         $page = Page::factory()->deleted()->create();
         PageVersion::factory()->page($page->id)->user($this->editor->id)->deleted()->create();
@@ -267,10 +262,9 @@ class PageDeleteTest extends TestCase {
     /**
      * Test restore page access.
      *
-     * @dataProvider getDeletePageProvider
-     *
      * @param bool $isValid
      */
+    #[DataProvider('getDeletePageProvider')]
     public function testGetRestorePage($isValid) {
         $page = Page::factory()->deleted()->create();
         PageVersion::factory()->page($page->id)->user($this->editor->id)->deleted()->create();
@@ -290,13 +284,12 @@ class PageDeleteTest extends TestCase {
     /**
      * Test page restoration.
      *
-     * @dataProvider postRestorePageProvider
-     *
      * @param bool $isDeleted
      * @param bool $withReason
      * @param bool $withImage
      * @param bool $expected
      */
+    #[DataProvider('postRestorePageProvider')]
     public function testPostRestorePage($isDeleted, $withReason, $withImage, $expected) {
         $page = Page::factory()->deleted()->create();
         PageVersion::factory()->page($page->id)->user($this->editor->id)->deleted()->create();
@@ -352,12 +345,11 @@ class PageDeleteTest extends TestCase {
     /**
      * Test full/force page deletion.
      *
-     * @dataProvider postForceDeletePageProvider
-     *
      * @param bool $withProtection
      * @param bool $withImage
      * @param bool $withRelationship
      */
+    #[DataProvider('postForceDeletePageProvider')]
     public function testPostForceDeletePage($withProtection, $withImage, $withRelationship) {
         // Make a category for the page to go into/to delete
         $category = SubjectCategory::factory()->create();

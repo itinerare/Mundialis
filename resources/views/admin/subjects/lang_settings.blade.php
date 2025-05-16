@@ -30,7 +30,7 @@
         <li>Abbreviation (Optional), e.g. "n" for noun</li>
     </ul>
 
-    {!! Form::open(['url' => 'admin/data/language/lexicon-settings']) !!}
+    {!! Form::open(['action' => '/admin/data/language/lexicon-settings']) !!}
 
     <div id="sortable" class="sortable part-list">
         @if (count($parts))

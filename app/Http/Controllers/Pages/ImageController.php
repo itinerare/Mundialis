@@ -30,7 +30,7 @@ class ImageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageGallery(Request $request, $id) {
-        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->with('category', 'parent')->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -74,7 +74,7 @@ class ImageController extends Controller {
             'page'   => $page,
             'images' => $query->paginate(20)->appends($request->query()),
             'users'  => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -97,7 +97,7 @@ class ImageController extends Controller {
             abort(404);
         }
 
-        $query = PageImageVersion::where('page_image_id', $image->id)->with('user', 'image');
+        $query = PageImageVersion::where('page_image_id', $image->id);
         $sort = $request->only(['sort']);
 
         if ($request->get('user_id')) {
@@ -161,13 +161,13 @@ class ImageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCreateImage($id) {
-        $page = Page::where('id', $id)->with('category', 'parent')->first();
+        $page = Page::where('id', $id)->first();
         if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
 
         // Collect pages and information and group them
-        $groupedPages = Page::with('category')->orderBy('title')->where('id', '!=', $page->id)->get()->keyBy('id')->groupBy(function ($page) {
+        $groupedPages = Page::orderBy('title')->where('id', '!=', $page->id)->get()->keyBy('id')->groupBy(function ($page) {
             return $page->category->subject['name'];
         }, $preserveKeys = true)->toArray();
 
@@ -196,7 +196,7 @@ class ImageController extends Controller {
             'page'        => $page,
             'pageOptions' => $sortedPages,
             'users'       => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -210,7 +210,7 @@ class ImageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditImage($pageId, $id) {
-        $page = Page::where('id', $pageId)->with('category', 'parent')->first();
+        $page = Page::where('id', $pageId)->first();
         if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
@@ -220,7 +220,7 @@ class ImageController extends Controller {
         }
 
         // Collect pages and information and group them
-        $groupedPages = Page::orderBy('title')->where('id', '!=', $page->id)->with('category')->get()->keyBy('id')->groupBy(function ($page) {
+        $groupedPages = Page::orderBy('title')->where('id', '!=', $page->id)->get()->keyBy('id')->groupBy(function ($page) {
             return $page->category->subject['name'];
         }, $preserveKeys = true)->toArray();
 
@@ -249,7 +249,7 @@ class ImageController extends Controller {
             'page'        => $page,
             'pageOptions' => $sortedPages,
             'users'       => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -342,7 +342,7 @@ class ImageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getSortImages($id) {
-        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->with('category', 'parent')->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -352,7 +352,7 @@ class ImageController extends Controller {
         return view('pages.images.sort', [
             'page'   => $page,
             'images' => $query->get(),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }

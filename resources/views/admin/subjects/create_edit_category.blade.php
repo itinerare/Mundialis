@@ -20,9 +20,9 @@
     </h1>
 
     {!! Form::open([
-        'url' => $category->id
-            ? 'admin/data/categories/edit/' . $category->id
-            : 'admin/data/' . $subject['key'] . '/create',
+        'action' => $category->id
+            ? '/admin/data/categories/edit/' . $category->id
+            : '/admin/data/' . $subject['key'] . '/create',
         'files' => true,
     ]) !!}
 
@@ -31,13 +31,13 @@
     <div class="row">
         <div class="col-md">
             <div class="form-group">
-                {!! Form::label('Name') !!}
+                {!! Form::label('name', 'Name') !!}
                 {!! Form::text('name', $category->name, ['class' => 'form-control']) !!}
             </div>
         </div>
         <div class="col-md">
             <div class="form-group">
-                {!! Form::label('Parent Category (Optional)') !!}
+                {!! Form::label('parent_id', 'Parent Category (Optional)') !!}
                 {!! Form::select('parent_id', $categoryOptions, $category->parent_id, [
                     'class' => 'form-control',
                     'placeholder' => 'Select a Category',
@@ -46,7 +46,7 @@
         </div>
     </div>
     <div class="form-group">
-        {!! Form::label('Summary (Optional)') !!} {!! add_help('A short summary of the category\'s contents. This will be displayed on the category index.') !!}
+        {!! Form::label('summary', 'Summary (Optional)') !!} {!! add_help('A short summary of the category\'s contents. This will be displayed on the category index.') !!}
         {!! Form::text('summary', $category->summary, ['class' => 'form-control']) !!}
     </div>
 
@@ -59,7 +59,7 @@
         @endif
         <div class="col-md align-self-center">
             <div class="form-group">
-                {!! Form::label('Index Image (Optional)') !!} {!! add_help('This image is only used in the category index.') !!}
+                {!! Form::label('image', 'Index Image (Optional)') !!} {!! add_help('This image is only used in the category index.') !!}
                 <div>{!! Form::file('image') !!}</div>
                 <div class="text-muted">Recommended size: 300px x 300px</div>
                 @if ($category->has_image)
@@ -73,7 +73,7 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('Description (Optional)') !!}
+        {!! Form::label('description', 'Description (Optional)') !!}
         {!! Form::textarea('description', $category->description, ['class' => 'form-control wysiwyg']) !!}
     </div>
 

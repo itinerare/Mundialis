@@ -22,18 +22,18 @@
         @endif
     </h1>
 
-    {!! Form::open(['url' => $entry->id ? 'language/lexicon/edit/' . $entry->id : 'language/lexicon/create']) !!}
+    {!! Form::open(['action' => $entry->id ? '/language/lexicon/edit/' . $entry->id : '/language/lexicon/create']) !!}
 
     <div class="row">
         <div class="col-md">
             <div class="form-group">
-                {!! Form::label('Word') !!}
+                {!! Form::label('word', 'Word') !!}
                 {!! Form::text('word', $entry->word, ['class' => 'form-control']) !!}
             </div>
         </div>
         <div class="col-md">
             <div class="form-group">
-                {!! Form::label('Category (Optional)') !!} {!! add_help(
+                {!! Form::label('category_id', 'Category (Optional)') !!} {!! add_help(
                     'While selecting a category is optional, doing so allows access to advanced settings, such as conjugation/declension of words, as set for the category.',
                 ) !!}
                 {!! Form::select(
@@ -46,7 +46,7 @@
         </div>
         <div class="col-md-12">
             <div class="form-group">
-                {!! Form::label('Part of Speech') !!}
+                {!! Form::label('class', 'Part of Speech') !!}
                 {!! Form::select('class', $classOptions, $entry->class, [
                     'class' => 'form-control',
                     'placeholder' => 'Select a Part of Speech',
@@ -55,13 +55,13 @@
         </div>
         <div class="col-md">
             <div class="form-group">
-                {!! Form::label('Meaning') !!} {!! add_help('A concise meaning or translation of the word.') !!}
+                {!! Form::label('meaning', 'Meaning') !!} {!! add_help('A concise meaning or translation of the word.') !!}
                 {!! Form::text('meaning', $entry->meaning, ['class' => 'form-control']) !!}
             </div>
         </div>
         <div class="col-md">
             <div class="form-group">
-                {!! Form::label('Pronunciation (Optional)') !!}
+                {!! Form::label('pronunciation', 'Pronunciation (Optional)') !!}
                 {!! Form::text('pronunciation', $entry->pronunciation, ['class' => 'form-control']) !!}
             </div>
         </div>
@@ -80,12 +80,12 @@
     </ul>
 
     <div class="form-group">
-        {!! Form::label('Definition (Optional)') !!} {!! add_help('If desired, you can provide a longer-form definition for the word here.') !!}
+        {!! Form::label('definition', 'Definition (Optional)') !!} {!! add_help('If desired, you can provide a longer-form definition for the word here.') !!}
         {!! Form::textarea('definition', $entry->definition, ['class' => 'form-control wysiwyg']) !!}
     </div>
 
     <div class="form-group">
-        {!! Form::label('Etymology') !!} {!! add_help('Either select an on-site lexicon entry, or enter an off-site parent word.') !!}
+        {!! Form::label('parent_id[]', 'Etymology') !!} {!! add_help('Either select an on-site lexicon entry, or enter an off-site parent word.') !!}
         <div id="etymologyList">
             @if (!$entry->id || !$entry->etymologies->count())
                 <div class="mb-2 d-flex">

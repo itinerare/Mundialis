@@ -12,12 +12,12 @@ use App\Models\Page\PageVersion;
 use App\Models\User\Rank;
 use App\Models\User\User;
 use App\Services\ImageManager;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageImageDeleteTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     protected function setUp(): void {
         parent::setUp();
@@ -46,10 +46,9 @@ class PageImageDeleteTest extends TestCase {
     /**
      * Test image deletion access.
      *
-     * @dataProvider getDeleteImageProvider
-     *
      * @param bool $isValid
      */
+    #[DataProvider('getDeleteImageProvider')]
     public function testGetDeleteImage($isValid) {
         $response = $this->actingAs($this->editor)
             ->get('/pages/'.$this->page->id.'/gallery/delete/'.($isValid ? $this->image->id : 9999));
@@ -73,14 +72,13 @@ class PageImageDeleteTest extends TestCase {
     /**
      * Test (soft) image deletion.
      *
-     * @dataProvider postDeleteImageProvider
-     *
      * @param int  $rank
      * @param bool $withProtection
      * @param bool $isActive
      * @param bool $withReason
      * @param bool $expected
      */
+    #[DataProvider('postDeleteImageProvider')]
     public function testPostSoftDeleteImage($rank, $withProtection, $isActive, $withReason, $expected) {
         $user = User::factory()->create([
             'rank_id' => Rank::where('sort', $rank)->first()->id,
@@ -146,11 +144,10 @@ class PageImageDeleteTest extends TestCase {
     /**
      * Tests deleted images access.
      *
-     * @dataProvider getDeletedImagesProvider
-     *
      * @param bool $withImage
      * @param bool $isDeleted
      */
+    #[DataProvider('getDeletedImagesProvider')]
     public function testGetDeletedImages($withImage, $isDeleted) {
         if ($withImage) {
             $image = PageImage::factory();
@@ -196,10 +193,9 @@ class PageImageDeleteTest extends TestCase {
     /**
      * Test deleted image access.
      *
-     * @dataProvider getDeleteImageProvider
-     *
      * @param bool $isValid
      */
+    #[DataProvider('getDeleteImageProvider')]
     public function testGetDeletedImage($isValid) {
         $image = PageImage::factory()->deleted()->create();
         $version = PageImageVersion::factory()->image($image->id)->user($this->editor->id)->deleted()->create();
@@ -218,11 +214,10 @@ class PageImageDeleteTest extends TestCase {
     /**
      * Test restore image access.
      *
-     * @dataProvider getRestoreImageProvider
-     *
      * @param bool $withPage
      * @param bool $isDeleted
      */
+    #[DataProvider('getRestoreImageProvider')]
     public function testGetRestoreImage($withPage, $isDeleted) {
         if (!$withPage) {
             $page = Page::factory()->deleted()->create();
@@ -261,13 +256,12 @@ class PageImageDeleteTest extends TestCase {
     /**
      * Test image restoration.
      *
-     * @dataProvider postRestorePageProvider
-     *
      * @param bool $isDeleted
      * @param bool $withReason
      * @param bool $withPage
      * @param bool $expected
      */
+    #[DataProvider('postRestorePageProvider')]
     public function testPostRestoreImage($isDeleted, $withReason, $withPage, $expected) {
         if (!$withPage) {
             $page = Page::factory()->deleted()->create();

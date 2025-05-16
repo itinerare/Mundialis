@@ -10,7 +10,7 @@
     <h1>{{ $subject['name'] }}</h1>
 
     <p>This is a list of all categories for this subject. Categories can contain both sub-categories and/or
-        {{ strtolower($subject['term']) }}s.</p>
+        {{ strtolower($subject['term_plural'] ?? $subject['name']) }}.</p>
 
     @include('pages.subjects._category_index_content')
 

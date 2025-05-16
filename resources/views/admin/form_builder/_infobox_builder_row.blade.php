@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md">
                 <div class="form-group">
-                    {!! Form::label('Field Key') !!}
+                    {!! Form::label('infobox_key[]', 'Field Key') !!}
                     {!! Form::text('infobox_key[]', null, [
                         'class' => 'form-control',
                         'placeholder' => 'Internal key. Can\'t be duplicated in a template',
@@ -14,7 +14,7 @@
             </div>
             <div class="col-md">
                 <div class="form-group">
-                    {!! Form::label('Field Type') !!}
+                    {!! Form::label('infobox_type[]', 'Field Type') !!}
                     {!! Form::select(
                         'infobox_type[]',
                         [
@@ -31,7 +31,7 @@
             </div>
             <div class="col-md-12">
                 <div class="form-group">
-                    {!! Form::label('Label') !!}
+                    {!! Form::label('infobox_label[]', 'Label') !!}
                     {!! Form::text('infobox_label[]', null, [
                         'class' => 'form-control',
                         'placeholder' => 'Label shown on the editing form and page',
@@ -41,7 +41,7 @@
             <div class="chooseOptions col-md-6">
                 <div class="choiceOptions hide">
                     <div class="form-group">
-                        {!! Form::label('Field Options') !!}
+                        {!! Form::label('infobox_choices[]', 'Field Options') !!}
                         {!! Form::text('infobox_choices[]', null, [
                             'class' => 'form-control',
                             'placeholder' => 'Enter options, separated by commas',
@@ -50,7 +50,7 @@
                 </div>
                 <div class="valueOptions show">
                     <div class="form-group">
-                        {!! Form::label('Field Value (Optional)') !!}
+                        {!! Form::label('infobox_value[]', 'Field Value (Optional)') !!}
                         {!! Form::text('infobox_value[]', null, [
                             'class' => 'form-control',
                             'placeholder' => 'Default value for the field',
@@ -60,7 +60,7 @@
             </div>
             <div class="col-md">
                 <div class="form-group">
-                    {!! Form::label('Field Rules (Optional)') !!} (See rules <a
+                    {!! Form::label('infobox_rules[]', 'Field Rules (Optional)') !!} (See rules <a
                         href="https://laravel.com/docs/8.x/validation#available-validation-rules">here</a>)
                     {!! Form::text('infobox_rules[]', null, [
                         'class' => 'form-control',
@@ -70,7 +70,7 @@
             </div>
             <div class="col-md-12">
                 <div class="form-group">
-                    {!! Form::label('Field Help (Optional)') !!}
+                    {!! Form::label('infobox_help[]', 'Field Help (Optional)') !!}
                     {!! Form::text('infobox_help[]', null, [
                         'class' => 'form-control',
                         'placeholder' => 'Help tooltip text displayed when editing',

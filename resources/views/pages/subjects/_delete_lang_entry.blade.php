@@ -1,5 +1,5 @@
 @if ($entry)
-    {!! Form::open(['url' => 'language/lexicon/delete/' . $entry->id]) !!}
+    {!! Form::open(['action' => '/language/lexicon/delete/' . $entry->id]) !!}
 
     <p>You are about to delete the lexicon entry <strong>{{ $entry->word }}</strong>. This is not reversible.</p>
 

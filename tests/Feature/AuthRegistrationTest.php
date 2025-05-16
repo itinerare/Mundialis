@@ -4,13 +4,11 @@ namespace Tests\Feature;
 
 use App\Models\User\User;
 use App\Services\InvitationService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AuthRegistrationTest extends TestCase {
-    use RefreshDatabase;
-
     // These tests center on basic user authentication
     // They are modified from https://github.com/dwightwatson/laravel-auth-tests
 
@@ -34,13 +32,12 @@ class AuthRegistrationTest extends TestCase {
     /**
      * Test registration.
      *
-     * @dataProvider postRegistrationProvider
-     *
      * @param bool  $isValid
      * @param bool  $isOpen
      * @param array $code
      * @param bool  $expected
      */
+    #[DataProvider('postRegistrationProvider')]
     public function testPostRegistration($isValid, $isOpen, $code, $expected) {
         // Adjust site settings as necessary
         DB::table('site_settings')->where('key', 'is_registration_open')->update(['value' => $isOpen]);

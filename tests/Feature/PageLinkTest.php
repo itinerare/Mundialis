@@ -8,25 +8,17 @@ use App\Models\Page\PageVersion;
 use App\Models\Subject\LexiconSetting;
 use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageLinkTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     protected function setUp(): void {
         parent::setUp();
 
         $this->editor = User::factory()->editor()->create();
-
-        // Delete any pages/versions present due to other tests
-        if (Page::query()->count()) {
-            Page::query()->delete();
-        }
-        if (PageVersion::query()->count()) {
-            PageVersion::query()->delete();
-        }
 
         $this->page = Page::factory()->create();
         PageVersion::factory()->page($this->page->id)->user($this->editor->id)->create();
@@ -38,11 +30,10 @@ class PageLinkTest extends TestCase {
     /**
      * Test page creation with a wiki-style link.
      *
-     * @dataProvider postWithLinkProvider
-     *
      * @param string $type
      * @param bool   $withLabel
      */
+    #[DataProvider('postWithLinkProvider')]
     public function testPostCreatePageWithLink($type, $withLabel) {
         $category = SubjectCategory::factory()->create();
 
@@ -104,11 +95,10 @@ class PageLinkTest extends TestCase {
     /**
      * Test page editing with a wiki-style link.
      *
-     * @dataProvider postWithLinkProvider
-     *
      * @param string $type
      * @param bool   $withLabel
      */
+    #[DataProvider('postWithLinkProvider')]
     public function testPostEditPageWithLink($type, $withLabel) {
         for ($i = 1; $i <= 2; $i++) {
             $linkName[$i] = $this->faker->unique()->domainWord();
@@ -156,11 +146,10 @@ class PageLinkTest extends TestCase {
     /**
      * Test lexicon entry creation with a page link.
      *
-     * @dataProvider postWithLinkProvider
-     *
      * @param string $type
      * @param bool   $withLabel
      */
+    #[DataProvider('postWithLinkProvider')]
     public function testPostCreateLexiconEntryWithLink($type, $withLabel) {
         for ($i = 1; $i <= 2; $i++) {
             $linkName[$i] = $this->faker->unique()->domainWord();
@@ -182,7 +171,7 @@ class PageLinkTest extends TestCase {
                 break;
         }
 
-        $this->artisan('add-lexicon-settings');
+        $this->artisan('app:add-lexicon-settings');
         $class = LexiconSetting::all()->first();
 
         $data = [
@@ -216,11 +205,10 @@ class PageLinkTest extends TestCase {
     /**
      * Test lexicon entry editing with a page link.
      *
-     * @dataProvider postWithLinkProvider
-     *
      * @param string $type
      * @param bool   $withLabel
      */
+    #[DataProvider('postWithLinkProvider')]
     public function testPostEditLexiconEntryWithLink($type, $withLabel) {
         for ($i = 1; $i <= 2; $i++) {
             $linkName[$i] = $this->faker->unique()->domainWord();

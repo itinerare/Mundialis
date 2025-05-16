@@ -15,7 +15,7 @@ class SetupAdminUser extends Command {
      *
      * @var string
      */
-    protected $signature = 'setup-admin-user';
+    protected $signature = 'app:setup-admin-user';
 
     /**
      * The console command description.

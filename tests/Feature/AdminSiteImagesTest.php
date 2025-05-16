@@ -3,14 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AdminSiteImagesTest extends TestCase {
-    use RefreshDatabase;
-
     /******************************************************************************
         ADMIN / SITE IMAGES
     *******************************************************************************/
@@ -33,10 +31,9 @@ class AdminSiteImagesTest extends TestCase {
     /**
      * Test image uploading.
      *
-     * @dataProvider siteImageProvider
-     *
      * @param string $key
      */
+    #[DataProvider('siteImageProvider')]
     public function testPostUploadImage($key) {
         // Remove the current file if it exists
         if (File::exists(public_path('images/'.$key.'.png'))) {
@@ -60,7 +57,7 @@ class AdminSiteImagesTest extends TestCase {
             assertTrue(File::exists(public_path('images/'.$key.'.png')));
 
         // Replace with default images for tidiness
-        $this->artisan('copy-default-images');
+        $this->artisan('app:copy-default-images');
     }
 
     public static function siteImageProvider() {

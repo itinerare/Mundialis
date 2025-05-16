@@ -12,12 +12,12 @@ use App\Models\Page\PageVersion;
 use App\Models\User\User;
 use App\Models\User\WatchedPage;
 use App\Services\ImageManager;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class UserNotificationTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     /******************************************************************************
         USER / NOTIFICATIONS
@@ -32,11 +32,10 @@ class UserNotificationTest extends TestCase {
     /**
      * Test notifications access.
      *
-     * @dataProvider getNotificationsProvider
-     *
      * @param bool $withNotification
      * @param int  $status
      */
+    #[DataProvider('getNotificationsProvider')]
     public function testGetNotifications($withNotification, $status) {
         if ($withNotification) {
             // Create a notification to view
@@ -58,10 +57,9 @@ class UserNotificationTest extends TestCase {
     /**
      * Test clearing all notifications.
      *
-     * @dataProvider postClearNotificationsProvider
-     *
      * @param bool $withNotification
      */
+    #[DataProvider('postClearNotificationsProvider')]
     public function testPostClearAllNotifications($withNotification) {
         if ($withNotification) {
             // Create a notification to clear
@@ -89,11 +87,10 @@ class UserNotificationTest extends TestCase {
     /**
      * Test clearing notifications of a set type.
      *
-     * @dataProvider postClearTypedNotificationsProvider
-     *
      * @param bool $withNotification
      * @param bool $withUnrelated
      */
+    #[DataProvider('postClearTypedNotificationsProvider')]
     public function testPostClearTypedNotifications($withNotification, $withUnrelated) {
         if ($withNotification) {
             // Create a notification to clear
@@ -131,12 +128,11 @@ class UserNotificationTest extends TestCase {
     /**
      * Test sending notifications.
      *
-     * @dataProvider sendNotificationsProvider
-     *
      * @param int  $type
      * @param bool $userWatched
      * @param bool $editorWatched
      */
+    #[DataProvider('sendNotificationsProvider')]
     public function testSendNotification($type, $userWatched, $editorWatched) {
         if (Notification::all()->count()) {
             // Delete any remaining notifications to ensure that counts are accurate

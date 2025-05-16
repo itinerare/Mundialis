@@ -3,13 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AdminSiteSettingsTest extends TestCase {
-    use RefreshDatabase;
-
     /******************************************************************************
         ADMIN / SITE SETTINGS
     *******************************************************************************/
@@ -34,7 +32,7 @@ class AdminSiteSettingsTest extends TestCase {
      */
     public function testCanPostEditSiteSetting() {
         // Ensure site settings are present to modify
-        $this->artisan('add-site-settings');
+        $this->artisan('app:add-site-settings');
 
         // Make a temporary user
         $user = User::factory()->admin()->make();
@@ -57,12 +55,11 @@ class AdminSiteSettingsTest extends TestCase {
     /**
      * Test site setting editing.
      *
-     * @dataProvider settingsProvider
-     *
      * @param string $key
      * @param bool   $value
      * @param bool   $expected
      */
+    #[DataProvider('settingsProvider')]
     public function testPostEditSiteSetting($key, $value, $expected) {
         // Try to post data
         $response = $this

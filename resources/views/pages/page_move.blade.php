@@ -27,9 +27,9 @@
         page's revision history. Nonetheless, for this reason, it is recommended to only move pages to categories within the
         same subject, or to categories that have the same or similar fields.</p>
 
-    {!! Form::open(['url' => 'pages/' . $page->id . '/move']) !!}
+    {!! Form::open(['action' => '/pages/' . $page->id . '/move']) !!}
     <div class="form-group">
-        {!! Form::label('Category') !!}
+        {!! Form::label('category_id', 'Category') !!}
         {!! Form::select('category_id', $categories, old('category_id'), [
             'class' => 'form-control select-category',
             'placeholder' => 'Select a Category',
@@ -37,7 +37,7 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('Reason (Optional)') !!} {!! add_help(
+        {!! Form::label('reason', 'Reason (Optional)') !!} {!! add_help(
             'A short summary of why you are moving the page. Optional, but recommended for recordkeeping and communication purposes.',
         ) !!}
         {!! Form::text('reason', null, ['class' => 'form-control']) !!}

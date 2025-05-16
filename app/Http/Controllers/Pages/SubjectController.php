@@ -157,10 +157,11 @@ class SubjectController extends Controller {
         }
 
         return view('pages.subjects.category', [
-            'category'   => $category,
-            'pages'      => $query->paginate(20)->appends($request->query()),
-            'tags'       => (new PageTag)->listTags(),
-            'dateHelper' => new TimeDivision,
+            'category'      => $category,
+            'subcategories' => $category->children()->paginate(10, ['*'], 'categories_page')->appends($request->query()),
+            'pages'         => $query->paginate(20, ['*'], 'pages_page')->appends($request->query()),
+            'tags'          => (new PageTag)->listTags(),
+            'dateHelper'    => new TimeDivision,
         ]);
     }
 

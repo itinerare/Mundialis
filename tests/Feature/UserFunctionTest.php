@@ -3,16 +3,16 @@
 namespace Tests\Feature;
 
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class UserFunctionTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     /******************************************************************************
         USER / SETTINGS
@@ -73,11 +73,10 @@ class UserFunctionTest extends TestCase {
     /**
      * Test email editing.
      *
-     * @dataProvider userEditProvider
-     *
      * @param bool $isValid
      * @param bool $expected
      */
+    #[DataProvider('userEditProvider')]
     public function testPostEditEmail($isValid, $expected) {
         // Generate some test data
         if ($isValid) {
@@ -105,11 +104,10 @@ class UserFunctionTest extends TestCase {
     /**
      * Test password editing.
      *
-     * @dataProvider userEditProvider
-     *
      * @param bool $isValid
      * @param bool $expected
      */
+    #[DataProvider('userEditProvider')]
     public function testPostEditPassword($isValid, $expected) {
         // Make a persistent user with a simple password
         $user = User::factory()->simplePass()->create();

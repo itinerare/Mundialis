@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -31,9 +33,10 @@ class AppServiceProvider extends ServiceProvider {
         Model::preventAccessingMissingAttributes();
         Model::preventSilentlyDiscardingAttributes();
 
-        // Since this is a performance concern only, don’t halt
-        // production for violations.
+        // While automatic eager loading should prevent this from being relevant,
+        // leave this enabled in non-production environments to help catch any errors
         Model::preventLazyLoading(!$this->app->isProduction());
+        Model::automaticallyEagerLoadRelationships();
 
         Schema::defaultStringLength(191);
         Paginator::useBootstrap();
@@ -49,6 +52,20 @@ class AppServiceProvider extends ServiceProvider {
                 $config
             );
         });
+
+        // Load class aliases
+        AliasLoader::getInstance([
+            'Settings'      => \App\Facades\Settings::class,
+            'Notifications' => \App\Facades\Notifications::class,
+            'Image'         => \Intervention\Image\Facades\Image::class,
+        ]);
+
+        // Set custom polymorphic types for pages and entries,
+        // for use by page links
+        Relation::enforceMorphMap([
+            'page'  => 'App\Models\Page\Page',
+            'entry' => 'App\Models\Lexicon\LexiconEntry',
+        ]);
 
         /*
          * Paginate a standard Laravel Collection.

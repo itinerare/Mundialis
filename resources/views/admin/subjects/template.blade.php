@@ -21,7 +21,7 @@
     <p>This is the overall template that will be used for this subject's pages. Categories' templates can be further
         customized, but it's recommended to make smart use of this to minimize as much redundancy as possible.</p>
 
-    {!! Form::open(['url' => 'admin/data/' . $subject['key'] . '/edit']) !!}
+    {!! Form::open(['action' => '/admin/data/' . $subject['key'] . '/edit']) !!}
 
     @include('admin.form_builder._template_builder_content', ['template' => $template])
 

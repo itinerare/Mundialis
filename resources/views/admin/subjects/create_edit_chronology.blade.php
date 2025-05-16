@@ -21,28 +21,28 @@
     </h1>
 
     {!! Form::open([
-        'url' => $chronology->id
-            ? 'admin/data/time/chronology/edit/' . $chronology->id
-            : 'admin/data/time/chronology/create',
+        'action' => $chronology->id
+            ? '/admin/data/time/chronology/edit/' . $chronology->id
+            : '/admin/data/time/chronology/create',
     ]) !!}
 
     <div class="row">
         <div class="col-md">
             <div class="form-group">
-                {!! Form::label('Name') !!}
+                {!! Form::label('name', 'Name') !!}
                 {!! Form::text('name', $chronology->name, ['class' => 'form-control']) !!}
             </div>
         </div>
         <div class="col-md">
             <div class="form-group">
-                {!! Form::label('Abbreviation (Optional)') !!}
+                {!! Form::label('abbreviation', 'Abbreviation (Optional)') !!}
                 {!! Form::text('abbreviation', $chronology->abbreviation, ['class' => 'form-control']) !!}
             </div>
         </div>
     </div>
 
     <div class="form-group">
-        {!! Form::label('Parent Chronology (Optional)') !!}
+        {!! Form::label('parent_id', 'Parent Chronology (Optional)') !!}
         {!! Form::select('parent_id', $chronologyOptions, $chronology->parent_id, [
             'class' => 'form-control',
             'placeholder' => 'Select a Chronology',
@@ -50,7 +50,7 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('Description (Optional)') !!}
+        {!! Form::label('description', 'Description (Optional)') !!}
         {!! Form::textarea('description', $chronology->description, ['class' => 'form-control wysiwyg']) !!}
     </div>
 

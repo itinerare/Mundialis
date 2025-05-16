@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-md">
                 <div class="form-group">
-                    {!! Form::label('Field Key') !!}
+                    {!! Form::label('field_key[]', 'Field Key') !!}
                     {!! Form::text('field_key[]', null, [
                         'class' => 'form-control',
                         'placeholder' => 'Internal key. Can\'t be duplicated in a template',
@@ -13,7 +13,7 @@
             </div>
             <div class="col-md">
                 <div class="form-group">
-                    {!! Form::label('Field Type') !!}
+                    {!! Form::label('field_type[]', 'Field Type') !!}
                     {!! Form::select(
                         'field_type[]',
                         [
@@ -31,7 +31,7 @@
             </div>
             <div class="col-md-12">
                 <div class="form-group">
-                    {!! Form::label('Label') !!}
+                    {!! Form::label('field_label[]', 'Label') !!}
                     {!! Form::text('field_label[]', null, [
                         'class' => 'form-control',
                         'placeholder' => 'Label shown on the editing form and as header if enabled',
@@ -41,7 +41,7 @@
             <div class="chooseOptions col-md-6">
                 <div class="choiceOptions hide">
                     <div class="form-group">
-                        {!! Form::label('Field Options') !!}
+                        {!! Form::label('field_choices[]', 'Field Options') !!}
                         {!! Form::text('field_choices[]', null, [
                             'class' => 'form-control',
                             'placeholder' => 'Enter options, separated by commas',
@@ -50,7 +50,7 @@
                 </div>
                 <div class="valueOptions show">
                     <div class="form-group">
-                        {!! Form::label('Field Value (Optional)') !!}
+                        {!! Form::label('field_value[]', 'Field Value (Optional)') !!}
                         {!! Form::text('field_value[]', null, [
                             'class' => 'form-control',
                             'placeholder' => 'Default value for the field',
@@ -60,8 +60,8 @@
             </div>
             <div class="col-md">
                 <div class="form-group">
-                    {!! Form::label('Field Rules (Optional)') !!} (See rules <a
-                        href="https://laravel.com/docs/8.x/validation#available-validation-rules">here</a>)
+                    {!! Form::label('field_rules[]', 'Field Rules (Optional)') !!} (See rules <a
+                        href="https://laravel.com/docs/12.x/validation#available-validation-rules">here</a>)
                     {!! Form::text('field_rules[]', null, [
                         'class' => 'form-control',
                         'placeholder' => 'Any custom validation rules',
@@ -70,7 +70,7 @@
             </div>
             <div class="col-md-12">
                 <div class="form-group">
-                    {!! Form::label('Field Help (Optional)') !!}
+                    {!! Form::label('field_help[]', 'Field Help (Optional)') !!}
                     {!! Form::text('field_help[]', null, [
                         'class' => 'form-control',
                         'placeholder' => 'Help tooltip text displayed when editing',
@@ -79,7 +79,7 @@
             </div>
             <div class="col-md">
                 <div class="form-group">
-                    {!! Form::label('Is Subsection') !!}
+                    {!! Form::label('field_is_subsection[]', 'Is Subsection') !!}
                     {!! Form::select(
                         'field_is_subsection[]',
                         [0 => 'No (No header shown)', 1 => 'Yes (Header shown)', 2 => 'Yes (sub-subsection) (Shows a minor header)'],

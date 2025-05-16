@@ -11,7 +11,7 @@ class AddSiteSettings extends Command {
      *
      * @var string
      */
-    protected $signature = 'add-site-settings';
+    protected $signature = 'app:add-site-settings';
 
     /**
      * The console command description.

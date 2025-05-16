@@ -1,5 +1,5 @@
 <div class="form-group">
-    {!! Form::label('Name (Optional)') !!}
+    {!! Form::label('people_name', 'Name (Optional)') !!}
     {!! Form::text('people_name', isset($page->data['people_name']) ? $page->data['people_name'] : null, [
         'class' => 'form-control',
     ]) !!}
@@ -12,7 +12,7 @@
                 <h6>{{ ucfirst($segment) }} (Optional)</h6>
                 <div class="row mb-2">
                     <div class="col-md">
-                        {!! Form::label('Place') !!}
+                        {!! Form::label($segment . '_place_id', 'Place') !!}
                         {!! Form::select(
                             $segment . '_place_id',
                             $placeOptions,
@@ -27,7 +27,7 @@
                 <div class="row mb-2">
                     @foreach ((new App\Models\Subject\TimeDivision())->dateFields() as $key => $field)
                         <div class="col-md">
-                            {!! Form::label($field['label']) !!}
+                            {!! Form::label($segment . '_' . $key, $field['label']) !!}
                             {!! Form::number(
                                 $segment . '_' . $key,
                                 isset($page->data[$segment]['date'][$key])
@@ -40,7 +40,7 @@
                         </div>
                     @endforeach
                     <div class="col-md-4">
-                        {!! Form::label('Chronology') !!} {!! add_help('The broad period of time that the event takes place in.') !!}
+                        {!! Form::label($segment . '_chronology_id', 'Chronology') !!} {!! add_help('The broad period of time that the event takes place in.') !!}
                         {!! Form::select(
                             $segment . '_chronology_id',
                             $chronologyOptions,

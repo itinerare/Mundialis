@@ -30,10 +30,10 @@
 
     <div class="card mb-4">
         <div class="card-body">
-            {!! Form::open(['url' => 'pages/' . $page->id . '/protect']) !!}
+            {!! Form::open(['action' => '/pages/' . $page->id . '/protect']) !!}
 
             <div class="form-group">
-                {!! Form::label('Reason (Optional)') !!} {!! add_help('A short summary why the page\'s protection is being updated.') !!}
+                {!! Form::label('reason', 'Reason (Optional)') !!} {!! add_help('A short summary why the page\'s protection is being updated.') !!}
                 {!! Form::text('reason', $page->protection ? $page->protection->reason : null, ['class' => 'form-control']) !!}
             </div>
 

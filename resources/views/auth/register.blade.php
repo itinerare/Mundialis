@@ -15,7 +15,7 @@
             <form method="POST" action="{{ route('register') }}">
                 @csrf
 
-                <div class="form-group row">
+                <div class="form-group row mb-2">
                     <label for="name" class="col-md-4 col-form-label text-md-right">Username</label>
 
                     <div class="col-md-6">
@@ -31,7 +31,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row mb-3">
                     <label for="email" class="col-md-4 col-form-label text-md-right">E-mail Address</label>
 
                     <div class="col-md-6">
@@ -47,7 +47,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row mb-2">
                     <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
 
                     <div class="col-md-6">
@@ -63,7 +63,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row mb-3">
                     <label for="password-confirm"
                         class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
 
@@ -73,7 +73,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row mb-2">
                     <label for="name" class="col-md-4 col-form-label text-md-right">Invitation Key
                         {!! add_help('An invitation key is required to create an account.') !!}</label>
 
@@ -90,7 +90,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group row mb-3">
                     <div class="col-md-6 offset-md-4">
                         <div class="form-check">
                             <label class="form-check-label">

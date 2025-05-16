@@ -1,4 +1,4 @@
-<div class="card mb-4">
+<div class="card mb-4 h-100">
     <div class="card-header">
         <h4>Recent Pages</h4>
     </div>

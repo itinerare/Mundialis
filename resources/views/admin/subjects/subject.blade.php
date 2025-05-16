@@ -78,7 +78,7 @@
 
         </table>
         <div class="mb-4">
-            {!! Form::open(['url' => 'admin/data/' . $subject['key'] . '/sort']) !!}
+            {!! Form::open(['action' => '/admin/data/' . $subject['key'] . '/sort']) !!}
             {!! Form::hidden('sort', '', ['id' => 'sortableOrder']) !!}
             {!! Form::submit('Save Order', ['class' => 'btn btn-primary']) !!}
             {!! Form::close() !!}

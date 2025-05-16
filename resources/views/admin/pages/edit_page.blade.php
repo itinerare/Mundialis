@@ -17,19 +17,19 @@
 
     <div class="row">
         <div class="col-md-6 form-group">
-            {!! Form::label('Title') !!}
+            {!! Form::label('name', 'Title') !!}
             {!! Form::text('name', $page->title, ['class' => 'form-control', 'disabled']) !!}
         </div>
         <div class="col-md-6 form-group">
-            {!! Form::label('Key') !!}
+            {!! Form::label('key', 'Key') !!}
             {!! Form::text('key', $page->key, ['class' => 'form-control', 'disabled']) !!}
         </div>
     </div>
 
-    {!! Form::open(['url' => 'admin/pages/edit/' . $page->id]) !!}
+    {!! Form::open(['action' => '/admin/pages/edit/' . $page->id]) !!}
 
     <div class="form-group">
-        {!! Form::label('Content') !!}
+        {!! Form::label('text', 'Content') !!}
         {!! Form::textarea('text', $page->text, ['class' => 'form-control wysiwyg']) !!}
     </div>
 

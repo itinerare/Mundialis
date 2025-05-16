@@ -3,12 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AuthLoginTest extends TestCase {
-    use RefreshDatabase;
-
     // These tests center on basic user authentication
     // They are modified from https://github.com/dwightwatson/laravel-auth-tests
 

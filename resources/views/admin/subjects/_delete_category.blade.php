@@ -1,5 +1,5 @@
 @if ($category)
-    {!! Form::open(['url' => 'admin/data/categories/delete/' . $category->id]) !!}
+    {!! Form::open(['action' => '/admin/data/categories/delete/' . $category->id]) !!}
 
     <p>You are about to delete the category <strong>{{ $category->name }}</strong>. This is not reversible. If pages
         or sub-categories in this category exist, you will not be able to delete this category. This will

@@ -249,7 +249,7 @@ class SubjectService extends Service {
             // Permanently delete any remaining pages and associated data in the category,
             // as without the category/its data they will not be recoverable anyway
             if ($category->pages()->withTrashed()->count()) {
-                foreach (Page::where('category_id', $category->id)->with('images', 'relationships')->withTrashed()->get() as $page) {
+                foreach (Page::where('category_id', $category->id)->withTrashed()->get() as $page) {
                     if (!(new PageManager)->deletePage($page, $user, null, true)) {
                         throw new \Exception('Failed to force delete page.');
                     }

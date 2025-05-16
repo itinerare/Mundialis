@@ -12,7 +12,7 @@ class AddSitePages extends Command {
      *
      * @var string
      */
-    protected $signature = 'add-site-pages';
+    protected $signature = 'app:add-site-pages';
 
     /**
      * The console command description.

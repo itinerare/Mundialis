@@ -37,7 +37,7 @@
             divisions that have already been created</li>
     </ul>
 
-    {!! Form::open(['url' => 'admin/data/time/divisions']) !!}
+    {!! Form::open(['action' => '/admin/data/time/divisions']) !!}
 
     <div id="sortable" class="sortable division-list">
         @if (count($divisions))

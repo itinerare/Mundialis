@@ -4,6 +4,78 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [3.0.0-rc.2](https://code.itinerare.net/itinerare/Mundialis/compare/v3.0.0-rc.1...v3.0.0-rc.2) (2025-05-12)
+
+### Bug Fixes
+
+* Finesse landing page display ([22f407](https://code.itinerare.net/itinerare/Mundialis/commit/22f407a323715566d143a5bb02e613eb69821e96))
+* Update more form opens; closes #492 ([f52ff1](https://code.itinerare.net/itinerare/Mundialis/commit/f52ff1b8b60bd0ea09381cbbc8550c7aab05fb73))
+
+##### Subjects
+
+* Improve page terminology on subject page ([44fbb9](https://code.itinerare.net/itinerare/Mundialis/commit/44fbb962a83328d11f1b97b6f066c37e123fd354))
+
+
+---
+
+## [3.0.0-rc.1](https://code.itinerare.net/itinerare/Mundialis/compare/v2.6.1...v3.0.0-rc.1) (2025-05-05)
+
+### ⚠ BREAKING CHANGES
+
+* Rebuild on Laravel 11 application skeleton ([685eb7](https://code.itinerare.net/itinerare/Mundialis/commit/685eb784ca8f964ba0ae985f63bc31a1a9a656d2))
+* Update to Laravel 11 ([ef26e8](https://code.itinerare.net/itinerare/Mundialis/commit/ef26e889f8c042044b490078d7ddf04f7db454d0))
+
+### Features
+
+* Enable automatic eager loading ([469b0f](https://code.itinerare.net/itinerare/Mundialis/commit/469b0f1d316f06fcce9d6ea430b34dead069f82f))
+
+### Bug Fixes
+
+* Adjust form syntax ([7e5921](https://code.itinerare.net/itinerare/Mundialis/commit/7e59212989d1144290a66133e6188c768a3b182d))
+* Correct page, lexicon entry create/edit form urls ([2d0779](https://code.itinerare.net/itinerare/Mundialis/commit/2d0779264d6c1019ccf6d83bb2964e463fc0ce7d))
+* Don't handle wiki link parsing in a transaction ([d07385](https://code.itinerare.net/itinerare/Mundialis/commit/d07385796fdd2a6e916428c66848850eb74375eb))
+* Revert example .env session driver value ([b869b1](https://code.itinerare.net/itinerare/Mundialis/commit/b869b13d861a4e714850cc8720b8073b9aa9d36e))
+* Update example .env ([ab0867](https://code.itinerare.net/itinerare/Mundialis/commit/ab0867e5762782304c242d9f46d09975e3dccc87))
+* Use polymorphic relationships for page links ([8404c5](https://code.itinerare.net/itinerare/Mundialis/commit/8404c5a774474f8225e744eca7b62d542574486f))
+
+##### Pages
+
+* Provide dateHelper on move page view for people, time pages ([7d40ee](https://code.itinerare.net/itinerare/Mundialis/commit/7d40ee3925749426c3e2188ada618fbaf5bea96d))
+
+##### Tests
+
+* Remove unnecessary DB cleanup from some test files ([c2c4e5](https://code.itinerare.net/itinerare/Mundialis/commit/c2c4e5309138766265bf846976c3c75b7d87f5c7))
+* Update PHPUnit, tests ([915125](https://code.itinerare.net/itinerare/Mundialis/commit/9151255a75451c157b39fbdd4a08e0e59074df11))
+* Use LazilyRefreshDatabase on base test case ([045ebb](https://code.itinerare.net/itinerare/Mundialis/commit/045ebb85f257fe7c7244d2a251437cbb89159253))
+
+##### Users
+
+* Refine forgot password message check ([35dc82](https://code.itinerare.net/itinerare/Mundialis/commit/35dc827e45a4efee711160ff7a132de24e53e7b5))
+
+
+---
+
+## [2.6.1](https://code.itinerare.net/itinerare/Mundialis/compare/v2.6.0...v2.6.1) (2025-03-17)
+
+### Bug Fixes
+
+
+##### Pages
+
+* Always check for page when collecting context tag pages; closes #491 ([862624](https://code.itinerare.net/itinerare/Mundialis/commit/86262411007f3063e541773cec8cb6e339db5690))
+* Eager load basic page properties with tags ([ce54c8](https://code.itinerare.net/itinerare/Mundialis/commit/ce54c81fa091f630c6e168dd3df404f1d1b26671))
+* Eager load common page relations on tag index ([601023](https://code.itinerare.net/itinerare/Mundialis/commit/601023fa54d38d893f3232b574c463afe003a300))
+* Filter deleted pages when checking if tag has a navbox ([d208d7](https://code.itinerare.net/itinerare/Mundialis/commit/d208d7350d1f9ab0b7a556afc13b00b463128e6b))
+* Include deleted_at when eager loading tag pages ([192ecf](https://code.itinerare.net/itinerare/Mundialis/commit/192ecf403d7aa748082c5dae21abfefcb9759514))
+
+##### Subjects
+
+* Eager load parent in admin subject category index ([d521bc](https://code.itinerare.net/itinerare/Mundialis/commit/d521bc8d45bef584326eea7ab7eaac2778d9c703))
+* Paginate subcategories on category pages separately; closes #490 ([e77166](https://code.itinerare.net/itinerare/Mundialis/commit/e77166f0e8445a4fb03c1d157b308e4e1ff2d11b))
+
+
+---
+
 ## [2.6.0](https://code.itinerare.net/itinerare/Mundialis/compare/v2.5.1...v2.6.0) (2025-01-13)
 
 ### Features

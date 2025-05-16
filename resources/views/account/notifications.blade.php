@@ -10,7 +10,7 @@
     <h1>Notifications</h1>
 
     <div class="text-right mb-3">
-        {!! Form::open(['url' => 'notifications/clear']) !!}
+        {!! Form::open(['action' => '/notifications/clear']) !!}
         {!! Form::submit('Clear All', ['class' => 'btn btn-primary']) !!}
         {!! Form::close() !!}
     </div>
@@ -21,7 +21,7 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <span class="float-right h5 mb-2">
-                        {!! Form::open(['url' => 'notifications/clear/' . $type]) !!}
+                        {!! Form::open(['action' => '/notifications/clear/' . $type]) !!}
                         <span class="badge badge-primary">
                             {{ $notifications->where('notification_type_id', $type)->count() }}
                         </span>

@@ -33,14 +33,14 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPage($id) {
-        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->with('image', 'parent', 'tags')->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
 
         return view('pages.page', [
             'page' => $page,
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -53,12 +53,12 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageHistory(Request $request, $id) {
-        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->with('parent')->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
 
-        $query = PageVersion::where('page_id', $page->id)->with('user:id,name,rank_id,is_banned');
+        $query = PageVersion::where('page_id', $page->id);
         $sort = $request->only(['sort']);
 
         if ($request->get('user_id')) {
@@ -82,7 +82,7 @@ class PageController extends Controller {
             'page'     => $page,
             'versions' => $query->paginate(20)->appends($request->query()),
             'users'    => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -95,7 +95,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getLinksHere(Request $request, $id) {
-        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->with('parent')->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -111,7 +111,7 @@ class PageController extends Controller {
         return view('pages.page_links_here', [
             'page'  => $page,
             'links' => $query->paginate(20)->appends($request->query()),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -125,7 +125,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageVersion($pageId, $id) {
-        $page = Page::visible(Auth::user() ?? null)->where('id', $pageId)->with('parent')->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $pageId)->first();
         if (!$page) {
             abort(404);
         }
@@ -134,7 +134,7 @@ class PageController extends Controller {
         return view('pages.page_version', [
             'page'    => $page,
             'version' => $version,
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -155,12 +155,9 @@ class PageController extends Controller {
         return view('pages.create_edit_page', [
             'page'     => new Page,
             'category' => $category,
-        ] + ($category->subject['key'] == 'places' ? [
+        ] + (config('mundialis.subjects.'.$category->subject['key'].'.editing.placeOptions') ? [
             'placeOptions' => Page::subject('places')->pluck('title', 'id'),
-        ] : []) + ($category->subject['key'] == 'time' ? [
-            'chronologyOptions' => TimeChronology::pluck('name', 'id'),
-        ] : []) + ($category->subject['key'] == 'people' ? [
-            'placeOptions'      => Page::subject('places')->pluck('title', 'id'),
+        ] : []) + (config('mundialis.subjects.'.$category->subject['key'].'.editing.chronologyOptions') ? [
             'chronologyOptions' => TimeChronology::pluck('name', 'id'),
         ] : []));
     }
@@ -173,7 +170,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditPage($id) {
-        $page = Page::with('parent')->find($id);
+        $page = Page::find($id);
         if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
@@ -181,12 +178,9 @@ class PageController extends Controller {
         return view('pages.create_edit_page', [
             'page'     => $page,
             'category' => $page->category,
-        ] + ($page->category->subject['key'] == 'places' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.editing.placeOptions') ? [
             'placeOptions' => Page::subject('places')->where('id', '!=', $page->id)->pluck('title', 'id'),
-        ] : []) + ($page->category->subject['key'] == 'time' ? [
-            'chronologyOptions' => TimeChronology::pluck('name', 'id'),
-        ] : []) + ($page->category->subject['key'] == 'people' ? [
-            'placeOptions'      => Page::subject('places')->pluck('title', 'id'),
+        ] : []) + (config('mundialis.subjects.'.$page->category->subject['key'].'.editing.chronologyOptions') ? [
             'chronologyOptions' => TimeChronology::pluck('name', 'id'),
         ] : []));
     }
@@ -282,7 +276,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getProtectPage(Request $request, $id) {
-        $page = Page::where('id', $id)->with('parent')->first();
+        $page = Page::where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -311,7 +305,7 @@ class PageController extends Controller {
             'page'        => $page,
             'protections' => $query->paginate(20)->appends($request->query()),
             'users'       => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -346,7 +340,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getMovePage($id) {
-        $page = Page::with('parent')->find($id);
+        $page = Page::find($id);
         if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
@@ -379,7 +373,9 @@ class PageController extends Controller {
         return view('pages.page_move', [
             'page'       => $page,
             'categories' => $sortedCategories,
-        ]);
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
+            'dateHelper' => new TimeDivision,
+        ] : []));
     }
 
     /**
@@ -413,7 +409,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getResetPage($pageId, $id) {
-        $page = Page::with('parent')->find($pageId);
+        $page = Page::find($pageId);
         if ($page && !Auth::user()->canEdit($page)) {
             abort(404);
         }
@@ -459,7 +455,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeletePage($id) {
-        $page = Page::with('parent')->find($id);
+        $page = Page::find($id);
         if ($page && !Auth::user()->canEdit($page)) {
             abort(404);
         }
