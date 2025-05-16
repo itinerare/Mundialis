@@ -5,7 +5,7 @@
 @endsection
 
 @section('meta-img')
-    {{ $page->image ? $page->image->thumbnailUrl : asset('images/logo.png') }}
+    {{ $page->image ? Storage::url($page->image->thumbnailUrl) : Storage::url('images/logo.png') }}
 @endsection
 
 @section('meta-desc')
@@ -30,7 +30,7 @@
         @foreach ($images as $image)
             <div class="col-md-3 col-6 text-center mb-2" data-id="{{ $image->id }}">
                 <div>
-                    <img src="{{ $image->thumbnailUrl }}" class="img-thumbnail"
+                    <img src="{{ Storage::url($image->thumbnailUrl) }}" class="img-thumbnail"
                         alt="Thumbnail for image #{{ $image->id }}" />
                 </div>
             </div>

@@ -15,7 +15,7 @@
                     <div class="col-md text-center align-self-center">
                         @if ($version->image)
                             <a href="{{ url('special/get-image/' . $version->image->id) }}"
-                                class="image-link mw-100"><img src="{{ $version->image->thumbnailUrl }}"
+                                class="image-link mw-100"><img src="{{ Storage::url($version->image->thumbnailUrl) }}"
                                     class="img-thumbnail mw-100" /></a>
                         @else
                             Deleted image

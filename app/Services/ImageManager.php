@@ -13,6 +13,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
 class ImageManager extends Service {
@@ -267,8 +268,8 @@ class ImageManager extends Service {
                 // Delete version files
                 foreach ($image->versions as $version) {
                     if (isset($version->hash)) {
-                        unlink($image->imagePath.'/'.$version->thumbnailFileName);
-                        unlink($image->imagePath.'/'.$version->imageFileName);
+                        Storage::delete($image->imagePath.'/'.$version->thumbnailFileName);
+                        Storage::delete($image->imagePath.'/'.$version->imageFileName);
                     }
                 }
 
@@ -355,8 +356,8 @@ class ImageManager extends Service {
             $this->handleImage($file['image'], $image->imagePath, $version->imageFileName);
             $this->handleImage($file['thumbnail'], $image->imagePath, $version->thumbnailFileName);
         } elseif (!$create && File::exists($image->imagePath.'/'.$version->thumbnailFileName)) {
-            unlink($image->imagePath.'/'.$version->thumbnailFileName);
-            unlink($image->imagePath.'/'.$version->imageFileName);
+            Storage::delete($image->imagePath.'/'.$version->thumbnailFileName);
+            Storage::delete($image->imagePath.'/'.$version->imageFileName);
         }
 
         return true;
@@ -447,19 +448,19 @@ class ImageManager extends Service {
                 }
 
                 // Save image
-                if (!$this->handleImage($data['image'], $image->imagePath, $version->imageFileName)) {
+                if (!$this->handleImage(file_get_contents($data['image']), $image->imagePath, $version->imageFileName)) {
                     throw new \Exception('An error occurred while handling image file.');
                 }
 
                 // Save thumbnail
                 if (isset($data['use_cropper']) && $data['use_cropper']) {
                     $this->cropThumbnail(Arr::only($data, ['x0', 'x1', 'y0', 'y1']), $image, $version);
-                } elseif (!$this->handleImage($data['thumbnail'], $image->imagePath, $version->thumbnailFileName)) {
+                } elseif (!$this->handleImage(file_get_contents($data['thumbnail']), $image->imagePath, $version->thumbnailFileName)) {
                     throw new \Exception('An error occurred while handling thumbnail file.');
                 }
 
                 // Trim transparent parts of image.
-                $processImage = Image::make($image->imagePath.'/'.$version->imageFileName)->trim('transparent');
+                $processImage = Image::make($data['image'])->trim('transparent');
 
                 if (config('mundialis.settings.image_thumbnail_automation') == 1) {
                     // Make the image be square
@@ -478,7 +479,7 @@ class ImageManager extends Service {
                 }
 
                 // Save the processed image
-                $processImage->save($image->imagePath.'/'.$version->imageFileName, 100, $imageData['extension']);
+                Storage::put($image->imagePath.'/'.$version->imageFileName, $processImage->encode($imageData['extension'], 100));
             } else {
                 // Otherwise, just create a new version
                 $version = $this->logImageVersion($image->id, $user->id, null, 'Image Info Updated', $data['reason'] ?? null, null, $data['is_minor'] ?? 0);
@@ -624,7 +625,7 @@ class ImageManager extends Service {
      * @param PageImageVersion $version
      */
     private function cropThumbnail($points, $pageImage, $version) {
-        $image = Image::make($pageImage->imagePath.'/'.$version->imageFileName);
+        $image = Image::make(Storage::get($pageImage->imagePath.'/'.$version->imageFileName));
 
         if (config('mundialis.settings.watermark_image_thumbnails') == 1) {
             // Trim transparent parts of image
@@ -687,7 +688,7 @@ class ImageManager extends Service {
         }
 
         // Save the thumbnail
-        $image->save($pageImage->thumbnailPath.'/'.$version->thumbnailFileName, 100, $version->extension);
+        Storage::put($pageImage->thumbnailPath.'/'.$version->thumbnailFileName, $image->encode($version->extension, 100));
     }
 
     /**

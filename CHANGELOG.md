@@ -4,6 +4,23 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [2.6.0](https://code.itinerare.net/itinerare/Mundialis/compare/v2.5.1...v2.6.0) (2025-01-13)
+
+### Features
+
+
+##### Tests
+
+* Add visibility, validity checks to page image sort tests ([2ce1d8](https://code.itinerare.net/itinerare/Mundialis/commit/2ce1d813458e08d91613488bd350b0c60d5373de))
+* Add visibility, validity to get page image sort tests ([25ca48](https://code.itinerare.net/itinerare/Mundialis/commit/25ca481e1c23dbe1ca343a0fa407694968775251))
+
+### Bug Fixes
+
+* Use full ValidateSignature middleware path ([99ffa6](https://code.itinerare.net/itinerare/Mundialis/commit/99ffa677e706554728994972a7afaaf158f7486d))
+
+
+---
+
 ## [2.5.1](https://code.itinerare.net/itinerare/Mundialis/compare/v2.5.0...v2.5.1) (2024-12-30)
 
 ### Bug Fixes

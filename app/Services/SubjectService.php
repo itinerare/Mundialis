@@ -125,7 +125,7 @@ class SubjectService extends Service {
 
             // Handle image
             if ($image) {
-                $this->handleImage($image, $category->imagePath, $category->imageFileName);
+                $this->handleImage(file_get_contents($image), $category->imagePath, $category->imageFileName);
             }
 
             return $this->commitReturn($category);
@@ -213,7 +213,7 @@ class SubjectService extends Service {
 
             // Handle image
             if ($image) {
-                $this->handleImage($image, $category->imagePath, $category->imageFileName);
+                $this->handleImage(file_get_contents($image), $category->imagePath, $category->imageFileName);
             }
 
             return $this->commitReturn($category);

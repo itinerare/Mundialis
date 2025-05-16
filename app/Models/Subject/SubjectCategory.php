@@ -137,7 +137,7 @@ class SubjectCategory extends Model {
      * @return string
      */
     public function getImagePathAttribute() {
-        return public_path($this->imageDirectory);
+        return $this->imageDirectory;
     }
 
     /**
@@ -150,7 +150,7 @@ class SubjectCategory extends Model {
             return null;
         }
 
-        return asset($this->imageDirectory.'/'.$this->imageFileName);
+        return $this->imageDirectory.'/'.$this->imageFileName;
     }
 
     /**

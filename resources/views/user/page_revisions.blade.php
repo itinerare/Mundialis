@@ -5,7 +5,7 @@
 @endsection
 
 @section('meta-img')
-    {{ asset('/images/avatars/' . $user->avatar) }}
+    {{ Storage::url('/images/avatars/' . $user->avatar) }}
 @endsection
 
 @section('profile-content')
