@@ -384,15 +384,11 @@ abstract class Service {
 
     // Moves an uploaded image into a directory, checking if it exists.
     private function saveImage($image, $dir, $name, $copy = false) {
-        if (!Storage::directoryExists($dir)) {
-            // Create the directory.
-            if (!Storage::createDirectory($dir)) {
-                $this->setError('error', 'Failed to create image directory.');
+        if (!Storage::put($dir.'/'.$name, $image)) {
+            this->setError('error', 'Failed to upload image.');
 
-                return false;
-            }
-        }
-        Storage::put($dir.'/'.$name, $image);
+            return false;
+        };
 
         return true;
     }
