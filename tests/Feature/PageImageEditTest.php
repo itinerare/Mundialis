@@ -11,7 +11,6 @@ use App\Models\User\User;
 use App\Services\ImageManager;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
@@ -175,8 +174,6 @@ class PageImageEditTest extends TestCase {
                 ]);
             }
 
-            Log::info('/'.$image->imagePath.'/'.$image->version->imageFileName);
-
             $this->assertTrue(Storage::fileExists('/'.$image->imagePath.'/'.$image->version->imageFileName));
             $this->assertTrue(Storage::fileExists('/'.$image->imagePath.'/'.$image->version->thumbnailFileName));
 
@@ -311,8 +308,6 @@ class PageImageEditTest extends TestCase {
             }
 
             if ($fileData) {
-                Log::info($imageData['image']->imagePath.'/'.$imageData['image']->version->imageFileName);
-
                 $this->assertTrue(Storage::fileExists('/'.$imageData['image']->imagePath.'/'.$imageData['image']->version->imageFileName));
                 $this->assertTrue(Storage::fileExists('/'.$imageData['image']->imagePath.'/'.$imageData['image']->version->thumbnailFileName));
 
