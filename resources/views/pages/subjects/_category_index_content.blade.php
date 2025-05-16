@@ -17,7 +17,7 @@
                 <div class="card h-100">
                     <div class="card-header text-center">
                         @if ($category->has_image)
-                            <a href="{{ $category->url }}"><img src="{{ $category->imageUrl }}"
+                            <a href="{{ $category->url }}"><img src="{{ Storage::url($category->imageUrl) }}"
                                     class="mw-100 mb-1" /></a>
                         @endif
                         <h3>

@@ -4,7 +4,7 @@
             @if ($loop->iteration == 1 && $relationshipPage->image)
                 <div class="col-sm-4">
                     <a href="{{ $relationshipPage->url }}"><img class="img-thumbnail mw-100"
-                            src="{{ $relationshipPage->image->thumbnailUrl }}" />
+                            src="{{ Storage::url($relationshipPage->image->thumbnailUrl) }}" />
                     </a>
                 </div>
             @endif
@@ -30,7 +30,7 @@
             @if ($loop->iteration == 2 && $relationshipPage->image)
                 <div class="col-sm-4">
                     <a href="{{ $relationshipPage->url }}"><img class="img-thumbnail mw-100"
-                            src="{{ $relationshipPage->image->thumbnailUrl }}" />
+                            src="{{ Storage::url($relationshipPage->image->thumbnailUrl) }}" />
                 </div>
             @endif
         </div>

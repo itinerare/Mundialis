@@ -339,9 +339,9 @@ class SubjectDataTest extends TestCase {
             if ($withImage) {
                 $category = SubjectCategory::where('subject', 'misc')->where('name', $data['name'])->first();
 
-                $this->assertTrue(File::exists(public_path('images/data/categories/'.$category->id.'-image.png')));
+                $this->assertTrue(Storage::fileExists('/images/data/categories/'.$category->id.'-image.png'));
 
-                unlink(public_path('images/data/categories/'.$category->id.'-image.png'));
+                Storage::delete('/images/data/categories/'.$category->id.'-image.png');
             }
         } else {
             $response->assertSessionHasErrors();
@@ -412,9 +412,9 @@ class SubjectDataTest extends TestCase {
             if ($withImage) {
                 $category = SubjectCategory::where('subject', 'misc')->where('name', $data['name'])->first();
 
-                $this->assertTrue(File::exists(public_path('images/data/categories/'.$category->id.'-image.png')));
+                $this->assertTrue(Storage::fileExists('/images/data/categories/'.$category->id.'-image.png'));
 
-                unlink(public_path('images/data/categories/'.$category->id.'-image.png'));
+                Storage::delete('/images/data/categories/'.$category->id.'-image.png');
             }
         } else {
             $response->assertSessionHasErrors();

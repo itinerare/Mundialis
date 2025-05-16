@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
@@ -36,8 +37,8 @@ class AdminSiteImagesTest extends TestCase {
     #[DataProvider('siteImageProvider')]
     public function testPostUploadImage($key) {
         // Remove the current file if it exists
-        if (File::exists(public_path('images/'.$key.'.png'))) {
-            unlink('public/images/'.$key.'.png');
+        if (Storage::fileExists('images/'.$key.'.png')) {
+            Storage::delete('images/'.$key.'.png');
         }
 
         // Create a fake file
@@ -54,7 +55,7 @@ class AdminSiteImagesTest extends TestCase {
         $response->assertSessionHasNoErrors();
         // Check that the file is now present
         $this->
-            assertTrue(File::exists(public_path('images/'.$key.'.png')));
+            assertTrue(Storage::fileExists('/images/'.$key.'.png'));
 
         // Replace with default images for tidiness
         $this->artisan('app:copy-default-images');
@@ -75,8 +76,8 @@ class AdminSiteImagesTest extends TestCase {
         $file = UploadedFile::fake()->create('test.css', 50);
 
         // Check that the file is absent, and if not, remove it
-        if (File::exists(public_path('css/custom.css'))) {
-            unlink('public/css/custom.css');
+        if (Storage::fileExists('/css/custom.css')) {
+            Storage::delete('/css/custom.css');
         }
 
         // Try to post data
@@ -89,9 +90,9 @@ class AdminSiteImagesTest extends TestCase {
         $response->assertSessionHasNoErrors();
         // Check that the file is now present
         $this->
-            assertTrue(File::exists(public_path('css/custom.css')));
+            assertTrue(Storage::fileExists('/css/custom.css'));
 
         // Clean up
-        unlink('public/css/custom.css');
+        Storage::delete('/css/custom.css');
     }
 }

@@ -5,7 +5,7 @@
 @endsection
 
 @section('meta-img')
-    {{ $image->thumbnailUrl }}
+    {{ Storage::url($image->thumbnailUrl) }}
 @endsection
 
 @section('meta-desc')
@@ -24,7 +24,7 @@
     @include('pages._page_header', ['section' => 'Gallery - Image #' . $image->id])
 
     <div class="text-center">
-        <img src="{{ $image->imageUrl }}" class="rounded bg-light mw-100 p-2 mb-2" />
+        <img src="{{ Storage::url($image->imageUrl) }}" class="rounded bg-light mw-100 p-2 mb-2" />
     </div>
 
     <hr />
@@ -76,7 +76,7 @@
                     <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
                         <div class="col-md-3 text-center">
                             @if ($version->hash)
-                                <a href="{{ $version->imageUrl }}"><img src="{{ $version->thumbnailUrl }}"
+                                <a href="{{ Storage::url($version->imageUrl) }}"><img src="{{ Storage::url($version->thumbnailUrl) }}"
                                         class="img-thumbnail mw-100" style="max-height:100px;" /></a>
                             @else
                                 <i>No image</i>

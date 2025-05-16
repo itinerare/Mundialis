@@ -38,9 +38,9 @@ class PageImageDeleteTest extends TestCase {
     }
 
     protected function tearDown(): void {
-        parent::tearDown();
-
         $this->service->testImages($this->image, $this->version, false);
+
+        parent::tearDown();
     }
 
     /**

@@ -5,7 +5,7 @@
 @endsection
 
 @section('meta-img')
-    {{ asset('/images/avatars/' . $user->avatar) }}
+    {{ Storage::url('/images/avatars/' . $user->avatar) }}
 @endsection
 
 @section('profile-content')
@@ -17,10 +17,10 @@
 
     <div class="row mb-4">
         <div class="col-md-3 text-center d-block d-md-none mb-4">
-            <img src="/images/avatars/{{ $user->avatar }}" class="userAvatar" style="width:200px;height:200px;">
+            <img src="{{ Storage::url('/images/avatars/'.$user->avatar) }}" class="userAvatar" style="width:200px;height:200px;">
         </div>
         <div class="col-md card my-2">
-            <img src="/images/avatars/{{ $user->avatar }}" class="userAvatar d-none d-md-block"
+            <img src="{{ Storage::url('/images/avatars/'.$user->avatar) }}" class="userAvatar d-none d-md-block"
                 style="position:absolute;width:200px;height:200px;margin-top:-10px; margin-left:-10px;
         margin-right:25px;">
             <div>
@@ -105,7 +105,7 @@
                             <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
                                 <div class="col-md text-center align-self-center">
                                     <a href="{{ url('special/get-image/' . $version->image->id) }}"
-                                        class="image-link mw-100"><img src="{{ $version->image->thumbnailUrl }}"
+                                        class="image-link mw-100"><img src="{{ Storage::url($version->image->thumbnailUrl) }}"
                                             class="img-thumbnail mw-100" /></a>
                                 </div>
                                 <div class="col-md align-self-center">{!! pretty_date($version->created_at) !!}</div>
