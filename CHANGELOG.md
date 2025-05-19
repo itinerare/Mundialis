@@ -4,6 +4,24 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [3.0.0-rc.3](https://code.itinerare.net/itinerare/Mundialis/compare/v3.0.0-rc.2...v3.0.0-rc.3) (2025-05-19)
+
+### Bug Fixes
+
+
+##### Pages
+
+* Create a new version when updating wanted page links ([37530a](https://code.itinerare.net/itinerare/Mundialis/commit/37530a688e4d53296e18dcbfec11a45a4ccdd396))
+* Decode HTML entities when parsing page links; closes #493 ([a3c567](https://code.itinerare.net/itinerare/Mundialis/commit/a3c56719f1357a47c04ba44eb0fafb58e3fa9270))
+* Save version data when updating wanted page links; closes #494 ([cbcf4d](https://code.itinerare.net/itinerare/Mundialis/commit/cbcf4dba435d711a8368110d38496353ac86be0c))
+
+##### Special Pages
+
+* Check for link parent existence when viewing link related special pages ([925143](https://code.itinerare.net/itinerare/Mundialis/commit/9251431e23f7d2682b3f7a40dfa0ea7c598fad4f))
+
+
+---
+
 ## [3.0.0-rc.2](https://code.itinerare.net/itinerare/Mundialis/compare/v3.0.0-rc.1...v3.0.0-rc.2) (2025-05-12)
 
 ### Bug Fixes

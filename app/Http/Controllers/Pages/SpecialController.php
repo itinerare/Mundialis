@@ -243,7 +243,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getMostLinkedPages(Request $request) {
-        $query = PageLink::whereNotNull('link_id')->where('linked_type', 'page')
+        $query = PageLink::whereHas('parent')->whereNotNull('link_id')->where('linked_type', 'page')
             ->get()->filter(function ($link) {
                 if (Auth::check() && Auth::user()->canWrite) {
                     return 1;
@@ -406,7 +406,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getWantedPages(Request $request) {
-        $query = PageLink::whereNotNull('title')->get()->filter(function ($link) {
+        $query = PageLink::whereHas('parent')->whereNotNull('title')->get()->filter(function ($link) {
             if (Auth::check() && Auth::user()->canWrite) {
                 return 1;
             }

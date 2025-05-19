@@ -193,7 +193,7 @@ abstract class Service {
         foreach ($data['parsed'] as $key=>$item) {
             $i = 1;
             // Test content against both a wiki-style link pattern without label and one with
-            foreach (['/\[\[([A-Za-z0-9_-_\s!-@~-ʷ]+)\]\]/', '/\[\[([A-Za-z0-9_-_\s!-@~-ʷ]+)\|([A-Za-z0-9_-_\s!-@~-ʷ]+)\]\]/'] as $pattern) {
+            foreach (['/\[\[([a-zA-Z0-9_-_!-\/:;\^-`{}~\sÀ-ɏʰ-˾̀-ͯ᷀-᷿Ḁ-ỿ]+)\]\]/', '/\[\[([a-zA-Z0-9_-_!-\/:;\^-`{}~\sÀ-ɏʰ-˾̀-ͯ᷀-᷿Ḁ-ỿ]+)\|([a-zA-Z0-9_-_!-\/:;\^-`{}~\sÀ-ɏʰ-˾̀-ͯ᷀-᷿Ḁ-ỿ]+)\]\]/'] as $pattern) {
                 $i2 = 0;
 
                 $matches = null;
@@ -203,22 +203,11 @@ abstract class Service {
                 }
                 if (isset($count) && $count && isset($matches[1])) {
                     foreach ($matches[1] as $match) {
-                        // A bunch of special characters...
-                        $replacements = [
-                            '&Agrave'  => 'À', '&agrave;' => 'à', '&Aacute;' => 'Á', '&aacute;' => 'á', '&Acirc;' => 'Â', '&acirc;' => 'â', '&Atilde;' => 'Ã', '&atilde;' => 'ã',
-                            '&Auml;'   => 'Ä', '&auml;' => 'ä', '&Aring;' => 'Å', '&aring;' => 'å', '&AElig;' => 'Æ', '&aelig;' => 'æ', '&Ccedil;' => 'Ç', '&ccedil;' => 'ç',
-                            '&ETH;'    => 'Ð', '&eth;' => 'ð', '&Egrave;' => 'È', '&egrave;' => 'è', '&Eacute;' => 'É', '&eacute;' => 'é', '&Ecirc;' => 'Ê', '&ecirc;' => 'ê',
-                            '&Euml;'   => 'Ë', '&euml;' => 'ë', '&Igrave;' => 'Ì', '&igrave;' => 'ì', '&Iacute;' => 'Í', '&iacute;' => 'í', '&Icirc;' => 'Î', '&icirc;' => 'î',
-                            '&Iuml;'   => 'Ï', '&iuml;' => 'ï', '&Ntilde;' => 'Ñ', '&ntilde;' => 'ñ', '&Ograve;' => 'Ò', '&ograve;' => 'ò', '&Oacute;' => 'Ó', '&oacute;' => 'ó',
-                            '&Ocirc;'  => 'Ô', '&ocirc;' => 'ô', '&Otilde;' => 'Õ', '&otilde;' => 'õ', '&Ouml;' => 'Ö', '&ouml;' => 'ö', '&Oslash;' => 'Ø', '&oslash;' => 'ø',
-                            '&OElig;'  => 'Œ', '&oelig;' => 'œ', '&szlig;' => 'ß', '&THORN;' => 'Þ', '&thorn;' => 'þ', '&Ugrave;' => 'Ù', '&ugrave;' => 'ù', '&Uacute;' => 'Ú',
-                            '&uacute;' => 'ú', '&Ucirc;' => 'Û', '&ucirc;' => 'û', '&Uuml;' => 'Ü', '&uuml;' => 'ü', '&Yacute;' => 'Ý', '&yacute;' => 'ý', '&Yuml;' => 'Ÿ', '&yuml;' => 'ÿ',
-                        ];
-                        // And replace any if found in the match
-                        $replaced = str_replace(array_keys($replacements), array_values($replacements), $match);
+                        // Convert HTML entities back to the relevant special characters
+                        $decoded = html_entity_decode($match);
 
                         // Attempt to locate an associated page
-                        $page = Page::get()->where('displayTitle', $replaced)->first();
+                        $page = Page::get()->where('displayTitle', $decoded)->first();
 
                         // Make a version of the match suitable for regex replacement
                         $regexMatch = str_replace('(', '\(', $match);
@@ -249,7 +238,7 @@ abstract class Service {
                             // which will help generate maintenance reports and, when the
                             // page is created, help update this page.
                             $data['links'][] = [
-                                'title' => $match,
+                                'title' => $decoded,
                             ];
                         }
                         $i2++;
