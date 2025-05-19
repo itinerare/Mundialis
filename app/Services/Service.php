@@ -193,7 +193,7 @@ abstract class Service {
         foreach ($data['parsed'] as $key=>$item) {
             $i = 1;
             // Test content against both a wiki-style link pattern without label and one with
-            foreach (['/\[\[([A-Za-z0-9_-_\s!-@~-ʷ]+)\]\]/', '/\[\[([A-Za-z0-9_-_\s!-@~-ʷ]+)\|([A-Za-z0-9_-_\s!-@~-ʷ]+)\]\]/'] as $pattern) {
+            foreach (['/\[\[([a-zA-Z0-9_-_!-\/:;\^-`{}~\sÀ-ɏʰ-˾̀-ͯ᷀-᷿Ḁ-ỿ]+)\]\]/', '/\[\[([a-zA-Z0-9_-_!-\/:;\^-`{}~\sÀ-ɏʰ-˾̀-ͯ᷀-᷿Ḁ-ỿ]+)\|([a-zA-Z0-9_-_!-\/:;\^-`{}~\sÀ-ɏʰ-˾̀-ͯ᷀-᷿Ḁ-ỿ]+)\]\]/'] as $pattern) {
                 $i2 = 0;
 
                 $matches = null;
