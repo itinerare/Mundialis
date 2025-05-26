@@ -21,9 +21,11 @@ jobs:
         tag=$(echo "$response" | jq -r '.[0].tag_name')
         url=$(echo "$response" | jq -r '.[0].html_url')
         description=$(echo "$response" | jq -r '.[0].body')
+        prerelease=$(echo "$response" | jq -r '.[0].prerelease')
 
         echo "name=$name" >> "$GITHUB_OUTPUT"
-        echo "tag=$name" >> "$GITHUB_OUTPUT"
+        echo "tag=$tag" >> "$GITHUB_OUTPUT"
+        echo "prerelease=$prerelease" >> "$GITHUB_OUTPUT"
 
         echo "Mirrored from ${url}" > description.md
         echo "" >> description.md
@@ -36,4 +38,5 @@ jobs:
         allowUpdates: true
         tag: ${{ steps.info.outputs.tag }}
         name: ${{ steps.info.outputs.name }}
+        prerelease: ${{ steps.info.outputs.prerelease }}
         bodyFile: "description.md"

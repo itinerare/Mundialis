@@ -4,27 +4,27 @@
     "description": "A web app framework for managing story, character, and world information.",
     "license": "Parity-7.0",
     "require": {
-        "php": "^8.1",
-        "spatie/flysystem-dropbox": "^3.0.0",
-        "doctrine/dbal": "^3.0",
-        "guzzlehttp/guzzle": "^7.0.1",
+        "php": "^8.2",
+        "alban/laravel-collective-spatie-html-parser": "^1.1",
+        "guzzlehttp/guzzle": "^7.2",
         "intervention/image": "^2.5",
         "laracasts/flash": "^3.2",
         "laravel/fortify": "^1.7",
-        "laravel/framework": "^10.0",
+        "laravel/framework": "^12.0",
         "laravel/helpers": "^1.4",
-        "laravel/tinker": "^2.5",
-        "laravelcollective/html": "^6.0",
-        "spatie/laravel-backup": "^8.0"
+        "laravel/tinker": "^2.8",
+        "spatie/flysystem-dropbox": "^3.0.0",
+        "spatie/laravel-backup": "^9.2",
+        "spatie/laravel-html": "^3.5"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
-        "laravel/sail": "^1.0.1",
+        "laravel/sail": "^1.18",
         "marcocesarato/php-conventional-changelog": "^1.10",
         "mockery/mockery": "^1.4.2",
-        "nunomaduro/collision": "^7.0",
-        "phpunit/phpunit": "^10.0",
+        "nunomaduro/collision": "^8.6",
+        "phpunit/phpunit": "^11.0",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
@@ -65,8 +65,8 @@
         "changelog": [
             "./vendor/marcocesarato/php-conventional-changelog/conventional-changelog"
         ],
-        "release": [
-            "./vendor/marcocesarato/php-conventional-changelog/conventional-changelog --no-tag"
+        "release-candidate": [
+            "./vendor/marcocesarato/php-conventional-changelog/conventional-changelog --rc"
         ]
     },
     "extra": {
@@ -81,5 +81,5 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "version": "2.6.1"
+    "version": "3.0.0"
 }

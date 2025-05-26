@@ -4,12 +4,12 @@ namespace Tests\Feature;
 
 use App\Models\User\Rank;
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AdminUserEditTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     /******************************************************************************
         ADMIN / USER EDITING
@@ -36,11 +36,10 @@ class AdminUserEditTest extends TestCase {
     /**
      * Test user edit page access.
      *
-     * @dataProvider getUserProvider
-     *
      * @param bool $withUser
      * @param int  $status
      */
+    #[DataProvider('getUserProvider')]
     public function testGetEditUser($withUser, $status) {
         $this->actingAs($this->admin)
             ->get('/admin/users/'.($withUser ? $this->subject->name : $this->faker()->domainWord()).'/edit')
@@ -50,11 +49,10 @@ class AdminUserEditTest extends TestCase {
     /**
      * Test user updates access.
      *
-     * @dataProvider getUserProvider
-     *
      * @param bool $withUser
      * @param int  $status
      */
+    #[DataProvider('getUserProvider')]
     public function testGetUserUpdates($withUser, $status) {
         $this->actingAs($this->admin)
             ->get('/admin/users/'.($withUser ? $this->subject->name : $this->faker()->domainWord()).'/updates')
@@ -71,12 +69,11 @@ class AdminUserEditTest extends TestCase {
     /**
      * Test user editing.
      *
-     * @dataProvider postEditUserProvider
-     *
      * @param bool  $withUser
      * @param array $data
      * @param bool  $expected
      */
+    #[DataProvider('postEditUserProvider')]
     public function testPostEditUser($withUser, $data, $expected) {
         // Make a user of the specified rank
         $subject = User::factory()->create([
@@ -123,11 +120,10 @@ class AdminUserEditTest extends TestCase {
     /**
      * Test ban user page access.
      *
-     * @dataProvider getUserProvider
-     *
      * @param bool $withUser
      * @param int  $status
      */
+    #[DataProvider('getUserProvider')]
     public function testGetBanUser($withUser, $status) {
         $this->actingAs($this->admin)
             ->get('/admin/users/'.($withUser ? $this->subject->name : $this->faker()->domainWord()).'/ban')
@@ -137,11 +133,10 @@ class AdminUserEditTest extends TestCase {
     /**
      * Test ban confirmation access.
      *
-     * @dataProvider getUserProvider
-     *
      * @param bool $withUser
      * @param int  $status
      */
+    #[DataProvider('getUserProvider')]
     public function testGetConfirmBanUser($withUser, $status) {
         $this->actingAs($this->admin)
             ->get('/admin/users/'.($withUser ? $this->subject->name : $this->faker()->domainWord()).'/ban-confirm')
@@ -151,12 +146,11 @@ class AdminUserEditTest extends TestCase {
     /**
      * Test unban user access.
      *
-     * @dataProvider getUnbanUserProvider
-     *
      * @param bool $withUser
      * @param bool $isBanned
      * @param int  $status
      */
+    #[DataProvider('getUnbanUserProvider')]
     public function testGetUnbanUser($withUser, $isBanned, $status) {
         // Make a user of the specified ban status
         $subject = User::factory()->create(['is_banned' => $isBanned]);
@@ -177,13 +171,12 @@ class AdminUserEditTest extends TestCase {
     /**
      * Test user banning.
      *
-     * @dataProvider postBanUserProvider
-     *
      * @param bool $withUser
      * @param int  $rank
      * @param bool $withReason
      * @param bool $expected
      */
+    #[DataProvider('postBanUserProvider')]
     public function testPostBanUser($withUser, $rank, $withReason, $expected) {
         // Make a user of the specified rank
         $subject = User::factory()->create([
@@ -220,13 +213,12 @@ class AdminUserEditTest extends TestCase {
     /**
      * Test ban message editing.
      *
-     * @dataProvider postBanUserProvider
-     *
      * @param bool $withUser
      * @param int  $rank
      * @param bool $withReason
      * @param bool $expected
      */
+    #[DataProvider('postBanUserProvider')]
     public function testPostEditBan($withUser, $rank, $withReason, $expected) {
         // Make a persistent user of the specified rank and ban status
         $subject = User::factory()->banned()->create([
@@ -273,13 +265,12 @@ class AdminUserEditTest extends TestCase {
     /**
      * Test user unbanning.
      *
-     * @dataProvider postUnbanUserProvider
-     *
      * @param bool $withUser
      * @param bool $isBanned
      * @param int  $rank
      * @param bool $expected
      */
+    #[DataProvider('postUnbanUserProvider')]
     public function testPostUnbanUser($withUser, $isBanned, $rank, $expected) {
         // Make a persistent user of the specified rank and ban status
         $subject = User::factory()->create([

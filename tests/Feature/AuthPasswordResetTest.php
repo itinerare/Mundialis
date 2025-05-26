@@ -4,16 +4,14 @@ namespace Tests\Feature;
 
 use App\Models\User\User;
 use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Queue;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AuthPasswordResetTest extends TestCase {
-    use RefreshDatabase;
-
     // These tests center on basic user authentication
     // They are modified from https://github.com/dwightwatson/laravel-auth-tests
 
@@ -36,11 +34,10 @@ class AuthPasswordResetTest extends TestCase {
     /**
      * Test password reset email.
      *
-     * @dataProvider passwordResetProvider
-     *
      * @param bool $isValid
      * @param bool $expected
      */
+    #[DataProvider('passwordResetProvider')]
     public function testPostPasswordResetEmail($isValid, $expected) {
         if ($isValid) {
             Notification::fake();

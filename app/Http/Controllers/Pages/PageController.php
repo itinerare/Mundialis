@@ -33,7 +33,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPage($id) {
-        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->with('image', 'parent', 'tags')->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -53,12 +53,12 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageHistory(Request $request, $id) {
-        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->with('parent')->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
 
-        $query = PageVersion::where('page_id', $page->id)->with('user:id,name,rank_id,is_banned');
+        $query = PageVersion::where('page_id', $page->id);
         $sort = $request->only(['sort']);
 
         if ($request->get('user_id')) {
@@ -95,7 +95,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getLinksHere(Request $request, $id) {
-        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->with('parent')->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -125,7 +125,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPageVersion($pageId, $id) {
-        $page = Page::visible(Auth::user() ?? null)->where('id', $pageId)->with('parent')->first();
+        $page = Page::visible(Auth::user() ?? null)->where('id', $pageId)->first();
         if (!$page) {
             abort(404);
         }
@@ -173,7 +173,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditPage($id) {
-        $page = Page::with('parent')->find($id);
+        $page = Page::find($id);
         if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
@@ -282,7 +282,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getProtectPage(Request $request, $id) {
-        $page = Page::where('id', $id)->with('parent')->first();
+        $page = Page::where('id', $id)->first();
         if (!$page) {
             abort(404);
         }
@@ -346,7 +346,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getMovePage($id) {
-        $page = Page::with('parent')->find($id);
+        $page = Page::find($id);
         if (!$page || !Auth::user()->canEdit($page)) {
             abort(404);
         }
@@ -379,7 +379,9 @@ class PageController extends Controller {
         return view('pages.page_move', [
             'page'       => $page,
             'categories' => $sortedCategories,
-        ]);
+        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+            'dateHelper' => new TimeDivision,
+        ] : []));
     }
 
     /**
@@ -413,7 +415,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getResetPage($pageId, $id) {
-        $page = Page::with('parent')->find($pageId);
+        $page = Page::find($pageId);
         if ($page && !Auth::user()->canEdit($page)) {
             abort(404);
         }
@@ -459,7 +461,7 @@ class PageController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeletePage($id) {
-        $page = Page::with('parent')->find($id);
+        $page = Page::find($id);
         if ($page && !Auth::user()->canEdit($page)) {
             abort(404);
         }

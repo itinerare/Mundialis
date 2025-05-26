@@ -6,12 +6,12 @@ use App\Models\Page\Page;
 use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageEditTest extends TestCase {
-    use RefreshDatabase, withFaker;
+    use WithFaker;
 
     protected function setUp(): void {
         parent::setUp();
@@ -22,11 +22,10 @@ class PageEditTest extends TestCase {
     /**
      * Test page creation access.
      *
-     * @dataProvider getCreatePageProvider
-     *
      * @param bool $withCategory
      * @param int  $status
      */
+    #[DataProvider('getCreatePageProvider')]
     public function testGetCreatePage($withCategory, $status) {
         if ($withCategory) {
             $category = SubjectCategory::factory()->create();
@@ -48,11 +47,10 @@ class PageEditTest extends TestCase {
     /**
      * Test page editing access.
      *
-     * @dataProvider getEditPageProvider
-     *
      * @param bool $withPage
      * @param int  $status
      */
+    #[DataProvider('getEditPageProvider')]
     public function testGetEditPage($withPage, $status) {
         if ($withPage) {
             $page = Page::factory()->create();
@@ -74,9 +72,6 @@ class PageEditTest extends TestCase {
     /**
      * Test page creation.
      *
-     * @dataProvider postCreateEditPageProvider
-     * @dataProvider postCreatePageProvider
-     *
      * @param bool $withCategory
      * @param bool $withTitle
      * @param bool $withSummary
@@ -86,6 +81,8 @@ class PageEditTest extends TestCase {
      * @param bool $withPageTag
      * @param bool $expected
      */
+    #[DataProvider('postCreateEditPageProvider')]
+    #[DataProvider('postCreatePageProvider')]
     public function testPostCreatePage($withCategory, $withTitle, $withSummary, $withData, $withParent, $withUtilityTag, $withPageTag, $expected) {
         if ($withCategory) {
             $category = SubjectCategory::factory()->testData()->create();
@@ -159,9 +156,6 @@ class PageEditTest extends TestCase {
     /**
      * Test page editing.
      *
-     * @dataProvider postCreateEditPageProvider
-     * @dataProvider postEditPageProvider
-     *
      * @param bool $withPage
      * @param bool $withTitle
      * @param bool $withSummary
@@ -171,6 +165,8 @@ class PageEditTest extends TestCase {
      * @param bool $withPageTag
      * @param bool $expected
      */
+    #[DataProvider('postCreateEditPageProvider')]
+    #[DataProvider('postEditPageProvider')]
     public function testPostEditPage($withPage, $withTitle, $withSummary, $withData, $withParent, $withUtilityTag, $withPageTag, $expected) {
         $category = SubjectCategory::factory()->testData()->create();
 

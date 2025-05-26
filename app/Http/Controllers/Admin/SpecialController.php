@@ -29,7 +29,7 @@ class SpecialController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getUnwatchedPages(Request $request) {
-        $query = Page::with('watchers')->get()
+        $query = Page::get()
             ->filter(function ($page) {
                 return $page->watchers->count() == 0;
             })->sortBy('title');
@@ -175,7 +175,7 @@ class SpecialController extends Controller {
             abort(404);
         }
 
-        $query = PageImageVersion::where('page_image_id', $image->id)->with('image', 'user');
+        $query = PageImageVersion::where('page_image_id', $image->id);
         $sort = $request->only(['sort']);
 
         if ($request->get('user_id')) {

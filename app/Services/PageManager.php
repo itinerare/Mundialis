@@ -64,10 +64,12 @@ class PageManager extends Service {
             // Create page
             $page = Page::create(Arr::only($data, ['category_id', 'title', 'summary', 'is_visible', 'parent_id']));
 
-            // If the page is wanted, update the existing page(s)
             if (PageLink::where('title', $page->displayTitle)->exists()) {
-                foreach (PageLink::where('title', $page->displayTitle)->where('parent_type', 'page')->get() as $link) {
+                // If the page is wanted, update the existing page(s)
+                foreach (PageLink::whereHas('parent')->where('parent_type', 'page')->where('title', $page->displayTitle)->get() as $link) {
                     $version = PageVersion::find($link->parent->version->id);
+
+                    // Process existing version data
                     $versionData = $version->data;
                     if (isset($versionData['data']['parsed'])) {
                         unset($versionData['data']['parsed']);
@@ -75,10 +77,16 @@ class PageManager extends Service {
                     if (isset($versionData['data']['links'])) {
                         unset($versionData['data']['links']);
                     }
+                    $versionData['data'] = $this->parse_wiki_links($versionData['data']);
 
-                    // Parse data and update version
-                    $newData['data'] = $this->parse_wiki_links($versionData['data']);
-                    $version->save();
+                    // Create a new version
+                    $link->parent->versions()->create([
+                        'user_id'  => $user->id,
+                        'type'     => 'Links Updated',
+                        'reason'   => 'A linked-to wanted page was created.',
+                        'is_minor' => 1,
+                        'data'     => $versionData,
+                    ]);
 
                     // And update the links themselves
                     $link->update([
@@ -88,7 +96,7 @@ class PageManager extends Service {
                 }
 
                 // As well as entries
-                foreach (PageLink::where('title', $page->displayTitle)->where('parent_type', 'entry')->get() as $link) {
+                foreach (PageLink::where('parent_type', 'entry')->where('title', $page->displayTitle)->get() as $link) {
                     $entry = $link->parent;
 
                     $parsed = $this->parse_wiki_links((array) $entry->definition);
@@ -625,7 +633,7 @@ class PageManager extends Service {
     }
 
     /**
-     * Processes tags.
+     * Processes page links.
      *
      * @param Page  $page
      * @param array $data

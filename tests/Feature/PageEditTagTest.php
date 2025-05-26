@@ -7,12 +7,12 @@ use App\Models\Page\PageTag;
 use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageEditTagTest extends TestCase {
-    use RefreshDatabase, withFaker;
+    use WithFaker;
 
     protected function setUp(): void {
         parent::setUp();
@@ -23,13 +23,12 @@ class PageEditTagTest extends TestCase {
     /**
      * Test page creation with utility tags.
      *
-     * @dataProvider postUtilityTagProvider
-     *
      * @param bool $wip
      * @param bool $stub
      * @param bool $outdated
      * @param bool $cleanup
      */
+    #[DataProvider('postUtilityTagProvider')]
     public function testPostCreatePageWithUtilityTags($wip, $stub, $outdated, $cleanup) {
         $category = SubjectCategory::factory()->create();
 
@@ -89,15 +88,14 @@ class PageEditTagTest extends TestCase {
     /**
      * Test page editing with utility tags.
      *
-     * @dataProvider postUtilityTagProvider
-     * @dataProvider postEditUtilityTagProvider
-     *
      * @param bool $wip
      * @param bool $stub
      * @param bool $outdated
      * @param bool $cleanup
      * @param bool $withTags
      */
+    #[DataProvider('postUtilityTagProvider')]
+    #[DataProvider('postEditUtilityTagProvider')]
     public function testPostEditPageWithUtilityTags($wip, $stub, $outdated, $cleanup, $withTags) {
         // Set up an array so that it's easy to loop through the tags
         // and access the relevant bool for each
@@ -203,10 +201,9 @@ class PageEditTagTest extends TestCase {
     /**
      * Test page creation with page tags.
      *
-     * @dataProvider postCreatePageTagsProvider
-     *
      * @param int $quantity
      */
+    #[DataProvider('postCreatePageTagsProvider')]
     public function testPostCreatePageWithPageTags($quantity) {
         $category = SubjectCategory::factory()->create();
 
@@ -252,12 +249,11 @@ class PageEditTagTest extends TestCase {
     /**
      * Test page editing with page tags.
      *
-     * @dataProvider postEditPageTagsProvider
-     *
      * @param int  $quantity
      * @param bool $withTags
      * @param bool $preserveExisting
      */
+    #[DataProvider('postEditPageTagsProvider')]
     public function testPostEditPageWithPageTags($quantity, $withTags, $preserveExisting) {
         $page = Page::factory()->create();
 

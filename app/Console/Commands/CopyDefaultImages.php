@@ -10,7 +10,7 @@ class CopyDefaultImages extends Command {
      *
      * @var string
      */
-    protected $signature = 'copy-default-images';
+    protected $signature = 'app:copy-default-images';
 
     /**
      * The console command description.

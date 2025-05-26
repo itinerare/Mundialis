@@ -21,9 +21,9 @@
     </h1>
 
     {!! Form::open([
-        'url' => $category->id
-            ? 'admin/data/language/lexicon-categories/edit/' . $category->id
-            : 'admin/data/language/lexicon-categories/create',
+        'action' => $category->id
+            ? '/admin/data/language/lexicon-categories/edit/' . $category->id
+            : '/admin/data/language/lexicon-categories/create',
     ]) !!}
 
     <h2>Basic Information</h2>
@@ -31,13 +31,13 @@
     <div class="row">
         <div class="col-md">
             <div class="form-group">
-                {!! Form::label('Name') !!}
+                {!! Form::label('name', 'Name') !!}
                 {!! Form::text('name', $category->name, ['class' => 'form-control']) !!}
             </div>
         </div>
         <div class="col-md">
             <div class="form-group">
-                {!! Form::label('Parent Category (Optional)') !!}
+                {!! Form::label('parent_id', 'Parent Category (Optional)') !!}
                 {!! Form::select('parent_id', $categoryOptions, $category->parent_id, [
                     'class' => 'form-control',
                     'placeholder' => 'Select a Category',
@@ -47,7 +47,7 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('Description (Optional)') !!}
+        {!! Form::label('description', 'Description (Optional)') !!}
         {!! Form::textarea('description', $category->description, ['class' => 'form-control wysiwyg']) !!}
     </div>
 
@@ -79,7 +79,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            {!! Form::label('Property Name') !!}
+                                            {!! Form::label('property_name[]', 'Property Name') !!}
                                             <div class="d-flex">
                                                 <a class="fas fa-arrows-alt-v handle mr-2" href="#"></a>
                                                 {!! Form::text('property_name[]', $values['name'], ['class' => 'form-control']) !!}
@@ -88,7 +88,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            {!! Form::label('Dimensions') !!} {!! add_help('Enter any number of dimensions, or leave blank to mark as non-dimensional.') !!}
+                                            {!! Form::label('property_dimensions[]', 'Dimensions') !!} {!! add_help('Enter any number of dimensions, or leave blank to mark as non-dimensional.') !!}
                                             <div class="d-flex">
                                                 {!! Form::text(
                                                     'property_dimensions[]',
@@ -127,7 +127,7 @@
                                         <h6>{{ $combination }}</h6>
                                         <div class="row">
                                             <div class="col-md">
-                                                {!! Form::label('Criteria') !!} {!! add_help(
+                                                {!! Form::label('declension_criteria[' . $class->id . '][' . $key . ']', 'Criteria') !!} {!! add_help(
                                                     'Enter one or more regex patterns. Only words matching these criteria will have transformations applied to them. Note that delimiters are automatically added.',
                                                 ) !!}
                                                 {!! Form::text(
@@ -140,7 +140,7 @@
                                             </div>
                                             <div class="w-100 mb-1"></div>
                                             <div class="col-md">
-                                                {!! Form::label('Regex') !!} {!! add_help('Enter one or more regex patterns to replace. Note that delimiters are automatically added.') !!}
+                                                {!! Form::label('declension_regex[' . $class->id . '][' . $key . ']', 'Regex') !!} {!! add_help('Enter one or more regex patterns to replace. Note that delimiters are automatically added.') !!}
                                                 {!! Form::text(
                                                     'declension_regex[' . $class->id . '][' . $key . ']',
                                                     isset($category->data[$class->id]['conjugation'][$key])
@@ -150,7 +150,7 @@
                                                 ) !!}
                                             </div>
                                             <div class="col-md">
-                                                {!! Form::label('Replacement') !!} {!! add_help('Enter one or more series of characters to replace the pattern(s) with.') !!}
+                                                {!! Form::label('declension_replacement[' . $class->id . '][' . $key . ']', 'Replacement') !!} {!! add_help('Enter one or more series of characters to replace the pattern(s) with.') !!}
                                                 {!! Form::text(
                                                     'declension_replacement[' . $class->id . '][' . $key . ']',
                                                     isset($category->data[$class->id]['conjugation'][$key])
@@ -191,7 +191,7 @@
             <div class="row">
                 <div class="col-md">
                     <div class="form-group">
-                        {!! Form::label('Property Name') !!}
+                        {!! Form::label('property_name[]', 'Property Name') !!}
                         <div class="d-flex">
                             <a class="fas fa-arrows-alt-v handle mr-2" href="#"></a>
                             {!! Form::text('property_name[]', null, ['class' => 'form-control']) !!}
@@ -200,7 +200,7 @@
                 </div>
                 <div class="col-md">
                     <div class="form-group">
-                        {!! Form::label('Dimensions') !!}
+                        {!! Form::label('property_dimensions[]', 'Dimensions') !!}
                         <div class="d-flex">
                             {!! Form::text('property_dimensions[]', null, [
                                 'class' => 'form-control dimension-list',

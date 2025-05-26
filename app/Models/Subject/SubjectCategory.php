@@ -86,7 +86,7 @@ class SubjectCategory extends Model {
      * Get pages in this category.
      */
     public function pages() {
-        return $this->hasMany(Page::class, 'category_id')->with('category', 'parent', 'image', 'tags');
+        return $this->hasMany(Page::class, 'category_id');
     }
 
     /**********************************************************************************************

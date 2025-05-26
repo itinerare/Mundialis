@@ -14,10 +14,10 @@ jobs:
   laravel-tests:
     strategy:
       matrix:
-        target: ['8.1', '8.2']
+        target: ['8.2', '8.3']
 
     runs-on: docker
-    
+
     services:
       mysql:
           image: mysql:9

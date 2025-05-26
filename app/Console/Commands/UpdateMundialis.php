@@ -42,8 +42,8 @@ class UpdateMundialis extends Command {
 
             // Run setup commands
             $this->line("\n".'Updating site pages and settings...');
-            $this->call('add-site-settings');
-            $this->call('add-site-pages');
+            $this->call('app:add-site-settings');
+            $this->call('app:add-site-pages');
         } else {
             $this->line('Aborting! Please run composer install and then run this command again.');
         }

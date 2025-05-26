@@ -6,12 +6,12 @@ use App\Models\Page\Page;
 use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageMoveTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     protected function setUp(): void {
         parent::setUp();
@@ -24,10 +24,9 @@ class PageMoveTest extends TestCase {
     /**
      * Test page move access.
      *
-     * @dataProvider getMovePageProvider
-     *
      * @param bool $isValid
      */
+    #[DataProvider('getMovePageProvider')]
     public function testGetMovePage($isValid) {
         $response = $this->actingAs($this->editor)
             ->get('/pages/'.($isValid ? $this->page->id : 9999).'/move');
@@ -45,13 +44,12 @@ class PageMoveTest extends TestCase {
     /**
      * Test page moving.
      *
-     * @dataProvider postMovePageProvider
-     *
      * @param bool $withPage
      * @param bool $withReason
      * @param bool $withConflict
      * @param bool $expected
      */
+    #[DataProvider('postMovePageProvider')]
     public function testPostMovePage($withPage, $withReason, $withConflict, $expected) {
         $category = SubjectCategory::factory()->create();
         $oldCategory = $this->page->category;

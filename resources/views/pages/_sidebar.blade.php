@@ -41,7 +41,7 @@
             <div class="sidebar-item"><a href="{{ url('pages/' . $page->id . '/links-here') }}"
                     class="{{ set_active('pages/' . $page->id . '/links-here*') }}">What Links Here</a></div>
             @if (Auth::check())
-                {!! Form::open(['url' => 'account/watched-pages/' . $page->id, 'id' => 'watchForm']) !!}
+                {!! Form::open(['action' => '/account/watched-pages/' . $page->id, 'id' => 'watchForm']) !!}
                 <div class="sidebar-item"><a href="#"
                         onclick="document.getElementById('watchForm').submit();">{{ Auth::user()->watched->where('id', $page->id)->first() ? 'Unw' : 'W' }}atch
                         Page</a></div>

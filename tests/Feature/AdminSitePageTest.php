@@ -4,12 +4,12 @@ namespace Tests\Feature;
 
 use App\Models\SitePage;
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AdminSitePageTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     /******************************************************************************
         ADMIN / SITE PAGES
@@ -18,7 +18,7 @@ class AdminSitePageTest extends TestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->artisan('add-site-pages');
+        $this->artisan('app:add-site-pages');
         $this->admin = User::factory()->admin()->make();
     }
 
@@ -34,10 +34,9 @@ class AdminSitePageTest extends TestCase {
     /**
      * Test site page editing.
      *
-     * @dataProvider sitePageProvider
-     *
      * @param string $key
      */
+    #[DataProvider('sitePageProvider')]
     public function testPostEditSitePage($key) {
         // Get the information for the page
         $page = SitePage::where('key', $key)->first();

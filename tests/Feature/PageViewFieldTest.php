@@ -6,21 +6,20 @@ use App\Models\Page\Page;
 use App\Models\Page\PageVersion;
 use App\Models\Subject\SubjectCategory;
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class PageViewFieldTest extends TestCase {
-    use RefreshDatabase, WithFaker;
+    use WithFaker;
 
     /**
      * Test page access with an infobox field.
      *
-     * @dataProvider getPageWithFieldProvider
-     *
      * @param string $fieldType
      * @param bool   $withInput
      */
+    #[DataProvider('getPageWithFieldProvider')]
     public function testGetPageWithInfoboxField($fieldType, $withInput) {
         // Set up some data for the field
         $fieldData = [
@@ -100,12 +99,11 @@ class PageViewFieldTest extends TestCase {
     /**
      * Test page access with a main body field.
      *
-     * @dataProvider getPageWithFieldProvider
-     * @dataProvider getPageWithTemplateFieldProvider
-     *
      * @param string $fieldType
      * @param bool   $withInput
      */
+    #[DataProvider('getPageWithFieldProvider')]
+    #[DataProvider('getPageWithTemplateFieldProvider')]
     public function testGetPageWithTemplateField($fieldType, $withInput) {
         // Set up some data for the field
         $fieldData = [

@@ -33,16 +33,16 @@ class SetupMundialis extends Command {
         if ($this->confirm('Have you run the composer install command or equivalent and run first-time migrations?')) {
             // Run setup commands
             $this->line("\n".'Adding site pages and settings...');
-            $this->call('add-site-settings');
-            $this->call('add-site-pages');
-            $this->call('add-lexicon-settings');
+            $this->call('app:add-site-settings');
+            $this->call('app:add-site-pages');
+            $this->call('app:add-lexicon-settings');
 
             $this->line("\n".'Copying default images...');
-            $this->call('copy-default-images');
+            $this->call('app:copy-default-images');
 
             // Run admin user setup
             $this->line("\n".'Setting up admin user...');
-            $this->call('setup-admin-user');
+            $this->call('app:setup-admin-user');
         } else {
             $this->line('Aborting! Please run composer install and php artisan migrate and then run this command again.');
         }

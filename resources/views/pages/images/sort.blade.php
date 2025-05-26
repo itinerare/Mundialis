@@ -37,7 +37,7 @@
         @endforeach
     </div>
 
-    {!! Form::open(['url' => 'pages/' . $page->id . '/gallery/sort', 'class' => 'text-right']) !!}
+    {!! Form::open(['action' => '/pages/' . $page->id . '/gallery/sort', 'class' => 'text-right']) !!}
     {!! Form::hidden('sort', null, ['id' => 'sortableOrder']) !!}
     {!! Form::submit('Save Order', ['class' => 'btn btn-primary']) !!}
     {!! Form::close() !!}

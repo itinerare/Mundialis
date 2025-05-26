@@ -6,25 +6,20 @@ use App\Models\Page\Page;
 use App\Models\Subject\SubjectCategory;
 use App\Models\Subject\SubjectTemplate;
 use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class SubjectDataTest extends TestCase {
-    use RefreshDatabase, withFaker;
+    use WithFaker;
 
     protected function setUp(): void {
         parent::setUp();
 
         $this->admin = User::factory()->admin()->make();
-
-        // Delete any subject categories present due to other tests
-        if (SubjectCategory::query()->count()) {
-            SubjectCategory::query()->delete();
-        }
     }
 
     /******************************************************************************
@@ -34,12 +29,11 @@ class SubjectDataTest extends TestCase {
     /**
      * Test subject category index access.
      *
-     * @dataProvider getSubjectIndexProvider
-     *
      * @param string $subject
      * @param bool   $withCategory
      * @param bool   $withUnrelated
      */
+    #[DataProvider('getSubjectIndexProvider')]
     public function testGetSubjectIndex($subject, $withCategory, $withUnrelated) {
         if ($withCategory) {
             $category = SubjectCategory::factory()->subject($subject)->create();
@@ -96,12 +90,11 @@ class SubjectDataTest extends TestCase {
     /**
      * Test subject template access.
      *
-     * @dataProvider getEditSubjectTemplateProvider
-     *
      * @param string $subject
      * @param bool   $withData
      * @param int    $status
      */
+    #[DataProvider('getEditSubjectTemplateProvider')]
     public function testGetEditSubjectTemplate($subject, $withData, $status) {
         if ($withData) {
             SubjectTemplate::factory()->subject($subject)->create();
@@ -144,13 +137,12 @@ class SubjectDataTest extends TestCase {
     /**
      * Test subject template editing.
      *
-     * @dataProvider postEditSubjectTemplateProvider
-     *
      * @param string $subject
      * @param bool   $withData
      * @param bool   $cascade
      * @param bool   $expected
      */
+    #[DataProvider('postEditSubjectTemplateProvider')]
     public function testPostEditSubjectTemplate($subject, $withData, $cascade, $expected) {
         if ($withData) {
             // Supply some test data
@@ -242,10 +234,9 @@ class SubjectDataTest extends TestCase {
     /**
      * Test subject category create access.
      *
-     * @dataProvider getSubjectCategoryProvider
-     *
      * @param bool $withCategory
      */
+    #[DataProvider('getSubjectCategoryProvider')]
     public function testGetCreateSubjectCategory($withCategory) {
         if ($withCategory) {
             $category = SubjectCategory::factory()->create();
@@ -274,10 +265,9 @@ class SubjectDataTest extends TestCase {
     /**
      * Test subject category edit access.
      *
-     * @dataProvider getSubjectCategoryProvider
-     *
      * @param bool $withCategory
      */
+    #[DataProvider('getSubjectCategoryProvider')]
     public function testGetEditSubjectCategory($withCategory) {
         $category = SubjectCategory::factory()->create();
 
@@ -301,8 +291,6 @@ class SubjectDataTest extends TestCase {
     /**
      * Test subject category creation.
      *
-     * @dataProvider postSubjectCategoryProvider
-     *
      * @param bool $withName
      * @param bool $withParent
      * @param bool $withDescription
@@ -310,6 +298,7 @@ class SubjectDataTest extends TestCase {
      * @param bool $populateData
      * @param bool $expected
      */
+    #[DataProvider('postSubjectCategoryProvider')]
     public function testPostCreateSubjectCategory($withName, $withParent, $withDescription, $withImage, $populateData, $expected) {
         if ($withParent) {
             $parent = SubjectCategory::factory()->testData()->create();
@@ -370,8 +359,6 @@ class SubjectDataTest extends TestCase {
     /**
      * Test subject category editing.
      *
-     * @dataProvider postSubjectCategoryProvider
-     *
      * @param bool $withName
      * @param bool $withParent
      * @param bool $withDescription
@@ -379,6 +366,7 @@ class SubjectDataTest extends TestCase {
      * @param bool $populateData
      * @param bool $expected
      */
+    #[DataProvider('postSubjectCategoryProvider')]
     public function testPostEditSubjectCategory($withName, $withParent, $withDescription, $withImage, $populateData, $expected) {
         if ($withParent) {
             $parent = SubjectCategory::factory()->testData()->create();
@@ -563,10 +551,9 @@ class SubjectDataTest extends TestCase {
     /**
      * Test subject category delete access.
      *
-     * @dataProvider getSubjectCategoryProvider
-     *
      * @param bool $withCategory
      */
+    #[DataProvider('getSubjectCategoryProvider')]
     public function testGetDeleteSubjectCategory($withCategory) {
         $category = SubjectCategory::factory()->create();
 
@@ -584,13 +571,12 @@ class SubjectDataTest extends TestCase {
     /**
      * Test subject category deletion.
      *
-     * @dataProvider postDeleteSubjectCategoryProvider
-     *
      * @param bool $withCategory
      * @param bool $withChild
      * @param bool $withPage
      * @param bool $expected
      */
+    #[DataProvider('postDeleteSubjectCategoryProvider')]
     public function testPostDeleteSubjectCategory($withCategory, $withChild, $withPage, $expected) {
         $category = SubjectCategory::factory()->create();
 

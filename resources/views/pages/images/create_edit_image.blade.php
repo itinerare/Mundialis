@@ -23,15 +23,15 @@
     @endif
 
     {!! Form::open([
-        'url' => $image->id
-            ? 'pages/' . $page->id . '/gallery/edit/' . $image->id
-            : 'pages/' . $page->id . '/gallery/create',
+        'action' => $image->id
+            ? '/pages/' . $page->id . '/gallery/edit/' . $image->id
+            : '/pages/' . $page->id . '/gallery/create',
         'files' => true,
         'id' => 'imageForm',
     ]) !!}
 
     <div class="form-group">
-        {!! Form::label('Image File' . ($image->id ? ' (Optional)' : '')) !!} {!! add_help('Note that the image is not protected in any way, so take whatever precautions you desire.') !!}
+        {!! Form::label('image', 'Image File' . ($image->id ? ' (Optional)' : '')) !!} {!! add_help('Note that the image is not protected in any way, so take whatever precautions you desire.') !!}
         <div>{!! Form::file('image', ['id' => 'mainImage']) !!}</div>
         <div class="small">Images may be GIF, JPEG, PNG, or WebP and up to
             {{ min((int) ini_get('upload_max_filesize'), (int) ini_get('post_max_size'), '20') }}MB in size.</div>
@@ -80,7 +80,7 @@
     @endif
     <div class="card mb-3" id="thumbnailUpload">
         <div class="card-body">
-            {!! Form::label('Thumbnail Image') !!} {!! add_help(
+            {!! Form::label('thumbnail', 'Thumbnail Image') !!} {!! add_help(
                 'This image is shown on page index and in the infobox if the image is the page\'s primary image, or in the page\'s gallery.',
             ) !!}
             <div>{!! Form::file('thumbnail') !!}</div>
@@ -91,7 +91,7 @@
 
     <h3>Image Information</h3>
     <div class="form-group">
-        {!! Form::label('Page(s) (Optional)') !!} {!! add_help('Pages to associate this image with <strong>in addition to</strong> this one.') !!}
+        {!! Form::label('page_id[]', 'Page(s) (Optional)') !!} {!! add_help('Pages to associate this image with <strong>in addition to</strong> this one.') !!}
         {!! Form::select(
             'page_id[]',
             $pageOptions,
@@ -101,7 +101,7 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('Creator(s)') !!} {!! add_help('Either select an on-site user, or enter the URL of an off-site user\'s profile.') !!}
+        {!! Form::label('creator_id[]', 'Creator(s)') !!} {!! add_help('Either select an on-site user, or enter the URL of an off-site user\'s profile.') !!}
         <div id="creatorList">
             @if (!$image->id || !$image->creators->count())
                 <div class="mb-2 d-flex">
@@ -130,7 +130,7 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('Description (Optional)') !!}
+        {!! Form::label('description', 'Description (Optional)') !!}
         {!! Form::textarea('description', $image->description, ['class' => 'form-control wysiwyg']) !!}
     </div>
 
@@ -204,7 +204,7 @@
                         <p>Please provide some information about your edit before confirming it! This will be added to the
                             image's version history.</p>
                         <div class="form-group">
-                            {!! Form::label('Reason (Optional)') !!} {!! add_help(
+                            {!! Form::label('reason', 'Reason (Optional)') !!} {!! add_help(
                                 'A short summary of what was edited and why. Optional, but recommended for recordkeeping and communication purposes.',
                             ) !!}
                             {!! Form::text('reason', null, ['class' => 'form-control']) !!}

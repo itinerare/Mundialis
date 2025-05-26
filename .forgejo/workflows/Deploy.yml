@@ -22,9 +22,10 @@ jobs:
           cd "${{ vars.DEPLOY_APP_PATH }}"
           php artisan down --render="errors::503" --refresh=30
           git pull
-          composer install -no --no-dev --ignore-platform-reqs
+          composer install -no --no-dev
           php artisan migrate --force
           php artisan optimize
           php artisan optimize
+          php artisan app:add-site-settings
           php artisan up
           ENDSSH
