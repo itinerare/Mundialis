@@ -4,39 +4,7 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
-## [3.0.0-rc.3](https://code.itinerare.net/itinerare/Mundialis/compare/v3.0.0-rc.2...v3.0.0-rc.3) (2025-05-19)
-
-### Bug Fixes
-
-
-##### Pages
-
-* Create a new version when updating wanted page links ([37530a](https://code.itinerare.net/itinerare/Mundialis/commit/37530a688e4d53296e18dcbfec11a45a4ccdd396))
-* Decode HTML entities when parsing page links; closes #493 ([a3c567](https://code.itinerare.net/itinerare/Mundialis/commit/a3c56719f1357a47c04ba44eb0fafb58e3fa9270))
-* Save version data when updating wanted page links; closes #494 ([cbcf4d](https://code.itinerare.net/itinerare/Mundialis/commit/cbcf4dba435d711a8368110d38496353ac86be0c))
-
-##### Special Pages
-
-* Check for link parent existence when viewing link related special pages ([925143](https://code.itinerare.net/itinerare/Mundialis/commit/9251431e23f7d2682b3f7a40dfa0ea7c598fad4f))
-
-
----
-
-## [3.0.0-rc.2](https://code.itinerare.net/itinerare/Mundialis/compare/v3.0.0-rc.1...v3.0.0-rc.2) (2025-05-12)
-
-### Bug Fixes
-
-* Finesse landing page display ([22f407](https://code.itinerare.net/itinerare/Mundialis/commit/22f407a323715566d143a5bb02e613eb69821e96))
-* Update more form opens; closes #492 ([f52ff1](https://code.itinerare.net/itinerare/Mundialis/commit/f52ff1b8b60bd0ea09381cbbc8550c7aab05fb73))
-
-##### Subjects
-
-* Improve page terminology on subject page ([44fbb9](https://code.itinerare.net/itinerare/Mundialis/commit/44fbb962a83328d11f1b97b6f066c37e123fd354))
-
-
----
-
-## [3.0.0-rc.1](https://code.itinerare.net/itinerare/Mundialis/compare/v2.6.1...v3.0.0-rc.1) (2025-05-05)
+## [3.0.0](https://code.itinerare.net/itinerare/Mundialis/compare/v2.6.1...v3.0.0) (2025-05-26)
 
 ### ⚠ BREAKING CHANGES
 
@@ -52,13 +20,27 @@ All notable changes to this project will be documented in this file.
 * Adjust form syntax ([7e5921](https://code.itinerare.net/itinerare/Mundialis/commit/7e59212989d1144290a66133e6188c768a3b182d))
 * Correct page, lexicon entry create/edit form urls ([2d0779](https://code.itinerare.net/itinerare/Mundialis/commit/2d0779264d6c1019ccf6d83bb2964e463fc0ce7d))
 * Don't handle wiki link parsing in a transaction ([d07385](https://code.itinerare.net/itinerare/Mundialis/commit/d07385796fdd2a6e916428c66848850eb74375eb))
+* Finesse landing page display ([22f407](https://code.itinerare.net/itinerare/Mundialis/commit/22f407a323715566d143a5bb02e613eb69821e96))
 * Revert example .env session driver value ([b869b1](https://code.itinerare.net/itinerare/Mundialis/commit/b869b13d861a4e714850cc8720b8073b9aa9d36e))
 * Update example .env ([ab0867](https://code.itinerare.net/itinerare/Mundialis/commit/ab0867e5762782304c242d9f46d09975e3dccc87))
+* Update more form opens; closes #492 ([f52ff1](https://code.itinerare.net/itinerare/Mundialis/commit/f52ff1b8b60bd0ea09381cbbc8550c7aab05fb73))
 * Use polymorphic relationships for page links ([8404c5](https://code.itinerare.net/itinerare/Mundialis/commit/8404c5a774474f8225e744eca7b62d542574486f))
 
 ##### Pages
 
+* Allow more unicode characters in page links; closes #496 ([bdc774](https://code.itinerare.net/itinerare/Mundialis/commit/bdc774d5abdef4808a05f03ad0bec13ad3cfa96f))
+* Create a new version when updating wanted page links ([37530a](https://code.itinerare.net/itinerare/Mundialis/commit/37530a688e4d53296e18dcbfec11a45a4ccdd396))
+* Decode HTML entities when parsing page links; closes #493 ([a3c567](https://code.itinerare.net/itinerare/Mundialis/commit/a3c56719f1357a47c04ba44eb0fafb58e3fa9270))
 * Provide dateHelper on move page view for people, time pages ([7d40ee](https://code.itinerare.net/itinerare/Mundialis/commit/7d40ee3925749426c3e2188ada618fbaf5bea96d))
+* Save version data when updating wanted page links; closes #494 ([cbcf4d](https://code.itinerare.net/itinerare/Mundialis/commit/cbcf4dba435d711a8368110d38496353ac86be0c))
+
+##### Special Pages
+
+* Check for link parent existence when viewing link related special pages ([925143](https://code.itinerare.net/itinerare/Mundialis/commit/9251431e23f7d2682b3f7a40dfa0ea7c598fad4f))
+
+##### Subjects
+
+* Improve page terminology on subject page ([44fbb9](https://code.itinerare.net/itinerare/Mundialis/commit/44fbb962a83328d11f1b97b6f066c37e123fd354))
 
 ##### Tests
 
