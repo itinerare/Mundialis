@@ -40,7 +40,7 @@ class PageController extends Controller {
 
         return view('pages.page', [
             'page' => $page,
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -82,7 +82,7 @@ class PageController extends Controller {
             'page'     => $page,
             'versions' => $query->paginate(20)->appends($request->query()),
             'users'    => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -111,7 +111,7 @@ class PageController extends Controller {
         return view('pages.page_links_here', [
             'page'  => $page,
             'links' => $query->paginate(20)->appends($request->query()),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -134,7 +134,7 @@ class PageController extends Controller {
         return view('pages.page_version', [
             'page'    => $page,
             'version' => $version,
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -155,13 +155,12 @@ class PageController extends Controller {
         return view('pages.create_edit_page', [
             'page'     => new Page,
             'category' => $category,
-        ] + ($category->subject['key'] == 'places' ? [
+        ] + (config('mundialis.subjects.'.$category->subject['key'].'.editing.placeOptions') ? [
             'placeOptions' => Page::subject('places')->pluck('title', 'id'),
-        ] : []) + ($category->subject['key'] == 'time' ? [
+        ] : []) + (config('mundialis.subjects.'.$category->subject['key'].'.editing.chronologyOptions') ? [
             'chronologyOptions' => TimeChronology::pluck('name', 'id'),
-        ] : []) + ($category->subject['key'] == 'people' ? [
-            'placeOptions'      => Page::subject('places')->pluck('title', 'id'),
-            'chronologyOptions' => TimeChronology::pluck('name', 'id'),
+        ] : []) + (config('mundialis.subjects.'.$category->subject['key'].'.editing.factionOptions') ? [
+            'factionOptions' => Page::subject('factions')->pluck('title', 'id'),
         ] : []));
     }
 
@@ -181,13 +180,12 @@ class PageController extends Controller {
         return view('pages.create_edit_page', [
             'page'     => $page,
             'category' => $page->category,
-        ] + ($page->category->subject['key'] == 'places' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.editing.placeOptions') ? [
             'placeOptions' => Page::subject('places')->where('id', '!=', $page->id)->pluck('title', 'id'),
-        ] : []) + ($page->category->subject['key'] == 'time' ? [
+        ] : []) + (config('mundialis.subjects.'.$page->category->subject['key'].'.editing.chronologyOptions') ? [
             'chronologyOptions' => TimeChronology::pluck('name', 'id'),
-        ] : []) + ($page->category->subject['key'] == 'people' ? [
-            'placeOptions'      => Page::subject('places')->pluck('title', 'id'),
-            'chronologyOptions' => TimeChronology::pluck('name', 'id'),
+        ] : []) + (config('mundialis.subjects.'.$page->category->subject['key'].'.editing.factionOptions') ? [
+            'factionOptions' => Page::subject('factions')->where('id', '!=', $page->id)->pluck('title', 'id'),
         ] : []));
     }
 
@@ -231,28 +229,60 @@ class PageController extends Controller {
                     $request[$key] = 0;
                 }
             }
-            if ($category->subject['key'] == 'time') {
-                foreach (['start', 'end'] as $segment) {
-                    foreach ((new TimeDivision)->dateFields() as $key=>$field) {
-                        $answerArray[] = 'date_'.$segment.'_'.$key;
-                        if (isset($field['rules'])) {
-                            $validationRules['date_'.$segment.'_'.$key] = $field['rules'];
-                        }
-                        if ($field['type'] == 'checkbox' && !isset($request['date_'.$segment.'_'.$key])) {
-                            $request['date_'.$segment.'_'.$key] = 0;
+
+            switch ($category->subject['key']) {
+                case 'people':
+                    $answerArray[] = 'people_name';
+
+                    foreach (['birth', 'death'] as $segment) {
+                        $answerArray[] = $segment.'_place_id';
+                        $validationRules[$segment.'_place_id'] = ['nullable', Rule::exists('pages', 'id')->where(function ($query) {
+                            $query->whereNull('deleted_at');
+                        })];
+
+                        $answerArray[] = $segment.'_chronology_id';
+                        $validationRules[$segment.'_chronology_id'] = ['nullable', 'exists:time_chronology,id'];
+                        foreach ((new TimeDivision)->dateFields() as $key=>$field) {
+                            $answerArray[] = $segment.'_'.$key;
                         }
                     }
-                }
-            }
-            if ($category->subject['key'] == 'people') {
-                $answerArray[] = 'people_name';
-                foreach (['birth', 'death'] as $segment) {
-                    $answerArray[] = $segment.'_place_id';
-                    $answerArray[] = $segment.'_chronology_id';
-                    foreach ((new TimeDivision)->dateFields() as $key=>$field) {
-                        $answerArray[] = $segment.'_'.$key;
+                    break;
+                case 'places':
+                    $validationRules['parent_id'] = ['nullable', Rule::exists('pages', 'id')->where(function ($query) {
+                        $query->whereNull('deleted_at');
+                    })];
+                    break;
+                case 'factions':
+                    $validationRules['parent_id'] = ['nullable', Rule::exists('pages', 'id')->where(function ($query) {
+                        $query->whereNull('deleted_at');
+                    })];
+
+                    foreach (['formation', 'dissolution'] as $segment) {
+                        $answerArray[] = $segment.'_place_id';
+                        $validationRules[$segment.'_place_id'] = ['nullable', Rule::exists('pages', 'id')->where(function ($query) {
+                            $query->whereNull('deleted_at');
+                        })];
+
+                        $answerArray[] = $segment.'_chronology_id';
+                        $validationRules[$segment.'_chronology_id'] = ['nullable', 'exists:time_chronology,id'];
+                        foreach ((new TimeDivision)->dateFields() as $key=>$field) {
+                            $answerArray[] = $segment.'_'.$key;
+                        }
                     }
-                }
+                    break;
+                case 'time':
+                    $validationRules['parent_id'] = ['nullable', 'exists:time_chronology,id'];
+
+                    foreach (['start', 'end'] as $segment) {
+                        foreach ((new TimeDivision)->dateFields() as $key=>$field) {
+                            $answerArray[] = 'date_'.$segment.'_'.$key;
+                            $validationRules['date_'.$segment.'_'.$key] = ['nullable', 'numeric'];
+                        }
+                    }
+                    break;
+                default:
+                    // Do nothing
+                    break;
             }
         }
 
@@ -311,7 +341,7 @@ class PageController extends Controller {
             'page'        => $page,
             'protections' => $query->paginate(20)->appends($request->query()),
             'users'       => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }
@@ -379,7 +409,7 @@ class PageController extends Controller {
         return view('pages.page_move', [
             'page'       => $page,
             'categories' => $sortedCategories,
-        ] + ($page->category->subject['key'] == 'people' || $page->category->subject['key'] == 'time' ? [
+        ] + (config('mundialis.subjects.'.$page->category->subject['key'].'.hasDates') ? [
             'dateHelper' => new TimeDivision,
         ] : []));
     }

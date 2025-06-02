@@ -34,6 +34,13 @@ return [
                 ],
             ],
         ],
+        // Whether or not dates are displayed on and around pages in this subject/if a helper class for date display must be provided.
+        'hasDates' => true,
+        // Which common options (chronologies, places, etc.) need to be provided when creating or editing pages in this subject.
+        'editing'  => [
+            'placeOptions'      => true,
+            'chronologyOptions' => true,
+        ],
     ],
 
     'places'   => [
@@ -48,6 +55,9 @@ return [
                 ],
             ],
         ],
+        'editing' => [
+            'placeOptions' => true,
+        ],
     ],
 
     'species'  => [
@@ -61,6 +71,32 @@ return [
         'name'        => 'Things',
         'description' => 'Pages for this subject represent inanimate objects within or relevant to your project. This can include anything from rather mundane things like clothing, tools, and food to objects of great rarity or import.',
         'term'        => 'Thing',
+    ],
+
+    'factions' => [
+        'name'        => 'Factions',
+        'description' => 'Pages for this subject represent groups or organizations of people within your project. Depending on the scale and scope of your project, these can represent anything from small groups to whole societies.',
+        'term'        => 'Faction',
+        'segments'    => [
+            'general properties' => [
+                'parent' => [
+                    'name'        => 'Parent Faction (Optional)',
+                    'description' => 'The parent faction, group, or organization that the faction being edited exists within.',
+                ],
+            ],
+            'infobox' => [
+                'formation-dissolution' => [
+                    'name'        => 'Formation & Dissolution (Optional)',
+                    'description' => 'These allow setting of the time and place of the faction\'s formation and/or dissolution. If both are set, and both times are within the same <a href="/admin/data/time/chronology">chronology</a>, the site will attempt to calculate age at time of dissolution (assuming that the greatest <a href="/admin/data/time/divisions">division of time</a> corresponds to years). This can be overridden by manually setting an age. Date settings use either a single generic year field (if no divisions of time are set) or date fields constructed according to the divisions enabled for use in dates.',
+                ],
+            ],
+        ],
+        'hasDates' => true,
+        'editing'  => [
+            'factionOptions'    => true,
+            'placeOptions'      => true,
+            'chronologyOptions' => true,
+        ],
     ],
 
     'concepts' => [
@@ -91,6 +127,10 @@ return [
                     'description' => 'The date of the event. Uses either a generic year field or the divisions of time enabled for use for dates. This isn\'t required, but if no date is provided, events will be assumed to take place at the beginning of their chronology. Depending on how your configure the latter, this may be fine or it may make it impossible to generate coherent timelines.',
                 ],
             ],
+        ],
+        'hasDates' => true,
+        'editing'  => [
+            'chronologyOptions' => true,
         ],
     ],
 

@@ -24,10 +24,16 @@ class PageMoveTest extends TestCase {
     /**
      * Test page move access.
      *
-     * @param bool $isValid
+     * @param string $subject
+     * @param bool   $isValid
      */
     #[DataProvider('getMovePageProvider')]
-    public function testGetMovePage($isValid) {
+    public function testGetMovePage($subject, $isValid) {
+        if ($subject != 'misc') {
+            $category = SubjectCategory::factory()->subject($subject)->create();
+            $this->page->update(['category_id' => $category->id]);
+        }
+
         $response = $this->actingAs($this->editor)
             ->get('/pages/'.($isValid ? $this->page->id : 9999).'/move');
 
@@ -36,8 +42,16 @@ class PageMoveTest extends TestCase {
 
     public static function getMovePageProvider() {
         return [
-            'valid'   => [1],
-            'invalid' => [0],
+            'valid person'   => ['people', 1],
+            'valid place'    => ['places', 1],
+            'valid species'  => ['species', 1],
+            'valid thing'    => ['things', 1],
+            'valid faction'  => ['factions', 1],
+            'valid concept'  => ['concepts', 1],
+            'valid event'    => ['time', 1],
+            'valid language' => ['language', 1],
+            'valid misc'     => ['misc', 1],
+            'invalid misc'   => ['misc', 0],
         ];
     }
 

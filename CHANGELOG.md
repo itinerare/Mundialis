@@ -4,6 +4,29 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [3.1.0](https://code.itinerare.net/itinerare/Mundialis/compare/v3.0.0...v3.1.0) (2025-06-02)
+
+### Features
+
+
+##### Factions
+
+* Add factions as subject ([4e3310](https://code.itinerare.net/itinerare/Mundialis/commit/4e3310eccd4affbdb73fc73744cc6b976a0967ba))
+
+##### Tests
+
+* Extend subject support to additional tests ([d63a65](https://code.itinerare.net/itinerare/Mundialis/commit/d63a659129667d657393afd1d3c1d6f4ee0cf891))
+
+### Bug Fixes
+
+
+##### Pages
+
+* Better validate parent objects ([f1255a](https://code.itinerare.net/itinerare/Mundialis/commit/f1255a35f91208872fdd84ae67882554e6fda70d))
+
+
+---
+
 ## [3.0.0](https://code.itinerare.net/itinerare/Mundialis/compare/v2.6.1...v3.0.0) (2025-05-26)
 
 ### ⚠ BREAKING CHANGES
