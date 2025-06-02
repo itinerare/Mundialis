@@ -13,7 +13,7 @@
         </h5>
         {!! $image->description ? $image->description : '<i>No description provided.</i><br/>' !!}
         <small>
-            Created {!! $image->created_at->format('d F Y') !!} ・ Updated {!! $image->updated_at->format('d F Y') !!}
+            Created {!! $image->created_at->format('d F Y') !!} ・ Updated {!! $image->version->updated_at->format('d F Y') !!}
         </small>
     </div>
     <div class="col-md pl-md-1 mb-2">
