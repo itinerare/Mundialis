@@ -58,9 +58,14 @@ Install packages with composer:
 $ composer install
 ```
 
-Generate app key and run database migrations:
+Create the database (if not using mysql or mariaDB):
 ```
-$ php artisan key:generate 
+$ touch database/database.sqlite
+```
+
+Generate the application key and run database migrations:
+```
+$ php artisan key:generate
 $ php artisan migrate
 ```
 

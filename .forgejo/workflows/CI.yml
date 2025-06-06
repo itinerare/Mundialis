@@ -40,6 +40,23 @@ jobs:
       env:
         DB_PORT: ${{ job.services.mysql.ports[3306] }}
 
+  laravel-tests-sqlite:
+    strategy:
+      matrix:
+        target: ['8.2', '8.3']
+
+    runs-on: docker
+
+    steps:
+    - name: Set up PHP/Laravel
+      uses: https://code.itinerare.net/internal/laravel-setup-action@main
+      with:
+        php-version: ${{ matrix.target }}
+        extensions: gd, imagick, pdo_sqlite, sqlite3
+
+    - name: Run tests
+      run: php artisan test -c phpunit-sqlite.xml
+
   pint:
     runs-on: docker
     needs: laravel-tests
@@ -58,7 +75,7 @@ jobs:
       with:
         message: 'refactor: fix PHP styling'
         gpg_key: ${{ secrets.CI_GPG }}
-    
+
     - name: Organize logs
       run: echo "Complete!"
 
@@ -78,7 +95,7 @@ jobs:
       with:
         message: 'refactor: fix blade formatting'
         gpg_key: ${{ secrets.CI_GPG }}
-    
+
     - name: Organize logs
       run: echo "Complete!"
 
@@ -98,6 +115,6 @@ jobs:
       with:
         message: 'chore(deps): rebuild mix assets'
         gpg_key: ${{ secrets.CI_GPG }}
-    
+
     - name: Organize logs
       run: echo "Complete!"

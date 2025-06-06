@@ -380,9 +380,11 @@ class ImageManager extends Service {
             }
 
             $ids = array_reverse(explode(',', $data['sort']));
-            $images = PageImage::whereIn('id', $ids)->orderBy(DB::raw('FIELD(id, '.implode(',', $ids).')'))->whereHas('pages', function ($query) use ($page) {
+            $images = PageImage::whereIn('id', $ids)->whereHas('pages', function ($query) use ($page) {
                 $query->where('pages.id', $page->id);
-            })->get();
+            })->get()->sortBy(function ($image) use ($ids) {
+                return array_flip($ids)[$image->id];
+            });
 
             if (count($images) != count($ids)) {
                 throw new \Exception('Invalid image(s) included in sorting order.');
