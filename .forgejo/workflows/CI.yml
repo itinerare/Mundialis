@@ -29,40 +29,12 @@ jobs:
           options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-    - name: Set up PHP
-      uses: https://github.com/shivammathur/setup-php@v2
+    - name: Set up PHP/Laravel
+      uses: https://code.itinerare.net/internal/laravel-setup-action@main
       with:
         php-version: ${{ matrix.target }}
-        extensions: gd, imagick
 
-    - name: Checkout code
-      uses: https://code.itinerare.net/internal/checkout@v4
-
-    - name: Copy .env
-      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-
-    - name: Get composer cache directory
-      id: composer-cache
-      run: |
-        echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-    - name: Cache or restore composer cache
-      uses: https://code.itinerare.net/internal/cache@v4
-      with:
-        path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-composer-
-
-    - name: Install dependencies
-      env:
-        COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH_JSON }}
-      run: composer install --no-ansi --no-interaction --no-scripts --prefer-dist --ignore-platform-reqs
-
-    - name: Generate key
-      run: php artisan key:generate
-
-    - name: Set directory permissions
+    - name: Set directory Permissions
       run: chmod -R 777 storage bootstrap/cache
 
     - name: Run tests
@@ -75,34 +47,10 @@ jobs:
     needs: laravel-tests
 
     steps:
-    - name: Set up PHP
-      uses: https://github.com/shivammathur/setup-php@v2
+    - name: Set up PHP/Laravel
+      uses: https://code.itinerare.net/internal/laravel-setup-action@main
       with:
-        php-version: 8.2
-
-    - name: Checkout code
-      uses: https://code.itinerare.net/internal/checkout@v4
-      with:
-        repository: ${{ github.event.pull_request.head.repo.full_name }}
-        ref: ${{ github.event.pull_request.head.ref }}
-
-    - name: Get composer cache directory
-      id: composer-cache
-      run: |
-        echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-    - name: Cache or restore composer cache
-      uses: https://code.itinerare.net/internal/cache@v4
-      with:
-        path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-composer-
-
-    - name: Install dependencies
-      env:
-        COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH_JSON }}
-      run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --ignore-platform-reqs
+        php-version: '8.2'
 
     - name: Run pint
       run: composer lint
@@ -127,20 +75,8 @@ jobs:
     needs: laravel-tests
 
     steps:
-    - name: Checkout code
-      uses: https://code.itinerare.net/internal/checkout@v4
-      with:
-        repository: ${{ github.event.pull_request.head.repo.full_name }}
-        ref: ${{ github.event.pull_request.head.ref }}
-
-    - name: Set up node
-      uses: https://github.com/actions/setup-node@v4
-      with:
-        node-version: ${{ vars.NODE_VERSION }}
-        cache: 'npm'
-
-    - name: Install packages
-      run: npm install
+    - name: Set up node/npm
+      uses: https://code.itinerare.net/internal/node-setup-action@main
 
     - name: Run blade-formatter
       run: npm run format
@@ -166,20 +102,8 @@ jobs:
     needs: laravel-tests
 
     steps:
-    - name: Checkout code
-      uses: https://code.itinerare.net/internal/checkout@v4
-      with:
-        repository: ${{ github.event.pull_request.head.repo.full_name }}
-        ref: ${{ github.event.pull_request.head.ref }}
-
-    - name: Set up node
-      uses: https://github.com/actions/setup-node@v4
-      with:
-        node-version: ${{ vars.NODE_VERSION }}
-        cache: 'npm'
-
-    - name: Install packages
-      run: npm install
+    - name: Set up node/npm
+      uses: https://code.itinerare.net/internal/node-setup-action@main
 
     - name: Run Mix
       run: npm run prod
