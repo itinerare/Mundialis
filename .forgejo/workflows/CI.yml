@@ -52,20 +52,14 @@ jobs:
     - name: Run pint
       run: composer lint
 
-    - name: Import GPG key
-      uses: https://github.com/crazy-max/ghaction-import-gpg@v6
-      with:
-        gpg_private_key: ${{ secrets.CI_GPG }}
-        git_user_signingkey: true
-        git_commit_gpgsign: true
-
     - name: Commit changes
-      uses: https://github.com/EndBug/add-and-commit@v9
+      uses: https://code.itinerare.net/internal/lint-commit-action@main
       with:
         message: 'refactor: fix PHP styling'
-        default_author: github_actions
-        author_name: ${{ vars.COMMITTER_NAME }}
-        author_email: ${{ vars.COMMITTER_EMAIL }}
+        gpg_key: ${{ secrets.CI_GPG }}
+    
+    - name: Organize logs
+      run: echo "Complete!"
 
   blade-formatter:
     runs-on: docker
@@ -78,21 +72,14 @@ jobs:
     - name: Run blade-formatter
       run: npm run format
 
-    - name: Import GPG key
-      uses: https://github.com/crazy-max/ghaction-import-gpg@v6
-      with:
-        gpg_private_key: ${{ secrets.CI_GPG }}
-        git_user_signingkey: true
-        git_commit_gpgsign: true
-
     - name: Commit changes
-      uses: https://github.com/EndBug/add-and-commit@v9
+      uses: https://code.itinerare.net/internal/lint-commit-action@main
       with:
-        pull: '--rebase --autostash'
         message: 'refactor: fix blade formatting'
-        default_author: github_actions
-        author_name: ${{ vars.COMMITTER_NAME }}
-        author_email: ${{ vars.COMMITTER_EMAIL }}
+        gpg_key: ${{ secrets.CI_GPG }}
+    
+    - name: Organize logs
+      run: echo "Complete!"
 
   rebuild-mix-assets:
     runs-on: docker
@@ -105,18 +92,11 @@ jobs:
     - name: Run Mix
       run: npm run prod
 
-    - name: Import GPG key
-      uses: https://github.com/crazy-max/ghaction-import-gpg@v6
-      with:
-        gpg_private_key: ${{ secrets.CI_GPG }}
-        git_user_signingkey: true
-        git_commit_gpgsign: true
-
     - name: Commit changes
-      uses: https://github.com/EndBug/add-and-commit@v9
+      uses: https://code.itinerare.net/internal/lint-commit-action@main
       with:
-          pull: '--rebase --autostash'
-          message: 'chore(deps): rebuild mix assets'
-          default_author: github_actions
-          author_name: ${{ vars.COMMITTER_NAME }}
-          author_email: ${{ vars.COMMITTER_EMAIL }}
+        message: 'chore(deps): rebuild mix assets'
+        gpg_key: ${{ secrets.CI_GPG }}
+    
+    - name: Organize logs
+      run: echo "Complete!"
