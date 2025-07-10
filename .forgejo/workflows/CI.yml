@@ -52,7 +52,7 @@ jobs:
       uses: https://code.itinerare.net/internal/laravel-setup-action@main
       with:
         php-version: ${{ matrix.target }}
-        extensions: gd, imagick, pdo_sqlite, sqlite3
+        php-extensions: gd, imagick, pdo_sqlite, sqlite3
 
     - name: Run tests
       run: php artisan test -c phpunit-sqlite.xml
