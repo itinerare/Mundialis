@@ -34,6 +34,7 @@ jobs:
       with:
         php-version: ${{ matrix.target }}
         php-extensions: gd, imagick
+        composer-auth: ${{ secrets.COMPOSER_AUTH_JSON }}
 
     - name: Run tests
       run: php artisan test
@@ -66,6 +67,7 @@ jobs:
       uses: https://code.itinerare.net/internal/php-setup-action@main
       with:
         php-version: '8.2'
+        composer-auth: ${{ secrets.COMPOSER_AUTH_JSON }}
 
     - name: Run pint
       run: composer lint
