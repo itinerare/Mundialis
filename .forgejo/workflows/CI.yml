@@ -54,6 +54,7 @@ jobs:
       with:
         php-version: ${{ matrix.target }}
         php-extensions: gd, imagick, pdo_sqlite, sqlite3
+        composer-auth: ${{ secrets.COMPOSER_AUTH_JSON }}
 
     - name: Run tests
       run: php artisan test -c phpunit-sqlite.xml
