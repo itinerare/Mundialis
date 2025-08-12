@@ -16,7 +16,8 @@ jobs:
       matrix:
         target: ['8.2', '8.3']
 
-    runs-on: docker
+    runs-on: docker-cli
+    container: code.itinerare.net/internal/php-node:${{ matrix.target }}-${{ vars.NODE_VER }}-alpine
 
     services:
       mysql:
@@ -32,8 +33,6 @@ jobs:
     - name: Set up PHP/Laravel
       uses: https://code.itinerare.net/internal/laravel-setup-action@main
       with:
-        php-version: ${{ matrix.target }}
-        php-extensions: gd, imagick
         composer-auth: ${{ secrets.COMPOSER_AUTH_JSON }}
 
     - name: Run tests
@@ -46,7 +45,8 @@ jobs:
       matrix:
         target: ['8.2', '8.3']
 
-    runs-on: docker
+    runs-on: docker-cli
+    container: code.itinerare.net/internal/php-node:${{ matrix.target }}-${{ vars.NODE_VER }}-alpine
 
     steps:
     - name: Set up PHP/Laravel
@@ -60,7 +60,9 @@ jobs:
       run: php artisan test -c phpunit-sqlite.xml
 
   pint:
-    runs-on: docker
+    runs-on: docker-cli
+    container: code.itinerare.net/internal/php-node:8.2-${{ vars.NODE_VER }}-alpine
+    
     needs: laravel-tests
 
     steps:
