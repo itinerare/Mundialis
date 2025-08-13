@@ -17,7 +17,7 @@ jobs:
         target: ['8.2', '8.3']
 
     runs-on: docker-cli
-    container: code.itinerare.net/internal/php-node:${{ matrix.target }}-${{ vars.NODE_VER }}-alpine
+    container: code.itinerare.net/internal/php-node:${{ matrix.target }}-alpine
 
     services:
       mysql:
@@ -46,7 +46,7 @@ jobs:
         target: ['8.2', '8.3']
 
     runs-on: docker-cli
-    container: code.itinerare.net/internal/php-node:${{ matrix.target }}-${{ vars.NODE_VER }}-alpine
+    container: code.itinerare.net/internal/php-node:${{ matrix.target }}-alpine
 
     steps:
     - name: Install dependencies
@@ -61,7 +61,7 @@ jobs:
 
   pint:
     runs-on: docker-cli
-    container: code.itinerare.net/internal/php-node:8.2-${{ vars.NODE_VER }}-alpine
+    container: code.itinerare.net/internal/php-node:8.2-alpine
     
     needs: laravel-tests
 
