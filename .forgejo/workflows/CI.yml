@@ -52,8 +52,6 @@ jobs:
     - name: Install dependencies
       uses: https://code.itinerare.net/internal/laravel-setup-action@main
       with:
-        php-version: ${{ matrix.target }}
-        php-extensions: gd, imagick, pdo_sqlite, sqlite3
         composer-auth: ${{ secrets.COMPOSER_AUTH_JSON }}
 
     - name: Run tests
