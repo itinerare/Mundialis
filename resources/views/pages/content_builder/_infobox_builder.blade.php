@@ -3,7 +3,7 @@
         @if ($page->image)
             <div class="text-center">
                 <a href="{{ url('pages/get-image/' . $page->id . '/' . $page->image->id) }}" class="image-link"><img
-                        src="{{ $page->image->thumbnailUrl }}" class="img-thumbnail mw-100 mb-2" /></a>
+                        src="{{ Storage::url($page->image->thumbnailUrl) }}" class="img-thumbnail mw-100 mb-2" /></a>
             </div>
         @endif
         @if (isset($page->category->subject['segments']['infobox']) &&

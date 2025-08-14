@@ -5,7 +5,7 @@
 @endsection
 
 @section('meta-img')
-    {{ $page->image ? $page->image->thumbnailUrl : asset('images/logo.png') }}
+    {{ $page->image ? Storage::url($page->image->thumbnailUrl) : asset('images/logo.png') }}
 @endsection
 
 @section('meta-desc')
@@ -69,7 +69,7 @@
             {!! $loop->remaining + 1 == $loop->count % 4 ? '<div class="my-auto col mobile-hide"></div>' : '' !!}
             <div class="col-md-3 mb-2">
                 <a href="{{ url('pages/get-image/' . $page->id . '/' . $image->id) }}" class="image-link"><img
-                        src="{{ $image->thumbnailUrl }}" class="img-thumbnail mw-100"
+                        src="{{ Storage::url($image->thumbnailUrl) }}" class="img-thumbnail mw-100"
                         style="{{ !$image->pivot->is_valid ? 'filter: grayscale(60%) opacity(50%);' : '' }}" /></a>
             </div>
             {!! $loop->count % 4 != 0 && $loop->last ? '<div class="my-auto col mobile-hide"></div>' : '' !!}

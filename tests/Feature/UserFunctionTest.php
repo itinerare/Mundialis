@@ -52,8 +52,8 @@ class UserFunctionTest extends TestCase {
         $file = UploadedFile::fake()->image('test_image.png');
 
         // Remove the current avatar if it exists
-        if (File::exists(public_path('images/avatars/'.$this->user->id.'.png'))) {
-            unlink('public/images/avatars/'.$this->user->id.'.png');
+        if (Storage::fileExists('images/avatars/'.$this->user->id.'.png')) {
+            Storage::delete('/images/avatars/'.$this->user->id.'.png');
         }
 
         $response = $this
@@ -65,9 +65,9 @@ class UserFunctionTest extends TestCase {
         $response->assertSessionHasNoErrors();
         // Check that the file is now present
         $this->
-            assertTrue(File::exists(public_path('images/avatars/'.$this->user->id.'.png')));
+            assertTrue(Storage::fileExists('images/avatars/'.$this->user->id.'.png'));
 
-        unlink(public_path('images/avatars/'.$this->user->id.'.png'));
+        Storage::delete('/images/avatars/'.$this->user->id.'.png');
     }
 
     /**

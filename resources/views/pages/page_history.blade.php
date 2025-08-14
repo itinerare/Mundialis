@@ -5,7 +5,7 @@
 @endsection
 
 @section('meta-img')
-    {{ $page->image ? $page->image->thumbnailUrl : asset('images/logo.png') }}
+    {{ $page->image ? Storage::url($page->image->thumbnailUrl) : Storage::url('images/logo.png') }}
 @endsection
 
 @section('meta-desc')

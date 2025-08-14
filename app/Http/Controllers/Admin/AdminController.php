@@ -111,7 +111,7 @@ class AdminController extends Controller {
         $request->validate(['file' => 'required|file']);
         $file = $request->file('file');
 
-        if ($service->uploadCss($file)) {
+        if ($service->uploadCss(file_get_contents($file))) {
             flash('File uploaded successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {

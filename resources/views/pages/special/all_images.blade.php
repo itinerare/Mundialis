@@ -55,7 +55,7 @@
             {!! $loop->remaining + 1 == $loop->count % 4 ? '<div class="my-auto col mobile-hide"></div>' : '' !!}
             <div class="col-md-3 mb-2">
                 <a href="{{ url('special/get-image/' . $image->id) }}" class="image-link"><img
-                        src="{{ $image->thumbnailUrl }}" class="img-thumbnail mw-100" /></a>
+                        src="{{ Storage::url($image->thumbnailUrl) }}" class="img-thumbnail mw-100" /></a>
             </div>
             {!! $loop->count % 4 != 0 && $loop->last ? '<div class="my-auto col mobile-hide"></div>' : '' !!}
             {!! $loop->iteration % 4 == 0 ? '<div class="w-100"></div>' : '' !!}

@@ -6,8 +6,8 @@ use App\Models\Page\Page;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\ViewErrorBag;
 
@@ -139,14 +139,14 @@ abstract class Service {
             }
 
             // Then overwrite the old image.
-            return $this->saveImage($image, $dir, $name, $copy);
+            return $this->saveImage(file_get_contents($image), $dir, $name, $copy);
         }
 
         return false;
     }
 
     public function deleteImage($dir, $name) {
-        unlink($dir.'/'.$name);
+        Storage::delete($dir.'/'.$name);
     }
 
     /**
@@ -362,9 +362,9 @@ abstract class Service {
     // Moves an old image within the same directory.
     private function moveImage($dir, $name, $oldName, $copy = false) {
         if ($copy) {
-            File::copy($dir.'/'.$oldName, $dir.'/'.$name);
+            Storage::copy($dir.'/'.$oldName, $dir.'/'.$name);
         } else {
-            File::move($dir.'/'.$oldName, $dir.'/'.$name);
+            Storage::move($dir.'/'.$oldName, $dir.'/'.$name);
         }
 
         return true;
@@ -372,21 +372,11 @@ abstract class Service {
 
     // Moves an uploaded image into a directory, checking if it exists.
     private function saveImage($image, $dir, $name, $copy = false) {
-        if (!file_exists($dir)) {
-            // Create the directory.
-            if (!mkdir($dir, 0755, true)) {
-                $this->setError('error', 'Failed to create image directory.');
+        if (!Storage::put($dir.'/'.$name, $image)) {
+            this->setError('error', 'Failed to upload image.');
 
-                return false;
-            }
-            chmod($dir, 0755);
+            return false;
         }
-        if ($copy) {
-            File::copy($image, $dir.'/'.$name);
-        } else {
-            File::move($image, $dir.'/'.$name);
-        }
-        chmod($dir.'/'.$name, 0755);
 
         return true;
     }
