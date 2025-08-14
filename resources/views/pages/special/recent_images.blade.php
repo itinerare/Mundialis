@@ -54,8 +54,9 @@
                 </div>
                 <div class="col-md-2 text-center align-self-center">
                     @if ($version->hash)
-                        <a href="{{ Storage::url($version->imageUrl) }}"><img src="{{ Storage::url($version->thumbnailUrl) }}"
-                                class="img-thumbnail mw-100" style="max-height:100px;" /></a>
+                        <a href="{{ Storage::url($version->imageUrl) }}"><img
+                                src="{{ Storage::url($version->thumbnailUrl) }}" class="img-thumbnail mw-100"
+                                style="max-height:100px;" /></a>
                     @else
                         <i>No image</i>
                     @endif

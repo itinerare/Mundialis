@@ -76,8 +76,9 @@
                     <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
                         <div class="col-md-3 text-center">
                             @if ($version->hash)
-                                <a href="{{ Storage::url($version->imageUrl) }}"><img src="{{ Storage::url($version->thumbnailUrl) }}"
-                                        class="img-thumbnail mw-100" style="max-height:100px;" /></a>
+                                <a href="{{ Storage::url($version->imageUrl) }}"><img
+                                        src="{{ Storage::url($version->thumbnailUrl) }}" class="img-thumbnail mw-100"
+                                        style="max-height:100px;" /></a>
                             @else
                                 <i>No image</i>
                             @endif

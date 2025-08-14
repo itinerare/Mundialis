@@ -14,7 +14,8 @@
             <div class="row">
                 @if (Auth::user()->avatar != 'default.jpg')
                     <div class="col-md-2 align-self-center">
-                        <img class="img-thumbnail mw-100" src="{{ Storage::url('images/avatars/' . Auth::user()->avatar) }}" />
+                        <img class="img-thumbnail mw-100"
+                            src="{{ Storage::url('images/avatars/' . Auth::user()->avatar) }}" />
                     </div>
                 @endif
                 <div class="col-md">

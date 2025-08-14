@@ -13,7 +13,8 @@
     @endif
     <div class="mt-auto align-bottom">
         @if ($member['page']->image)
-            <img src="{{ Storage::url($member['page']->image->thumbnailUrl) }}" style="width:100px;" class="img-thumbnail mw-100" />
+            <img src="{{ Storage::url($member['page']->image->thumbnailUrl) }}" style="width:100px;"
+                class="img-thumbnail mw-100" />
         @else
             <img src="{{ Storage::url('images/logo.png') }}" style="width:100px;" class="img-thumbnail mw-100" />
         @endif

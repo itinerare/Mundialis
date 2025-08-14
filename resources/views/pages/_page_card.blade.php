@@ -1,7 +1,8 @@
 <div class="card h-100">
     <div class="card-header text-center">
         @if ($page->image)
-            <a href="{{ $page->url }}"><img src="{{ Storage::url($page->image->thumbnailUrl) }}" class="mw-100 mb-1" /></a>
+            <a href="{{ $page->url }}"><img src="{{ Storage::url($page->image->thumbnailUrl) }}"
+                    class="mw-100 mb-1" /></a>
         @endif
         <h3>
             {!! $page->displayName !!}

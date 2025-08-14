@@ -51,7 +51,8 @@
         @foreach ($images as $image)
             <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
                 <div class="col-md-2">
-                    <img src="{{ Storage::url($image->thumbnailUrl) }}" class="img-thumbnail mw-100" style="max-height:100px;" />
+                    <img src="{{ Storage::url($image->thumbnailUrl) }}" class="img-thumbnail mw-100"
+                        style="max-height:100px;" />
                 </div>
                 <div class="col-md-3 align-self-center">
                     <a href="{{ url('admin/special/deleted-images/' . $image->id) }}" data-toggle="tooltip"
