@@ -4,11 +4,13 @@ namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\SQLiteConnection;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
@@ -66,6 +68,18 @@ class AppServiceProvider extends ServiceProvider {
             'page'  => 'App\Models\Page\Page',
             'entry' => 'App\Models\Lexicon\LexiconEntry',
         ]);
+
+        if (DB::Connection() instanceof SQLiteConnection) {
+            // Handle REGEXP for sqlite
+            // Adapted from https://bannister.me/blog/using-mysql-and-postgres-functions-in-sqlite
+            DB::connection()->getPdo()->sqliteCreateFunction('regexp', function ($pattern, $string) {
+                if (preg_match('/'.$pattern.'/', $string)) {
+                    return true;
+                }
+
+                return false;
+            }, 2);
+        }
 
         /*
          * Paginate a standard Laravel Collection.

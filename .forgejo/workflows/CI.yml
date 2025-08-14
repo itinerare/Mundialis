@@ -16,7 +16,8 @@ jobs:
       matrix:
         target: ['8.2', '8.3']
 
-    runs-on: docker
+    runs-on: docker-cli
+    container: code.itinerare.net/internal/php-node:${{ matrix.target }}-alpine
 
     services:
       mysql:
@@ -29,147 +30,93 @@ jobs:
           options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-    - name: Set up PHP
-      uses: https://github.com/shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.target }}
-        extensions: gd, imagick
-
-    - name: Checkout code
-      uses: https://code.itinerare.net/internal/checkout@v4
-
-    - name: Copy .env
-      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-
     - name: Install dependencies
-      env:
-        COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH_JSON }}
-      run: composer install --no-ansi --no-interaction --no-scripts --prefer-dist --ignore-platform-reqs
-
-    - name: Generate key
-      run: php artisan key:generate
-
-    - name: Set directory permissions
-      run: chmod -R 777 storage bootstrap/cache
+      uses: https://code.itinerare.net/internal/laravel-setup-action@main
+      with:
+        composer-auth: ${{ secrets.COMPOSER_AUTH_JSON }}
 
     - name: Run tests
       run: php artisan test
       env:
         DB_PORT: ${{ job.services.mysql.ports[3306] }}
 
+  laravel-tests-sqlite:
+    strategy:
+      matrix:
+        target: ['8.2', '8.3']
+
+    runs-on: docker-cli
+    container: code.itinerare.net/internal/php-node:${{ matrix.target }}-alpine
+
+    steps:
+    - name: Install dependencies
+      uses: https://code.itinerare.net/internal/laravel-setup-action@main
+      with:
+        composer-auth: ${{ secrets.COMPOSER_AUTH_JSON }}
+
+    - name: Run tests
+      run: php artisan test -c phpunit-sqlite.xml
+
   pint:
-    runs-on: docker
+    runs-on: docker-cli
+    container: code.itinerare.net/internal/php-node:8.2-alpine
+    
     needs: laravel-tests
 
     steps:
-    - name: Set up PHP
-      uses: https://github.com/shivammathur/setup-php@v2
-      with:
-        php-version: 8.2
-
-    - name: Checkout code
-      uses: https://code.itinerare.net/internal/checkout@v4
-      with:
-        repository: ${{ github.event.pull_request.head.repo.full_name }}
-        ref: ${{ github.event.pull_request.head.ref }}
-
     - name: Install dependencies
-      env:
-        COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH_JSON }}
-      run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --ignore-platform-reqs
+      uses: https://code.itinerare.net/internal/php-setup-action@main
+      with:
+        composer-auth: ${{ secrets.COMPOSER_AUTH_JSON }}
 
     - name: Run pint
       run: composer lint
 
-    - name: Import GPG key
-      uses: https://github.com/crazy-max/ghaction-import-gpg@v6
-      with:
-        gpg_private_key: ${{ secrets.CI_GPG }}
-        git_user_signingkey: true
-        git_commit_gpgsign: true
-
     - name: Commit changes
-      uses: https://github.com/EndBug/add-and-commit@v9
+      uses: https://code.itinerare.net/internal/lint-commit-action@main
       with:
         message: 'refactor: fix PHP styling'
-        default_author: github_actions
-        author_name: ${{ vars.COMMITTER_NAME }}
-        author_email: ${{ vars.COMMITTER_EMAIL }}
+        gpg_key: ${{ secrets.CI_GPG }}
+
+    - name: Organize logs
+      run: echo "Complete!"
 
   blade-formatter:
     runs-on: docker
     needs: laravel-tests
 
     steps:
-    - name: Checkout code
-      uses: https://code.itinerare.net/internal/checkout@v4
-      with:
-        repository: ${{ github.event.pull_request.head.repo.full_name }}
-        ref: ${{ github.event.pull_request.head.ref }}
-
-    - name: Set up node
-      uses: https://github.com/actions/setup-node@v4
-      with:
-        node-version: ${{ vars.NODE_VERSION }}
-        cache: 'npm'
-
-    - name: Install packages
-      run: npm install
+    - name: Set up node/npm
+      uses: https://code.itinerare.net/internal/node-setup-action@main
 
     - name: Run blade-formatter
       run: npm run format
 
-    - name: Import GPG key
-      uses: https://github.com/crazy-max/ghaction-import-gpg@v6
-      with:
-        gpg_private_key: ${{ secrets.CI_GPG }}
-        git_user_signingkey: true
-        git_commit_gpgsign: true
-
     - name: Commit changes
-      uses: https://github.com/EndBug/add-and-commit@v9
+      uses: https://code.itinerare.net/internal/lint-commit-action@main
       with:
-        pull: '--rebase --autostash'
         message: 'refactor: fix blade formatting'
-        default_author: github_actions
-        author_name: ${{ vars.COMMITTER_NAME }}
-        author_email: ${{ vars.COMMITTER_EMAIL }}
+        gpg_key: ${{ secrets.CI_GPG }}
+
+    - name: Organize logs
+      run: echo "Complete!"
 
   rebuild-mix-assets:
     runs-on: docker
     needs: laravel-tests
 
     steps:
-    - name: Checkout code
-      uses: https://code.itinerare.net/internal/checkout@v4
-      with:
-        repository: ${{ github.event.pull_request.head.repo.full_name }}
-        ref: ${{ github.event.pull_request.head.ref }}
-
-    - name: Set up node
-      uses: https://github.com/actions/setup-node@v4
-      with:
-        node-version: ${{ vars.NODE_VERSION }}
-        cache: 'npm'
-
-    - name: Install packages
-      run: npm install
+    - name: Set up node/npm
+      uses: https://code.itinerare.net/internal/node-setup-action@main
 
     - name: Run Mix
       run: npm run prod
 
-    - name: Import GPG key
-      uses: https://github.com/crazy-max/ghaction-import-gpg@v6
-      with:
-        gpg_private_key: ${{ secrets.CI_GPG }}
-        git_user_signingkey: true
-        git_commit_gpgsign: true
-
     - name: Commit changes
-      uses: https://github.com/EndBug/add-and-commit@v9
+      uses: https://code.itinerare.net/internal/lint-commit-action@main
       with:
-          pull: '--rebase --autostash'
-          message: 'chore(deps): rebuild mix assets'
-          default_author: github_actions
-          author_name: ${{ vars.COMMITTER_NAME }}
-          author_email: ${{ vars.COMMITTER_EMAIL }}
+        message: 'chore(deps): rebuild mix assets'
+        gpg_key: ${{ secrets.CI_GPG }}
+
+    - name: Organize logs
+      run: echo "Complete!"
