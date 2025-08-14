@@ -13,6 +13,7 @@
         "laravel/framework": "^12.0",
         "laravel/helpers": "^1.4",
         "laravel/tinker": "^2.8",
+        "league/flysystem-aws-s3-v3": "^3.29",
         "spatie/flysystem-dropbox": "^3.0.0",
         "spatie/laravel-backup": "^9.2",
         "spatie/laravel-html": "^3.5"
@@ -81,5 +82,5 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "version": "3.1.0-rc.1"
+    "version": "3.1.0"
 }

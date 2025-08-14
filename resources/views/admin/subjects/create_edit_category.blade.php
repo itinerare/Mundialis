@@ -54,7 +54,7 @@
         @if ($category->has_image)
             <div class="col-md-4 text-center">
                 Current image:<br />
-                <img src="{{ $category->imageUrl }}" class="mw-100 img-thumbnail mb-2" />
+                <img src="{{ Storage::url($category->imageUrl) }}" class="mw-100 img-thumbnail mb-2" />
             </div>
         @endif
         <div class="col-md align-self-center">

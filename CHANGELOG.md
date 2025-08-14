@@ -4,7 +4,7 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
-## [3.1.0-rc.1](https://code.itinerare.net/itinerare/Mundialis/compare/v3.0.0...v3.1.0-rc.1) (2025-05-26)
+## [3.1.0](https://code.itinerare.net/itinerare/Mundialis/compare/v3.0.0...v3.1.0) (2025-06-02)
 
 ### Features
 

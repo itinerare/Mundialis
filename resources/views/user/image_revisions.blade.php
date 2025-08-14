@@ -5,7 +5,7 @@
 @endsection
 
 @section('meta-img')
-    {{ asset('/images/avatars/' . $user->avatar) }}
+    {{ Storage::url('/images/avatars/' . $user->avatar) }}
 @endsection
 
 @section('profile-content')
@@ -38,14 +38,14 @@
                 <div class="col-md-1 text-center align-self-center">
                     @if ($version->image)
                         <a href="{{ url('special/get-image/' . $version->image->id) }}" class="image-link mw-100"><img
-                                src="{{ $version->image->thumbnailUrl }}" class="img-thumbnail mw-100" /></a>
+                                src="{{ Storage::url($version->image->thumbnailUrl) }}" class="img-thumbnail mw-100" /></a>
                     @else
                         Deleted image
                     @endif
                 </div>
                 <div class="col-md-2 text-center align-self-center">
                     @if ($version->hash)
-                        <a href="{{ $version->imageUrl }}"><img src="{{ $version->thumbnailUrl }}"
+                        <a href="{{ Storage::url($version->imageUrl) }}"><img src="{{ Storage::url($version->thumbnailUrl) }}"
                                 class="img-thumbnail mw-100" style="max-height:100px;" /></a>
                     @else
                         <i>No image</i>

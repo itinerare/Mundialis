@@ -2,7 +2,7 @@
     <div class="row no-gutters">
         @if ($page->image)
             <div class="col-md-4 mobile-hide">
-                <a href="{{ $page->url }}"><img class="img-thumbnail mw-100" src="{{ $page->image->thumbnailUrl }}" />
+                <a href="{{ $page->url }}"><img class="img-thumbnail mw-100" src="{{ Storage::url($page->image->thumbnailUrl) }}" />
                 </a>
             </div>
         @endif
@@ -12,7 +12,7 @@
                     @if ($page->image)
                         <div class="col-4 mobile-show">
                             <a href="{{ $page->url }}"><img class="img-thumbnail mw-100"
-                                    src="{{ $page->image->thumbnailUrl }}" />
+                                    src="{{ Storage::url($page->image->thumbnailUrl) }}" />
                             </a>
                         </div>
                     @endif

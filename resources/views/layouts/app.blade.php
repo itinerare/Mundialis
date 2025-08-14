@@ -20,7 +20,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ config('app.url', 'http://localhost') }}">
     <meta property="og:image"
-        content="@if (View::hasSection('meta-img')) @yield('meta-img') @else {{ asset('images/meta-image.png') }} @endif">
+        content="@if (View::hasSection('meta-img')) @yield('meta-img') @else {{ Storage::url('images/meta-image.png') }} @endif">
     <meta property="og:title" content="{{ config('mundialis.settings.site_name', 'Mundialis') }} -@yield('title')">
     <meta property="og:description"
         content="@if (View::hasSection('meta-desc')) @yield('meta-desc') @else {{ config('mundialis.settings.site_desc', 'A Mundialis site') }} @endif">
@@ -29,7 +29,7 @@
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ config('app.url', 'http://localhost') }}">
     <meta property="twitter:image"
-        content="@if (View::hasSection('meta-img')) @yield('meta-img') @else {{ asset('images/meta-image.png') }} @endif">
+        content="@if (View::hasSection('meta-img')) @yield('meta-img') @else {{ Storage::url('images/meta-image.png') }} @endif">
     <meta property="twitter:title"
         content="{{ config('mundialis.settings.site_name', 'Mundialis') }} -@yield('title')">
     <meta property="twitter:description"
@@ -48,8 +48,8 @@
     <!-- Styles -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/mundialis.css') }}" rel="stylesheet">
-    @if (file_exists(public_path() . '/css/custom.css'))
-        <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+    @if (Storage::fileExists('/css/custom.css'))
+        <link href="{{ Storage::url('css/custom.css') }}" rel="stylesheet">
     @endif
 
     {{-- Font Awesome --}}
@@ -79,7 +79,7 @@
             <div class="row">
                 @if (Settings::get('visitors_can_read') || Auth::check())
                     <div class="sidebar col-lg-2" id="sidebar">
-                        <a href="{{ url('/') }}" class="py-2"><img src="{{ asset('images/logo.png') }}"
+                        <a href="{{ url('/') }}" class="py-2"><img src="{{ Storage::url('images/logo.png') }}"
                                 class="mw-100 mobile-hide rounded" /></a>
                         @yield('sidebar')
                     </div>

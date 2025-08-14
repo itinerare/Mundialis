@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
 
@@ -142,8 +143,8 @@ class UserService extends Service {
                 $file = 'images/avatars/'.$user->avatar;
                 // $destinationPath = 'uploads/' . $id . '/';
 
-                if (File::exists($file)) {
-                    if (!unlink($file)) {
+                if (Storage::fileExists($file)) {
+                    if (!Storage::delete($file)) {
                         throw new \Exception('Failed to unlink old avatar.');
                     }
                 }
@@ -151,11 +152,11 @@ class UserService extends Service {
 
             // Checks if uploaded file is a GIF
             if ($avatar->getClientOriginalExtension() == 'gif') {
-                if (!$avatar->move(public_path('images/avatars'), $filename)) {
+                if (!Storage::put('images/avatars'.$filename, $avatar)) {
                     throw new \Exception('Failed to move file.');
                 }
             } else {
-                if (!Image::make($avatar)->resize(200, 200)->save(public_path('images/avatars/'.$filename))) {
+                if (!Storage::put('images/avatars/'.$filename, Image::make($avatar)->resize(200, 200)->encode(null, 100))) {
                     throw new \Exception('Failed to process avatar.');
                 }
             }

@@ -88,7 +88,7 @@ class PageImageVersion extends Model {
             return null;
         }
 
-        return asset($this->image->imageDirectory.'/'.$this->imageFileName);
+        return $this->image->imageDirectory.'/'.$this->imageFileName;
     }
 
     /**
@@ -110,6 +110,6 @@ class PageImageVersion extends Model {
             return null;
         }
 
-        return asset($this->image->imageDirectory.'/'.$this->thumbnailFileName);
+        return $this->image->imageDirectory.'/'.$this->thumbnailFileName;
     }
 }

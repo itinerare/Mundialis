@@ -13,6 +13,7 @@ use App\Models\User\User;
 use App\Models\User\WatchedPage;
 use App\Services\ImageManager;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
@@ -191,8 +192,8 @@ class UserNotificationTest extends TestCase {
                     ->post('/pages/'.$page->id.'/gallery/edit/'.$image->id, $data);
 
                 // Clean up the test images
-                unlink($image->imagePath.'/'.$version->thumbnailFileName);
-                unlink($image->imagePath.'/'.$version->imageFileName);
+                Storage::delete($image->imagePath.'/'.$version->thumbnailFileName);
+                Storage::delete($image->imagePath.'/'.$version->imageFileName);
                 break;
             case 2:
                 // WATCHED_PAGE_DELETED

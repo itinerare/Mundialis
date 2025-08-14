@@ -195,7 +195,7 @@ class Page extends Model {
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeSubject($query, $subject) {
-        return $query->whereRelation('category', 'subject', $subject);
+        return $query->whereRelation('category', 'subject', strtolower($subject));
     }
 
     /**
