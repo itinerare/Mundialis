@@ -16,8 +16,8 @@ jobs:
       matrix:
         target: ['8.2', '8.3']
 
-    runs-on: docker-cli
-    container: code.itinerare.net/internal/php-node:${{ matrix.target }}-alpine
+    runs-on: ${{ vars.DEFAULT_RUNNER }}
+    container: code.itinerare.net/internal/php-alpine:${{ matrix.target }}
 
     services:
       mysql:
@@ -45,8 +45,8 @@ jobs:
       matrix:
         target: ['8.2', '8.3']
 
-    runs-on: docker-cli
-    container: code.itinerare.net/internal/php-node:${{ matrix.target }}-alpine
+    runs-on: ${{ vars.DEFAULT_RUNNER }}
+    container: code.itinerare.net/internal/php-alpine:${{ matrix.target }}
 
     steps:
     - name: Install dependencies
@@ -58,8 +58,8 @@ jobs:
       run: php artisan test -c phpunit-sqlite.xml
 
   pint:
-    runs-on: docker-cli
-    container: code.itinerare.net/internal/php-node:8.2-alpine
+    runs-on: ${{ vars.DEFAULT_RUNNER }}
+    container: code.itinerare.net/internal/php-alpine:8.2
     
     needs: laravel-tests
 
@@ -82,11 +82,12 @@ jobs:
       run: echo "Complete!"
 
   blade-formatter:
-    runs-on: docker
+    runs-on: ${{ vars.DEFAULT_RUNNER }}
+    container: code.itinerare.net/internal/node-alpine:3.22
     needs: laravel-tests
 
     steps:
-    - name: Set up node/npm
+    - name: Install dependencies
       uses: https://code.itinerare.net/internal/node-setup-action@main
 
     - name: Run blade-formatter
@@ -102,11 +103,12 @@ jobs:
       run: echo "Complete!"
 
   rebuild-mix-assets:
-    runs-on: docker
+    runs-on: ${{ vars.DEFAULT_RUNNER }}
+    container: code.itinerare.net/internal/node-alpine:3.22
     needs: laravel-tests
 
     steps:
-    - name: Set up node/npm
+    - name: Install dependencies
       uses: https://code.itinerare.net/internal/node-setup-action@main
 
     - name: Run Mix
