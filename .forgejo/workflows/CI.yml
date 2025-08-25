@@ -16,18 +16,18 @@ jobs:
       matrix:
         target: ['8.2', '8.3']
 
-    runs-on: ${{ vars.DEFAULT_RUNNER }}
+    runs-on: docker-cli
     container: code.itinerare.net/internal/php-alpine:${{ matrix.target }}
 
     services:
-      mysql:
-          image: mysql:9
+      mariadb:
+          image: mariadb:lts
           env:
               MYSQL_ALLOW_EMPTY_PASSWORD: yes
               MYSQL_DATABASE: mundialis_test
           ports:
               - 3306
-          options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+          options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
     - name: Install dependencies
@@ -38,14 +38,14 @@ jobs:
     - name: Run tests
       run: php artisan test
       env:
-        DB_PORT: ${{ job.services.mysql.ports[3306] }}
+        DB_HOST: mariadb
 
   laravel-tests-sqlite:
     strategy:
       matrix:
         target: ['8.2', '8.3']
 
-    runs-on: ${{ vars.DEFAULT_RUNNER }}
+    runs-on: docker-cli
     container: code.itinerare.net/internal/php-alpine:${{ matrix.target }}
 
     steps:
@@ -58,7 +58,7 @@ jobs:
       run: php artisan test -c phpunit-sqlite.xml
 
   pint:
-    runs-on: ${{ vars.DEFAULT_RUNNER }}
+    runs-on: docker-cli
     container: code.itinerare.net/internal/php-alpine:8.2
     
     needs: laravel-tests
@@ -82,7 +82,7 @@ jobs:
       run: echo "Complete!"
 
   blade-formatter:
-    runs-on: ${{ vars.DEFAULT_RUNNER }}
+    runs-on: docker-cli
     container: code.itinerare.net/internal/node-alpine:3.22
     needs: laravel-tests
 
@@ -103,7 +103,7 @@ jobs:
       run: echo "Complete!"
 
   rebuild-mix-assets:
-    runs-on: ${{ vars.DEFAULT_RUNNER }}
+    runs-on: docker-cli
     container: code.itinerare.net/internal/node-alpine:3.22
     needs: laravel-tests
 
