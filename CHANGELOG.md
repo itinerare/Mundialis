@@ -4,6 +4,27 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [3.2.0](https://code.itinerare.net/itinerare/Mundialis/compare/v3.1.0...v3.2.0) (2025-08-25)
+
+### Features
+
+* Add sqlite support ([3eb1aa](https://code.itinerare.net/itinerare/Mundialis/commit/3eb1aa5b78b78a9832808acb3b2056726f6720d8))
+* Add storage driver compatibility (#495) ([496560](https://code.itinerare.net/itinerare/Mundialis/commit/496560f216940e9adc9add63f0f87567cb27bfba))
+
+### Bug Fixes
+
+
+##### Page Images
+
+* Display update timestamp from latest version in image info modal ([53ba7b](https://code.itinerare.net/itinerare/Mundialis/commit/53ba7b61cd98f5edc109e55ae66cc4bf7b9959ec))
+
+##### Pages
+
+* Ensure subject query is lowercase ([1eae19](https://code.itinerare.net/itinerare/Mundialis/commit/1eae19c729e6e779183ef2606e18ec99786e18f7))
+
+
+---
+
 ## [3.1.0](https://code.itinerare.net/itinerare/Mundialis/compare/v3.0.0...v3.1.0) (2025-06-02)
 
 ### Features
