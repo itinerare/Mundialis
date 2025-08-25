@@ -7,7 +7,9 @@ on:
 
 jobs:
   deploy:
-    runs-on: docker
+    if: ${{ secrets.SSH_KEY != '' }}
+    runs-on: docker-cli
+    container: code.itinerare.net/internal/node-alpine:3.22
 
     steps:
       - name: Set up SSH key
