@@ -21,7 +21,7 @@ jobs:
 
     services:
       mariadb:
-          image: mariadb:lts
+          image: mariadb:lts@sha256:272084c2dec70619714df329c4ffcb336e3f8c723072c3f56f2e4015997bbf2c
           env:
               MYSQL_ALLOW_EMPTY_PASSWORD: yes
               MYSQL_DATABASE: mundialis_test
