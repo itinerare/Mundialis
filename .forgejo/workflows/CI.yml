@@ -16,8 +16,7 @@ jobs:
       matrix:
         target: ['8.2', '8.3']
 
-    runs-on: docker-cli
-    container: code.itinerare.net/internal/php-alpine:${{ matrix.target }}
+    runs-on: php-alpine-${{ matrix.target }}
 
     services:
       mariadb:
@@ -45,8 +44,7 @@ jobs:
       matrix:
         target: ['8.2', '8.3']
 
-    runs-on: docker-cli
-    container: code.itinerare.net/internal/php-alpine:${{ matrix.target }}
+    runs-on: php-alpine-${{ matrix.target }}
 
     steps:
     - name: Install dependencies
@@ -58,9 +56,7 @@ jobs:
       run: php artisan test -c phpunit-sqlite.xml
 
   pint:
-    runs-on: docker-cli
-    container: code.itinerare.net/internal/php-alpine:8.2
-    
+    runs-on: php-alpine-8.2
     needs: laravel-tests
 
     steps:
@@ -82,8 +78,7 @@ jobs:
       run: echo "Complete!"
 
   blade-formatter:
-    runs-on: docker-cli
-    container: code.itinerare.net/internal/node-alpine:3.22
+    runs-on: node-alpine
     needs: laravel-tests
 
     steps:
@@ -103,8 +98,7 @@ jobs:
       run: echo "Complete!"
 
   rebuild-mix-assets:
-    runs-on: docker-cli
-    container: code.itinerare.net/internal/node-alpine:3.22
+    runs-on: node-alpine
     needs: laravel-tests
 
     steps:
