@@ -1,8 +1,8 @@
 # The Parity Public License 7.0.0
 
-Contributor: [itinerare](https://github.com/itinerare)
+Contributor: [itinerare](https://code.itinerare.net/itinerare)
 
-Source Code: https://github.com/itinerare/Mundialis
+Source Code: https://code.itinerare.net/itinerare/Mundialis
 
 ## Purpose
 
