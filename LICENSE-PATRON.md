@@ -5,7 +5,7 @@ Payment Platforms:
 - https://www.patreon.com/itinerare
 
 Participating Contributors:
-- [itinerare](https://github.com/itinerare)
+- [itinerare](https://code.itinerare.net/itinerare)
 
 ## Purpose
 
