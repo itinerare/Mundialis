@@ -114,16 +114,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.356.12",
+            "version": "3.356.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "0068088fed44e2bed3a2e82f2c7a0bb9e356b3c3"
+                "reference": "d0357fbe2535bb7d832e594a4ff2ff8da29d229c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/0068088fed44e2bed3a2e82f2c7a0bb9e356b3c3",
-                "reference": "0068088fed44e2bed3a2e82f2c7a0bb9e356b3c3",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d0357fbe2535bb7d832e594a4ff2ff8da29d229c",
+                "reference": "d0357fbe2535bb7d832e594a4ff2ff8da29d229c",
                 "shasum": ""
             },
             "require": {
@@ -136,7 +136,7 @@
                 "guzzlehttp/psr7": "^2.4.5",
                 "mtdowling/jmespath.php": "^2.8.0",
                 "php": ">=8.1",
-                "psr/http-message": "^2.0"
+                "psr/http-message": "^1.0 || ^2.0"
             },
             "require-dev": {
                 "andrewsville/php-token-reflection": "^1.4",
@@ -205,9 +205,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.356.12"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.356.17"
             },
-            "time": "2025-09-05T18:10:41+00:00"
+            "time": "2025-09-12T18:07:37+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
@@ -8574,16 +8574,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "11.5.38",
+            "version": "11.5.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "5bd0e4f64a2261b7ade7054c51547beaf2d99e43"
+                "reference": "ad5597f79d8489d2870073ac0bc0dd0ad1fa9931"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/5bd0e4f64a2261b7ade7054c51547beaf2d99e43",
-                "reference": "5bd0e4f64a2261b7ade7054c51547beaf2d99e43",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ad5597f79d8489d2870073ac0bc0dd0ad1fa9931",
+                "reference": "ad5597f79d8489d2870073ac0bc0dd0ad1fa9931",
                 "shasum": ""
             },
             "require": {
@@ -8655,7 +8655,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.38"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.39"
             },
             "funding": [
                 {
@@ -8679,7 +8679,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-11T10:34:07+00:00"
+            "time": "2025-09-14T06:20:41+00:00"
         },
         {
             "name": "sebastian/cli-parser",
