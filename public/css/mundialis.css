@@ -70,7 +70,7 @@ body {
 }
 
 .content-warning-image {
-    filter: blur(1em);
+    filter: blur(.25em);
 }
 
 .recent-image {
