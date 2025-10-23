@@ -105,10 +105,10 @@
                         @foreach ($imageVersions as $version)
                             <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
                                 <div class="col-md text-center align-self-center">
-                                    <a href="{{ url('special/get-image/' . $version->image->id) }}"
-                                        class="image-link mw-100"><img
-                                            src="{{ Storage::url($version->image->thumbnailUrl) }}"
-                                            class="img-thumbnail mw-100" /></a>
+                                    @include('pages.images._image_thumb', [
+                                        'image' => $version->image,
+                                        'context' => 'special',
+                                    ])
                                 </div>
                                 <div class="col-md align-self-center">{!! pretty_date($version->created_at) !!}</div>
                                 <div class="col-md align-self-center">{{ $version->type }}{!! $version->is_minor ? ' (<abbr data-toggle="tooltip" title="This edit is minor">m</abbr>)' : '' !!}</div>

@@ -269,6 +269,7 @@ class ImageController extends Controller {
             'image', 'thumbnail', 'x0', 'x1', 'y0', 'y1', 'use_cropper',
             'creator_id', 'creator_url', 'description', 'page_id',
             'is_valid', 'is_visible', 'mark_invalid', 'mark_active',
+            'content_warning',
             'is_minor', 'reason',
         ]);
 

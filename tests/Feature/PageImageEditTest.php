@@ -87,13 +87,14 @@ class PageImageEditTest extends TestCase {
      * @param array $fileData
      * @param bool  $withDescription
      * @param array $creatorData
+     * @param bool  $withWarning
      * @param bool  $isVisible
      * @param bool  $isValid
      * @param bool  $isActive
      * @param bool  $expected
      */
     #[DataProvider('postCreateImageProvider')]
-    public function testPostCreateImage($fileData, $withDescription, $creatorData, $isVisible, $isValid, $isActive, $expected) {
+    public function testPostCreateImage($fileData, $withDescription, $creatorData, $withWarning, $isVisible, $isValid, $isActive, $expected) {
         $page = Page::factory()->create();
 
         if ($fileData[0]) {
@@ -123,10 +124,11 @@ class PageImageEditTest extends TestCase {
             ] + ($creatorData[2] ? [
                 1 => $creatorData[1] ? $this->faker->url() : null,
             ] : []),
-            'description' => $withDescription ? $this->faker->unique()->domainWord() : null,
-            'is_valid'    => $isValid,
-            'is_visible'  => $isVisible,
-            'mark_active' => $isActive,
+            'description'     => $withDescription ? $this->faker->unique()->domainWord() : null,
+            'content_warning' => $withWarning ? $this->faker->sentence() : null,
+            'is_valid'        => $isValid,
+            'is_visible'      => $isVisible,
+            'mark_active'     => $isActive,
         ];
 
         $response = $this
@@ -137,8 +139,9 @@ class PageImageEditTest extends TestCase {
             $response->assertSessionHasNoErrors();
 
             $this->assertDatabaseHas('page_images', [
-                'description' => $data['description'],
-                'is_visible'  => $data['is_visible'],
+                'description'     => $data['description'],
+                'is_visible'      => $data['is_visible'],
+                'content_warning' => $data['content_warning'],
             ]);
 
             $image = PageImage::where('description', $data['description'])->where('is_visible', $data['is_visible'])->first();
@@ -182,8 +185,9 @@ class PageImageEditTest extends TestCase {
             $response->assertSessionHasErrors();
 
             $this->assertDatabaseMissing('page_images', [
-                'description' => $data['description'],
-                'is_visible'  => $data['is_visible'],
+                'description'     => $data['description'],
+                'is_visible'      => $data['is_visible'],
+                'content_warning' => $data['content_warning'],
             ]);
         }
     }
@@ -193,19 +197,20 @@ class PageImageEditTest extends TestCase {
             // $fileData = [$isImage, $withThumbnail, $isValid]
             // $creatorData = [$withUser, $withUrl, $asMultiple]
 
-            'valid image'                        => [[1, 0, 1], 1, [1, 0, 0], 1, 1, 0, 1],
-            'valid image without description'    => [[1, 0, 1], 0, [1, 0, 0], 1, 1, 0, 1],
-            'valid image with thumbnail'         => [[1, 1, 1], 1, [1, 0, 0], 1, 1, 0, 1],
-            'valid image with url creator'       => [[1, 0, 1], 1, [0, 1, 0], 1, 1, 0, 1],
-            'valid image with both creators'     => [[1, 0, 1], 1, [1, 1, 0], 1, 1, 0, 1],
-            'valid image with multiple creators' => [[1, 0, 1], 1, [1, 1, 1], 1, 1, 0, 1],
-            'valid image without creator'        => [[1, 0, 1], 1, [0, 0, 0], 1, 1, 0, 0],
-            'valid image, hidden'                => [[1, 0, 1], 1, [1, 0, 0], 0, 1, 0, 1],
-            'valid image, invalid'               => [[1, 0, 1], 1, [1, 0, 0], 1, 0, 0, 1],
-            'valid image, active'                => [[1, 0, 1], 1, [1, 0, 0], 1, 1, 1, 1],
-            'invalid image'                      => [[1, 0, 0], 1, [1, 0, 0], 1, 1, 0, 0],
-            'valid file'                         => [[0, 0, 1], 1, [1, 0, 0], 1, 1, 0, 0],
-            'invalid file'                       => [[0, 0, 0], 1, [1, 0, 0], 1, 1, 0, 0],
+            'valid image'                        => [[1, 0, 1], 1, [1, 0, 0], 0, 1, 1, 0, 1],
+            'valid image without description'    => [[1, 0, 1], 0, [1, 0, 0], 0, 1, 1, 0, 1],
+            'valid image with warning'           => [[1, 0, 1], 1, [1, 0, 0], 1, 1, 1, 0, 1],
+            'valid image with thumbnail'         => [[1, 1, 1], 1, [1, 0, 0], 0, 1, 1, 0, 1],
+            'valid image with url creator'       => [[1, 0, 1], 1, [0, 1, 0], 0, 1, 1, 0, 1],
+            'valid image with both creators'     => [[1, 0, 1], 1, [1, 1, 0], 0, 1, 1, 0, 1],
+            'valid image with multiple creators' => [[1, 0, 1], 1, [1, 1, 1], 0, 1, 1, 0, 1],
+            'valid image without creator'        => [[1, 0, 1], 1, [0, 0, 0], 0, 1, 1, 0, 0],
+            'valid image, hidden'                => [[1, 0, 1], 1, [1, 0, 0], 0, 0, 1, 0, 1],
+            'valid image, invalid'               => [[1, 0, 1], 1, [1, 0, 0], 0, 1, 0, 0, 1],
+            'valid image, active'                => [[1, 0, 1], 1, [1, 0, 0], 0, 1, 1, 1, 1],
+            'invalid image'                      => [[1, 0, 0], 1, [1, 0, 0], 0, 1, 1, 0, 0],
+            'valid file'                         => [[0, 0, 1], 1, [1, 0, 0], 0, 1, 1, 0, 0],
+            'invalid file'                       => [[0, 0, 0], 1, [1, 0, 0], 0, 1, 1, 0, 0],
         ];
     }
 
@@ -216,13 +221,14 @@ class PageImageEditTest extends TestCase {
      * @param array|null $fileData
      * @param bool       $withDescription
      * @param array      $creatorData
+     * @param bool       $withWarning
      * @param bool       $isVisible
      * @param bool       $isValid
      * @param bool       $isActive
      * @param bool       $expected
      */
     #[DataProvider('postEditImageProvider')]
-    public function testPostEditImage($withImage, $fileData, $withDescription, $creatorData, $isVisible, $isValid, $isActive, $expected) {
+    public function testPostEditImage($withImage, $fileData, $withDescription, $creatorData, $withWarning, $isVisible, $isValid, $isActive, $expected) {
         $page = Page::factory()->create();
         if ($withImage) {
             $imageData = $this->createImage($page);
@@ -242,8 +248,9 @@ class PageImageEditTest extends TestCase {
         }
 
         $data = [
-            'description' => $withDescription ? $this->faker->unique()->domainWord() : null,
-            'creator_id'  => [
+            'description'     => $withDescription ? $this->faker->unique()->domainWord() : null,
+            'content_warning' => $withWarning ? $this->faker->sentence() : null,
+            'creator_id'      => [
                 0 => $creatorData[0] ? $this->editor->id : null,
             ] + ($creatorData[2] ? [
                 1 => null,
@@ -253,9 +260,9 @@ class PageImageEditTest extends TestCase {
             ] + ($creatorData[2] ? [
                 1 => $creatorData[1] ? $this->faker->url() : null,
             ] : []),
-            'is_visible'  => $isVisible,
-            'is_valid'    => $isValid,
-            'mark_active' => $isActive,
+            'is_visible'      => $isVisible,
+            'is_valid'        => $isValid,
+            'mark_active'     => $isActive,
         ] + ($fileData ? [
             'image'       => $file,
             'thumbnail'   => $fileData[1] ? $thumbnail : null,
@@ -270,10 +277,12 @@ class PageImageEditTest extends TestCase {
 
         if ($expected) {
             $response->assertSessionHasNoErrors();
+
             $this->assertDatabaseHas('page_images', [
-                'id'          => $imageData['image']->id,
-                'description' => $data['description'],
-                'is_visible'  => $data['is_visible'],
+                'id'              => $imageData['image']->id,
+                'description'     => $data['description'],
+                'is_visible'      => $data['is_visible'],
+                'content_warning' => $data['content_warning'],
             ]);
 
             $this->assertDatabaseHas('pages', [
@@ -331,20 +340,21 @@ class PageImageEditTest extends TestCase {
             // $fileData = [$isImage, $withThumbnail, $isValid]
             // $creatorData = [$withUser, $withUrl, $asMultiple]
 
-            'with valid image'                        => [1, [1, 0, 1], 0, [1, 0, 0], 1, 1, 0, 1],
-            'with valid image with description'       => [1, [1, 0, 1], 1, [1, 0, 0], 1, 1, 0, 1],
-            'with valid image with thumbnail'         => [1, [1, 1, 1], 0, [1, 0, 0], 1, 1, 0, 1],
-            'with valid image with url creator'       => [1, [1, 0, 1], 0, [0, 1, 0], 1, 1, 0, 1],
-            'with valid image with both creators'     => [1, [1, 0, 1], 0, [1, 1, 0], 1, 1, 0, 1],
-            'with valid image with multiple creators' => [1, [1, 0, 1], 0, [1, 1, 1], 1, 1, 0, 1],
-            'with valid image without creator'        => [1, [1, 0, 1], 0, [0, 0, 0], 1, 1, 0, 0],
-            'with valid image, hidden'                => [1, [1, 0, 1], 0, [1, 0, 0], 0, 1, 0, 1],
-            'with valid image, invalid'               => [1, [1, 0, 1], 0, [1, 0, 0], 1, 0, 0, 1],
-            'with valid image, active'                => [1, [1, 0, 1], 0, [1, 0, 0], 1, 1, 1, 1],
-            'with invalid image'                      => [1, [1, 0, 0], 0, [1, 0, 0], 1, 1, 0, 0],
-            'with valid file'                         => [1, [0, 0, 1], 0, [1, 0, 0], 1, 1, 0, 0],
-            'invalid file'                            => [1, [0, 0, 0], 0, [1, 0, 0], 1, 1, 0, 0],
-            'without image'                           => [0, [1, 0, 1], 0, [1, 0, 0], 1, 1, 0, 0],
+            'with valid image'                        => [1, [1, 0, 1], 0, [1, 0, 0], 0, 1, 1, 0, 1],
+            'with valid image with description'       => [1, [1, 0, 1], 1, [1, 0, 0], 0, 1, 1, 0, 1],
+            'with valid image with warning'           => [1, [1, 0, 1], 0, [1, 0, 0], 1, 1, 1, 0, 1],
+            'with valid image with thumbnail'         => [1, [1, 1, 1], 0, [1, 0, 0], 0, 1, 1, 0, 1],
+            'with valid image with url creator'       => [1, [1, 0, 1], 0, [0, 1, 0], 0, 1, 1, 0, 1],
+            'with valid image with both creators'     => [1, [1, 0, 1], 0, [1, 1, 0], 0, 1, 1, 0, 1],
+            'with valid image with multiple creators' => [1, [1, 0, 1], 0, [1, 1, 1], 0, 1, 1, 0, 1],
+            'with valid image without creator'        => [1, [1, 0, 1], 0, [0, 0, 0], 0, 1, 1, 0, 0],
+            'with valid image, hidden'                => [1, [1, 0, 1], 0, [1, 0, 0], 0, 0, 1, 0, 1],
+            'with valid image, invalid'               => [1, [1, 0, 1], 0, [1, 0, 0], 0, 1, 0, 0, 1],
+            'with valid image, active'                => [1, [1, 0, 1], 0, [1, 0, 0], 0, 1, 1, 1, 1],
+            'with invalid image'                      => [1, [1, 0, 0], 0, [1, 0, 0], 0, 1, 1, 0, 0],
+            'with valid file'                         => [1, [0, 0, 1], 0, [1, 0, 0], 0, 1, 1, 0, 0],
+            'invalid file'                            => [1, [0, 0, 0], 0, [1, 0, 0], 0, 1, 1, 0, 0],
+            'without image'                           => [0, [1, 0, 1], 0, [1, 0, 0], 0, 1, 1, 0, 0],
         ];
     }
 
@@ -355,16 +365,17 @@ class PageImageEditTest extends TestCase {
         $imageData = $this->createImage();
 
         $data = [
-            'image'        => UploadedFile::fake()->image('test_image.png'),
-            'use_cropper'  => 1,
-            'x0'           => 0, 'x1' => 1,
-            'y0'           => 0, 'y1' => 1,
-            'description'  => $this->faker->unique()->domainWord(),
-            'is_valid'     => 1,
-            'is_visible'   => 1,
-            'mark_invalid' => 1,
-            'creator_id'   => [0 => $this->editor->id],
-            'creator_url'  => [0 => null],
+            'image'           => UploadedFile::fake()->image('test_image.png'),
+            'use_cropper'     => 1,
+            'x0'              => 0, 'x1' => 1,
+            'y0'              => 0, 'y1' => 1,
+            'description'     => $this->faker->unique()->domainWord(),
+            'content_warning' => null,
+            'is_valid'        => 1,
+            'is_visible'      => 1,
+            'mark_invalid'    => 1,
+            'creator_id'      => [0 => $this->editor->id],
+            'creator_url'     => [0 => null],
         ];
 
         $response = $this
@@ -401,10 +412,11 @@ class PageImageEditTest extends TestCase {
         $imageData = $this->createImage($page[0]);
 
         $data = [
-            'page_id'     => [0 => $page[1]->id],
-            'description' => null,
-            'creator_id'  => [0 => $this->editor->id],
-            'creator_url' => [0 => null],
+            'page_id'         => [0 => $page[1]->id],
+            'description'     => null,
+            'creator_id'      => [0 => $this->editor->id],
+            'creator_url'     => [0 => null],
+            'content_warning' => null,
         ];
 
         $response = $this
@@ -438,10 +450,11 @@ class PageImageEditTest extends TestCase {
         PagePageImage::factory()->page($page[1]->id)->image($imageData['image']->id)->create();
 
         $data = [
-            'page_id'     => [0 => $page[0]->id],
-            'description' => null,
-            'creator_id'  => [0 => $this->editor->id],
-            'creator_url' => [0 => null],
+            'page_id'         => [0 => $page[0]->id],
+            'description'     => null,
+            'content_warning' => null,
+            'creator_id'      => [0 => $this->editor->id],
+            'creator_url'     => [0 => null],
         ];
 
         $response = $this
@@ -476,9 +489,10 @@ class PageImageEditTest extends TestCase {
         PagePageImage::factory()->page($page[1]->id)->image($imageData['image']->id)->create();
 
         $data = [
-            'description' => null,
-            'creator_id'  => [0 => $this->editor->id],
-            'creator_url' => [0 => null],
+            'description'     => null,
+            'creator_id'      => [0 => $this->editor->id],
+            'creator_url'     => [0 => null],
+            'content_warning' => null,
         ];
 
         if ($isActive) {

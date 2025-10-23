@@ -130,6 +130,11 @@
     </div>
 
     <div class="form-group">
+        {!! Form::label('content_warning', 'Content Warning (Optional)') !!} {!! add_help('If this is set, the image\'s thumbnail will be blurred, with a badge with the reason added.') !!}
+        {!! Form::text('content_warning', $image->content_warning, ['class' => 'form-control']) !!}
+    </div>
+
+    <div class="form-group">
         {!! Form::label('description', 'Description (Optional)') !!}
         {!! Form::textarea('description', $image->description, ['class' => 'form-control wysiwyg']) !!}
     </div>

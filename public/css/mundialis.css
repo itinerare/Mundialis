@@ -65,6 +65,46 @@ body {
     display:none;
 }
 
+.invalid-image {
+    filter: grayscale(60%) opacity(50%);
+}
+
+.content-warning-image {
+    filter: blur(1em);
+}
+
+.recent-image {
+    max-height: 50px;
+}
+
+.container{
+    padding: 0;
+    position:relative;
+}
+@media screen and (max-width: 640px){
+    .container{
+      width: 100%;
+    }
+}
+
+.image-badge{
+    position: absolute;
+    text-align: center;
+    padding:5px 10px;
+    z-index:4;
+    right:0;
+    bottom:0;
+    border-radius: .5em 0 .25rem 0;
+}
+
+.content {
+    display: inline-block;
+    position: relative;
+    width: 90%;
+    margin: auto;
+    overflow: hidden;
+}
+
 /**************************************************************************************************
 
     Layout

@@ -1,6 +1,11 @@
+@if (isset($image->content_warning) && $image->content_warning)
+    <div class="alert alert-warning">
+        This image has the following content warning: {{ $image->content_warning }}
+    </div>
+@endif
 @if (isset($image->pivot) && !$image->pivot->is_valid)
     <div class="alert alert-danger">
-        This image is outdated for this page, and only noted here for recordkeeping purposes.
+        This image is outdated for this page and only noted here for recordkeeping purposes.
     </div>
 @endif
 <div class="row no-gutters">

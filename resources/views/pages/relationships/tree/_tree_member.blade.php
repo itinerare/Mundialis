@@ -14,7 +14,7 @@
     <div class="mt-auto align-bottom">
         @if ($member['page']->image)
             <img src="{{ Storage::url($member['page']->image->thumbnailUrl) }}" style="width:100px;"
-                class="img-thumbnail mw-100" />
+                class="img-thumbnail mw-100 {{ isset($image->content_warning) && $image->content_warning ? 'content-warning-image' : '' }}" />
         @else
             <img src="{{ Storage::url('images/logo.png') }}" style="width:100px;" class="img-thumbnail mw-100" />
         @endif

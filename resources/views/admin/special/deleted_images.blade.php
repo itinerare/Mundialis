@@ -10,9 +10,9 @@
     <h1>Deleted Images</h1>
 
     <p>This is a list of all deleted images on the site. So long as one or more of the pages they are attached to are not
-        permanently deleted (i.e. their parent category is not deleted), they will remain here in perpetuity. Images may be
+        permanently deleted (their parent category is not deleted), they will remain here in perpetuity. Images may be
         restored so long as one or more of their linked page(s) are not currently deleted. Images deleted alongside pages
-        (e.g. if they were only linked to the deleted page) are automatically restored with the page if it is restored.</p>
+        (if they were only linked to the deleted page) are automatically restored with the page if it is restored.</p>
 
     <div>
         {!! Form::open(['method' => 'GET', 'class' => 'form-inline justify-content-end']) !!}
@@ -51,7 +51,8 @@
         @foreach ($images as $image)
             <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
                 <div class="col-md-2">
-                    <img src="{{ Storage::url($image->thumbnailUrl) }}" class="img-thumbnail mw-100"
+                    <img src="{{ Storage::url($image->thumbnailUrl) }}"
+                        class="img-thumbnail mw-100 {{ isset($image->content_warning) && $image->content_warning ? 'content-warning-image' : '' }}"
                         style="max-height:100px;" />
                 </div>
                 <div class="col-md-3 align-self-center">

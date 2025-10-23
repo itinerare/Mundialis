@@ -46,8 +46,10 @@
             <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
                 <div class="col-md-1 text-center align-self-center">
                     @if ($version->image)
-                        <a href="{{ url('special/get-image/' . $version->image->id) }}" class="image-link mw-100"><img
-                                src="{{ Storage::url($version->image->thumbnailUrl) }}" class="img-thumbnail mw-100" /></a>
+                        @include('pages.images._image_thumb', [
+                            'image' => $version->image,
+                            'context' => 'special',
+                        ])
                     @else
                         Deleted image
                     @endif

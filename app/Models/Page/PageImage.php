@@ -15,7 +15,7 @@ class PageImage extends Model {
      * @var array
      */
     protected $fillable = [
-        'description', 'is_visible',
+        'description', 'is_visible', 'content_warning',
     ];
 
     /**
@@ -38,9 +38,10 @@ class PageImage extends Model {
      * @var array
      */
     public static $createRules = [
-        'creator_id.*'  => 'nullable|required_without:creator_url.*',
-        'creator_url.*' => 'nullable|required_without:creator_id.*|url',
-        'image'         => 'required|mimes:jpg,jpeg,gif,png,webp|max:20000',
+        'creator_id.*'    => 'nullable|required_without:creator_url.*',
+        'creator_url.*'   => 'nullable|required_without:creator_id.*|url',
+        'image'           => 'required|mimes:jpg,jpeg,gif,png,webp|max:20000',
+        'content_warning' => 'nullable|max:255',
     ];
 
     /**
@@ -49,9 +50,10 @@ class PageImage extends Model {
      * @var array
      */
     public static $updateRules = [
-        'creator_id.*'  => 'nullable|required_without:creator_url.*',
-        'creator_url.*' => 'nullable|required_without:creator_id.*|url',
-        'image'         => 'nullable|mimes:jpg,jpeg,gif,png,webp|max:20000',
+        'creator_id.*'    => 'nullable|required_without:creator_url.*',
+        'creator_url.*'   => 'nullable|required_without:creator_id.*|url',
+        'image'           => 'nullable|mimes:jpg,jpeg,gif,png,webp|max:20000',
+        'content_warning' => 'nullable|max:255',
     ];
 
     /**********************************************************************************************

@@ -68,9 +68,7 @@
         @foreach ($images as $image)
             {!! $loop->remaining + 1 == $loop->count % 4 ? '<div class="my-auto col mobile-hide"></div>' : '' !!}
             <div class="col-md-3 mb-2">
-                <a href="{{ url('pages/get-image/' . $page->id . '/' . $image->id) }}" class="image-link"><img
-                        src="{{ Storage::url($image->thumbnailUrl) }}" class="img-thumbnail mw-100"
-                        style="{{ !$image->pivot->is_valid ? 'filter: grayscale(60%) opacity(50%);' : '' }}" /></a>
+                @include('pages.images._image_thumb')
             </div>
             {!! $loop->count % 4 != 0 && $loop->last ? '<div class="my-auto col mobile-hide"></div>' : '' !!}
             {!! $loop->iteration % 4 == 0 ? '<div class="w-100"></div>' : '' !!}

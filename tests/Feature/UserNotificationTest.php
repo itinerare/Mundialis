@@ -181,9 +181,10 @@ class UserNotificationTest extends TestCase {
 
                 // Generate some test data
                 $data = [
-                    'description' => $this->faker->unique()->domainWord(),
-                    'creator_id'  => [0 => $this->user->id],
-                    'creator_url' => [0 => null],
+                    'description'     => $this->faker->unique()->domainWord(),
+                    'content_warning' => null,
+                    'creator_id'      => [0 => $this->user->id],
+                    'creator_url'     => [0 => null],
                 ];
 
                 // Edit the image; this should prompt a notification if relevant

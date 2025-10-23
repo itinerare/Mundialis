@@ -178,7 +178,7 @@ class ImageManager extends Service {
             }
 
             // Update image
-            $image->update(Arr::only($data, ['description', 'is_visible']));
+            $image->update(Arr::only($data, ['description', 'is_visible', 'content_warning']));
 
             // Send a notification to users that have watched this page
             if ($page->watchers->count()) {
@@ -420,11 +420,12 @@ class ImageManager extends Service {
         try {
             // Process data stored on the image
             $imageData['description'] = $data['description'] ?? null;
+            $imageData['content_warning'] = $data['content_warning'] ?? null;
             $imageData['is_visible'] = $data['is_visible'] ?? 0;
 
             // If there's no preexisting image, create one
             if (!$image) {
-                $image = PageImage::create(Arr::only($imageData, ['description', 'is_visible']));
+                $image = PageImage::create(Arr::only($imageData, ['description', 'is_visible', 'content_warning']));
             }
 
             // If new or re-uploading an image
@@ -702,8 +703,9 @@ class ImageManager extends Service {
     private function processVersionData($data) {
         // Record image information for inclusion in version data
         $versionData = [
-            'is_visible'  => $data['is_visible'],
-            'description' => $data['description'],
+            'is_visible'      => $data['is_visible'],
+            'description'     => $data['description'],
+            'content_warning' => $data['content_warning'],
         ];
 
         // Record creator information

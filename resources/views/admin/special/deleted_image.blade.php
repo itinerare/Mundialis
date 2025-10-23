@@ -77,7 +77,8 @@
                         <div class="col-md-3 text-center">
                             @if ($version->hash)
                                 <a href="{{ Storage::url($version->imageUrl) }}"><img
-                                        src="{{ Storage::url($version->thumbnailUrl) }}" class="img-thumbnail mw-100"
+                                        src="{{ Storage::url($version->thumbnailUrl) }}"
+                                        class="img-thumbnail mw-100 {{ isset($image->content_warning) && $image->content_warning ? 'content-warning-image' : '' }}"
                                         style="max-height:100px;" /></a>
                             @else
                                 <i>No image</i>

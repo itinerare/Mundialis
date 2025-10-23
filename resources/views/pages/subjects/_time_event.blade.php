@@ -2,7 +2,8 @@
     <div class="row no-gutters">
         @if ($page->image)
             <div class="col-md-4 mobile-hide">
-                <a href="{{ $page->url }}"><img class="img-thumbnail mw-100"
+                <a href="{{ $page->url }}"><img
+                        class="img-thumbnail mw-100 {{ isset($image->content_warning) && $image->content_warning ? 'content-warning-image' : '' }}"
                         src="{{ Storage::url($page->image->thumbnailUrl) }}" />
                 </a>
             </div>
@@ -12,7 +13,8 @@
                 <div class="row no-gutters">
                     @if ($page->image)
                         <div class="col-4 mobile-show">
-                            <a href="{{ $page->url }}"><img class="img-thumbnail mw-100"
+                            <a href="{{ $page->url }}"><img
+                                    class="img-thumbnail mw-100 {{ isset($image->content_warning) && $image->content_warning ? 'content-warning-image' : '' }}"
                                     src="{{ Storage::url($page->image->thumbnailUrl) }}" />
                             </a>
                         </div>

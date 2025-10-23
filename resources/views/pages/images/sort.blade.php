@@ -30,7 +30,8 @@
         @foreach ($images as $image)
             <div class="col-md-3 col-6 text-center mb-2" data-id="{{ $image->id }}">
                 <div>
-                    <img src="{{ Storage::url($image->thumbnailUrl) }}" class="img-thumbnail"
+                    <img src="{{ Storage::url($image->thumbnailUrl) }}"
+                        class="img-thumbnail {{ isset($image->content_warning) && $image->content_warning ? 'content-warning-image' : '' }}"
                         alt="Thumbnail for image #{{ $image->id }}" />
                 </div>
             </div>
