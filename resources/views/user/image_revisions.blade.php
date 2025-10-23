@@ -70,3 +70,8 @@
     <div class="text-center mt-4 small text-muted">{{ $versions->total() }}
         result{{ $versions->total() == 1 ? '' : 's' }} found.</div>
 @endsection
+
+@section('scripts')
+    @parent
+    @include('pages.images._info_popup_js')
+@endsection
