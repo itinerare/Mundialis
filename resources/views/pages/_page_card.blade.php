@@ -2,7 +2,7 @@
     <div class="card-header text-center">
         @if ($page->image)
             <a href="{{ $page->url }}"><img src="{{ Storage::url($page->image->thumbnailUrl) }}"
-                    class="mw-100 mb-1" /></a>
+                    class="mw-100 mb-1 {{ isset($page->image->content_warning) && $page->image->content_warning ? 'content-warning-image' : '' }}" /></a>
         @endif
         <h3>
             {!! $page->displayName !!}
