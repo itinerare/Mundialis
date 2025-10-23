@@ -65,7 +65,10 @@ class UserService extends Service {
         }
 
         if ($user) {
-            $user->update($data);
+            $user->update([
+                'password' => $data['password'],
+                'email'    => $data['email'],
+            ]);
             if (isset($data['email_old'])) {
                 $$user->sendEmailVerificationNotification();
             }
