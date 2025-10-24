@@ -1,0 +1,36 @@
+name: Import PR
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr-id:
+        description: "PR ID:"
+        required: true
+        type: number
+      remote-address:
+        description: "Remote URL:"
+        required: true
+        default: https://codeberg.org/itinerare/Mundialis.git
+        type: string
+      base-branch:
+        description: "Branch to PR into:"
+        required: false
+        default: develop
+        type: string
+
+jobs:
+  import-pr:
+    if: ${{ secrets.PR_TOKEN != '' }}
+    runs-on: node-alpine
+
+    steps:
+      - name: Import PR
+        uses: https://code.itinerare.net/internal/pr-import-action@main
+        with:
+          pr-id: ${{ inputs.pr-id }}
+          remote-address: ${{ inputs.remote-address }}
+          base-branch: ${{ inputs.base-branch }}
+          pr-token: ${{ secrets.PR_TOKEN }}
+
+      - name: Organize logs
+        run: echo "Complete!"
