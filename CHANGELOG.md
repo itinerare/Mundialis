@@ -4,6 +4,31 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [3.3.0-rc.1](https://code.itinerare.net/itinerare/Mundialis/compare/v3.2.0...v3.3.0-rc.1) (2025-10-27)
+
+### Features
+
+
+##### Page Images
+
+* Add content warnings; closes #497 ([8020a4](https://code.itinerare.net/itinerare/Mundialis/commit/8020a4dcafcb1d6c585174bd7d01ae27d225ee9f))
+
+### Bug Fixes
+
+
+##### Page Images
+
+* Apply content warning blur to page cards ([b58e73](https://code.itinerare.net/itinerare/Mundialis/commit/b58e73bc1ba727795055c32dcfacf7438dc43797))
+* Apply content warning blur to special/recent images image changes ([56ad6e](https://code.itinerare.net/itinerare/Mundialis/commit/56ad6e61b19f8bd3834091f9140f4bbfbc667fa2))
+
+##### Users
+
+* Add image modal JS to user image revisions list ([9274a0](https://code.itinerare.net/itinerare/Mundialis/commit/9274a0287a7c4a651002f6aa7f43c3ca2ca8b702))
+* Specify fields to update when updating admin user via command ([3ddcc8](https://code.itinerare.net/itinerare/Mundialis/commit/3ddcc8106b90d80e884cb956a48b8b9c928342f0))
+
+
+---
+
 ## [3.2.0](https://code.itinerare.net/itinerare/Mundialis/compare/v3.1.0...v3.2.0) (2025-08-25)
 
 ### Features
